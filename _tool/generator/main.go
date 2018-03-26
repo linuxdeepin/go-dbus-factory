@@ -6,6 +6,10 @@ import (
 
 	"log"
 
+	"fmt"
+
+	"bytes"
+
 	"github.com/davecgh/go-spew/spew"
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
@@ -53,6 +57,7 @@ func main() {
 
 	sf := NewSourceFile("libdock")
 
+	sf.AddGoImport("unsafe")
 	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/client")
 
@@ -78,8 +83,14 @@ func main() {
 		}
 
 		writeObjectAccessMethod(sf.GoBody, ifc, objCfg)
+		writeImplementerMethods(sf.GoBody, ifc, ifcCfg)
+
+		for _, method := range ifc.Methods {
+			writeMethod(sf.GoBody, method, ifcCfg)
+		}
 	}
 	sf.Print()
+	sf.Save("./auto.go")
 }
 
 func writeNewObject(sb *SourceBody, cfg *ObjectConfig) {
@@ -103,6 +114,138 @@ func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *O
 		ifcCfg.TypeName)
 	sb.Pn("    return &obj.%s", ifcCfg.TypeName)
 	sb.Pn("}\n")
+}
+
+func writeImplementerMethods(sb *SourceBody, ifc introspect.Interface, ifcCfg *InterfaceConfig) {
+	sb.Pn("type %s struct{}", ifcCfg.TypeName)
+
+	sb.Pn("func (v *%s) GetObject_() *client.Object {", ifcCfg.TypeName)
+	sb.Pn("    return (*client.Object)(unsafe.Pointer(v))")
+	sb.Pn("}\n")
+
+	sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.TypeName)
+	sb.Pn("    return %q", ifc.Name)
+	sb.Pn("}\n")
+}
+
+func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
+	args := getArgs(method.Args)
+	inArgs := getInArgs(args)
+	outArgs := getOutArgs(args)
+	// sb.Pn("// in %#v", inArgs)
+	// sb.Pn("// out %#v", outArgs)
+
+	// GoXXX
+
+	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
+		ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false))
+	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
+		method.Name, getArgsName(inArgs, false))
+	sb.Pn("}\n")
+
+	// StoreXXX
+	if len(outArgs) > 0 {
+		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.TypeName,
+			method.Name, getArgsProto(outArgs, true))
+		sb.Pn("    err = call.Store(%s)", getArgsRefName(outArgs, true))
+		sb.Pn("    return")
+		sb.Pn("}\n")
+	}
+
+	// Call
+	if len(outArgs) == 0 {
+		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
+			ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false))
+		sb.Pn("return (<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done).Err",
+			method.Name, getArgsName(inArgs, false))
+		sb.Pn("}\n")
+	} else {
+		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
+			ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false),
+			getArgsProto(outArgs, true))
+		sb.Pn("return v.Store%s(", method.Name)
+		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
+			method.Name, getArgsName(inArgs, false))
+		sb.Pn("}\n")
+	}
+}
+
+func getArgs(args []introspect.Arg) []introspect.Arg {
+	argNameIdx := 0
+	var ret []introspect.Arg
+	fixName := false
+	for idx, arg := range args {
+
+		if idx == 0 {
+			if arg.Name == "" {
+				fixName = true
+			}
+		}
+
+		arg0 := arg
+		// fix arg name
+		if fixName {
+			arg0.Name = fmt.Sprintf("arg%d", argNameIdx)
+			argNameIdx++
+		}
+		ret = append(ret, arg0)
+	}
+	return ret
+}
+
+func getInArgs(args []introspect.Arg) []introspect.Arg {
+	var ret []introspect.Arg
+	for _, arg := range args {
+		if arg.Direction != "out" {
+			ret = append(ret, arg)
+		}
+	}
+	return ret
+}
+
+func getOutArgs(args []introspect.Arg) []introspect.Arg {
+	var ret []introspect.Arg
+	for _, arg := range args {
+		if arg.Direction == "out" {
+			ret = append(ret, arg)
+		}
+	}
+	return ret
+}
+
+func getArgsProto(args []introspect.Arg, begin bool) string {
+	var buf bytes.Buffer
+
+	for _, arg := range args {
+		argType := TypeFor(arg.Type).String()
+		buf.WriteString(fmt.Sprintf(",%s %s", arg.Name, argType))
+	}
+
+	return fixList(buf.String(), begin)
+}
+
+func getArgsName(args []introspect.Arg, begin bool) string {
+	var buf bytes.Buffer
+	for _, arg := range args {
+		buf.WriteString(fmt.Sprintf(",%s", arg.Name))
+	}
+	return fixList(buf.String(), begin)
+}
+
+func getArgsRefName(args []introspect.Arg, begin bool) string {
+	var buf bytes.Buffer
+	for _, arg := range args {
+		buf.WriteString(fmt.Sprintf(",&%s", arg.Name))
+	}
+	return fixList(buf.String(), begin)
+}
+
+func fixList(str string, begin bool) string {
+	if str == "" || !begin {
+		return str
+	}
+
+	return str[1:]
 }
 
 func ParseNode(file string) (*introspect.Node, error) {
