@@ -1,0 +1,35 @@
+{
+  "Service": "com.deepin.dde.daemon.Launcher",
+  "Objects": [
+    {
+      "Type": "Launcher",
+      "Path": "/com/deepin/dde/daemon/Launcher",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.dde.daemon.Launcher",
+          "Type": "launcher",
+          "Fixes": {
+            "m/GetAllItemInfos": [
+              {
+                "Name": "itemInfoList",
+                "Type": "[]ItemInfo"
+              }
+            ],
+            "m/GetItemInfo": [
+              {
+                "Name": "itemInfo",
+                "Type": "ItemInfo"
+              }
+            ],
+            "s/ItemChanged": [
+              {
+                "Name": "itemInfo",
+                "Type": "ItemInfo"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

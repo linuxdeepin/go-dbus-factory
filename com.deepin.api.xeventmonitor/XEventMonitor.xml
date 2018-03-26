@@ -1,0 +1,98 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.deepin.api.XEventMonitor">
+        <method name="RegisterArea">
+            <arg name="x1" type="i" direction="in"></arg>
+            <arg name="y1" type="i" direction="in"></arg>
+            <arg name="x2" type="i" direction="in"></arg>
+            <arg name="y2" type="i" direction="in"></arg>
+            <arg name="flag" type="i" direction="in"></arg>
+            <arg name="id" type="s" direction="out"></arg>
+        </method>
+        <method name="RegisterAreas">
+            <arg name="areas" type="a(iiii)" direction="in"></arg>
+            <arg name="flag" type="i" direction="in"></arg>
+            <arg name="id" type="s" direction="out"></arg>
+        </method>
+        <method name="RegisterFullScreen">
+            <arg name="id" type="s" direction="out"></arg>
+        </method>
+        <method name="UnregisterArea">
+            <arg name="id" type="s" direction="in"></arg>
+            <arg name="ok" type="b" direction="out"></arg>
+        </method>
+        <signal name="CancelAllArea"></signal>
+        <signal name="CursorInto">
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="CursorOut">
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="CursorMove">
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="ButtonPress">
+            <arg name="button" type="i"></arg>
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="ButtonRelease">
+            <arg name="button" type="i"></arg>
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="KeyPress">
+            <arg name="key" type="s"></arg>
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+        <signal name="KeyRelease">
+            <arg name="key" type="s"></arg>
+            <arg name="x" type="i"></arg>
+            <arg name="y" type="i"></arg>
+            <arg name="id" type="s"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>

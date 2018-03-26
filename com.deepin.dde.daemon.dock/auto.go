@@ -1,4 +1,4 @@
-package libdock
+package dock
 
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
@@ -15,10 +15,6 @@ func NewDock(conn *dbus.Conn) *Dock {
 	obj := new(Dock)
 	obj.Object.Init_(conn, "com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock")
 	return obj
-}
-
-func (obj *Dock) Dock() *dock {
-	return &obj.dock
 }
 
 type dock struct{}
@@ -418,10 +414,6 @@ func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) *Entry {
 	obj := new(Entry)
 	obj.Object.Init_(conn, "com.deepin.dde.daemon.Dock", path)
 	return obj
-}
-
-func (obj *Entry) Entry() *entry {
-	return &obj.entry
 }
 
 type entry struct{}

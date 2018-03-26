@@ -8,8 +8,6 @@
         {
           "Name": "com.deepin.dde.daemon.Dock",
           "Type": "dock",
-          "Accessor": "Dock",
-
           "Fixes": {
             "p/FrontendWindowRect": {
               "Type": "PropDockFrontendWindowRect",
@@ -27,8 +25,6 @@
         {
           "Name": "com.deepin.dde.daemon.Dock.Entry",
           "Type": "entry",
-          "Accessor": "Entry",
-
           "Fixes": {
             "p/WindowInfos": {
               "Type": "PropEntryWindowInfos",

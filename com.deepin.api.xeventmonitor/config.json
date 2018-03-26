@@ -1,0 +1,24 @@
+{
+  "Service":"com.deepin.api.XEventMonitor",
+  "Objects": [
+    {
+      "Type": "XEventMonitor",
+      "Path":"/com/deepin/api/XEventMonitor",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.XEventMonitor",
+          "Type": "xEventMonitor",
+
+          "Fixes": {
+            "m/RegisterAreas": [
+              {
+                "Name": "areas",
+                "Type": "[]CoordinateRange"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
