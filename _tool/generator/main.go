@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
@@ -26,9 +25,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	spew.Dump(srvCfg)
 
-	sf := NewSourceFile("libdock")
+	dirName := filepath.Base(dir)
+	lastDotIdx := strings.LastIndexByte(dirName, '.')
+	pkg := dirName[lastDotIdx+1:]
+
+	sf := NewSourceFile(pkg)
 
 	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
@@ -101,6 +103,10 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 
 func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *ObjectConfig) {
 	ifcCfg := objCfg.getInterface(ifc.Name)
+	if ifcCfg.Accessor == "" {
+		return
+	}
+
 	sb.Pn("func (obj *%s) %s() *%s {", objCfg.Type, ifcCfg.Accessor,
 		ifcCfg.Type)
 	sb.Pn("    return &obj.%s", ifcCfg.Type)
@@ -127,10 +133,12 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// sb.Pn("// in %#v", inArgs)
 	// sb.Pn("// out %#v", outArgs)
 
+	argFixes := ifcCfg.getArgFixes("m/" + method.Name)
+
 	// GoXXX
 
 	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
-		ifcCfg.Type, method.Name, getArgsProto(inArgs, false))
+		ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes))
 	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
 		method.Name, getArgsName(inArgs, false))
 	sb.Pn("}\n")
@@ -138,7 +146,7 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// StoreXXX
 	if len(outArgs) > 0 {
 		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.Type,
-			method.Name, getArgsProto(outArgs, true))
+			method.Name, getArgsProto(outArgs, true, argFixes))
 		sb.Pn("    err = call.Store(%s)", getArgsRefName(outArgs, true))
 		sb.Pn("    return")
 		sb.Pn("}\n")
@@ -147,14 +155,14 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// Call
 	if len(outArgs) == 0 {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
-			ifcCfg.Type, method.Name, getArgsProto(inArgs, false))
+			ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes))
 		sb.Pn("return (<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done).Err",
 			method.Name, getArgsName(inArgs, false))
 		sb.Pn("}\n")
 	} else {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
-			ifcCfg.Type, method.Name, getArgsProto(inArgs, false),
-			getArgsProto(outArgs, true))
+			ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes),
+			getArgsProto(outArgs, true, argFixes))
 		sb.Pn("return v.Store%s(", method.Name)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
 			method.Name, getArgsName(inArgs, false))
@@ -166,9 +174,10 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	sb.Pn("// signal %s\n", signal.Name)
 
 	args := getArgs(signal.Args)
+	argFixes := ifcCfg.getArgFixes("s/" + signal.Name)
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
-		ifcCfg.Type, signal.Name, getArgsProto(args, true))
+		ifcCfg.Type, signal.Name, getArgsProto(args, true, argFixes))
 	sb.Pn("obj := v.GetObject_()")
 	sb.Pn("rule := fmt.Sprintf(")
 	sb.writeStr(`"type='signal',interface='%s',member='%s',path='%s',sender='%s'",` + "\n")
@@ -182,7 +191,8 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 
 	if len(args) > 0 {
 		for _, arg := range args {
-			sb.Pn("var %s %s", arg.Name, TypeFor(arg.Type).String())
+			argType := getArgType(arg, argFixes)
+			sb.Pn("var %s %s", arg.Name, argType)
 		}
 		sb.Pn("err := dbus.Store(sig.Body %s)", getArgsRefName(args, false))
 		sb.Pn("if err == nil {")
@@ -341,11 +351,19 @@ func getOutArgs(args []introspect.Arg) []introspect.Arg {
 	return ret
 }
 
-func getArgsProto(args []introspect.Arg, begin bool) string {
+func getArgType(arg introspect.Arg, argFixes ArgFixes) string {
+	argType := argFixes.get(arg.Name).Type
+	if argType != "" {
+		return argType
+	}
+	return TypeFor(arg.Type).String()
+}
+
+func getArgsProto(args []introspect.Arg, begin bool, argFixes ArgFixes) string {
 	var buf bytes.Buffer
 
 	for _, arg := range args {
-		argType := TypeFor(arg.Type).String()
+		argType := getArgType(arg, argFixes)
 		buf.WriteString(fmt.Sprintf(",%s %s", arg.Name, argType))
 	}
 

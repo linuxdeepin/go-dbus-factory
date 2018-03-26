@@ -46,7 +46,29 @@ func (ic *InterfaceConfig) getPropertyFix(name string) *PropertyFix {
 	return &propFix
 }
 
+func (ic *InterfaceConfig) getArgFixes(name string) ArgFixes {
+	rawMsg, ok := ic.Fixes[name]
+	if !ok {
+		return nil
+	}
+	var argFixes ArgFixes
+	err := json.Unmarshal(rawMsg, &argFixes)
+	if err != nil {
+		return nil
+	}
+	return argFixes
+}
+
 type ArgFixes []ArgFix
+
+func (fixes ArgFixes) get(name string) ArgFix {
+	for _, fix := range fixes {
+		if fix.Name == name {
+			return fix
+		}
+	}
+	return ArgFix{}
+}
 
 type ArgFix struct {
 	Name string
