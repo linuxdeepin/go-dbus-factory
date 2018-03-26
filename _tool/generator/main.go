@@ -10,6 +10,8 @@ import (
 
 	"bytes"
 
+	"strings"
+
 	"github.com/davecgh/go-spew/spew"
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
@@ -238,15 +240,21 @@ func getPropType(ty string) string {
 		if val == "" {
 			return ""
 		}
-		return "client." + val
+		return "client.Prop" + val
 	} else if len(ty) == 2 && ty[0] == 'a' {
 		val := propBaseTypeMap[ty[1:]]
 		if val == "" {
 			return ""
 		}
-		return "client." + val + "Array"
+		return "client.Prop" + val + "Array"
 	}
 	return ""
+}
+
+type PropConfig struct {
+	Type         string
+	GoType       string
+	GoEmptyValue string
 }
 
 func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig) {
@@ -263,18 +271,63 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		sb.Pn("}\n")
 	} else {
 		//
+		pc := PropConfig{
+			Type:         "DockFrontendWindowRect",
+			GoType:       "FrontendWindowRect",
+			GoEmptyValue: "FrontendWindowRect{}",
+		}
+		sb.Pn("func (v *%s) %s() %s {", ifcCfg.TypeName, prop.Name, pc.Type)
+		sb.Pn("    return %s{", pc.Type)
+		sb.Pn("        Impl: v,")
+		sb.Pn("    }")
+		sb.Pn("}\n")
+
+		sb.Pn("type %s struct {", pc.Type)
+		sb.Pn("Impl client.Implementer")
+		sb.Pn("}\n")
+
+		// Get
+		if strings.Contains(prop.Access, "read") {
+			sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
+				pc.Type, pc.GoType)
+			sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
+			sb.Pn("%q, &value)", prop.Name)
+			sb.Pn("    return")
+			sb.Pn("}\n")
+		}
+
+		// Set
+		if strings.Contains(prop.Access, "write") {
+			sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
+				pc.Type, pc.GoType)
+			sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
+				" p.Impl.GetInterfaceName_(), %q, value)", prop.Name)
+			sb.Pn("}\n")
+		}
+
+		// ConnectChanged
+		sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
+			pc.Type, pc.GoType)
+		sb.Pn("cb0 := func(hasValue bool, value interface{}) {")
+
+		sb.Pn("if hasValue {")
+		sb.Pn("    var v %s", pc.GoType)
+		sb.Pn("    err := dbus.Store([]interface{}{value}, &v)")
+		sb.Pn("    if err != nil {")
+		sb.Pn("        return")
+		sb.Pn("    }")
+		sb.Pn("    cb(true, v)")
+		sb.Pn("} else {")
+		sb.Pn("    cb(false, %s)", pc.GoEmptyValue)
+		sb.Pn("}")
+
+		sb.Pn("}") // end cb0
+
+		sb.Pn("return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),")
+		sb.Pn("%q, cb0)", prop.Name)
+		sb.Pn("}\n")
 	}
 }
-
-/*
-
-func (d *dock) DisplayMode() client.PropInt32 {
-	return client.PropInt32{
-		Impl: d,
-		Name: "DisplayMode",
-	}
-}
-*/
 
 func getArgs(args []introspect.Arg) []introspect.Arg {
 	argNameIdx := 0

@@ -8,22 +8,6 @@ import (
 	"text/template"
 )
 
-// var propBaseTypeMap = map[string]string{
-// 	"b": "Bool",
-
-// 	"y": "Byte",
-// 	"n": "Int16",
-// 	"q": "Uint16",
-// 	"i": "Int32",
-// 	"u": "Uint32",
-// 	"x": "Int64",
-// 	"t": "Uint64",
-// 	"d": "Double",
-
-// 	"s": "String",
-// 	"o": "ObjectPath",
-// }
-
 const propCode = `
 type Prop{{.Type}} struct {
 	Impl Implementer
@@ -123,33 +107,3 @@ func main() {
 	}
 
 }
-
-/*
-type PropInt32 struct {
-	Impl Implementer
-	Name string
-}
-
-func (p PropInt32) Get(flags dbus.Flags) (value int32, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, &value)
-	return
-}
-
-func (p PropInt32) Set(flags dbus.Flags, value int32) error {
-	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
-}
-
-func (p PropInt32) ConnectChanged(cb func(hasValue bool, value int32)) error {
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			val, ok := value.(int32)
-			if ok {
-				cb(true, val)
-			}
-		} else {
-			cb(false, 0)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(), p.Name, cb0)
-}
-*/
