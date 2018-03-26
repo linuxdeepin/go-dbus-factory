@@ -1,61 +1,32 @@
 package main
 
 import (
-	"encoding/xml"
-	"os"
-
-	"log"
-
-	"fmt"
-
 	"bytes"
-
+	"encoding/xml"
+	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
-type ObjectConfig struct {
-	ServiceName string
-	Path        string // optional
-	TypeName    string
-
-	Interfaces map[string]*InterfaceConfig
-	//                   ^interfaceName
-}
-
-type InterfaceConfig struct {
-	TypeName           string
-	ObjectAccessMethod string
+func init() {
+	log.SetFlags(log.Lshortfile)
 }
 
 func main() {
-	node, err := ParseNode("data/com.deepin.dde.daemon.Dock/Dock.xml")
+	dir := os.Args[1]
+	log.Println("dir:", dir)
+
+	configFile := filepath.Join(dir, "config.json")
+	srvCfg, err := loadConfig(configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	spew.Dump(node)
-
-	// serviceName := "com.deepin.dde.daemon.Dock"
-	// path := "/com/deepin/dde/daemon/Dock"
-	// typeName := "DockObject"
-	objCfg := &ObjectConfig{
-		ServiceName: "com.deepin.dde.daemon.Dock",
-		Path:        "/com/deepin/dde/daemon/Dock",
-		TypeName:    "DockObject",
-		Interfaces: map[string]*InterfaceConfig{
-			"com.deepin.dde.daemon.Dock": {
-				TypeName:           "dock",
-				ObjectAccessMethod: "Dock",
-			},
-		},
-	}
-	// objCfg.Path = ""
-
-	// DockObject
-
-	// dock interface
+	spew.Dump(srvCfg)
 
 	sf := NewSourceFile("libdock")
 
@@ -65,77 +36,85 @@ func main() {
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/client")
 
-	sf.GoBody.Pn("type %s struct {", objCfg.TypeName)
-
-	for _, ifc := range node.Interfaces {
-		ifcCfg := objCfg.Interfaces[ifc.Name]
-		if ifcCfg == nil {
-			continue
+	for _, objCfg := range srvCfg.Objects {
+		node, err := ParseNode(filepath.Join(dir, objCfg.Type+".xml"))
+		if err != nil {
+			log.Fatal(err)
 		}
-		sf.GoBody.Pn("%s // interface %s", ifcCfg.TypeName, ifc.Name)
+
+		sf.GoBody.Pn("type %s struct {", objCfg.Type)
+
+		for _, ifc := range node.Interfaces {
+			ifcCfg := objCfg.getInterface(ifc.Name)
+			if ifcCfg == nil {
+				continue
+			}
+			sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifc.Name)
+		}
+
+		sf.GoBody.Pn("client.Object")
+		sf.GoBody.Pn("}\n")
+
+		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
+
+		for _, ifc := range node.Interfaces {
+			ifcCfg := objCfg.getInterface(ifc.Name)
+			if ifcCfg == nil {
+				continue
+			}
+
+			writeObjectAccessMethod(sf.GoBody, ifc, objCfg)
+			writeImplementerMethods(sf.GoBody, ifc, ifcCfg)
+
+			for _, method := range ifc.Methods {
+				writeMethod(sf.GoBody, method, ifcCfg)
+			}
+
+			for _, signal := range ifc.Signals {
+				writeSignal(sf.GoBody, signal, ifcCfg)
+			}
+
+			for _, prop := range ifc.Properties {
+				writeProperty(sf.GoBody, prop, ifcCfg)
+			}
+		}
 	}
 
-	sf.GoBody.Pn("client.Object")
-	sf.GoBody.Pn("}\n")
-
-	writeNewObject(sf.GoBody, objCfg)
-
-	for _, ifc := range node.Interfaces {
-		ifcCfg := objCfg.Interfaces[ifc.Name]
-		if ifcCfg == nil {
-			continue
-		}
-
-		writeObjectAccessMethod(sf.GoBody, ifc, objCfg)
-		writeImplementerMethods(sf.GoBody, ifc, ifcCfg)
-
-		for _, method := range ifc.Methods {
-			writeMethod(sf.GoBody, method, ifcCfg)
-		}
-
-		for _, signal := range ifc.Signals {
-			writeSignal(sf.GoBody, signal, ifcCfg)
-		}
-
-		for _, prop := range ifc.Properties {
-			writeProperty(sf.GoBody, prop, ifcCfg)
-		}
-	}
-	sf.Print()
-	sf.Save("./auto.go")
+	// sf.Print()
+	sf.Save(filepath.Join(dir, "auto.go"))
 }
 
-func writeNewObject(sb *SourceBody, cfg *ObjectConfig) {
+func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 	if cfg.Path != "" {
-		sb.Pn("func New%s(conn *dbus.Conn) *%s {", cfg.TypeName, cfg.TypeName)
-		sb.Pn("    obj := new(%s)", cfg.TypeName)
-		sb.Pn("    obj.Object.Init_(conn, %q,%q)", cfg.ServiceName, cfg.Path)
+		sb.Pn("func New%s(conn *dbus.Conn) *%s {", cfg.Type, cfg.Type)
+		sb.Pn("    obj := new(%s)", cfg.Type)
+		sb.Pn("    obj.Object.Init_(conn, %q,%q)", serviceName, cfg.Path)
 	} else {
 		sb.Pn("func New%s(conn *dbus.Conn, path dbus.ObjectPath) *%s {",
-			cfg.TypeName, cfg.TypeName)
-		sb.Pn("    obj := new(%s)", cfg.TypeName)
-		sb.Pn("    obj.Object.Init_(conn, %q,path)", cfg.ServiceName)
+			cfg.Type, cfg.Type)
+		sb.Pn("    obj := new(%s)", cfg.Type)
+		sb.Pn("    obj.Object.Init_(conn, %q,path)", serviceName)
 	}
 	sb.Pn("    return obj")
 	sb.Pn("}\n")
 }
 
 func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *ObjectConfig) {
-	ifcCfg := objCfg.Interfaces[ifc.Name]
-	sb.Pn("func (obj *%s) %s() *%s {", objCfg.TypeName, ifcCfg.ObjectAccessMethod,
-		ifcCfg.TypeName)
-	sb.Pn("    return &obj.%s", ifcCfg.TypeName)
+	ifcCfg := objCfg.getInterface(ifc.Name)
+	sb.Pn("func (obj *%s) %s() *%s {", objCfg.Type, ifcCfg.Accessor,
+		ifcCfg.Type)
+	sb.Pn("    return &obj.%s", ifcCfg.Type)
 	sb.Pn("}\n")
 }
 
 func writeImplementerMethods(sb *SourceBody, ifc introspect.Interface, ifcCfg *InterfaceConfig) {
-	sb.Pn("type %s struct{}", ifcCfg.TypeName)
+	sb.Pn("type %s struct{}", ifcCfg.Type)
 
-	sb.Pn("func (v *%s) GetObject_() *client.Object {", ifcCfg.TypeName)
+	sb.Pn("func (v *%s) GetObject_() *client.Object {", ifcCfg.Type)
 	sb.Pn("    return (*client.Object)(unsafe.Pointer(v))")
 	sb.Pn("}\n")
 
-	sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.TypeName)
+	sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
 	sb.Pn("    return %q", ifc.Name)
 	sb.Pn("}\n")
 }
@@ -151,14 +130,14 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// GoXXX
 
 	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
-		ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false))
+		ifcCfg.Type, method.Name, getArgsProto(inArgs, false))
 	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
 		method.Name, getArgsName(inArgs, false))
 	sb.Pn("}\n")
 
 	// StoreXXX
 	if len(outArgs) > 0 {
-		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.TypeName,
+		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.Type,
 			method.Name, getArgsProto(outArgs, true))
 		sb.Pn("    err = call.Store(%s)", getArgsRefName(outArgs, true))
 		sb.Pn("    return")
@@ -168,13 +147,13 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// Call
 	if len(outArgs) == 0 {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
-			ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false))
+			ifcCfg.Type, method.Name, getArgsProto(inArgs, false))
 		sb.Pn("return (<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done).Err",
 			method.Name, getArgsName(inArgs, false))
 		sb.Pn("}\n")
 	} else {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
-			ifcCfg.TypeName, method.Name, getArgsProto(inArgs, false),
+			ifcCfg.Type, method.Name, getArgsProto(inArgs, false),
 			getArgsProto(outArgs, true))
 		sb.Pn("return v.Store%s(", method.Name)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
@@ -189,7 +168,7 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	args := getArgs(signal.Args)
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
-		ifcCfg.TypeName, signal.Name, getArgsProto(args, true))
+		ifcCfg.Type, signal.Name, getArgsProto(args, true))
 	sb.Pn("obj := v.GetObject_()")
 	sb.Pn("rule := fmt.Sprintf(")
 	sb.writeStr(`"type='signal',interface='%s',member='%s',path='%s',sender='%s'",` + "\n")
@@ -251,18 +230,12 @@ func getPropType(ty string) string {
 	return ""
 }
 
-type PropConfig struct {
-	Type         string
-	GoType       string
-	GoEmptyValue string
-}
-
 func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig) {
 	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
 
 	propType := getPropType(prop.Type)
 	if propType != "" {
-		sb.Pn("func (v *%s) %s() %s {", ifcCfg.TypeName, prop.Name, propType)
+		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propType)
 		sb.Pn("    return %s{", propType)
 		sb.Pn("        Impl: v,")
 		sb.Pn("        Name: %q,", prop.Name)
@@ -270,26 +243,22 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 
 		sb.Pn("}\n")
 	} else {
-		//
-		pc := PropConfig{
-			Type:         "DockFrontendWindowRect",
-			GoType:       "FrontendWindowRect",
-			GoEmptyValue: "FrontendWindowRect{}",
-		}
-		sb.Pn("func (v *%s) %s() %s {", ifcCfg.TypeName, prop.Name, pc.Type)
-		sb.Pn("    return %s{", pc.Type)
+		propFix := ifcCfg.getPropertyFix(prop.Name)
+
+		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propFix.Type)
+		sb.Pn("    return %s{", propFix.Type)
 		sb.Pn("        Impl: v,")
 		sb.Pn("    }")
 		sb.Pn("}\n")
 
-		sb.Pn("type %s struct {", pc.Type)
+		sb.Pn("type %s struct {", propFix.Type)
 		sb.Pn("Impl client.Implementer")
 		sb.Pn("}\n")
 
 		// Get
 		if strings.Contains(prop.Access, "read") {
 			sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
-				pc.Type, pc.GoType)
+				propFix.Type, propFix.ValueType)
 			sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
 			sb.Pn("%q, &value)", prop.Name)
 			sb.Pn("    return")
@@ -299,7 +268,7 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		// Set
 		if strings.Contains(prop.Access, "write") {
 			sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
-				pc.Type, pc.GoType)
+				propFix.Type, propFix.ValueType)
 			sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
 				" p.Impl.GetInterfaceName_(), %q, value)", prop.Name)
 			sb.Pn("}\n")
@@ -307,18 +276,18 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 
 		// ConnectChanged
 		sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
-			pc.Type, pc.GoType)
+			propFix.Type, propFix.ValueType)
 		sb.Pn("cb0 := func(hasValue bool, value interface{}) {")
 
 		sb.Pn("if hasValue {")
-		sb.Pn("    var v %s", pc.GoType)
+		sb.Pn("    var v %s", propFix.ValueType)
 		sb.Pn("    err := dbus.Store([]interface{}{value}, &v)")
 		sb.Pn("    if err != nil {")
 		sb.Pn("        return")
 		sb.Pn("    }")
 		sb.Pn("    cb(true, v)")
 		sb.Pn("} else {")
-		sb.Pn("    cb(false, %s)", pc.GoEmptyValue)
+		sb.Pn("    cb(false, %s)", propFix.EmptyValue)
 		sb.Pn("}")
 
 		sb.Pn("}") // end cb0
