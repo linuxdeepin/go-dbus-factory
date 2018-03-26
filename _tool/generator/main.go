@@ -57,8 +57,10 @@ func main() {
 
 	sf := NewSourceFile("libdock")
 
+	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
 	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
+	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/client")
 
 	sf.GoBody.Pn("type %s struct {", objCfg.TypeName)
@@ -87,6 +89,14 @@ func main() {
 
 		for _, method := range ifc.Methods {
 			writeMethod(sf.GoBody, method, ifcCfg)
+		}
+
+		for _, signal := range ifc.Signals {
+			writeSignal(sf.GoBody, signal, ifcCfg)
+		}
+
+		for _, prop := range ifc.Properties {
+			writeProperty(sf.GoBody, prop, ifcCfg)
 		}
 	}
 	sf.Print()
@@ -129,6 +139,7 @@ func writeImplementerMethods(sb *SourceBody, ifc introspect.Interface, ifcCfg *I
 }
 
 func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
+	sb.Pn("// method %s\n", method.Name)
 	args := getArgs(method.Args)
 	inArgs := getInArgs(args)
 	outArgs := getOutArgs(args)
@@ -169,6 +180,101 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 		sb.Pn("}\n")
 	}
 }
+
+func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConfig) {
+	sb.Pn("// signal %s\n", signal.Name)
+
+	args := getArgs(signal.Args)
+
+	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
+		ifcCfg.TypeName, signal.Name, getArgsProto(args, true))
+	sb.Pn("obj := v.GetObject_()")
+	sb.Pn("rule := fmt.Sprintf(")
+	sb.writeStr(`"type='signal',interface='%s',member='%s',path='%s',sender='%s'",` + "\n")
+	sb.Pn("v.GetInterfaceName_(), %q, obj.Path_(), obj.ServiceName_())\n", signal.Name)
+
+	sb.Pn("sigRule := &dbusutil.SignalRule{")
+	sb.Pn("Path: obj.Path_(),")
+	sb.Pn("Name: v.GetInterfaceName_() + \".%s\",", signal.Name)
+	sb.Pn("}")
+	sb.Pn("handlerFunc := func(sig *dbus.Signal) {")
+
+	if len(args) > 0 {
+		for _, arg := range args {
+			sb.Pn("var %s %s", arg.Name, TypeFor(arg.Type).String())
+		}
+		sb.Pn("err := dbus.Store(sig.Body %s)", getArgsRefName(args, false))
+		sb.Pn("if err == nil {")
+		sb.Pn("    cb(%s)", getArgsName(args, true))
+		sb.Pn("}")
+	} else {
+		sb.Pn("cb()")
+	}
+
+	sb.Pn("}\n") // end handlerFunc
+
+	sb.Pn("return obj.ConnectSignal_(rule, sigRule, handlerFunc)")
+
+	sb.Pn("}\n")
+}
+
+var propBaseTypeMap = map[string]string{
+	"y": "Byte",
+	"b": "Bool",
+	"n": "Int16",
+	"q": "Uint16",
+	"i": "Int32",
+	"u": "Uint32",
+	"x": "Int64",
+	"t": "Uint64",
+	"d": "Double",
+	"s": "String",
+	"o": "ObjectPath",
+}
+
+func getPropType(ty string) string {
+	if len(ty) == 1 {
+		val := propBaseTypeMap[ty]
+		if val == "" {
+			return ""
+		}
+		return "client." + val
+	} else if len(ty) == 2 && ty[0] == 'a' {
+		val := propBaseTypeMap[ty[1:]]
+		if val == "" {
+			return ""
+		}
+		return "client." + val + "Array"
+	}
+	return ""
+}
+
+func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig) {
+	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
+
+	propType := getPropType(prop.Type)
+	if propType != "" {
+		sb.Pn("func (v *%s) %s() %s {", ifcCfg.TypeName, prop.Name, propType)
+		sb.Pn("    return %s{", propType)
+		sb.Pn("        Impl: v,")
+		sb.Pn("        Name: %q,", prop.Name)
+		sb.Pn("    }")
+
+		sb.Pn("}\n")
+	} else {
+		//
+	}
+}
+
+/*
+
+func (d *dock) DisplayMode() client.PropInt32 {
+	return client.PropInt32{
+		Impl: d,
+		Name: "DisplayMode",
+	}
+}
+*/
 
 func getArgs(args []introspect.Arg) []introspect.Arg {
 	argNameIdx := 0
