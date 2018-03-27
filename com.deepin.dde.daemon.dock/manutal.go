@@ -1,4 +1,4 @@
-package libdock
+package dock
 
 type FrontendWindowRect struct {
 	X, Y          int32

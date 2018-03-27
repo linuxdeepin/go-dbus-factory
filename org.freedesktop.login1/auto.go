@@ -1,10 +1,16 @@
 package login1
 
+import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/client"
 import "unsafe"
+
+/* prevent compile error */
+var _ = errors.New
+var _ dbusutil.SignalHandlerId
+var _ = fmt.Sprintf
 
 type Manager struct {
 	manager // interface org.freedesktop.login1.Manager
@@ -1054,10 +1060,13 @@ type Seat struct {
 	client.Object
 }
 
-func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) *Seat {
+func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) (*Seat, error) {
+	if !path.IsValid() {
+		return nil, errors.New("path is invalid")
+	}
 	obj := new(Seat)
 	obj.Object.Init_(conn, "org.freedesktop.login1", path)
-	return obj
+	return obj, nil
 }
 
 type seat struct{}
@@ -1258,10 +1267,13 @@ type Session struct {
 	client.Object
 }
 
-func NewSession(conn *dbus.Conn, path dbus.ObjectPath) *Session {
+func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
+	if !path.IsValid() {
+		return nil, errors.New("path is invalid")
+	}
 	obj := new(Session)
 	obj.Object.Init_(conn, "org.freedesktop.login1", path)
-	return obj
+	return obj, nil
 }
 
 type session struct{}
@@ -1770,10 +1782,13 @@ type User struct {
 	client.Object
 }
 
-func NewUser(conn *dbus.Conn, path dbus.ObjectPath) *User {
+func NewUser(conn *dbus.Conn, path dbus.ObjectPath) (*User, error) {
+	if !path.IsValid() {
+		return nil, errors.New("path is invalid")
+	}
 	obj := new(User)
 	obj.Object.Init_(conn, "org.freedesktop.login1", path)
-	return obj
+	return obj, nil
 }
 
 type user struct{}

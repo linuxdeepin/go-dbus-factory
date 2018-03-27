@@ -1,10 +1,16 @@
 package xeventmonitor
 
+import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/client"
 import "unsafe"
+
+/* prevent compile error */
+var _ = errors.New
+var _ dbusutil.SignalHandlerId
+var _ = fmt.Sprintf
 
 type XEventMonitor struct {
 	xEventMonitor // interface com.deepin.api.XEventMonitor

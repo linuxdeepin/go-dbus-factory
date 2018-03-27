@@ -1,10 +1,16 @@
 package dock
 
+import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/client"
 import "unsafe"
+
+/* prevent compile error */
+var _ = errors.New
+var _ dbusutil.SignalHandlerId
+var _ = fmt.Sprintf
 
 type Dock struct {
 	dock // interface com.deepin.dde.daemon.Dock
@@ -410,10 +416,13 @@ type Entry struct {
 	client.Object
 }
 
-func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) *Entry {
+func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) (*Entry, error) {
+	if !path.IsValid() {
+		return nil, errors.New("path is invalid")
+	}
 	obj := new(Entry)
 	obj.Object.Init_(conn, "com.deepin.dde.daemon.Dock", path)
-	return obj
+	return obj, nil
 }
 
 type entry struct{}

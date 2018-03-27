@@ -34,11 +34,18 @@ func main() {
 
 	sf := NewSourceFile(pkg)
 
+	sf.AddGoImport("errors")
 	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
 	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/client")
+
+	sf.GoBody.Pn("/* prevent compile error */")
+	sf.GoBody.Pn("var _ = errors.New")
+	sf.GoBody.Pn("var _ dbusutil.SignalHandlerId")
+	sf.GoBody.Pn("var _ = fmt.Sprintf")
+	sf.GoBody.Pn("")
 
 	for _, objCfg := range srvCfg.Objects {
 		node, err := ParseNode(filepath.Join(dir, objCfg.Type+".xml"))
@@ -93,13 +100,17 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 		sb.Pn("func New%s(conn *dbus.Conn) *%s {", cfg.Type, cfg.Type)
 		sb.Pn("    obj := new(%s)", cfg.Type)
 		sb.Pn("    obj.Object.Init_(conn, %q,%q)", serviceName, cfg.Path)
+		sb.Pn("    return obj")
 	} else {
-		sb.Pn("func New%s(conn *dbus.Conn, path dbus.ObjectPath) *%s {",
+		sb.Pn("func New%s(conn *dbus.Conn, path dbus.ObjectPath) (*%s,error) {",
 			cfg.Type, cfg.Type)
+		sb.Pn("    if !path.IsValid() {")
+		sb.Pn("        return nil, errors.New(\"path is invalid\")")
+		sb.Pn("    }")
 		sb.Pn("    obj := new(%s)", cfg.Type)
 		sb.Pn("    obj.Object.Init_(conn, %q,path)", serviceName)
+		sb.Pn("    return obj, nil")
 	}
-	sb.Pn("    return obj")
 	sb.Pn("}\n")
 }
 
