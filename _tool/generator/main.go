@@ -39,7 +39,7 @@ func main() {
 	sf.AddGoImport("unsafe")
 	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
-	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/client")
+	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
 
 	sf.GoBody.Pn("/* prevent compile error */")
 	sf.GoBody.Pn("var _ = errors.New")
@@ -63,7 +63,7 @@ func main() {
 			sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifc.Name)
 		}
 
-		sf.GoBody.Pn("client.Object")
+		sf.GoBody.Pn("proxy.Object")
 		sf.GoBody.Pn("}\n")
 
 		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
@@ -129,8 +129,8 @@ func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *O
 func writeImplementerMethods(sb *SourceBody, ifc introspect.Interface, ifcCfg *InterfaceConfig) {
 	sb.Pn("type %s struct{}", ifcCfg.Type)
 
-	sb.Pn("func (v *%s) GetObject_() *client.Object {", ifcCfg.Type)
-	sb.Pn("    return (*client.Object)(unsafe.Pointer(v))")
+	sb.Pn("func (v *%s) GetObject_() *proxy.Object {", ifcCfg.Type)
+	sb.Pn("    return (*proxy.Object)(unsafe.Pointer(v))")
 	sb.Pn("}\n")
 
 	sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
@@ -250,13 +250,13 @@ func getPropType(ty string) string {
 		if val == "" {
 			return ""
 		}
-		return "client.Prop" + val
+		return "proxy.Prop" + val
 	} else if len(ty) == 2 && ty[0] == 'a' {
 		val := propBaseTypeMap[ty[1:]]
 		if val == "" {
 			return ""
 		}
-		return "client.Prop" + val + "Array"
+		return "proxy.Prop" + val + "Array"
 	}
 	return ""
 }
@@ -286,7 +286,7 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		sb.Pn("}\n")
 
 		sb.Pn("type %s struct {", propFix.Type)
-		sb.Pn("Impl client.Implementer")
+		sb.Pn("Impl proxy.Implementer")
 		sb.Pn("}\n")
 
 		// Get
