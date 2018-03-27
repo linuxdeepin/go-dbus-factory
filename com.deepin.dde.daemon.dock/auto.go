@@ -4,7 +4,7 @@ import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/client"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
 
 /* prevent compile error */
@@ -14,7 +14,7 @@ var _ = fmt.Sprintf
 
 type Dock struct {
 	dock // interface com.deepin.dde.daemon.Dock
-	client.Object
+	proxy.Object
 }
 
 func NewDock(conn *dbus.Conn) *Dock {
@@ -25,8 +25,8 @@ func NewDock(conn *dbus.Conn) *Dock {
 
 type dock struct{}
 
-func (v *dock) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *dock) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*dock) GetInterfaceName_() string {
@@ -297,8 +297,8 @@ func (v *dock) ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHand
 
 // property ShowTimeout u
 
-func (v *dock) ShowTimeout() client.PropUint32 {
-	return client.PropUint32{
+func (v *dock) ShowTimeout() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "ShowTimeout",
 	}
@@ -306,8 +306,8 @@ func (v *dock) ShowTimeout() client.PropUint32 {
 
 // property HideTimeout u
 
-func (v *dock) HideTimeout() client.PropUint32 {
-	return client.PropUint32{
+func (v *dock) HideTimeout() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "HideTimeout",
 	}
@@ -322,7 +322,7 @@ func (v *dock) FrontendWindowRect() PropDockFrontendWindowRect {
 }
 
 type PropDockFrontendWindowRect struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropDockFrontendWindowRect) Get(flags dbus.Flags) (value FrontendWindowRect, err error) {
@@ -350,8 +350,8 @@ func (p PropDockFrontendWindowRect) ConnectChanged(cb func(hasValue bool, value 
 
 // property Entries ao
 
-func (v *dock) Entries() client.PropObjectPathArray {
-	return client.PropObjectPathArray{
+func (v *dock) Entries() proxy.PropObjectPathArray {
+	return proxy.PropObjectPathArray{
 		Impl: v,
 		Name: "Entries",
 	}
@@ -359,8 +359,8 @@ func (v *dock) Entries() client.PropObjectPathArray {
 
 // property HideMode i
 
-func (v *dock) HideMode() client.PropInt32 {
-	return client.PropInt32{
+func (v *dock) HideMode() proxy.PropInt32 {
+	return proxy.PropInt32{
 		Impl: v,
 		Name: "HideMode",
 	}
@@ -368,8 +368,8 @@ func (v *dock) HideMode() client.PropInt32 {
 
 // property DisplayMode i
 
-func (v *dock) DisplayMode() client.PropInt32 {
-	return client.PropInt32{
+func (v *dock) DisplayMode() proxy.PropInt32 {
+	return proxy.PropInt32{
 		Impl: v,
 		Name: "DisplayMode",
 	}
@@ -377,8 +377,8 @@ func (v *dock) DisplayMode() client.PropInt32 {
 
 // property HideState i
 
-func (v *dock) HideState() client.PropInt32 {
-	return client.PropInt32{
+func (v *dock) HideState() proxy.PropInt32 {
+	return proxy.PropInt32{
 		Impl: v,
 		Name: "HideState",
 	}
@@ -386,8 +386,8 @@ func (v *dock) HideState() client.PropInt32 {
 
 // property Position i
 
-func (v *dock) Position() client.PropInt32 {
-	return client.PropInt32{
+func (v *dock) Position() proxy.PropInt32 {
+	return proxy.PropInt32{
 		Impl: v,
 		Name: "Position",
 	}
@@ -395,8 +395,8 @@ func (v *dock) Position() client.PropInt32 {
 
 // property IconSize u
 
-func (v *dock) IconSize() client.PropUint32 {
-	return client.PropUint32{
+func (v *dock) IconSize() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "IconSize",
 	}
@@ -404,8 +404,8 @@ func (v *dock) IconSize() client.PropUint32 {
 
 // property DockedApps as
 
-func (v *dock) DockedApps() client.PropStringArray {
-	return client.PropStringArray{
+func (v *dock) DockedApps() proxy.PropStringArray {
+	return proxy.PropStringArray{
 		Impl: v,
 		Name: "DockedApps",
 	}
@@ -413,7 +413,7 @@ func (v *dock) DockedApps() client.PropStringArray {
 
 type Entry struct {
 	entry // interface com.deepin.dde.daemon.Dock.Entry
-	client.Object
+	proxy.Object
 }
 
 func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) (*Entry, error) {
@@ -427,8 +427,8 @@ func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) (*Entry, error) {
 
 type entry struct{}
 
-func (v *entry) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *entry) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*entry) GetInterfaceName_() string {
@@ -527,8 +527,8 @@ func (v *entry) RequestUndock(flags dbus.Flags) error {
 
 // property Name s
 
-func (v *entry) Name() client.PropString {
-	return client.PropString{
+func (v *entry) Name() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -536,8 +536,8 @@ func (v *entry) Name() client.PropString {
 
 // property Icon s
 
-func (v *entry) Icon() client.PropString {
-	return client.PropString{
+func (v *entry) Icon() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Icon",
 	}
@@ -545,8 +545,8 @@ func (v *entry) Icon() client.PropString {
 
 // property Id s
 
-func (v *entry) Id() client.PropString {
-	return client.PropString{
+func (v *entry) Id() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -554,8 +554,8 @@ func (v *entry) Id() client.PropString {
 
 // property IsActive b
 
-func (v *entry) IsActive() client.PropBool {
-	return client.PropBool{
+func (v *entry) IsActive() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IsActive",
 	}
@@ -563,8 +563,8 @@ func (v *entry) IsActive() client.PropBool {
 
 // property CurrentWindow u
 
-func (v *entry) CurrentWindow() client.PropUint32 {
-	return client.PropUint32{
+func (v *entry) CurrentWindow() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "CurrentWindow",
 	}
@@ -572,8 +572,8 @@ func (v *entry) CurrentWindow() client.PropUint32 {
 
 // property IsDocked b
 
-func (v *entry) IsDocked() client.PropBool {
-	return client.PropBool{
+func (v *entry) IsDocked() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IsDocked",
 	}
@@ -588,7 +588,7 @@ func (v *entry) WindowInfos() PropEntryWindowInfos {
 }
 
 type PropEntryWindowInfos struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropEntryWindowInfos) Get(flags dbus.Flags) (value map[uint32]WindowInfo, err error) {
@@ -616,8 +616,8 @@ func (p PropEntryWindowInfos) ConnectChanged(cb func(hasValue bool, value map[ui
 
 // property Menu s
 
-func (v *entry) Menu() client.PropString {
-	return client.PropString{
+func (v *entry) Menu() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Menu",
 	}
@@ -625,8 +625,8 @@ func (v *entry) Menu() client.PropString {
 
 // property DesktopFile s
 
-func (v *entry) DesktopFile() client.PropString {
-	return client.PropString{
+func (v *entry) DesktopFile() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "DesktopFile",
 	}

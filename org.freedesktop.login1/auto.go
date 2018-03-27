@@ -4,7 +4,7 @@ import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/client"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
 
 /* prevent compile error */
@@ -14,7 +14,7 @@ var _ = fmt.Sprintf
 
 type Manager struct {
 	manager // interface org.freedesktop.login1.Manager
-	client.Object
+	proxy.Object
 }
 
 func NewManager(conn *dbus.Conn) *Manager {
@@ -25,8 +25,8 @@ func NewManager(conn *dbus.Conn) *Manager {
 
 type manager struct{}
 
-func (v *manager) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *manager) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*manager) GetInterfaceName_() string {
@@ -743,8 +743,8 @@ func (v *manager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHa
 
 // property EnableWallMessages b
 
-func (v *manager) EnableWallMessages() client.PropBool {
-	return client.PropBool{
+func (v *manager) EnableWallMessages() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "EnableWallMessages",
 	}
@@ -752,8 +752,8 @@ func (v *manager) EnableWallMessages() client.PropBool {
 
 // property WallMessage s
 
-func (v *manager) WallMessage() client.PropString {
-	return client.PropString{
+func (v *manager) WallMessage() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "WallMessage",
 	}
@@ -761,8 +761,8 @@ func (v *manager) WallMessage() client.PropString {
 
 // property NAutoVTs u
 
-func (v *manager) NAutoVTs() client.PropUint32 {
-	return client.PropUint32{
+func (v *manager) NAutoVTs() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "NAutoVTs",
 	}
@@ -770,8 +770,8 @@ func (v *manager) NAutoVTs() client.PropUint32 {
 
 // property KillOnlyUsers as
 
-func (v *manager) KillOnlyUsers() client.PropStringArray {
-	return client.PropStringArray{
+func (v *manager) KillOnlyUsers() proxy.PropStringArray {
+	return proxy.PropStringArray{
 		Impl: v,
 		Name: "KillOnlyUsers",
 	}
@@ -779,8 +779,8 @@ func (v *manager) KillOnlyUsers() client.PropStringArray {
 
 // property KillExcludeUsers as
 
-func (v *manager) KillExcludeUsers() client.PropStringArray {
-	return client.PropStringArray{
+func (v *manager) KillExcludeUsers() proxy.PropStringArray {
+	return proxy.PropStringArray{
 		Impl: v,
 		Name: "KillExcludeUsers",
 	}
@@ -788,8 +788,8 @@ func (v *manager) KillExcludeUsers() client.PropStringArray {
 
 // property KillUserProcesses b
 
-func (v *manager) KillUserProcesses() client.PropBool {
-	return client.PropBool{
+func (v *manager) KillUserProcesses() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "KillUserProcesses",
 	}
@@ -797,8 +797,8 @@ func (v *manager) KillUserProcesses() client.PropBool {
 
 // property RebootToFirmwareSetup b
 
-func (v *manager) RebootToFirmwareSetup() client.PropBool {
-	return client.PropBool{
+func (v *manager) RebootToFirmwareSetup() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "RebootToFirmwareSetup",
 	}
@@ -806,8 +806,8 @@ func (v *manager) RebootToFirmwareSetup() client.PropBool {
 
 // property IdleHint b
 
-func (v *manager) IdleHint() client.PropBool {
-	return client.PropBool{
+func (v *manager) IdleHint() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -815,8 +815,8 @@ func (v *manager) IdleHint() client.PropBool {
 
 // property IdleSinceHint t
 
-func (v *manager) IdleSinceHint() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) IdleSinceHint() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -824,8 +824,8 @@ func (v *manager) IdleSinceHint() client.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *manager) IdleSinceHintMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -833,8 +833,8 @@ func (v *manager) IdleSinceHintMonotonic() client.PropUint64 {
 
 // property BlockInhibited s
 
-func (v *manager) BlockInhibited() client.PropString {
-	return client.PropString{
+func (v *manager) BlockInhibited() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "BlockInhibited",
 	}
@@ -842,8 +842,8 @@ func (v *manager) BlockInhibited() client.PropString {
 
 // property DelayInhibited s
 
-func (v *manager) DelayInhibited() client.PropString {
-	return client.PropString{
+func (v *manager) DelayInhibited() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "DelayInhibited",
 	}
@@ -851,8 +851,8 @@ func (v *manager) DelayInhibited() client.PropString {
 
 // property InhibitDelayMaxUSec t
 
-func (v *manager) InhibitDelayMaxUSec() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) InhibitDelayMaxUSec() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "InhibitDelayMaxUSec",
 	}
@@ -860,8 +860,8 @@ func (v *manager) InhibitDelayMaxUSec() client.PropUint64 {
 
 // property HandlePowerKey s
 
-func (v *manager) HandlePowerKey() client.PropString {
-	return client.PropString{
+func (v *manager) HandlePowerKey() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "HandlePowerKey",
 	}
@@ -869,8 +869,8 @@ func (v *manager) HandlePowerKey() client.PropString {
 
 // property HandleSuspendKey s
 
-func (v *manager) HandleSuspendKey() client.PropString {
-	return client.PropString{
+func (v *manager) HandleSuspendKey() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "HandleSuspendKey",
 	}
@@ -878,8 +878,8 @@ func (v *manager) HandleSuspendKey() client.PropString {
 
 // property HandleHibernateKey s
 
-func (v *manager) HandleHibernateKey() client.PropString {
-	return client.PropString{
+func (v *manager) HandleHibernateKey() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "HandleHibernateKey",
 	}
@@ -887,8 +887,8 @@ func (v *manager) HandleHibernateKey() client.PropString {
 
 // property HandleLidSwitch s
 
-func (v *manager) HandleLidSwitch() client.PropString {
-	return client.PropString{
+func (v *manager) HandleLidSwitch() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "HandleLidSwitch",
 	}
@@ -896,8 +896,8 @@ func (v *manager) HandleLidSwitch() client.PropString {
 
 // property HandleLidSwitchDocked s
 
-func (v *manager) HandleLidSwitchDocked() client.PropString {
-	return client.PropString{
+func (v *manager) HandleLidSwitchDocked() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "HandleLidSwitchDocked",
 	}
@@ -905,8 +905,8 @@ func (v *manager) HandleLidSwitchDocked() client.PropString {
 
 // property HoldoffTimeoutUSec t
 
-func (v *manager) HoldoffTimeoutUSec() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) HoldoffTimeoutUSec() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "HoldoffTimeoutUSec",
 	}
@@ -914,8 +914,8 @@ func (v *manager) HoldoffTimeoutUSec() client.PropUint64 {
 
 // property IdleAction s
 
-func (v *manager) IdleAction() client.PropString {
-	return client.PropString{
+func (v *manager) IdleAction() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "IdleAction",
 	}
@@ -923,8 +923,8 @@ func (v *manager) IdleAction() client.PropString {
 
 // property IdleActionUSec t
 
-func (v *manager) IdleActionUSec() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) IdleActionUSec() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleActionUSec",
 	}
@@ -932,8 +932,8 @@ func (v *manager) IdleActionUSec() client.PropUint64 {
 
 // property PreparingForShutdown b
 
-func (v *manager) PreparingForShutdown() client.PropBool {
-	return client.PropBool{
+func (v *manager) PreparingForShutdown() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "PreparingForShutdown",
 	}
@@ -941,8 +941,8 @@ func (v *manager) PreparingForShutdown() client.PropBool {
 
 // property PreparingForSleep b
 
-func (v *manager) PreparingForSleep() client.PropBool {
-	return client.PropBool{
+func (v *manager) PreparingForSleep() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "PreparingForSleep",
 	}
@@ -957,7 +957,7 @@ func (v *manager) ScheduledShutdown() PropManagerScheduledShutdown {
 }
 
 type PropManagerScheduledShutdown struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropManagerScheduledShutdown) Get(flags dbus.Flags) (value ScheduledShutdown, err error) {
@@ -985,8 +985,8 @@ func (p PropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, valu
 
 // property Docked b
 
-func (v *manager) Docked() client.PropBool {
-	return client.PropBool{
+func (v *manager) Docked() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "Docked",
 	}
@@ -994,8 +994,8 @@ func (v *manager) Docked() client.PropBool {
 
 // property RemoveIPC b
 
-func (v *manager) RemoveIPC() client.PropBool {
-	return client.PropBool{
+func (v *manager) RemoveIPC() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "RemoveIPC",
 	}
@@ -1003,8 +1003,8 @@ func (v *manager) RemoveIPC() client.PropBool {
 
 // property RuntimeDirectorySize t
 
-func (v *manager) RuntimeDirectorySize() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) RuntimeDirectorySize() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "RuntimeDirectorySize",
 	}
@@ -1012,8 +1012,8 @@ func (v *manager) RuntimeDirectorySize() client.PropUint64 {
 
 // property InhibitorsMax t
 
-func (v *manager) InhibitorsMax() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) InhibitorsMax() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "InhibitorsMax",
 	}
@@ -1021,8 +1021,8 @@ func (v *manager) InhibitorsMax() client.PropUint64 {
 
 // property NCurrentInhibitors t
 
-func (v *manager) NCurrentInhibitors() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) NCurrentInhibitors() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "NCurrentInhibitors",
 	}
@@ -1030,8 +1030,8 @@ func (v *manager) NCurrentInhibitors() client.PropUint64 {
 
 // property SessionsMax t
 
-func (v *manager) SessionsMax() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) SessionsMax() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "SessionsMax",
 	}
@@ -1039,8 +1039,8 @@ func (v *manager) SessionsMax() client.PropUint64 {
 
 // property NCurrentSessions t
 
-func (v *manager) NCurrentSessions() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) NCurrentSessions() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "NCurrentSessions",
 	}
@@ -1048,8 +1048,8 @@ func (v *manager) NCurrentSessions() client.PropUint64 {
 
 // property UserTasksMax t
 
-func (v *manager) UserTasksMax() client.PropUint64 {
-	return client.PropUint64{
+func (v *manager) UserTasksMax() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "UserTasksMax",
 	}
@@ -1057,7 +1057,7 @@ func (v *manager) UserTasksMax() client.PropUint64 {
 
 type Seat struct {
 	seat // interface org.freedesktop.login1.Seat
-	client.Object
+	proxy.Object
 }
 
 func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) (*Seat, error) {
@@ -1071,8 +1071,8 @@ func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) (*Seat, error) {
 
 type seat struct{}
 
-func (v *seat) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *seat) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*seat) GetInterfaceName_() string {
@@ -1131,8 +1131,8 @@ func (v *seat) SwitchToPrevious(flags dbus.Flags) error {
 
 // property Id s
 
-func (v *seat) Id() client.PropString {
-	return client.PropString{
+func (v *seat) Id() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -1147,7 +1147,7 @@ func (v *seat) ActiveSession() PropSeatActiveSession {
 }
 
 type PropSeatActiveSession struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropSeatActiveSession) Get(flags dbus.Flags) (value SessionInfo, err error) {
@@ -1175,8 +1175,8 @@ func (p PropSeatActiveSession) ConnectChanged(cb func(hasValue bool, value Sessi
 
 // property CanMultiSession b
 
-func (v *seat) CanMultiSession() client.PropBool {
-	return client.PropBool{
+func (v *seat) CanMultiSession() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "CanMultiSession",
 	}
@@ -1184,8 +1184,8 @@ func (v *seat) CanMultiSession() client.PropBool {
 
 // property CanTTY b
 
-func (v *seat) CanTTY() client.PropBool {
-	return client.PropBool{
+func (v *seat) CanTTY() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "CanTTY",
 	}
@@ -1193,8 +1193,8 @@ func (v *seat) CanTTY() client.PropBool {
 
 // property CanGraphical b
 
-func (v *seat) CanGraphical() client.PropBool {
-	return client.PropBool{
+func (v *seat) CanGraphical() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "CanGraphical",
 	}
@@ -1209,7 +1209,7 @@ func (v *seat) Sessions() PropSeatSessions {
 }
 
 type PropSeatSessions struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropSeatSessions) Get(flags dbus.Flags) (value []SessionInfo, err error) {
@@ -1237,8 +1237,8 @@ func (p PropSeatSessions) ConnectChanged(cb func(hasValue bool, value []SessionI
 
 // property IdleHint b
 
-func (v *seat) IdleHint() client.PropBool {
-	return client.PropBool{
+func (v *seat) IdleHint() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1246,8 +1246,8 @@ func (v *seat) IdleHint() client.PropBool {
 
 // property IdleSinceHint t
 
-func (v *seat) IdleSinceHint() client.PropUint64 {
-	return client.PropUint64{
+func (v *seat) IdleSinceHint() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1255,8 +1255,8 @@ func (v *seat) IdleSinceHint() client.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *seat) IdleSinceHintMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *seat) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -1264,7 +1264,7 @@ func (v *seat) IdleSinceHintMonotonic() client.PropUint64 {
 
 type Session struct {
 	session // interface org.freedesktop.login1.Session
-	client.Object
+	proxy.Object
 }
 
 func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
@@ -1278,8 +1278,8 @@ func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
 
 type session struct{}
 
-func (v *session) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *session) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*session) GetInterfaceName_() string {
@@ -1502,8 +1502,8 @@ func (v *session) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // property Id s
 
-func (v *session) Id() client.PropString {
-	return client.PropString{
+func (v *session) Id() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -1518,7 +1518,7 @@ func (v *session) User() PropSessionUser {
 }
 
 type PropSessionUser struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropSessionUser) Get(flags dbus.Flags) (value UserInfo, err error) {
@@ -1546,8 +1546,8 @@ func (p PropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInfo)) 
 
 // property Name s
 
-func (v *session) Name() client.PropString {
-	return client.PropString{
+func (v *session) Name() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1555,8 +1555,8 @@ func (v *session) Name() client.PropString {
 
 // property Timestamp t
 
-func (v *session) Timestamp() client.PropUint64 {
-	return client.PropUint64{
+func (v *session) Timestamp() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "Timestamp",
 	}
@@ -1564,8 +1564,8 @@ func (v *session) Timestamp() client.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *session) TimestampMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *session) TimestampMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "TimestampMonotonic",
 	}
@@ -1573,8 +1573,8 @@ func (v *session) TimestampMonotonic() client.PropUint64 {
 
 // property VTNr u
 
-func (v *session) VTNr() client.PropUint32 {
-	return client.PropUint32{
+func (v *session) VTNr() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "VTNr",
 	}
@@ -1589,7 +1589,7 @@ func (v *session) Seat() PropSessionSeat {
 }
 
 type PropSessionSeat struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropSessionSeat) Get(flags dbus.Flags) (value SeatInfo, err error) {
@@ -1617,8 +1617,8 @@ func (p PropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInfo)) 
 
 // property TTY s
 
-func (v *session) TTY() client.PropString {
-	return client.PropString{
+func (v *session) TTY() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "TTY",
 	}
@@ -1626,8 +1626,8 @@ func (v *session) TTY() client.PropString {
 
 // property Display s
 
-func (v *session) Display() client.PropString {
-	return client.PropString{
+func (v *session) Display() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Display",
 	}
@@ -1635,8 +1635,8 @@ func (v *session) Display() client.PropString {
 
 // property Remote b
 
-func (v *session) Remote() client.PropBool {
-	return client.PropBool{
+func (v *session) Remote() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "Remote",
 	}
@@ -1644,8 +1644,8 @@ func (v *session) Remote() client.PropBool {
 
 // property RemoteHost s
 
-func (v *session) RemoteHost() client.PropString {
-	return client.PropString{
+func (v *session) RemoteHost() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "RemoteHost",
 	}
@@ -1653,8 +1653,8 @@ func (v *session) RemoteHost() client.PropString {
 
 // property RemoteUser s
 
-func (v *session) RemoteUser() client.PropString {
-	return client.PropString{
+func (v *session) RemoteUser() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "RemoteUser",
 	}
@@ -1662,8 +1662,8 @@ func (v *session) RemoteUser() client.PropString {
 
 // property Service s
 
-func (v *session) Service() client.PropString {
-	return client.PropString{
+func (v *session) Service() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Service",
 	}
@@ -1671,8 +1671,8 @@ func (v *session) Service() client.PropString {
 
 // property Desktop s
 
-func (v *session) Desktop() client.PropString {
-	return client.PropString{
+func (v *session) Desktop() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Desktop",
 	}
@@ -1680,8 +1680,8 @@ func (v *session) Desktop() client.PropString {
 
 // property Scope s
 
-func (v *session) Scope() client.PropString {
-	return client.PropString{
+func (v *session) Scope() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Scope",
 	}
@@ -1689,8 +1689,8 @@ func (v *session) Scope() client.PropString {
 
 // property Leader u
 
-func (v *session) Leader() client.PropUint32 {
-	return client.PropUint32{
+func (v *session) Leader() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "Leader",
 	}
@@ -1698,8 +1698,8 @@ func (v *session) Leader() client.PropUint32 {
 
 // property Audit u
 
-func (v *session) Audit() client.PropUint32 {
-	return client.PropUint32{
+func (v *session) Audit() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "Audit",
 	}
@@ -1707,8 +1707,8 @@ func (v *session) Audit() client.PropUint32 {
 
 // property Type s
 
-func (v *session) Type() client.PropString {
-	return client.PropString{
+func (v *session) Type() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -1716,8 +1716,8 @@ func (v *session) Type() client.PropString {
 
 // property Class s
 
-func (v *session) Class() client.PropString {
-	return client.PropString{
+func (v *session) Class() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Class",
 	}
@@ -1725,8 +1725,8 @@ func (v *session) Class() client.PropString {
 
 // property Active b
 
-func (v *session) Active() client.PropBool {
-	return client.PropBool{
+func (v *session) Active() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "Active",
 	}
@@ -1734,8 +1734,8 @@ func (v *session) Active() client.PropBool {
 
 // property State s
 
-func (v *session) State() client.PropString {
-	return client.PropString{
+func (v *session) State() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "State",
 	}
@@ -1743,8 +1743,8 @@ func (v *session) State() client.PropString {
 
 // property IdleHint b
 
-func (v *session) IdleHint() client.PropBool {
-	return client.PropBool{
+func (v *session) IdleHint() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1752,8 +1752,8 @@ func (v *session) IdleHint() client.PropBool {
 
 // property IdleSinceHint t
 
-func (v *session) IdleSinceHint() client.PropUint64 {
-	return client.PropUint64{
+func (v *session) IdleSinceHint() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1761,8 +1761,8 @@ func (v *session) IdleSinceHint() client.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *session) IdleSinceHintMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *session) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -1770,8 +1770,8 @@ func (v *session) IdleSinceHintMonotonic() client.PropUint64 {
 
 // property LockedHint b
 
-func (v *session) LockedHint() client.PropBool {
-	return client.PropBool{
+func (v *session) LockedHint() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "LockedHint",
 	}
@@ -1779,7 +1779,7 @@ func (v *session) LockedHint() client.PropBool {
 
 type User struct {
 	user // interface org.freedesktop.login1.User
-	client.Object
+	proxy.Object
 }
 
 func NewUser(conn *dbus.Conn, path dbus.ObjectPath) (*User, error) {
@@ -1793,8 +1793,8 @@ func NewUser(conn *dbus.Conn, path dbus.ObjectPath) (*User, error) {
 
 type user struct{}
 
-func (v *user) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *user) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*user) GetInterfaceName_() string {
@@ -1823,8 +1823,8 @@ func (v *user) Kill(flags dbus.Flags, signo int32) error {
 
 // property UID u
 
-func (v *user) UID() client.PropUint32 {
-	return client.PropUint32{
+func (v *user) UID() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "UID",
 	}
@@ -1832,8 +1832,8 @@ func (v *user) UID() client.PropUint32 {
 
 // property GID u
 
-func (v *user) GID() client.PropUint32 {
-	return client.PropUint32{
+func (v *user) GID() proxy.PropUint32 {
+	return proxy.PropUint32{
 		Impl: v,
 		Name: "GID",
 	}
@@ -1841,8 +1841,8 @@ func (v *user) GID() client.PropUint32 {
 
 // property Name s
 
-func (v *user) Name() client.PropString {
-	return client.PropString{
+func (v *user) Name() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1850,8 +1850,8 @@ func (v *user) Name() client.PropString {
 
 // property Timestamp t
 
-func (v *user) Timestamp() client.PropUint64 {
-	return client.PropUint64{
+func (v *user) Timestamp() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "Timestamp",
 	}
@@ -1859,8 +1859,8 @@ func (v *user) Timestamp() client.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *user) TimestampMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *user) TimestampMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "TimestampMonotonic",
 	}
@@ -1868,8 +1868,8 @@ func (v *user) TimestampMonotonic() client.PropUint64 {
 
 // property RuntimePath s
 
-func (v *user) RuntimePath() client.PropString {
-	return client.PropString{
+func (v *user) RuntimePath() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "RuntimePath",
 	}
@@ -1877,8 +1877,8 @@ func (v *user) RuntimePath() client.PropString {
 
 // property Service s
 
-func (v *user) Service() client.PropString {
-	return client.PropString{
+func (v *user) Service() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Service",
 	}
@@ -1886,8 +1886,8 @@ func (v *user) Service() client.PropString {
 
 // property Slice s
 
-func (v *user) Slice() client.PropString {
-	return client.PropString{
+func (v *user) Slice() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "Slice",
 	}
@@ -1902,7 +1902,7 @@ func (v *user) Display() PropUserDisplay {
 }
 
 type PropUserDisplay struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropUserDisplay) Get(flags dbus.Flags) (value SessionInfo, err error) {
@@ -1930,8 +1930,8 @@ func (p PropUserDisplay) ConnectChanged(cb func(hasValue bool, value SessionInfo
 
 // property State s
 
-func (v *user) State() client.PropString {
-	return client.PropString{
+func (v *user) State() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
 		Name: "State",
 	}
@@ -1946,7 +1946,7 @@ func (v *user) Sessions() PropUserSessions {
 }
 
 type PropUserSessions struct {
-	Impl client.Implementer
+	Impl proxy.Implementer
 }
 
 func (p PropUserSessions) Get(flags dbus.Flags) (value []SessionInfo, err error) {
@@ -1974,8 +1974,8 @@ func (p PropUserSessions) ConnectChanged(cb func(hasValue bool, value []SessionI
 
 // property IdleHint b
 
-func (v *user) IdleHint() client.PropBool {
-	return client.PropBool{
+func (v *user) IdleHint() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1983,8 +1983,8 @@ func (v *user) IdleHint() client.PropBool {
 
 // property IdleSinceHint t
 
-func (v *user) IdleSinceHint() client.PropUint64 {
-	return client.PropUint64{
+func (v *user) IdleSinceHint() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1992,8 +1992,8 @@ func (v *user) IdleSinceHint() client.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *user) IdleSinceHintMonotonic() client.PropUint64 {
-	return client.PropUint64{
+func (v *user) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -2001,8 +2001,8 @@ func (v *user) IdleSinceHintMonotonic() client.PropUint64 {
 
 // property Linger b
 
-func (v *user) Linger() client.PropBool {
-	return client.PropBool{
+func (v *user) Linger() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "Linger",
 	}

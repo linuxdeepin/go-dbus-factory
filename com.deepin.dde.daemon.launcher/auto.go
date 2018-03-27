@@ -4,7 +4,7 @@ import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/client"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
 
 /* prevent compile error */
@@ -14,7 +14,7 @@ var _ = fmt.Sprintf
 
 type Launcher struct {
 	launcher // interface com.deepin.dde.daemon.Launcher
-	client.Object
+	proxy.Object
 }
 
 func NewLauncher(conn *dbus.Conn) *Launcher {
@@ -25,8 +25,8 @@ func NewLauncher(conn *dbus.Conn) *Launcher {
 
 type launcher struct{}
 
-func (v *launcher) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *launcher) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*launcher) GetInterfaceName_() string {
@@ -331,8 +331,8 @@ func (v *launcher) ConnectUninstallFailed(cb func(appId string, errMsg string)) 
 
 // property Fullscreen b
 
-func (v *launcher) Fullscreen() client.PropBool {
-	return client.PropBool{
+func (v *launcher) Fullscreen() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
 		Name: "Fullscreen",
 	}
@@ -340,8 +340,8 @@ func (v *launcher) Fullscreen() client.PropBool {
 
 // property DisplayMode i
 
-func (v *launcher) DisplayMode() client.PropInt32 {
-	return client.PropInt32{
+func (v *launcher) DisplayMode() proxy.PropInt32 {
+	return proxy.PropInt32{
 		Impl: v,
 		Name: "DisplayMode",
 	}

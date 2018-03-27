@@ -4,7 +4,7 @@ import "errors"
 import "fmt"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/client"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
 
 /* prevent compile error */
@@ -14,7 +14,7 @@ var _ = fmt.Sprintf
 
 type XEventMonitor struct {
 	xEventMonitor // interface com.deepin.api.XEventMonitor
-	client.Object
+	proxy.Object
 }
 
 func NewXEventMonitor(conn *dbus.Conn) *XEventMonitor {
@@ -25,8 +25,8 @@ func NewXEventMonitor(conn *dbus.Conn) *XEventMonitor {
 
 type xEventMonitor struct{}
 
-func (v *xEventMonitor) GetObject_() *client.Object {
-	return (*client.Object)(unsafe.Pointer(v))
+func (v *xEventMonitor) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
 func (*xEventMonitor) GetInterfaceName_() string {
