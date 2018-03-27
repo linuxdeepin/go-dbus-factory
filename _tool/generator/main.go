@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"strconv"
+
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
@@ -134,6 +136,14 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// sb.Pn("// out %#v", outArgs)
 
 	argFixes := ifcCfg.getArgFixes("m/" + method.Name)
+	// check and warn
+	for _, arg := range args {
+		argType := getArgType(arg, argFixes)
+		if strings.Contains(argType, "[]interface {}") {
+			log.Printf("Warning: found []interface{} in %s.%s arg %s\n",
+				ifcCfg.Name, method.Name, arg.Name)
+		}
+	}
 
 	// GoXXX
 
@@ -254,6 +264,9 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		sb.Pn("}\n")
 	} else {
 		propFix := ifcCfg.getPropertyFix(prop.Name)
+		if propFix == nil {
+			panic(fmt.Errorf("failed to get property fix for %s.%s", ifcCfg.Name, prop.Name))
+		}
 
 		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propFix.Type)
 		sb.Pn("    return %s{", propFix.Type)
@@ -308,8 +321,35 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 	}
 }
 
+func initNameMap() map[string]int {
+	goKeywords := []string{
+		"break", "default", "func", "interface", "select",
+		"case", "defer", "go", "map", "struct",
+		"chan", "else", "goto", "package", "switch",
+		"const", "fallthrough", "if", "range", "type",
+		"continue", "for", "import", "return", "var",
+	}
+	nameMap := make(map[string]int, len(goKeywords))
+	for _, keyword := range goKeywords {
+		nameMap[keyword] = 1
+	}
+	return nameMap
+}
+
+func getName(nameMap map[string]int, name string) string {
+	count := nameMap[name]
+	defer func() {
+		nameMap[name] = count + 1
+	}()
+
+	if count == 0 {
+		return name
+	}
+	return name + strconv.Itoa(count-1)
+}
+
 func getArgs(args []introspect.Arg) []introspect.Arg {
-	argNameIdx := 0
+	nameMap := initNameMap()
 	var ret []introspect.Arg
 	fixName := false
 	for idx, arg := range args {
@@ -317,14 +357,15 @@ func getArgs(args []introspect.Arg) []introspect.Arg {
 		if idx == 0 {
 			if arg.Name == "" {
 				fixName = true
+				nameMap["arg"] = 1
 			}
 		}
 
 		arg0 := arg
-		// fix arg name
 		if fixName {
-			arg0.Name = fmt.Sprintf("arg%d", argNameIdx)
-			argNameIdx++
+			arg0.Name = getName(nameMap, "arg")
+		} else {
+			arg0.Name = getName(nameMap, arg0.Name)
 		}
 		ret = append(ret, arg0)
 	}
