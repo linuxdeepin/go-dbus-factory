@@ -1,0 +1,109 @@
+{
+  "Service": "org.freedesktop.login1",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/freedesktop/login1",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.login1.Manager",
+          "Type": "manager",
+          "Fixes": {
+            "p/ScheduledShutdown": {
+              "Type": "PropManagerScheduledShutdown",
+              "ValueType": "ScheduledShutdown",
+              "EmptyValue": "ScheduledShutdown{}"
+            },
+            "m/ListSessions": [
+              {
+                "Name": "sessionList",
+                "Type": "[]SessionDetail"
+              }
+            ],
+            "m/ListUsers": [
+              {
+                "Name": "userList",
+                "Type": "[]UserDetail"
+              }
+            ],
+            "m/ListSeats": [
+              {
+                "Name": "seatList",
+                "Type": "[]SeatInfo"
+              }
+            ],
+            "m/ListInhibitors": [
+              {
+                "Name": "inhibitorList",
+                "Type": "[]InhibitorInfo"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Seat",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.login1.Seat",
+          "Type": "seat",
+          "Fixes": {
+            "p/ActiveSession": {
+              "Type": "PropSeatActiveSession",
+              "ValueType": "SessionInfo",
+              "EmptyValue": "SessionInfo{}"
+            },
+            "p/Sessions": {
+              "Type": "PropSeatSessions",
+              "ValueType": "[]SessionInfo",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Session",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.login1.Session",
+          "Type": "session",
+          "Fixes": {
+            "p/User": {
+              "Type": "PropSessionUser",
+              "ValueType": "UserInfo",
+              "EmptyValue": "UserInfo{}"
+            },
+            "p/Seat": {
+              "Type": "PropSessionSeat",
+              "ValueType": "SeatInfo",
+              "EmptyValue": "SeatInfo{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "User",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.login1.User",
+          "Type": "user",
+          "Fixes": {
+            "p/Display": {
+              "Type": "PropUserDisplay",
+              "ValueType": "SessionInfo",
+              "EmptyValue": "SessionInfo{}"
+            },
+            "p/Sessions": {
+              "Type": "PropUserSessions",
+              "ValueType": "[]SessionInfo",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
