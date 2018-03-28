@@ -1,0 +1,15 @@
+{
+  "Service": "net.reactivated.Fprint",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/net/reactivated/Fprint/Manager",
+      "Interfaces": [
+        {
+          "Name": "net.reactivated.Fprint.Manager",
+          "Type": "manager"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="data" direction="out" type="s"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface" direction="in" type="s"/>
+      <arg name="propname" direction="in" type="s"/>
+      <arg name="value" direction="out" type="v"/>
+    </method>
+    <method name="Set">
+      <arg name="interface" direction="in" type="s"/>
+      <arg name="propname" direction="in" type="s"/>
+      <arg name="value" direction="in" type="v"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface" direction="in" type="s"/>
+      <arg name="props" direction="out" type="a{sv}"/>
+    </method>
+  </interface>
+  <interface name="net.reactivated.Fprint.Manager">
+    <method name="GetDefaultDevice">
+      <arg name="device" type="o" direction="out"/>
+    </method>
+    <method name="GetDevices">
+      <arg name="devices" type="ao" direction="out"/>
+    </method>
+  </interface>
+</node>
