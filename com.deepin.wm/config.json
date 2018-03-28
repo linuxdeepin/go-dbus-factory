@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.wm",
+  "Objects": [
+    {
+      "Type": "Wm",
+      "Path": "/com/deepin/wm",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.wm",
+          "Type": "wm"
+        }
+      ]
+    }
+  ]
+}
