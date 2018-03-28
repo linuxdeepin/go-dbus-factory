@@ -1,0 +1,73 @@
+{
+  "Service": "org.bluez",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/bluez",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.AgentManager",
+          "Type": "agentManager",
+          "Accessor": "AgentManager"
+        },
+        {
+          "Name": "org.bluez.HealthManager",
+          "Type": "healthManager",
+          "Accessor": "HealthManager"
+        },
+        {
+          "Name": "org.bluez.ProfileManager",
+          "Type": "profileManager",
+          "Accessor": "ProfileManager"
+        }
+      ]
+    },
+    {
+      "Type": "HCI",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.Adapter1",
+          "Type": "adapter",
+          "Accessor": "Adapter"
+        },
+        {
+          "Name": "org.bluez.GattManager1",
+          "Type": "gattManager",
+          "Accessor": "GattManager"
+        },
+        {
+          "Name": "org.bluez.Media1",
+          "Type": "media",
+          "Accessor": "Media"
+        },
+        {
+          "Name": "org.bluez.NetworkServer1",
+          "Type": "networkServer",
+          "Accessor": "NetworkServer"
+        }
+      ]
+    },
+    {
+      "Type": "Device",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.Device1",
+          "Type": "device",
+          "Accessor": "Device",
+          "Fixes": {
+            "p/ManufacturerData": {
+              "Type": "PropDeviceManufacturerData",
+              "ValueType": "map[uint16]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/ServiceData": {
+              "Type": "PropDeviceServiceData",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
