@@ -1,4 +1,4 @@
-Source: golang-github-linuxdeepin-go-dbus-factory-dev
+Source: golang-github-linuxdeepin-go-dbus-factory
 Section: devel
 Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
