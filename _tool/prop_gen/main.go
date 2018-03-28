@@ -24,6 +24,9 @@ func (p Prop{{.Type}}) Set(flags dbus.Flags, value {{.GoType}}) error {
 }
 
 func (p Prop{{.Type}}) ConnectChanged(cb func(hasValue bool, value {{.GoType}})) error {
+	if cb == nil {
+		return errNilCallback
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			val, ok := value.({{.GoType}})
@@ -86,8 +89,10 @@ func main() {
 
 	t := template.Must(template.New("propCode").Parse(propCode))
 
-	fmt.Println("package client\n")
-	fmt.Printf("import %q\n", "pkg.deepin.io/lib/dbus1")
+	fmt.Println("package proxy\n")
+	fmt.Println("import \"errors\"")
+	fmt.Println("import \"pkg.deepin.io/lib/dbus1\"")
+	fmt.Println("\nvar errNilCallback = errors.New(\"nil callback\")")
 
 	for _, cfg := range configs {
 		err := t.Execute(os.Stdout, cfg)

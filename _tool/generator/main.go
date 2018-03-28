@@ -199,6 +199,9 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
 		ifcCfg.Type, signal.Name, getArgsProto(args, true, argFixes))
+	sb.Pn("if cb == nil {")
+	sb.Pn("   return 0, errors.New(\"nil callback\")")
+	sb.Pn("}")
 	sb.Pn("obj := v.GetObject_()")
 	sb.Pn("rule := fmt.Sprintf(")
 	sb.writeStr(`"type='signal',interface='%s',member='%s',path='%s',sender='%s'",` + "\n")
@@ -311,6 +314,9 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		// ConnectChanged
 		sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
 			propFix.Type, propFix.ValueType)
+		sb.Pn("if cb == nil {")
+		sb.Pn("    return errors.New(\"nil callback\")")
+		sb.Pn("}")
 		sb.Pn("cb0 := func(hasValue bool, value interface{}) {")
 
 		sb.Pn("if hasValue {")
