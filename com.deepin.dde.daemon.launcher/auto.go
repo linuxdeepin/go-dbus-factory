@@ -214,6 +214,9 @@ func (v *launcher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
 // signal SearchDone
 
 func (v *launcher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -237,6 +240,9 @@ func (v *launcher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHan
 // signal ItemChanged
 
 func (v *launcher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -262,6 +268,9 @@ func (v *launcher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, 
 // signal NewAppLaunched
 
 func (v *launcher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -285,6 +294,9 @@ func (v *launcher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.Signal
 // signal UninstallSuccess
 
 func (v *launcher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -308,6 +320,9 @@ func (v *launcher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.Sign
 // signal UninstallFailed
 
 func (v *launcher) ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",

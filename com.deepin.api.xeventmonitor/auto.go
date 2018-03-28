@@ -100,6 +100,9 @@ func (v *xEventMonitor) UnregisterArea(flags dbus.Flags, id string) (ok bool, er
 // signal CancelAllArea
 
 func (v *xEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -119,6 +122,9 @@ func (v *xEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerI
 // signal CursorInto
 
 func (v *xEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -144,6 +150,9 @@ func (v *xEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) 
 // signal CursorOut
 
 func (v *xEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -169,6 +178,9 @@ func (v *xEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (
 // signal CursorMove
 
 func (v *xEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -194,6 +206,9 @@ func (v *xEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) 
 // signal ButtonPress
 
 func (v *xEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -220,6 +235,9 @@ func (v *xEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int3
 // signal ButtonRelease
 
 func (v *xEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -246,6 +264,9 @@ func (v *xEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y in
 // signal KeyPress
 
 func (v *xEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -272,6 +293,9 @@ func (v *xEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id
 // signal KeyRelease
 
 func (v *xEventMonitor) ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",

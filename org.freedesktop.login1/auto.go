@@ -554,6 +554,9 @@ func (v *manager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bo
 // signal SessionNew
 
 func (v *manager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -578,6 +581,9 @@ func (v *manager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.O
 // signal SessionRemoved
 
 func (v *manager) ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -602,6 +608,9 @@ func (v *manager) ConnectSessionRemoved(cb func(sessionId string, sessionPath db
 // signal UserNew
 
 func (v *manager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -626,6 +635,9 @@ func (v *manager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) 
 // signal UserRemoved
 
 func (v *manager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -650,6 +662,9 @@ func (v *manager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPat
 // signal SeatNew
 
 func (v *manager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -674,6 +689,9 @@ func (v *manager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath
 // signal SeatRemoved
 
 func (v *manager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -698,6 +716,9 @@ func (v *manager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.Object
 // signal PrepareForShutdown
 
 func (v *manager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -721,6 +742,9 @@ func (v *manager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.Signa
 // signal PrepareForSleep
 
 func (v *manager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -967,6 +991,9 @@ func (p PropManagerScheduledShutdown) Get(flags dbus.Flags) (value ScheduledShut
 }
 
 func (p PropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, value ScheduledShutdown)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v ScheduledShutdown
@@ -1157,6 +1184,9 @@ func (p PropSeatActiveSession) Get(flags dbus.Flags) (value SessionInfo, err err
 }
 
 func (p PropSeatActiveSession) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v SessionInfo
@@ -1219,6 +1249,9 @@ func (p PropSeatSessions) Get(flags dbus.Flags) (value []SessionInfo, err error)
 }
 
 func (p PropSeatSessions) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v []SessionInfo
@@ -1415,6 +1448,9 @@ func (v *session) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint
 // signal PauseDevice
 
 func (v *session) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -1440,6 +1476,9 @@ func (v *session) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 s
 // signal ResumeDevice
 
 func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFDIndex)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -1465,6 +1504,9 @@ func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbu
 // signal Lock
 
 func (v *session) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -1484,6 +1526,9 @@ func (v *session) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
 // signal Unlock
 
 func (v *session) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -1528,6 +1573,9 @@ func (p PropSessionUser) Get(flags dbus.Flags) (value UserInfo, err error) {
 }
 
 func (p PropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v UserInfo
@@ -1599,6 +1647,9 @@ func (p PropSessionSeat) Get(flags dbus.Flags) (value SeatInfo, err error) {
 }
 
 func (p PropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v SeatInfo
@@ -1912,6 +1963,9 @@ func (p PropUserDisplay) Get(flags dbus.Flags) (value SessionInfo, err error) {
 }
 
 func (p PropUserDisplay) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v SessionInfo
@@ -1956,6 +2010,9 @@ func (p PropUserSessions) Get(flags dbus.Flags) (value []SessionInfo, err error)
 }
 
 func (p PropUserSessions) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v []SessionInfo

@@ -232,6 +232,9 @@ func (v *dock) SetFrontendWindowRect(flags dbus.Flags, x int32, y int32, width u
 // signal ServiceRestarted
 
 func (v *dock) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -251,6 +254,9 @@ func (v *dock) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, err
 // signal EntryAdded
 
 func (v *dock) ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -275,6 +281,9 @@ func (v *dock) ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (db
 // signal EntryRemoved
 
 func (v *dock) ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
@@ -332,6 +341,9 @@ func (p PropDockFrontendWindowRect) Get(flags dbus.Flags) (value FrontendWindowR
 }
 
 func (p PropDockFrontendWindowRect) ConnectChanged(cb func(hasValue bool, value FrontendWindowRect)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v FrontendWindowRect
@@ -598,6 +610,9 @@ func (p PropEntryWindowInfos) Get(flags dbus.Flags) (value map[uint32]WindowInfo
 }
 
 func (p PropEntryWindowInfos) ConnectChanged(cb func(hasValue bool, value map[uint32]WindowInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
 			var v map[uint32]WindowInfo
