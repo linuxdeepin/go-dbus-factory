@@ -1,0 +1,94 @@
+<node>
+     <interface name="org.freedesktop.DBus.Introspectable">
+          <method name="Enable">
+               <arg type="s" direction="in"></arg>
+          </method>
+          <method name="InterfaceName">
+               <arg type="s" direction="out"></arg>
+          </method>
+          <method name="Introspect">
+               <arg type="s" direction="out"></arg>
+          </method>
+     </interface>
+     <interface name="org.freedesktop.DBus.Properties">
+          <method name="Get">
+               <arg type="s" direction="in"></arg>
+               <arg type="s" direction="in"></arg>
+               <arg type="v" direction="out"></arg>
+          </method>
+          <method name="GetAll">
+               <arg type="s" direction="in"></arg>
+               <arg type="a{sv}" direction="out"></arg>
+          </method>
+          <method name="InterfaceName">
+               <arg type="s" direction="out"></arg>
+          </method>
+          <method name="Set">
+               <arg type="s" direction="in"></arg>
+               <arg type="s" direction="in"></arg>
+               <arg type="v" direction="in"></arg>
+          </method>
+          <signal name="PropertiesChanged">
+               <arg type="s"></arg>
+               <arg type="a{sv}"></arg>
+               <arg type="as"></arg>
+          </signal>
+     </interface>
+     <interface name="com.deepin.daemon.Display">
+          <method name="ApplyChanges"></method>
+          <method name="AssociateTouch">
+               <arg type="s" direction="in"></arg>
+               <arg type="s" direction="in"></arg>
+          </method>
+          <method name="ChangeBrightness">
+               <arg type="b" direction="in"></arg>
+          </method>
+          <method name="DeleteCustomMode">
+               <arg type="s" direction="in"></arg>
+          </method>
+          <method name="GetBrightness">
+               <arg type="a{sd}" direction="out"></arg>
+          </method>
+          <method name="ListOutputNames">
+               <arg type="as" direction="out"></arg>
+          </method>
+          <method name="ListOutputsCommonModes">
+               <arg type="a(uqqd)" direction="out"></arg>
+          </method>
+          <method name="ModifyConfigName">
+               <arg type="s" direction="in"></arg>
+               <arg type="s" direction="in"></arg>
+          </method>
+          <method name="RefreshBrightness"></method>
+          <method name="Reset"></method>
+          <method name="ResetChanges"></method>
+          <method name="Save"></method>
+          <method name="SetAndSaveBrightness">
+               <arg type="s" direction="in"></arg>
+               <arg type="d" direction="in"></arg>
+          </method>
+          <method name="SetBrightness">
+               <arg type="s" direction="in"></arg>
+               <arg type="d" direction="in"></arg>
+          </method>
+          <method name="SetPrimary">
+               <arg type="s" direction="in"></arg>
+          </method>
+          <method name="SwitchMode">
+               <arg type="y" direction="in"></arg>
+               <arg type="s" direction="in"></arg>
+          </method>
+          <property name="HasChanged" type="b" access="read"></property>
+          <property name="DisplayMode" type="y" access="read"></property>
+          <property name="ScreenWidth" type="q" access="read"></property>
+          <property name="ScreenHeight" type="q" access="read"></property>
+          <property name="Primary" type="s" access="read"></property>
+          <property name="CurrentCustomId" type="s" access="read"></property>
+          <property name="CustomIdList" type="as" access="read"></property>
+          <property name="PrimaryRect" type="(nnqq)" access="read"></property>
+          <property name="Monitors" type="ao" access="read"></property>
+          <property name="Brightness" type="a{sd}" access="read"></property>
+          <property name="TouchMap" type="a{ss}" access="read"></property>
+     </interface>
+     <node name="MonitoreDP_1"></node>
+</node>
