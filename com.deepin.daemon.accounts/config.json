@@ -1,0 +1,24 @@
+{
+  "Service": "com.deepin.daemon.Accounts",
+  "Objects": [
+    {
+      "Type": "Accounts",
+      "Path": "/com/deepin/daemon/Accounts",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Accounts",
+          "Type": "accounts"
+        }
+      ]
+    },
+    {
+      "Type": "User",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Accounts.User",
+          "Type": "user"
+        }
+      ]
+    }
+  ]
+}

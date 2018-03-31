@@ -1,0 +1,103 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.deepin.daemon.Accounts.User">
+        <method name="DeleteIconFile">
+            <arg name="iconFile" type="s" direction="in"></arg>
+        </method>
+        <method name="EnableNoPasswdLogin">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="SetAccountType">
+            <arg name="accountType" type="i" direction="in"></arg>
+        </method>
+        <method name="SetAutomaticLogin">
+            <arg name="auto" type="b" direction="in"></arg>
+        </method>
+        <method name="SetDesktopBackgrounds">
+            <arg name="backgrounds" type="as" direction="in"></arg>
+        </method>
+        <method name="SetFullName">
+            <arg name="name" type="s" direction="in"></arg>
+        </method>
+        <method name="SetGreeterBackground">
+            <arg name="background" type="s" direction="in"></arg>
+        </method>
+        <method name="SetHistoryLayout">
+            <arg name="layouts" type="as" direction="in"></arg>
+        </method>
+        <method name="SetHomeDir">
+            <arg name="home" type="s" direction="in"></arg>
+        </method>
+        <method name="SetIconFile">
+            <arg name="iconFile" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLayout">
+            <arg name="layout" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLocale">
+            <arg name="locale" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLocked">
+            <arg name="locked" type="b" direction="in"></arg>
+        </method>
+        <method name="SetPassword">
+            <arg name="password" type="s" direction="in"></arg>
+        </method>
+        <method name="SetShell">
+            <arg name="shell" type="s" direction="in"></arg>
+        </method>
+        <property name="XSession" type="s" access="read"></property>
+        <property name="AccountType" type="i" access="read"></property>
+        <property name="IconList" type="as" access="read"></property>
+        <property name="HistoryLayout" type="as" access="read"></property>
+        <property name="FullName" type="s" access="read"></property>
+        <property name="Shell" type="s" access="read"></property>
+        <property name="GreeterBackground" type="s" access="read"></property>
+        <property name="IconFile" type="s" access="read"></property>
+        <property name="DesktopBackgrounds" type="as" access="read"></property>
+        <property name="SystemAccount" type="b" access="read"></property>
+        <property name="Locale" type="s" access="read"></property>
+        <property name="Locked" type="b" access="read"></property>
+        <property name="AutomaticLogin" type="b" access="read"></property>
+        <property name="LoginTime" type="t" access="read"></property>
+        <property name="UserName" type="s" access="read"></property>
+        <property name="Uid" type="s" access="read"></property>
+        <property name="Gid" type="s" access="read"></property>
+        <property name="HomeDir" type="s" access="read"></property>
+        <property name="Layout" type="s" access="read"></property>
+        <property name="NoPasswdLogin" type="b" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>
