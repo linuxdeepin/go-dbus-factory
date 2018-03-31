@@ -1,0 +1,67 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.deepin.daemon.InputDevice.Keyboard">
+        <method name="AddLayoutOption">
+            <arg name="option" type="s" direction="in"></arg>
+        </method>
+        <method name="AddUserLayout">
+            <arg name="layout" type="s" direction="in"></arg>
+        </method>
+        <method name="ClearLayoutOption"></method>
+        <method name="DeleteLayoutOption">
+            <arg name="option" type="s" direction="in"></arg>
+        </method>
+        <method name="DeleteUserLayout">
+            <arg name="layout" type="s" direction="in"></arg>
+        </method>
+        <method name="GetLayoutDesc">
+            <arg name="layout" type="s" direction="in"></arg>
+            <arg name="description" type="s" direction="out"></arg>
+        </method>
+        <method name="LayoutList">
+            <arg name="layout_list" type="a{ss}" direction="out"></arg>
+        </method>
+        <method name="Reset"></method>
+        <property name="UserOptionList" type="as" access="read"></property>
+        <property name="RepeatEnabled" type="b" access="readwrite"></property>
+        <property name="CapslockToggle" type="b" access="readwrite"></property>
+        <property name="CursorBlink" type="i" access="readwrite"></property>
+        <property name="RepeatInterval" type="u" access="readwrite"></property>
+        <property name="RepeatDelay" type="u" access="readwrite"></property>
+        <property name="CurrentLayout" type="s" access="readwrite"></property>
+        <property name="UserLayoutList" type="as" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>

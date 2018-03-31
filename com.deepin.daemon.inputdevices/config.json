@@ -1,0 +1,25 @@
+{
+  "Service": "com.deepin.daemon.InputDevices",
+  "Objects": [
+    {
+      "Type": "Keyboard",
+      "Path": "/com/deepin/daemon/InputDevice/Keyboard",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.InputDevice.Keyboard",
+          "Type": "keyboard"
+        }
+      ]
+    },
+    {
+      "Type": "TouchPad",
+      "Path": "/com/deepin/daemon/InputDevice/TouchPad",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.InputDevice.TouchPad",
+          "Type": "touchPad"
+        }
+      ]
+    }
+  ]
+}
