@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.api.CursorHelper",
+  "Objects": [
+    {
+      "Type": "CursorHelper",
+      "Path": "/com/deepin/api/CursorHelper",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.CursorHelper",
+          "Type": "cursorHelper"
+        }
+      ]
+    }
+  ]
+}
