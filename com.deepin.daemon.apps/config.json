@@ -1,0 +1,21 @@
+{
+  "Service": "com.deepin.daemon.Apps",
+  "Objects": [
+    {
+      "Type": "Apps",
+      "Path": "/com/deepin/daemon/Apps",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Apps.DesktopFileWatcher",
+          "Type": "desktopFileWatcher",
+          "Accessor": "DesktopFileWatcher"
+        },
+        {
+          "Name": "com.deepin.daemon.Apps.LaunchedRecorder",
+          "Type": "launchedRecorder",
+          "Accessor": "LaunchedRecorder"
+        }
+      ]
+    }
+  ]
+}
