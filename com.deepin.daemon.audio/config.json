@@ -1,0 +1,66 @@
+{
+  "Service": "com.deepin.daemon.Audio",
+  "Objects": [
+    {
+      "Type": "Audio",
+      "Path": "/com/deepin/daemon/Audio",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Audio",
+          "Type": "audio"
+        }
+      ]
+    },
+    {
+      "Type":"Sink",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Audio.Sink",
+          "Type": "sink",
+          "Fixes": {
+            "p/Ports": {
+              "Type": "PropSinkPorts",
+              "ValueType":"[]PortInfo",
+              "EmptyValue": "nil"
+            },
+            "p/ActivePort": {
+              "Type": "PropSinkActivePort",
+              "ValueType":"PortInfo",
+              "EmptyValue": "PortInfo{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type":"Source",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Audio.Source",
+          "Type": "source",
+          "Fixes": {
+            "p/Ports": {
+              "Type": "PropSourcePorts",
+              "ValueType":"[]PortInfo",
+              "EmptyValue": "nil"
+            },
+            "p/ActivePort": {
+              "Type": "PropSourceActivePort",
+              "ValueType":"PortInfo",
+              "EmptyValue": "PortInfo{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type":"SinkInput",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Audio.SinkInput",
+          "Type": "sinkInput"
+        }
+      ]
+    }
+  ]
+}
