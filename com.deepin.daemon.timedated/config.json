@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.Timedated",
+  "Objects": [
+    {
+      "Type": "Timedated",
+      "Path": "/com/deepin/daemon/Timedated",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Timedated",
+          "Type": "timedated"
+        }
+      ]
+    }
+  ]
+}
