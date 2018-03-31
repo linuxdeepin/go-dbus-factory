@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.Notifications",
+  "Objects": [
+    {
+      "Type": "Notifications",
+      "Path": "/org/freedesktop/Notifications",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Notifications",
+          "Type": "notifications"
+        }
+      ]
+    }
+  ]
+}
