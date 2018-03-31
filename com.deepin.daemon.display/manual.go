@@ -1,4 +1,4 @@
-package sessionmanager
+package display
 
 type ModeInfo struct {
 	Id     uint32
