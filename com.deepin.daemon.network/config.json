@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.Network",
+  "Objects": [
+    {
+      "Type": "Network",
+      "Path": "/com/deepin/daemon/Network",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Network",
+          "Type": "network"
+        }
+      ]
+    }
+  ]
+}
