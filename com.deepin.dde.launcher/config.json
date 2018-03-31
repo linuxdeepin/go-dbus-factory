@@ -1,0 +1,15 @@
+{
+  "Service":"com.deepin.dde.Launcher",
+  "Objects": [
+    {
+      "Type": "Launcher",
+      "Path": "/com/deepin/dde/Launcher",
+      "Interfaces": [
+        {
+          "Name":"com.deepin.dde.Launcher",
+          "Type":"launcher"
+        }
+      ]
+    }
+  ]
+}
