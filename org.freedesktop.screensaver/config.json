@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.ScreenSaver",
+  "Objects": [
+    {
+      "Type": "ScreenSaver",
+      "Path": "/org/freedesktop/ScreenSaver",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.ScreenSaver",
+          "Type": "screenSaver"
+        }
+      ]
+    }
+  ]
+}
