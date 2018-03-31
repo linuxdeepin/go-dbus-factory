@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.api.Device",
+  "Objects": [
+    {
+      "Type": "Device",
+      "Path": "/com/deepin/api/Device",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.Device",
+          "Type": "device"
+        }
+      ]
+    }
+  ]
+}
