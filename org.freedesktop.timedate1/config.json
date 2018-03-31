@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.timedate1",
+  "Objects": [
+    {
+      "Type": "Timedate",
+      "Path": "/org/freedesktop/timedate1",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.timedate1",
+          "Type": "timedate"
+        }
+      ]
+    }
+  ]
+}
