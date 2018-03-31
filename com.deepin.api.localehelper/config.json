@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.api.LocaleHelper",
+  "Objects": [
+    {
+      "Type": "LocaleHelper",
+      "Path": "/com/deepin/api/LocaleHelper",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.LocaleHelper",
+          "Type": "localeHelper"
+        }
+      ]
+    }
+  ]
+}
