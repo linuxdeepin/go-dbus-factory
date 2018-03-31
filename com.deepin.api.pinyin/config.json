@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.api.Pinyin",
+  "Objects": [
+    {
+      "Type": "Pinyin",
+      "Path": "/com/deepin/api/Pinyin",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.Pinyin",
+          "Type": "pinyin"
+        }
+      ]
+    }
+  ]
+}
