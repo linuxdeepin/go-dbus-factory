@@ -70,7 +70,7 @@ func main() {
 
 		for _, ifc := range node.Interfaces {
 			ifcCfg := objCfg.getInterface(ifc.Name)
-			if ifcCfg == nil {
+			if ifcCfg == nil || ifcCfg.TypeDefined {
 				continue
 			}
 
@@ -86,7 +86,14 @@ func main() {
 			}
 
 			for _, prop := range ifc.Properties {
-				writeProperty(sf.GoBody, prop, ifcCfg)
+				var methodSameName bool
+				for _, method := range ifc.Methods {
+					if method.Name == prop.Name {
+						methodSameName = true
+						break
+					}
+				}
+				writeProperty(sf.GoBody, prop, ifcCfg, methodSameName)
 			}
 		}
 	}
@@ -264,12 +271,20 @@ func getPropType(ty string) string {
 	return ""
 }
 
-func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig) {
+func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig,
+	methodSameName bool) {
 	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
+
+	var funcName string
+	if methodSameName {
+		funcName = "Prop" + prop.Name
+	} else {
+		funcName = prop.Name
+	}
 
 	propType := getPropType(prop.Type)
 	if propType != "" {
-		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propType)
+		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, funcName, propType)
 		sb.Pn("    return %s{", propType)
 		sb.Pn("        Impl: v,")
 		sb.Pn("        Name: %q,", prop.Name)

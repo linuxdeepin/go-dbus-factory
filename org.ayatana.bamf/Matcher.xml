@@ -1,0 +1,104 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!-- GDBus 2.53.4 -->
+<node>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="out"/>
+    </method>
+    <method name="GetAll">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg type="s" name="interface_name"/>
+      <arg type="a{sv}" name="changed_properties"/>
+      <arg type="as" name="invalidated_properties"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg type="s" name="xml_data" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg type="s" name="machine_uuid" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.ayatana.bamf.matcher">
+    <method name="XidsForApplication">
+      <arg type="s" name="desktop_file" direction="in"/>
+      <arg type="au" name="xids" direction="out"/>
+    </method>
+    <method name="TabPaths">
+      <arg type="as" name="paths" direction="out"/>
+    </method>
+    <method name="RunningApplications">
+      <arg type="as" name="paths" direction="out"/>
+    </method>
+    <method name="RunningApplicationsDesktopFiles">
+      <arg type="as" name="paths" direction="out"/>
+    </method>
+    <method name="RegisterFavorites">
+      <arg type="as" name="favorites" direction="in"/>
+    </method>
+    <method name="PathForApplication">
+      <arg type="s" name="desktop_file" direction="in"/>
+      <arg type="s" name="path" direction="out"/>
+    </method>
+    <method name="WindowPaths">
+      <arg type="as" name="paths" direction="out"/>
+    </method>
+    <method name="ApplicationPaths">
+      <arg type="as" name="paths" direction="out"/>
+    </method>
+    <method name="ApplicationIsRunning">
+      <arg type="s" name="desktop_file" direction="in"/>
+      <arg type="b" name="running" direction="out"/>
+    </method>
+    <method name="ApplicationForXid">
+      <arg type="u" name="xid" direction="in"/>
+      <arg type="s" name="application" direction="out"/>
+    </method>
+    <method name="ActiveWindow">
+      <arg type="s" name="window" direction="out"/>
+    </method>
+    <method name="ActiveApplication">
+      <arg type="s" name="application" direction="out"/>
+    </method>
+    <method name="WindowStackForMonitor">
+      <arg type="i" name="monitor_id" direction="in"/>
+      <arg type="as" name="window_list" direction="out"/>
+    </method>
+    <signal name="ActiveApplicationChanged">
+      <arg type="s" name="old_app"/>
+      <arg type="s" name="new_app"/>
+    </signal>
+    <signal name="ActiveWindowChanged">
+      <arg type="s" name="old_win"/>
+      <arg type="s" name="new_win"/>
+    </signal>
+    <signal name="ViewClosed">
+      <arg type="s" name="path"/>
+      <arg type="s" name="type"/>
+    </signal>
+    <signal name="ViewOpened">
+      <arg type="s" name="path"/>
+      <arg type="s" name="type"/>
+    </signal>
+    <signal name="StackingOrderChanged"/>
+    <signal name="RunningApplicationsChanged">
+      <arg type="as" name="opened_desktop_files"/>
+      <arg type="as" name="closed_desktop_files"/>
+    </signal>
+  </interface>
+</node>

@@ -27,10 +27,11 @@ func (oc *ObjectConfig) getInterface(name string) *InterfaceConfig {
 }
 
 type InterfaceConfig struct {
-	Name     string
-	Type     string
-	Accessor string
-	Fixes    map[string]json.RawMessage
+	Name        string
+	Type        string
+	Accessor    string
+	Fixes       map[string]json.RawMessage
+	TypeDefined bool
 }
 
 func (ic *InterfaceConfig) getPropertyFix(name string) *PropertyFix {

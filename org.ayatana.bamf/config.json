@@ -1,0 +1,52 @@
+{
+  "Service": "org.ayatana.bamf",
+  "Objects": [
+    {
+      "Type": "Control",
+      "Path": "/org/ayatana/bamf/control",
+      "Interfaces": [
+        {
+          "Name": "org.ayatana.bamf.control",
+          "Type": "control"
+        }
+      ]
+    },
+    {
+      "Type": "Matcher",
+      "Path": "/org/ayatana/bamf/matcher",
+      "Interfaces": [
+        {
+          "Name": "org.ayatana.bamf.matcher",
+          "Type": "matcher"
+        }
+      ]
+    },
+    {
+      "Type":"Application",
+      "Interfaces": [
+        {
+          "Name": "org.ayatana.bamf.application",
+          "Type":"application"
+        },
+        {
+          "Name": "org.ayatana.bamf.view",
+          "Type": "view"
+        }
+      ]
+    },
+    {
+      "Type": "Window",
+      "Interfaces": [
+        {
+          "Name": "org.ayatana.bamf.window",
+          "Type": "window"
+        },
+        {
+          "Name": "org.ayatana.bamf.view",
+          "Type": "view",
+          "TypeDefined": true
+        }
+      ]
+    }
+  ]
+}
