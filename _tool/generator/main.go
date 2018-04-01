@@ -350,6 +350,9 @@ func initNameMap() map[string]int {
 	for _, keyword := range goKeywords {
 		nameMap[keyword] = 1
 	}
+	nameMap["flags"] = 1
+	nameMap["ch"] = 1
+
 	return nameMap
 }
 

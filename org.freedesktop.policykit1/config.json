@@ -1,0 +1,79 @@
+{
+  "Service": "org.freedesktop.PolicyKit1",
+  "Objects": [
+    {
+      "Type": "Authority",
+      "Path": "/org/freedesktop/PolicyKit1/Authority",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.PolicyKit1.Authority",
+          "Type": "authority",
+          "Fixes": {
+            "m/EnumerateActions": [
+              {
+                "Name": "action_descriptions",
+                "Type": "[]ActionDescription"
+              }
+            ],
+            "m/CheckAuthorization": [
+              {
+                "Name": "subject",
+                "Type": "Subject"
+              },
+              {
+                "Name": "result",
+                "Type": "AuthorizationResult"
+              }
+            ],
+            "m/RegisterAuthenticationAgent": [
+              {
+                "Name": "subject",
+                "Type": "Subject"
+              }
+            ],
+            "m/RegisterAuthenticationAgentWithOptions": [
+              {
+                "Name":"subject",
+                "Type": "Subject"
+              }
+            ],
+            "m/UnregisterAuthenticationAgent": [
+              {
+                "Name":"subject",
+                "Type": "Subject"
+              }
+            ],
+            "m/AuthenticationAgentResponse": [
+              {
+                "Name": "identity",
+                "Type": "Identity"
+              }
+            ],
+            "m/AuthenticationAgentResponse2": [
+              {
+                "Name": "identity",
+                "Type": "Identity"
+              }
+            ],
+            "m/EnumerateTemporaryAuthorizations": [
+              {
+                "Name":"subject",
+                "Type": "Subject"
+              },
+              {
+                "Name": "temporary_authorizations",
+                "Type": "TemporaryAuthorization "
+              }
+            ],
+            "m/RevokeTemporaryAuthorizations": [
+              {
+                "Name":"subject",
+                "Type": "Subject"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
