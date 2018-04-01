@@ -1,0 +1,86 @@
+{
+  "Service": "org.freedesktop.secrets",
+  "Objects": [
+    {
+      "Type": "Service",
+      "Path": "/org/freedesktop/secrets",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Secret.Service",
+          "Type": "service",
+          "Fixes": {
+            "m/GetSecrets": [
+              {
+                "Name": "secrets",
+                "Type": "map[dbus.ObjectPath]Secret"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Collection",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Secret.Collection",
+          "Type": "collection",
+          "Fixes": {
+            "m/CreateItem": [
+              {
+                "Name": "secret",
+                "Type": "Secret"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Item",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Secret.Item",
+          "Type": "item",
+          "Fixes": {
+            "p/Attributes": {
+              "Type": "PropItemAttributes",
+              "ValueType": "map[string]string",
+              "EmptyValue": "nil"
+            },
+            "m/GetSecret": [
+              {
+                "Name": "secret",
+                "Type": "Secret"
+              }
+            ],
+            "m/SetSecret": [
+              {
+                "Name": "secret",
+                "Type": "Secret"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Session",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Secret.Session",
+          "Type": "session"
+        }
+      ]
+    },
+    {
+      "Type": "Prompt",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.Secret.Prompt",
+          "Type": "prompt"
+        }
+      ]
+    }
+  ]
+}
