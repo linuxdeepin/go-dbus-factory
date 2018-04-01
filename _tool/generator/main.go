@@ -60,7 +60,13 @@ func main() {
 			if ifcCfg == nil {
 				continue
 			}
-			sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifc.Name)
+			if ifc.Name == "org.freedesktop.DBus.ObjectManager" {
+				ifcCfg.TypeDefined = true
+				sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
+				sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifc.Name)
+			} else {
+				sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifc.Name)
+			}
 		}
 
 		sf.GoBody.Pn("proxy.Object")

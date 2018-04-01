@@ -1,0 +1,126 @@
+{
+  "Service": "org.freedesktop.UDisks2",
+  "Objects": [
+    {
+      "Type": "UDisks",
+      "Path": "/org/freedesktop/UDisks2",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        }
+      ]
+    },
+    {
+      "Type": "Manager",
+      "Path": "/org/freedesktop/UDisks2/Manager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.UDisks2.Manager",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type": "Drive",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.UDisks2.Drive",
+          "Type": "drive",
+          "Accessor": "Drive",
+          "Fixes": {
+            "p/Configuration": {
+              "Type": "PropDriveConfiguration",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name": "org.freedesktop.UDisks2.Drive.Ata",
+          "Type": "driveAta",
+          "Accessor": "DriveAta",
+          "Fixes": {
+            "m/SmartGetAttributes": [
+              {
+                "Name": "attributes",
+                "Type": "[]Attribute"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Block",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.UDisks2.Block",
+          "Type": "block",
+          "Accessor": "Block",
+          "Fixes": {
+            "p/Symlinks": {
+              "Type": "PropBlockSymlinks",
+              "ValueType": "[][]byte",
+              "EmptyValue": "nil"
+            },
+            "p/Configuration": {
+              "Type": "PropBlockConfiguration",
+              "ValueType": "[]ConfigurationItem",
+              "EmptyValue": "nil"
+            },
+            "m/AddConfigurationItem": [
+              {
+                "Name": "item",
+                "Type": "ConfigurationItem"
+              }
+            ],
+            "m/RemoveConfigurationItem": [
+              {
+                "Name": "item",
+                "Type": "ConfigurationItem"
+              }
+            ],
+            "m/UpdateConfigurationItem": [
+              {
+                "Name": "old_item",
+                "Type": "ConfigurationItem"
+              },
+              {
+                "Name": "new_item",
+                "Type": "ConfigurationItem"
+              }
+            ],
+            "m/GetSecretConfiguration": [
+              {
+                "Name": "configuration",
+                "Type": "[]ConfigurationItem"
+              }
+            ]
+          }
+        },
+        {
+          "Name": "org.freedesktop.UDisks2.PartitionTable",
+          "Type": "partitionTable",
+          "Accessor": "PartitionTable"
+        },
+        {
+          "Name": "org.freedesktop.UDisks2.Partition",
+          "Type": "partition",
+          "Accessor": "Partition"
+        },
+        {
+          "Name": "org.freedesktop.UDisks2.Filesystem",
+          "Type": "filesystem",
+          "Accessor": "Filesystem",
+          "Fixes": {
+            "p/MountPoints": {
+              "Type": "PropFsMountPoints",
+              "ValueType": "[][]byte",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
