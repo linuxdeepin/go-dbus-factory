@@ -1,0 +1,36 @@
+{
+  "Service": "org.freedesktop.miracle.wfd",
+  "Objects": [
+    {
+      "Type": "Wfd",
+      "Path": "/org/freedesktop/miracle/wfd",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        },
+        {
+          "Name": "org.freedesktop.miracle.wfd",
+          "Type": "wfd"
+        }
+      ]
+    },
+    {
+      "Type": "Sink",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.miracle.wfd.Sink",
+          "Type": "sink"
+        }
+      ]
+    },
+    {
+      "Type": "Session",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.miracle.wfd.Session",
+          "Type": "session"
+        }
+      ]
+    }
+  ]
+}
