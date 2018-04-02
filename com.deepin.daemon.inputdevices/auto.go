@@ -11,6 +11,7 @@ import "unsafe"
 var _ = errors.New
 var _ dbusutil.SignalHandlerId
 var _ = fmt.Sprintf
+var _ unsafe.Pointer
 
 type Keyboard struct {
 	keyboard // interface com.deepin.daemon.InputDevice.Keyboard

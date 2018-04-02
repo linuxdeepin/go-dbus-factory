@@ -45,6 +45,7 @@ func main() {
 	sf.GoBody.Pn("var _ = errors.New")
 	sf.GoBody.Pn("var _ dbusutil.SignalHandlerId")
 	sf.GoBody.Pn("var _ = fmt.Sprintf")
+	sf.GoBody.Pn("var _ unsafe.Pointer")
 	sf.GoBody.Pn("")
 
 	for _, objCfg := range srvCfg.Objects {

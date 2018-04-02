@@ -1,0 +1,32 @@
+{
+  "Service": "org.freedesktop.miracle.wifi",
+  "Objects": [
+    {
+     "Type": "Wifi",
+      "Path": "/org/freedesktop/miracle/wifi",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        }
+      ]
+    },
+    {
+      "Type": "Link",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.miracle.wifi.Link",
+          "Type": "link"
+        }
+      ]
+    },
+    {
+      "Type": "Peer",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.miracle.wifi.Peer",
+          "Type": "peer"
+        }
+      ]
+    }
+  ]
+}
