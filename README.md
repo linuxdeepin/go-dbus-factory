@@ -4,18 +4,18 @@
 
 命令如果没有特殊说明，都在项目根目录下执行。
 
-构建生成器
+构建生成器，执行命令：
 ```
 make bin
 ```
 将产生 generator 二进制。
 
-对单个文件夹进行自动化代码生成,如
+对单个文件夹进行自动化代码生成, 如执行命令：
 ```
 ./generator org.freedesktop.notifications
 ```
 
-对所有文件夹执行自动化代码生成
+对所有文件夹执行自动化代码生成，执行命令
 ```
 ./gen.sh
 ```
@@ -28,17 +28,15 @@ make bin
 org.freedesktop.Notifications 文件夹为 org.freedesktop.notifications, 自动生成的代码包的包名为点分割的最后一个组件，比如 notifications。
 
 
-文件夹内有内省xml, 配置文件 config.json, 和 go 代码。
+文件夹内有内省xml, 配置文件 config.json 和 go 代码。
 
 ### 内省 xml
-xml 可以用 gdbus introspect 命令获取
-
-比如获取 org.freedesktop.Notifications 服务的 /org/freedesktop/Notifications Object 的内省 xml。
+内省 xml 可以用 gdbus introspect 命令获取，比如获取 org.freedesktop.Notifications 服务的 /org/freedesktop/Notifications Object 的内省 xml，执行命令：
 ```
 gdbus introspect -e -d org.freedesktop.Notifications -o /org/freedesktop/Notifications -x > Notifications.xml
 ```
 
-xml 的根元素的tag为 node
+内省 xml 的根元素的 tag 为 node，文件名为 config.json 配置文件中 Object 的 Type 加后缀 `.xml`。
 
 ### config.json
 
@@ -65,7 +63,7 @@ xml 的根元素的tag为 node
 
 其中 Object 如果 Path 是固定的，则指定Path，如果 Path 不固定，则不指定 Path。
 
-如果 Object 具有多个接口，则需要指定 InterfaceConfig 的 Accessor 字段。
+如果 Object 具有多个接口，则需要指定 InterfaceConfig 的 Accessor 字段， 如果只具有一个接口，则不需要。
 参考 `com.deepin.daemon.apps/config.json`。
 
 如果 Object 具有 org.freedestkop.DBus.ObjectManager 接口，则 InterfaceConfig 只需写 Name 字段就行，生成器对这个 interface 进行了特殊处理。
