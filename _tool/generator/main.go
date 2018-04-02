@@ -109,21 +109,58 @@ func main() {
 }
 
 func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
-	if cfg.Path != "" {
-		sb.Pn("func New%s(conn *dbus.Conn) *%s {", cfg.Type, cfg.Type)
-		sb.Pn("    obj := new(%s)", cfg.Type)
-		sb.Pn("    obj.Object.Init_(conn, %q,%q)", serviceName, cfg.Path)
-		sb.Pn("    return obj")
-	} else {
-		sb.Pn("func New%s(conn *dbus.Conn, path dbus.ObjectPath) (*%s,error) {",
-			cfg.Type, cfg.Type)
-		sb.Pn("    if !path.IsValid() {")
-		sb.Pn("        return nil, errors.New(\"path is invalid\")")
-		sb.Pn("    }")
-		sb.Pn("    obj := new(%s)", cfg.Type)
-		sb.Pn("    obj.Object.Init_(conn, %q,path)", serviceName)
-		sb.Pn("    return obj, nil")
+	var inArgs []string
+	outTypes := []string{"*" + cfg.Type}
+	if serviceName == "" {
+		inArgs = append(inArgs, "serviceName string")
 	}
+
+	if cfg.Path == "" {
+		inArgs = append(inArgs, "path dbus.ObjectPath")
+		outTypes = append(outTypes, "error")
+	}
+
+	outTypesStr := strings.Join(outTypes, ",")
+	if len(outTypes) > 1 {
+		outTypesStr = "(" + outTypesStr + ")"
+	}
+
+	sb.Pn("func New%s(conn *dbus.Conn, %s) %s {", cfg.Type,
+		strings.Join(inArgs, ","), outTypesStr)
+
+	// check path
+	if cfg.Path == "" {
+		sb.Pn("if !path.IsValid() {")
+		sb.Pn("    return nil, errors.New(\"path is invalid\")")
+		sb.Pn("}")
+	}
+
+	sb.Pn("obj := new(%s)", cfg.Type)
+	var inArgServiceName string
+	var inArgPath string
+
+	if serviceName != "" {
+		inArgServiceName = strconv.Quote(serviceName)
+	} else {
+		inArgServiceName = "serviceName"
+	}
+
+	if cfg.Path != "" {
+		inArgPath = strconv.Quote(cfg.Path)
+	} else {
+		inArgPath = "path"
+	}
+
+	sb.Pn("obj.Object.Init_(conn, %s, %s)", inArgServiceName, inArgPath)
+
+	// return
+	var returnExpr string
+	if cfg.Path == "" {
+		returnExpr = "obj, nil"
+	} else {
+		returnExpr = "obj"
+	}
+	sb.Pn("return %s", returnExpr)
 	sb.Pn("}\n")
 }
 

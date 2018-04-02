@@ -1,0 +1,26 @@
+{
+  "Service1": "org.mpris.MediaPlayer2",
+  "Objects": [
+    {
+      "Type": "MediaPlayer",
+      "Path": "/org/mpris/MediaPlayer2",
+      "Interfaces": [
+        {
+          "Name": "org.mpris.MediaPlayer2",
+          "Type": "mediaPlayer"
+        },
+        {
+          "Name": "org.mpris.MediaPlayer2.Player",
+          "Type": "player",
+          "Fixes": {
+            "p/Metadata": {
+              "Type": "PropPlayerMetadata",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
