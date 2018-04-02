@@ -2,19 +2,55 @@ package main
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
 type ServiceConfig struct {
-	Service string
+	Service string // optional
 	Objects []*ObjectConfig
 }
 
 type ObjectConfig struct {
-	Type string
-	Path string // optional
-
+	Type       string
+	Path       string // optional
+	XMLFile    string // optional
 	Interfaces []*InterfaceConfig
+}
+
+func (oc *ObjectConfig) getXmlFile(dir string) string {
+	var name string
+	if oc.XMLFile != "" {
+		name = oc.XMLFile
+		if !strings.HasSuffix(name, ".xml") {
+			name += ".xml"
+		}
+	} else {
+		name = oc.Type + ".xml"
+	}
+	return filepath.Join(dir, name)
+}
+
+func (oc *ObjectConfig) loadXml(dir string) (*introspect.Node, error) {
+	file := oc.getXmlFile(dir)
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	dec := xml.NewDecoder(f)
+	var node introspect.Node
+	err = dec.Decode(&node)
+	if err != nil {
+		return nil, err
+	}
+	return &node, nil
 }
 
 func (oc *ObjectConfig) getInterface(name string) *InterfaceConfig {

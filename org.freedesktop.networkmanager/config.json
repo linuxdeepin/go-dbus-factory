@@ -1,0 +1,237 @@
+{
+  "Service": "org.freedesktop.NetworkManager",
+  "Objects": [
+    {
+      "Type": "AccessPoint",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.AccessPoint",
+          "Type": "accessPoint"
+        }
+      ]
+    },
+    {
+      "Type": "AgentManager",
+      "Path": "/org/freedesktop/NetworkManager/AgentManager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.AgentManager",
+          "Type": "agentManager"
+        }
+      ]
+    },
+    {
+      "Type": "Checkpoint",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Checkpoint",
+          "Type": "checkpoint"
+        }
+      ]
+    },
+    {
+      "Type": "ActiveConnection",
+      "XMLFile": "Connection.Active",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Connection.Active",
+          "Type": "activeConnection"
+        }
+      ]
+    },
+    {
+      "Type": "Dhcp4Config",
+      "XMLFile": "DHCP4Config",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Dhcp4Config",
+          "Type": "dhcp4Config",
+          "Fixes": {
+            "p/Options": {
+              "Type": "PropDhcp4ConfigOptions",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Dhcp6Config",
+      "XMLFile": "DHCP6Config",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Dhcp6Config",
+          "Type": "dhcp6Config",
+          "Fixes": {
+            "p/Options": {
+              "Type": "PropDhcp6ConfigOptions",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "DnsManager",
+      "Path": "/org/freedesktop/NetworkManager/DnsManager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.DnsManager",
+          "Type": "dnsManager",
+          "Fixes": {
+            "p/Configuration": {
+              "Type": "PropDnsManagerConfiguration",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "IP4Config",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.IP4Config",
+          "Type": "ip4Config",
+          "Fixes": {
+            "p/Addresses": {
+              "Type": "PropIP4ConfigAddresses",
+              "ValueType": "[][]uint32",
+              "EmptyValue": "nil"
+            },
+            "p/Routes": {
+              "Type": "PropIP4ConfigRoutes",
+              "ValueType": "[][]uint32",
+              "EmptyValue": "nil"
+            },
+            "p/AddressData": {
+              "Type": "PropIP4ConfigAddressData",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/RouteData": {
+              "Type": "PropIP4ConfigRouteData",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "IP6Config",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.IP6Config",
+          "Type": "ip6Config",
+          "Fixes": {
+            "p/AddressData": {
+              "Type": "PropIP6ConfigAddressData",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/RouteData": {
+              "Type": "PropIP6ConfigRouteData",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/Addresses": {
+              "Type": "PropIP6ConfigAddresses",
+              "ValueType": "[]IP6Address",
+              "EmptyValue": "nil"
+            },
+            "p/Routes": {
+              "Type": "PropIP6ConfigRoutes",
+              "ValueType": "[]IP6Route",
+              "EmptyValue": "nil"
+            },
+            "p/Nameservers": {
+              "Type": "PropIP6NameServers",
+              "ValueType": "[][]byte",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type":  "Manager",
+      "XMLFile": "NetworkManager",
+      "Path": "/org/freedesktop/NetworkManager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager",
+          "Type": "manager",
+          "Fixes": {
+            "p/GlobalDnsConfiguration": {
+              "Type": "PropManagerGlobalDnsConfiguration",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "PPP",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.PPP",
+          "Type": "ppp"
+        }
+      ]
+    },
+    {
+      "Type": "SecretAgent",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.SecretAgent",
+          "Type": "secretAgent"
+        }
+      ]
+    },
+    {
+      "Type": "ConnectionSettings",
+      "XMLFile": "Settings.Connection",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Settings.Connection",
+          "Type": "connectionSettings"
+        }
+      ]
+    },
+    {
+      "Type": "Settings",
+      "Path": "/org/freedesktop/NetworkManager/Settings",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Settings",
+          "Type": "settings"
+        }
+      ]
+    },
+    {
+      "Type": "VpnConnection",
+      "XMLFile": "VPN.Connection",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.VPN.Connection",
+          "Type": "vpnConnection"
+        }
+      ]
+    },
+    {
+      "Type": "VpnPlugin",
+      "XMLFile": "VPN.Plugin",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.VPN.Plugin",
+          "Type": "vpnPlugin"
+        }
+      ]
+    }
+  ]
+}

@@ -2,14 +2,12 @@ package main
 
 import (
 	"bytes"
-	"encoding/xml"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
-
 	"strconv"
+	"strings"
 
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
@@ -49,7 +47,7 @@ func main() {
 	sf.GoBody.Pn("")
 
 	for _, objCfg := range srvCfg.Objects {
-		node, err := ParseNode(filepath.Join(dir, objCfg.Type+".xml"))
+		node, err := objCfg.loadXml(dir)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -512,20 +510,4 @@ func fixList(str string, begin bool) string {
 	}
 
 	return str[1:]
-}
-
-func ParseNode(file string) (*introspect.Node, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	dec := xml.NewDecoder(f)
-	var node introspect.Node
-	err = dec.Decode(&node)
-	if err != nil {
-		return nil, err
-	}
-	return &node, nil
 }
