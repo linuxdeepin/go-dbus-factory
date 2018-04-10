@@ -10,6 +10,15 @@
           "Type": "manager"
         }
       ]
+    },
+    {
+      "Type": "Device",
+      "Interfaces": [
+        {
+          "Name": "net.reactivated.Fprint.Device",
+          "Type": "device"
+        }
+      ]
     }
   ]
 }
