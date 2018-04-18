@@ -276,7 +276,7 @@ func (v *device) NumEnrollStages() proxy.PropInt32 {
 
 // property name s
 
-func (v *device) name() proxy.PropString {
+func (v *device) Name() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "name",

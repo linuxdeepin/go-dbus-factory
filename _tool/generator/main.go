@@ -23,7 +23,7 @@ func main() {
 	configFile := filepath.Join(dir, "config.json")
 	srvCfg, err := loadConfig(configFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed to load config: ", err)
 	}
 
 	dirName := filepath.Base(dir)
@@ -317,11 +317,19 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 	methodSameName bool) {
 	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
 
-	var funcName string
-	if methodSameName {
+	propFix := ifcCfg.getPropertyFix(prop.Name)
+
+	var renameTo string
+	if propFix != nil {
+		renameTo = propFix.RenameTo
+	}
+
+	// get funcName
+	funcName := prop.Name
+	if renameTo != "" {
+		funcName = renameTo
+	} else if methodSameName {
 		funcName = "Prop" + prop.Name
-	} else {
-		funcName = prop.Name
 	}
 
 	propType := getPropType(prop.Type)
@@ -334,7 +342,6 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 
 		sb.Pn("}\n")
 	} else {
-		propFix := ifcCfg.getPropertyFix(prop.Name)
 		if propFix == nil {
 			panic(fmt.Errorf("failed to get property fix for %s.%s", ifcCfg.Name, prop.Name))
 		}

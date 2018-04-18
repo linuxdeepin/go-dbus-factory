@@ -16,7 +16,18 @@
       "Interfaces": [
         {
           "Name": "net.reactivated.Fprint.Device",
-          "Type": "device"
+          "Type": "device",
+          "Fixes": {
+            "p/scan-type": {
+              "RenameTo": "ScanType"
+            },
+            "p/num-enroll-stages": {
+              "RenameTo": "NumEnrollStages"
+            },
+            "p/name": {
+              "RenameTo": "Name"
+            }
+          }
         }
       ]
     }

@@ -116,6 +116,7 @@ type PropertyFix struct {
 	Type       string
 	ValueType  string
 	EmptyValue string
+	RenameTo   string
 }
 
 func loadConfig(file string) (*ServiceConfig, error) {
