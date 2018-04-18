@@ -47,14 +47,14 @@ func main() {
 	sf.GoBody.Pn("")
 
 	for _, objCfg := range srvCfg.Objects {
-		node, err := objCfg.loadXml(dir)
+		interfaces, err := objCfg.loadXml(dir)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		sf.GoBody.Pn("type %s struct {", objCfg.Type)
 
-		for _, ifc := range node.Interfaces {
+		for _, ifc := range interfaces {
 			ifcCfg := objCfg.getInterface(ifc.Name)
 			if ifcCfg == nil {
 				continue
@@ -73,7 +73,7 @@ func main() {
 
 		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
 
-		for _, ifc := range node.Interfaces {
+		for _, ifc := range interfaces {
 			ifcCfg := objCfg.getInterface(ifc.Name)
 			if ifcCfg == nil || ifcCfg.TypeDefined {
 				continue

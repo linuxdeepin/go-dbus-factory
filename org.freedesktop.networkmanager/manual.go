@@ -12,3 +12,8 @@ type IP6Route struct {
 	NextHop []byte
 	Metric  uint32
 }
+
+type DeviceStateReason struct {
+	State  uint32
+	Reason uint32
+}

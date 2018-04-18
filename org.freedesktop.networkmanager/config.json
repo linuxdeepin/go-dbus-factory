@@ -232,6 +232,139 @@
           "Type": "vpnPlugin"
         }
       ]
+    },
+    {
+      "Type": "Device",
+      "XmlFiles": ["Device*"],
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.Device",
+          "Accessor": "Device",
+          "Type": "device",
+          "Fixes": {
+            "p/StateReason": {
+              "Type": "PropDeviceStateReason",
+              "ValueType": "DeviceStateReason",
+              "EmptyValue": "DeviceStateReason{}"
+            },
+            "p/LldpNeighbors": {
+              "Type": "PropLldpNeighbors",
+              "ValueType": "[]map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Adsl",
+          "Accessor": "Adsl",
+          "Type": "deviceAdsl"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Bluetooth",
+          "Accessor": "Bluetooth",
+          "Type": "deviceBluetooth"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Bond",
+          "Accessor": "Bond",
+          "Type": "deviceBond"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Bridge",
+          "Accessor": "Bridge",
+          "Type": "deviceBridge"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Generic",
+          "Accessor": "Generic",
+          "Type": "deviceGeneric"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Infiniband",
+          "Accessor": "Infiniband",
+          "Type": "deviceInfiniband"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.IPTunnel",
+          "Accessor": "IPTunnel",
+          "Type": "deviceIPTunnel"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Macsec",
+          "Accessor": "Macsec",
+          "Type": "deviceMacsec"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Macvlan",
+          "Accessor": "Macvlan",
+          "Type": "deviceMacvlan"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Modem",
+          "Accessor": "Modem",
+          "Type": "deviceModem"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.OlpcMesh",
+          "Accessor": "OlpcMesh",
+          "Type": "deviceOlpcMesh"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Statistics",
+          "Accessor": "statistics",
+          "Type": "deviceStatistics"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Team",
+          "Accessor": "Team",
+          "Type": "deviceTeam"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Tun",
+          "Accessor": "Tun",
+          "Type": "deviceTun"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Veth",
+          "Accessor": "Veth",
+          "Type": "deviceVeth"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Vlan",
+          "Accessor": "Vlan",
+          "Type": "deviceVlan"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Vxlan",
+          "Accessor": "Vxlan",
+          "Type": "deviceVxlan"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.WiMax",
+          "Accessor": "WiMax",
+          "Type": "deviceWiMax"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Wired",
+          "Accessor": "Wired",
+          "Type": "deviceWired"
+        },
+        {
+          "Name": "org.freedesktop.NetworkManager.Device.Wireless",
+          "Accessor": "Wireless",
+          "Type": "deviceWireless"
+        }
+      ]
+    },
+    {
+      "Type": "WiMaxNsp",
+      "XmlFile": "WiMax.Nsp",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.NetworkManager.WiMax.Nsp",
+          "Type": "wiMaxNsp"
+        }
+      ]
     }
   ]
 }

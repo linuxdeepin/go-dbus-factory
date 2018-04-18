@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
@@ -18,26 +17,42 @@ type ServiceConfig struct {
 
 type ObjectConfig struct {
 	Type       string
-	Path       string // optional
-	XMLFile    string // optional
+	Path       string   // optional
+	XMLFile    string   // optional
+	XMLFiles   []string // optional
 	Interfaces []*InterfaceConfig
 }
 
-func (oc *ObjectConfig) getXmlFile(dir string) string {
-	var name string
-	if oc.XMLFile != "" {
-		name = oc.XMLFile
-		if !strings.HasSuffix(name, ".xml") {
-			name += ".xml"
+func (oc *ObjectConfig) getXmlFiles(dir string) []string {
+	var result []string
+	if len(oc.XMLFiles) > 0 {
+		for _, pat := range oc.XMLFiles {
+			matches, _ := filepath.Glob(filepath.Join(dir, pat+".xml"))
+			result = append(result, matches...)
 		}
+
+	} else if oc.XMLFile != "" {
+		result = append(result, filepath.Join(dir, oc.XMLFile+".xml"))
 	} else {
-		name = oc.Type + ".xml"
+		result = append(result, filepath.Join(dir, oc.Type+".xml"))
 	}
-	return filepath.Join(dir, name)
+	return result
 }
 
-func (oc *ObjectConfig) loadXml(dir string) (*introspect.Node, error) {
-	file := oc.getXmlFile(dir)
+func (oc *ObjectConfig) loadXml(dir string) ([]introspect.Interface, error) {
+	var result []introspect.Interface
+	xmlFiles := oc.getXmlFiles(dir)
+	for _, file := range xmlFiles {
+		interfaces, err := getInterfacesFromXmlFile(file)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, interfaces...)
+	}
+	return result, nil
+}
+
+func getInterfacesFromXmlFile(file string) ([]introspect.Interface, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
@@ -50,7 +65,7 @@ func (oc *ObjectConfig) loadXml(dir string) (*introspect.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &node, nil
+	return node.Interfaces, nil
 }
 
 func (oc *ObjectConfig) getInterface(name string) *InterfaceConfig {
