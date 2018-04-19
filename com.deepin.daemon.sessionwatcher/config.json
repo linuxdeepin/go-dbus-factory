@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.SessionWatcher",
+  "Objects": [
+    {
+      "Type": "SessionWatcher",
+      "Path": "/com/deepin/daemon/SessionWatcher",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.SessionWatcher",
+          "Type": "sessionWatcher"
+        }
+      ]
+    }
+  ]
+}
