@@ -210,40 +210,11 @@ func (v *sink) SupportBalance() proxy.PropBool {
 
 // property Ports a(ssy)
 
-func (v *sink) Ports() PropSinkPorts {
-	return PropSinkPorts{
+func (v *sink) Ports() PropPortInfoSlice {
+	return PropPortInfoSlice{
 		Impl: v,
+		Name: "Ports",
 	}
-}
-
-type PropSinkPorts struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSinkPorts) Get(flags dbus.Flags) (value []PortInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Ports", &value)
-	return
-}
-
-func (p PropSinkPorts) ConnectChanged(cb func(hasValue bool, value []PortInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []PortInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Ports", cb0)
 }
 
 // property Name s
@@ -284,40 +255,11 @@ func (v *sink) Balance() proxy.PropDouble {
 
 // property ActivePort (ssy)
 
-func (v *sink) ActivePort() PropSinkActivePort {
-	return PropSinkActivePort{
+func (v *sink) ActivePort() PropPortInfo {
+	return PropPortInfo{
 		Impl: v,
+		Name: "ActivePort",
 	}
-}
-
-type PropSinkActivePort struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSinkActivePort) Get(flags dbus.Flags) (value PortInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ActivePort", &value)
-	return
-}
-
-func (p PropSinkActivePort) ConnectChanged(cb func(hasValue bool, value PortInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v PortInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, PortInfo{})
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ActivePort", cb0)
 }
 
 // property Card u
@@ -493,40 +435,11 @@ func (v *source) Fade() proxy.PropDouble {
 
 // property Ports a(ssy)
 
-func (v *source) Ports() PropSourcePorts {
-	return PropSourcePorts{
+func (v *source) Ports() PropPortInfoSlice {
+	return PropPortInfoSlice{
 		Impl: v,
+		Name: "Ports",
 	}
-}
-
-type PropSourcePorts struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSourcePorts) Get(flags dbus.Flags) (value []PortInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Ports", &value)
-	return
-}
-
-func (p PropSourcePorts) ConnectChanged(cb func(hasValue bool, value []PortInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []PortInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Ports", cb0)
 }
 
 // property Card u
@@ -576,40 +489,11 @@ func (v *source) SupportFade() proxy.PropBool {
 
 // property ActivePort (ssy)
 
-func (v *source) ActivePort() PropSourceActivePort {
-	return PropSourceActivePort{
+func (v *source) ActivePort() PropPortInfo {
+	return PropPortInfo{
 		Impl: v,
+		Name: "ActivePort",
 	}
-}
-
-type PropSourceActivePort struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSourceActivePort) Get(flags dbus.Flags) (value PortInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ActivePort", &value)
-	return
-}
-
-func (p PropSourceActivePort) ConnectChanged(cb func(hasValue bool, value PortInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v PortInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, PortInfo{})
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ActivePort", cb0)
 }
 
 // property Name s
@@ -755,4 +639,74 @@ func (v *sinkInput) Mute() proxy.PropBool {
 		Impl: v,
 		Name: "Mute",
 	}
+}
+
+type PropPortInfoSlice struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropPortInfoSlice) Get(flags dbus.Flags) (value []PortInfo, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropPortInfoSlice) Set(flags dbus.Flags, value []PortInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropPortInfoSlice) ConnectChanged(cb func(hasValue bool, value []PortInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v []PortInfo
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+type PropPortInfo struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropPortInfo) Get(flags dbus.Flags) (value PortInfo, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropPortInfo) Set(flags dbus.Flags, value PortInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropPortInfo) ConnectChanged(cb func(hasValue bool, value PortInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v PortInfo
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, PortInfo{})
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
 }

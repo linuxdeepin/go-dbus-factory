@@ -19,13 +19,10 @@
           "Type": "sink",
           "Fixes": {
             "p/Ports": {
-              "Type": "PropSinkPorts",
-              "ValueType":"[]PortInfo"
+              "RefType": "PropPortInfoSlice"
             },
             "p/ActivePort": {
-              "Type": "PropSinkActivePort",
-              "ValueType":"PortInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropPortInfo"
             }
           }
         }
@@ -39,13 +36,10 @@
           "Type": "source",
           "Fixes": {
             "p/Ports": {
-              "Type": "PropSourcePorts",
-              "ValueType":"[]PortInfo"
+              "RefType": "PropPortInfoSlice"
             },
             "p/ActivePort": {
-              "Type": "PropSourceActivePort",
-              "ValueType":"PortInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropPortInfo"
             }
           }
         }
@@ -59,6 +53,17 @@
           "Type": "sinkInput"
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropPortInfoSlice",
+      "ValueType": "[]PortInfo"
+    },
+    {
+      "Type": "PropPortInfo",
+      "ValueType": "PortInfo",
+      "EmptyValue": "$T{}"
     }
   ]
 }

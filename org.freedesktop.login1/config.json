@@ -50,13 +50,10 @@
           "Type": "seat",
           "Fixes": {
             "p/ActiveSession": {
-              "Type": "PropSeatActiveSession",
-              "ValueType": "SessionInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropSessionInfo"
             },
             "p/Sessions": {
-              "Type": "PropSeatSessions",
-              "ValueType": "[]SessionInfo"
+              "RefType": "PropSessionInfoSlice"
             }
           }
         }
@@ -91,17 +88,25 @@
           "Type": "user",
           "Fixes": {
             "p/Display": {
-              "Type": "PropUserDisplay",
-              "ValueType": "SessionInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropSessionInfo"
             },
             "p/Sessions": {
-              "Type": "PropUserSessions",
-              "ValueType": "[]SessionInfo"
+              "RefType": "PropSessionInfoSlice"
             }
           }
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropSessionInfo",
+      "ValueType": "SessionInfo",
+      "EmptyValue": "$T{}"
+    },
+    {
+      "Type": "PropSessionInfoSlice",
+      "ValueType": "[]SessionInfo"
     }
   ]
 }

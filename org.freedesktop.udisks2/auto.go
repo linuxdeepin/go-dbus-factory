@@ -942,40 +942,11 @@ func (v *block) PreferredDevice() proxy.PropByteArray {
 
 // property Symlinks aay
 
-func (v *block) Symlinks() PropBlockSymlinks {
-	return PropBlockSymlinks{
+func (v *block) Symlinks() PropByteSliceSlice {
+	return PropByteSliceSlice{
 		Impl: v,
+		Name: "Symlinks",
 	}
-}
-
-type PropBlockSymlinks struct {
-	Impl proxy.Implementer
-}
-
-func (p PropBlockSymlinks) Get(flags dbus.Flags) (value [][]byte, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Symlinks", &value)
-	return
-}
-
-func (p PropBlockSymlinks) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v [][]byte
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Symlinks", cb0)
 }
 
 // property DeviceNumber t
@@ -1431,23 +1402,29 @@ func (v *filesystem) Unmount(flags dbus.Flags, options map[string]dbus.Variant) 
 
 // property MountPoints aay
 
-func (v *filesystem) MountPoints() PropFsMountPoints {
-	return PropFsMountPoints{
+func (v *filesystem) MountPoints() PropByteSliceSlice {
+	return PropByteSliceSlice{
 		Impl: v,
+		Name: "MountPoints",
 	}
 }
 
-type PropFsMountPoints struct {
+type PropByteSliceSlice struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropFsMountPoints) Get(flags dbus.Flags) (value [][]byte, err error) {
+func (p PropByteSliceSlice) Get(flags dbus.Flags) (value [][]byte, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"MountPoints", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropFsMountPoints) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
+func (p PropByteSliceSlice) Set(flags dbus.Flags, value [][]byte) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropByteSliceSlice) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1464,5 +1441,5 @@ func (p PropFsMountPoints) ConnectChanged(cb func(hasValue bool, value [][]byte)
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"MountPoints", cb0)
+		p.Name, cb0)
 }

@@ -545,40 +545,11 @@ func (v *dhcp4Config) ConnectPropertiesChanged(cb func(properties map[string]dbu
 
 // property Options a{sv}
 
-func (v *dhcp4Config) Options() PropDhcp4ConfigOptions {
-	return PropDhcp4ConfigOptions{
+func (v *dhcp4Config) Options() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Options",
 	}
-}
-
-type PropDhcp4ConfigOptions struct {
-	Impl proxy.Implementer
-}
-
-func (p PropDhcp4ConfigOptions) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Options", &value)
-	return
-}
-
-func (p PropDhcp4ConfigOptions) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Options", cb0)
 }
 
 type Dhcp6Config struct {
@@ -633,40 +604,11 @@ func (v *dhcp6Config) ConnectPropertiesChanged(cb func(properties map[string]dbu
 
 // property Options a{sv}
 
-func (v *dhcp6Config) Options() PropDhcp6ConfigOptions {
-	return PropDhcp6ConfigOptions{
+func (v *dhcp6Config) Options() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Options",
 	}
-}
-
-type PropDhcp6ConfigOptions struct {
-	Impl proxy.Implementer
-}
-
-func (p PropDhcp6ConfigOptions) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Options", &value)
-	return
-}
-
-func (p PropDhcp6ConfigOptions) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Options", cb0)
 }
 
 type DnsManager struct {
@@ -710,40 +652,11 @@ func (v *dnsManager) RcManager() proxy.PropString {
 
 // property Configuration aa{sv}
 
-func (v *dnsManager) Configuration() PropDnsManagerConfiguration {
-	return PropDnsManagerConfiguration{
+func (v *dnsManager) Configuration() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "Configuration",
 	}
-}
-
-type PropDnsManagerConfiguration struct {
-	Impl proxy.Implementer
-}
-
-func (p PropDnsManagerConfiguration) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Configuration", &value)
-	return
-}
-
-func (p PropDnsManagerConfiguration) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Configuration", cb0)
 }
 
 type IP4Config struct {
@@ -798,78 +711,20 @@ func (v *ip4Config) ConnectPropertiesChanged(cb func(properties map[string]dbus.
 
 // property Addresses aau
 
-func (v *ip4Config) Addresses() PropIP4ConfigAddresses {
-	return PropIP4ConfigAddresses{
+func (v *ip4Config) Addresses() PropUint32SliceSlice {
+	return PropUint32SliceSlice{
 		Impl: v,
+		Name: "Addresses",
 	}
-}
-
-type PropIP4ConfigAddresses struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP4ConfigAddresses) Get(flags dbus.Flags) (value [][]uint32, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Addresses", &value)
-	return
-}
-
-func (p PropIP4ConfigAddresses) ConnectChanged(cb func(hasValue bool, value [][]uint32)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v [][]uint32
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Addresses", cb0)
 }
 
 // property AddressData aa{sv}
 
-func (v *ip4Config) AddressData() PropIP4ConfigAddressData {
-	return PropIP4ConfigAddressData{
+func (v *ip4Config) AddressData() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "AddressData",
 	}
-}
-
-type PropIP4ConfigAddressData struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP4ConfigAddressData) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"AddressData", &value)
-	return
-}
-
-func (p PropIP4ConfigAddressData) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"AddressData", cb0)
 }
 
 // property Gateway s
@@ -883,78 +738,20 @@ func (v *ip4Config) Gateway() proxy.PropString {
 
 // property Routes aau
 
-func (v *ip4Config) Routes() PropIP4ConfigRoutes {
-	return PropIP4ConfigRoutes{
+func (v *ip4Config) Routes() PropUint32SliceSlice {
+	return PropUint32SliceSlice{
 		Impl: v,
+		Name: "Routes",
 	}
-}
-
-type PropIP4ConfigRoutes struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP4ConfigRoutes) Get(flags dbus.Flags) (value [][]uint32, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Routes", &value)
-	return
-}
-
-func (p PropIP4ConfigRoutes) ConnectChanged(cb func(hasValue bool, value [][]uint32)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v [][]uint32
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Routes", cb0)
 }
 
 // property RouteData aa{sv}
 
-func (v *ip4Config) RouteData() PropIP4ConfigRouteData {
-	return PropIP4ConfigRouteData{
+func (v *ip4Config) RouteData() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "RouteData",
 	}
-}
-
-type PropIP4ConfigRouteData struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP4ConfigRouteData) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"RouteData", &value)
-	return
-}
-
-func (p PropIP4ConfigRouteData) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"RouteData", cb0)
 }
 
 // property Nameservers au
@@ -1101,40 +898,11 @@ func (p PropIP6ConfigAddresses) ConnectChanged(cb func(hasValue bool, value []IP
 
 // property AddressData aa{sv}
 
-func (v *ip6Config) AddressData() PropIP6ConfigAddressData {
-	return PropIP6ConfigAddressData{
+func (v *ip6Config) AddressData() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "AddressData",
 	}
-}
-
-type PropIP6ConfigAddressData struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP6ConfigAddressData) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"AddressData", &value)
-	return
-}
-
-func (p PropIP6ConfigAddressData) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"AddressData", cb0)
 }
 
 // property Gateway s
@@ -1186,40 +954,11 @@ func (p PropIP6ConfigRoutes) ConnectChanged(cb func(hasValue bool, value []IP6Ro
 
 // property RouteData aa{sv}
 
-func (v *ip6Config) RouteData() PropIP6ConfigRouteData {
-	return PropIP6ConfigRouteData{
+func (v *ip6Config) RouteData() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "RouteData",
 	}
-}
-
-type PropIP6ConfigRouteData struct {
-	Impl proxy.Implementer
-}
-
-func (p PropIP6ConfigRouteData) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"RouteData", &value)
-	return
-}
-
-func (p PropIP6ConfigRouteData) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"RouteData", cb0)
 }
 
 // property Nameservers aay
@@ -1852,44 +1591,11 @@ func (v *manager) Connectivity() proxy.PropUint32 {
 
 // property GlobalDnsConfiguration a{sv}
 
-func (v *manager) GlobalDnsConfiguration() PropManagerGlobalDnsConfiguration {
-	return PropManagerGlobalDnsConfiguration{
+func (v *manager) GlobalDnsConfiguration() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "GlobalDnsConfiguration",
 	}
-}
-
-type PropManagerGlobalDnsConfiguration struct {
-	Impl proxy.Implementer
-}
-
-func (p PropManagerGlobalDnsConfiguration) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"GlobalDnsConfiguration", &value)
-	return
-}
-
-func (p PropManagerGlobalDnsConfiguration) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
-	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), "GlobalDnsConfiguration", value)
-}
-
-func (p PropManagerGlobalDnsConfiguration) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"GlobalDnsConfiguration", cb0)
 }
 
 type PPP struct {
@@ -3225,40 +2931,11 @@ func (v *device) Metered() proxy.PropUint32 {
 
 // property LldpNeighbors aa{sv}
 
-func (v *device) LldpNeighbors() PropLldpNeighbors {
-	return PropLldpNeighbors{
+func (v *device) LldpNeighbors() PropMapSVSlice {
+	return PropMapSVSlice{
 		Impl: v,
+		Name: "LldpNeighbors",
 	}
-}
-
-type PropLldpNeighbors struct {
-	Impl proxy.Implementer
-}
-
-func (p PropLldpNeighbors) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"LldpNeighbors", &value)
-	return
-}
-
-func (p PropLldpNeighbors) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"LldpNeighbors", cb0)
 }
 
 // property Real b
@@ -5234,4 +4911,109 @@ func (v *wiMaxNsp) NetworkType() proxy.PropUint32 {
 		Impl: v,
 		Name: "NetworkType",
 	}
+}
+
+type PropMapStringVariant struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v map[string]dbus.Variant
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+type PropMapSVSlice struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropMapSVSlice) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropMapSVSlice) Set(flags dbus.Flags, value []map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropMapSVSlice) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v []map[string]dbus.Variant
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+type PropUint32SliceSlice struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropUint32SliceSlice) Get(flags dbus.Flags) (value [][]uint32, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropUint32SliceSlice) Set(flags dbus.Flags, value [][]uint32) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropUint32SliceSlice) ConnectChanged(cb func(hasValue bool, value [][]uint32)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v [][]uint32
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
 }

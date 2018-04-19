@@ -1168,40 +1168,11 @@ func (v *seat) Id() proxy.PropString {
 
 // property ActiveSession (so)
 
-func (v *seat) ActiveSession() PropSeatActiveSession {
-	return PropSeatActiveSession{
+func (v *seat) ActiveSession() PropSessionInfo {
+	return PropSessionInfo{
 		Impl: v,
+		Name: "ActiveSession",
 	}
-}
-
-type PropSeatActiveSession struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSeatActiveSession) Get(flags dbus.Flags) (value SessionInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ActiveSession", &value)
-	return
-}
-
-func (p PropSeatActiveSession) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v SessionInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, SessionInfo{})
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ActiveSession", cb0)
 }
 
 // property CanMultiSession b
@@ -1233,40 +1204,11 @@ func (v *seat) CanGraphical() proxy.PropBool {
 
 // property Sessions a(so)
 
-func (v *seat) Sessions() PropSeatSessions {
-	return PropSeatSessions{
+func (v *seat) Sessions() PropSessionInfoSlice {
+	return PropSessionInfoSlice{
 		Impl: v,
+		Name: "Sessions",
 	}
-}
-
-type PropSeatSessions struct {
-	Impl proxy.Implementer
-}
-
-func (p PropSeatSessions) Get(flags dbus.Flags) (value []SessionInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Sessions", &value)
-	return
-}
-
-func (p PropSeatSessions) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []SessionInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Sessions", cb0)
 }
 
 // property IdleHint b
@@ -1947,40 +1889,11 @@ func (v *user) Slice() proxy.PropString {
 
 // property Display (so)
 
-func (v *user) Display() PropUserDisplay {
-	return PropUserDisplay{
+func (v *user) Display() PropSessionInfo {
+	return PropSessionInfo{
 		Impl: v,
+		Name: "Display",
 	}
-}
-
-type PropUserDisplay struct {
-	Impl proxy.Implementer
-}
-
-func (p PropUserDisplay) Get(flags dbus.Flags) (value SessionInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Display", &value)
-	return
-}
-
-func (p PropUserDisplay) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v SessionInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, SessionInfo{})
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Display", cb0)
 }
 
 // property State s
@@ -1994,40 +1907,11 @@ func (v *user) State() proxy.PropString {
 
 // property Sessions a(so)
 
-func (v *user) Sessions() PropUserSessions {
-	return PropUserSessions{
+func (v *user) Sessions() PropSessionInfoSlice {
+	return PropSessionInfoSlice{
 		Impl: v,
+		Name: "Sessions",
 	}
-}
-
-type PropUserSessions struct {
-	Impl proxy.Implementer
-}
-
-func (p PropUserSessions) Get(flags dbus.Flags) (value []SessionInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Sessions", &value)
-	return
-}
-
-func (p PropUserSessions) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []SessionInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Sessions", cb0)
 }
 
 // property IdleHint b
@@ -2064,4 +1948,74 @@ func (v *user) Linger() proxy.PropBool {
 		Impl: v,
 		Name: "Linger",
 	}
+}
+
+type PropSessionInfo struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropSessionInfo) Get(flags dbus.Flags) (value SessionInfo, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropSessionInfo) Set(flags dbus.Flags, value SessionInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropSessionInfo) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v SessionInfo
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, SessionInfo{})
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+type PropSessionInfoSlice struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropSessionInfoSlice) Get(flags dbus.Flags) (value []SessionInfo, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropSessionInfoSlice) Set(flags dbus.Flags, value []SessionInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropSessionInfoSlice) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v []SessionInfo
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
 }

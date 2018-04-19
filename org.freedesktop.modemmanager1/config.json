@@ -107,24 +107,19 @@
           "Type": "modemSignal",
           "Fixes": {
             "p/Cdma": {
-              "Type": "PropModemSignalCdma",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             },
             "p/Evdo": {
-              "Type": "PropModemSignalEvdo",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             },
             "p/Gsm": {
-              "Type": "PropModemSignalGsm",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             },
             "p/Umts": {
-              "Type": "PropModemSignalUmts",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             },
             "p/Lte": {
-              "Type": "PropModemSignalLte",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             }
           }
         },
@@ -139,8 +134,7 @@
           "Type": "modemTime",
           "Fixes": {
             "p/NetworkTimezone": {
-              "Type": "PropModemNetworkTimezone",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             }
           }
         },
@@ -150,6 +144,12 @@
           "Type": "modemVoice"
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropMapStringVariant",
+      "ValueType": "map[string]dbus.Variant"
     }
   ]
 }

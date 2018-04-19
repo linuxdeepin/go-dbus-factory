@@ -40,26 +40,31 @@
           "Type":"monitor",
           "Fixes": {
             "p/BestMode": {
-              "Type": "PropMonitorBestMode",
-              "ValueType": "ModeInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropModeInfo"
             },
             "p/CurrentMode": {
-              "Type": "PropMonitorCurrentMode",
-              "ValueType": "ModeInfo",
-              "EmptyValue": "$T{}"
+              "RefType": "PropModeInfo"
             },
             "p/Modes": {
-              "Type": "PropMonitorModes",
-              "ValueType": "[]ModeInfo"
+              "RefType": "PropModeInfoSlice"
             },
             "p/PreferredModes": {
-              "Type": "PropMonitorPreferredModes",
-              "ValueType": "[]ModeInfo"
+              "RefType": "PropModeInfoSlice"
             }
           }
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropModeInfo",
+      "ValueType": "ModeInfo",
+      "EmptyValue": "$T{}"
+    },
+    {
+      "Type": "PropModeInfoSlice",
+      "ValueType": "[]ModeInfo"
     }
   ]
 }

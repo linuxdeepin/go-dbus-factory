@@ -13,8 +13,27 @@ import (
 )
 
 type ServiceConfig struct {
-	Service string // optional
-	Objects []*ObjectConfig
+	Service       string // optional
+	Objects       []*ObjectConfig
+	PropertyTypes []PropertyTypeConfig
+}
+
+type PropertyTypeConfig struct {
+	Type       string
+	ValueType  string
+	EmptyValue string
+}
+
+func (ptc *PropertyTypeConfig) autoFill() {
+	if ptc.EmptyValue == "" {
+		if strings.HasPrefix(ptc.ValueType, "map[") ||
+			strings.HasPrefix(ptc.ValueType, "[]") {
+			ptc.EmptyValue = "nil"
+		}
+	} else {
+		ptc.EmptyValue = strings.Replace(ptc.EmptyValue, "$T",
+			ptc.ValueType, 1)
+	}
 }
 
 type ObjectConfig struct {
@@ -98,17 +117,9 @@ func (ic *InterfaceConfig) getPropertyFix(name string) *PropertyFix {
 	if err != nil {
 		return nil
 	}
-
-	if propFix.EmptyValue == "" {
-		if strings.HasPrefix(propFix.ValueType, "map[") ||
-			strings.HasPrefix(propFix.ValueType, "[]") {
-			propFix.EmptyValue = "nil"
-		}
-	} else {
-		propFix.EmptyValue = strings.Replace(propFix.EmptyValue, "$T",
-			propFix.ValueType, 1)
+	if propFix.RefType == "" {
+		propFix.autoFill()
 	}
-
 	return &propFix
 }
 
@@ -142,10 +153,9 @@ type ArgFix struct {
 }
 
 type PropertyFix struct {
-	Type       string
-	ValueType  string
-	EmptyValue string
-	RenameTo   string
+	PropertyTypeConfig
+	RenameTo string
+	RefType  string
 }
 
 func loadConfig(file string) (*ServiceConfig, error) {

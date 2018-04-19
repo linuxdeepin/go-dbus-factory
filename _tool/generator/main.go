@@ -105,6 +105,11 @@ func main() {
 		}
 	}
 
+	for _, propTypeCfg := range srvCfg.PropertyTypes {
+		propTypeCfg.autoFill()
+		writePropType(sf.GoBody, propTypeCfg)
+	}
+
 	sf.Save(filepath.Join(dir, "auto.go"))
 }
 
@@ -314,6 +319,62 @@ func getPropType(ty string) string {
 	return ""
 }
 
+func writePropType(sb *SourceBody, propTypeCfg PropertyTypeConfig) {
+	const propName = "p.Name"
+
+	sb.Pn("type %s struct {", propTypeCfg.Type)
+	sb.Pn("    Impl proxy.Implementer")
+	sb.Pn("    Name string")
+	sb.Pn("}\n")
+
+	writePropGet(sb, propTypeCfg, propName)
+	writePropSet(sb, propTypeCfg, propName)
+	writePropConnectChanged(sb, propTypeCfg, propName)
+}
+
+func writePropGet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+	sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
+	sb.Pn("%s, &value)", propName)
+	sb.Pn("    return")
+	sb.Pn("}\n")
+}
+
+func writePropSet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+	sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
+		" p.Impl.GetInterfaceName_(), %s, value)", propName)
+	sb.Pn("}\n")
+}
+
+func writePropConnectChanged(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+	sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn("if cb == nil {")
+	sb.Pn("    return errors.New(\"nil callback\")")
+	sb.Pn("}")
+	sb.Pn("cb0 := func(hasValue bool, value interface{}) {")
+
+	sb.Pn("if hasValue {")
+	sb.Pn("    var v %s", propTypeCfg.ValueType)
+	sb.Pn("    err := dbus.Store([]interface{}{value}, &v)")
+	sb.Pn("    if err != nil {")
+	sb.Pn("        return")
+	sb.Pn("    }")
+	sb.Pn("    cb(true, v)")
+	sb.Pn("} else {")
+	sb.Pn("    cb(false, %s)", propTypeCfg.EmptyValue)
+	sb.Pn("}")
+
+	sb.Pn("}") // end cb0
+
+	sb.Pn("return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),")
+	sb.Pn("%s, cb0)", propName)
+	sb.Pn("}\n")
+}
+
 func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig,
 	methodSameName bool) {
 	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
@@ -334,6 +395,10 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 	}
 
 	propType := getPropType(prop.Type)
+	if propType == "" && propFix != nil && propFix.RefType != "" {
+		propType = propFix.RefType
+	}
+
 	if propType != "" {
 		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, funcName, propType)
 		sb.Pn("    return %s{", propType)
@@ -344,7 +409,8 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		sb.Pn("}\n")
 	} else {
 		if propFix == nil {
-			panic(fmt.Errorf("failed to get property fix for %s.%s", ifcCfg.Name, prop.Name))
+			panic(fmt.Errorf("failed to get property fix for %s.%s",
+				ifcCfg.Name, prop.Name))
 		}
 
 		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propFix.Type)
@@ -357,49 +423,14 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		sb.Pn("Impl proxy.Implementer")
 		sb.Pn("}\n")
 
-		// Get
+		quotedPropName := strconv.Quote(prop.Name)
 		if strings.Contains(prop.Access, "read") {
-			sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
-				propFix.Type, propFix.ValueType)
-			sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
-			sb.Pn("%q, &value)", prop.Name)
-			sb.Pn("    return")
-			sb.Pn("}\n")
+			writePropGet(sb, propFix.PropertyTypeConfig, quotedPropName)
 		}
-
-		// Set
 		if strings.Contains(prop.Access, "write") {
-			sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
-				propFix.Type, propFix.ValueType)
-			sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
-				" p.Impl.GetInterfaceName_(), %q, value)", prop.Name)
-			sb.Pn("}\n")
+			writePropSet(sb, propFix.PropertyTypeConfig, quotedPropName)
 		}
-
-		// ConnectChanged
-		sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
-			propFix.Type, propFix.ValueType)
-		sb.Pn("if cb == nil {")
-		sb.Pn("    return errors.New(\"nil callback\")")
-		sb.Pn("}")
-		sb.Pn("cb0 := func(hasValue bool, value interface{}) {")
-
-		sb.Pn("if hasValue {")
-		sb.Pn("    var v %s", propFix.ValueType)
-		sb.Pn("    err := dbus.Store([]interface{}{value}, &v)")
-		sb.Pn("    if err != nil {")
-		sb.Pn("        return")
-		sb.Pn("    }")
-		sb.Pn("    cb(true, v)")
-		sb.Pn("} else {")
-		sb.Pn("    cb(false, %s)", propFix.EmptyValue)
-		sb.Pn("}")
-
-		sb.Pn("}") // end cb0
-
-		sb.Pn("return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),")
-		sb.Pn("%q, cb0)", prop.Name)
-		sb.Pn("}\n")
+		writePropConnectChanged(sb, propFix.PropertyTypeConfig, quotedPropName)
 	}
 }
 

@@ -58,8 +58,7 @@
           "Accessor": "Block",
           "Fixes": {
             "p/Symlinks": {
-              "Type": "PropBlockSymlinks",
-              "ValueType": "[][]byte"
+              "RefType": "PropByteSliceSlice"
             },
             "p/Configuration": {
               "Type": "PropBlockConfiguration",
@@ -111,12 +110,17 @@
           "Accessor": "Filesystem",
           "Fixes": {
             "p/MountPoints": {
-              "Type": "PropFsMountPoints",
-              "ValueType": "[][]byte"
+              "RefType": "PropByteSliceSlice"
             }
           }
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropByteSliceSlice",
+      "ValueType": "[][]byte"
     }
   ]
 }

@@ -1460,192 +1460,47 @@ func (v *modemSignal) Rate() proxy.PropUint32 {
 
 // property Cdma a{sv}
 
-func (v *modemSignal) Cdma() PropModemSignalCdma {
-	return PropModemSignalCdma{
+func (v *modemSignal) Cdma() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Cdma",
 	}
-}
-
-type PropModemSignalCdma struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemSignalCdma) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Cdma", &value)
-	return
-}
-
-func (p PropModemSignalCdma) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Cdma", cb0)
 }
 
 // property Evdo a{sv}
 
-func (v *modemSignal) Evdo() PropModemSignalEvdo {
-	return PropModemSignalEvdo{
+func (v *modemSignal) Evdo() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Evdo",
 	}
-}
-
-type PropModemSignalEvdo struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemSignalEvdo) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Evdo", &value)
-	return
-}
-
-func (p PropModemSignalEvdo) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Evdo", cb0)
 }
 
 // property Gsm a{sv}
 
-func (v *modemSignal) Gsm() PropModemSignalGsm {
-	return PropModemSignalGsm{
+func (v *modemSignal) Gsm() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Gsm",
 	}
-}
-
-type PropModemSignalGsm struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemSignalGsm) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Gsm", &value)
-	return
-}
-
-func (p PropModemSignalGsm) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Gsm", cb0)
 }
 
 // property Umts a{sv}
 
-func (v *modemSignal) Umts() PropModemSignalUmts {
-	return PropModemSignalUmts{
+func (v *modemSignal) Umts() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Umts",
 	}
-}
-
-type PropModemSignalUmts struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemSignalUmts) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Umts", &value)
-	return
-}
-
-func (p PropModemSignalUmts) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Umts", cb0)
 }
 
 // property Lte a{sv}
 
-func (v *modemSignal) Lte() PropModemSignalLte {
-	return PropModemSignalLte{
+func (v *modemSignal) Lte() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "Lte",
 	}
-}
-
-type PropModemSignalLte struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemSignalLte) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Lte", &value)
-	return
-}
-
-func (p PropModemSignalLte) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Lte", cb0)
 }
 
 func (obj *Modem) Simple() *modemSimple {
@@ -1762,40 +1617,11 @@ func (v *modemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.Si
 
 // property NetworkTimezone a{sv}
 
-func (v *modemTime) NetworkTimezone() PropModemNetworkTimezone {
-	return PropModemNetworkTimezone{
+func (v *modemTime) NetworkTimezone() PropMapStringVariant {
+	return PropMapStringVariant{
 		Impl: v,
+		Name: "NetworkTimezone",
 	}
-}
-
-type PropModemNetworkTimezone struct {
-	Impl proxy.Implementer
-}
-
-func (p PropModemNetworkTimezone) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"NetworkTimezone", &value)
-	return
-}
-
-func (p PropModemNetworkTimezone) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"NetworkTimezone", cb0)
 }
 
 func (obj *Modem) Voice() *modemVoice {
@@ -1913,4 +1739,39 @@ func (v *modemVoice) Calls() proxy.PropObjectPathArray {
 		Impl: v,
 		Name: "Calls",
 	}
+}
+
+type PropMapStringVariant struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p PropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v map[string]dbus.Variant
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
 }

@@ -48,8 +48,7 @@
           "Type": "dhcp4Config",
           "Fixes": {
             "p/Options": {
-              "Type": "PropDhcp4ConfigOptions",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             }
           }
         }
@@ -64,8 +63,7 @@
           "Type": "dhcp6Config",
           "Fixes": {
             "p/Options": {
-              "Type": "PropDhcp6ConfigOptions",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             }
           }
         }
@@ -80,8 +78,7 @@
           "Type": "dnsManager",
           "Fixes": {
             "p/Configuration": {
-              "Type": "PropDnsManagerConfiguration",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             }
           }
         }
@@ -95,20 +92,16 @@
           "Type": "ip4Config",
           "Fixes": {
             "p/Addresses": {
-              "Type": "PropIP4ConfigAddresses",
-              "ValueType": "[][]uint32"
+              "RefType": "PropUint32SliceSlice"
             },
             "p/Routes": {
-              "Type": "PropIP4ConfigRoutes",
-              "ValueType": "[][]uint32"
+              "RefType": "PropUint32SliceSlice"
             },
             "p/AddressData": {
-              "Type": "PropIP4ConfigAddressData",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             },
             "p/RouteData": {
-              "Type": "PropIP4ConfigRouteData",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             }
           }
         }
@@ -122,12 +115,10 @@
           "Type": "ip6Config",
           "Fixes": {
             "p/AddressData": {
-              "Type": "PropIP6ConfigAddressData",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             },
             "p/RouteData": {
-              "Type": "PropIP6ConfigRouteData",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             },
             "p/Addresses": {
               "Type": "PropIP6ConfigAddresses",
@@ -155,8 +146,7 @@
           "Type": "manager",
           "Fixes": {
             "p/GlobalDnsConfiguration": {
-              "Type": "PropManagerGlobalDnsConfiguration",
-              "ValueType": "map[string]dbus.Variant"
+              "RefType": "PropMapStringVariant"
             }
           }
         }
@@ -235,8 +225,7 @@
               "EmptyValue": "$T{}"
             },
             "p/LldpNeighbors": {
-              "Type": "PropLldpNeighbors",
-              "ValueType": "[]map[string]dbus.Variant"
+              "RefType": "PropMapSVSlice"
             }
           }
         },
@@ -351,6 +340,20 @@
           "Type": "wiMaxNsp"
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropMapStringVariant",
+      "ValueType": "map[string]dbus.Variant"
+    },
+    {
+      "Type": "PropMapSVSlice",
+      "ValueType": "[]map[string]dbus.Variant"
+    },
+    {
+      "Type": "PropUint32SliceSlice",
+      "ValueType": "[][]uint32"
     }
   ]
 }

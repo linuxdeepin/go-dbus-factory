@@ -602,61 +602,56 @@ func (v *monitor) Reflects() proxy.PropUint16Array {
 
 // property BestMode (uqqd)
 
-func (v *monitor) BestMode() PropMonitorBestMode {
-	return PropMonitorBestMode{
+func (v *monitor) BestMode() PropModeInfo {
+	return PropModeInfo{
 		Impl: v,
+		Name: "BestMode",
 	}
-}
-
-type PropMonitorBestMode struct {
-	Impl proxy.Implementer
-}
-
-func (p PropMonitorBestMode) Get(flags dbus.Flags) (value ModeInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"BestMode", &value)
-	return
-}
-
-func (p PropMonitorBestMode) ConnectChanged(cb func(hasValue bool, value ModeInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v ModeInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, ModeInfo{})
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"BestMode", cb0)
 }
 
 // property CurrentMode (uqqd)
 
-func (v *monitor) CurrentMode() PropMonitorCurrentMode {
-	return PropMonitorCurrentMode{
+func (v *monitor) CurrentMode() PropModeInfo {
+	return PropModeInfo{
 		Impl: v,
+		Name: "CurrentMode",
 	}
 }
 
-type PropMonitorCurrentMode struct {
-	Impl proxy.Implementer
+// property Modes a(uqqd)
+
+func (v *monitor) Modes() PropModeInfoSlice {
+	return PropModeInfoSlice{
+		Impl: v,
+		Name: "Modes",
+	}
 }
 
-func (p PropMonitorCurrentMode) Get(flags dbus.Flags) (value ModeInfo, err error) {
+// property PreferredModes a(uqqd)
+
+func (v *monitor) PreferredModes() PropModeInfoSlice {
+	return PropModeInfoSlice{
+		Impl: v,
+		Name: "PreferredModes",
+	}
+}
+
+type PropModeInfo struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p PropModeInfo) Get(flags dbus.Flags) (value ModeInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"CurrentMode", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropMonitorCurrentMode) ConnectChanged(cb func(hasValue bool, value ModeInfo)) error {
+func (p PropModeInfo) Set(flags dbus.Flags, value ModeInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropModeInfo) ConnectChanged(cb func(hasValue bool, value ModeInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -673,28 +668,25 @@ func (p PropMonitorCurrentMode) ConnectChanged(cb func(hasValue bool, value Mode
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"CurrentMode", cb0)
+		p.Name, cb0)
 }
 
-// property Modes a(uqqd)
-
-func (v *monitor) Modes() PropMonitorModes {
-	return PropMonitorModes{
-		Impl: v,
-	}
-}
-
-type PropMonitorModes struct {
+type PropModeInfoSlice struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropMonitorModes) Get(flags dbus.Flags) (value []ModeInfo, err error) {
+func (p PropModeInfoSlice) Get(flags dbus.Flags) (value []ModeInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Modes", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropMonitorModes) ConnectChanged(cb func(hasValue bool, value []ModeInfo)) error {
+func (p PropModeInfoSlice) Set(flags dbus.Flags, value []ModeInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p PropModeInfoSlice) ConnectChanged(cb func(hasValue bool, value []ModeInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -711,43 +703,5 @@ func (p PropMonitorModes) ConnectChanged(cb func(hasValue bool, value []ModeInfo
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Modes", cb0)
-}
-
-// property PreferredModes a(uqqd)
-
-func (v *monitor) PreferredModes() PropMonitorPreferredModes {
-	return PropMonitorPreferredModes{
-		Impl: v,
-	}
-}
-
-type PropMonitorPreferredModes struct {
-	Impl proxy.Implementer
-}
-
-func (p PropMonitorPreferredModes) Get(flags dbus.Flags) (value []ModeInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"PreferredModes", &value)
-	return
-}
-
-func (p PropMonitorPreferredModes) ConnectChanged(cb func(hasValue bool, value []ModeInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v []ModeInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"PreferredModes", cb0)
+		p.Name, cb0)
 }
