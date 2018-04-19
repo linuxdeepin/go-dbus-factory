@@ -1,0 +1,196 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!-- GDBus 2.53.4 -->
+<node>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="out"/>
+    </method>
+    <method name="GetAll">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg type="s" name="interface_name"/>
+      <arg type="a{sv}" name="changed_properties"/>
+      <arg type="as" name="invalidated_properties"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg type="s" name="xml_data" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg type="s" name="machine_uuid" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.ColorManager">
+    <method name="GetDevices">
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="GetDevicesByKind">
+      <arg type="s" name="kind" direction="in">
+      </arg>
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="FindDeviceById">
+      <arg type="s" name="device_id" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="FindSensorById">
+      <arg type="s" name="sensor_id" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="FindDeviceByProperty">
+      <arg type="s" name="key" direction="in">
+      </arg>
+      <arg type="s" name="value" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="FindProfileById">
+      <arg type="s" name="profile_id" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="FindProfileByProperty">
+      <arg type="s" name="key" direction="in">
+      </arg>
+      <arg type="s" name="value" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="FindProfileByFilename">
+      <arg type="s" name="filename" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="GetStandardSpace">
+      <arg type="s" name="standard_space" direction="in">
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="GetProfiles">
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="GetSensors">
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="GetProfilesByKind">
+      <arg type="s" name="kind" direction="in">
+      </arg>
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="CreateProfileWithFd">
+      <arg type="s" name="profile_id" direction="in">
+      </arg>
+      <arg type="s" name="scope" direction="in">
+      </arg>
+      <arg type="h" name="handle" direction="in">
+      </arg>
+      <arg type="a{ss}" name="properties" direction="in">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="CdStringMap">
+        </annotation>
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="CreateProfile">
+      <arg type="s" name="profile_id" direction="in">
+      </arg>
+      <arg type="s" name="scope" direction="in">
+      </arg>
+      <arg type="a{ss}" name="properties" direction="in">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="CdStringMap">
+        </annotation>
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="CreateDevice">
+      <arg type="s" name="device_id" direction="in">
+      </arg>
+      <arg type="s" name="scope" direction="in">
+      </arg>
+      <arg type="a{ss}" name="properties" direction="in">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="CdStringMap">
+        </annotation>
+      </arg>
+      <arg type="o" name="object_path" direction="out">
+      </arg>
+    </method>
+    <method name="DeleteDevice">
+      <arg type="o" name="object_path" direction="in">
+      </arg>
+    </method>
+    <method name="DeleteProfile">
+      <arg type="o" name="object_path" direction="in">
+      </arg>
+    </method>
+    <signal name="Changed">
+    </signal>
+    <signal name="DeviceAdded">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="DeviceRemoved">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="DeviceChanged">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="ProfileAdded">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="ProfileRemoved">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="SensorAdded">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="SensorRemoved">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <signal name="ProfileChanged">
+      <arg type="o" name="object_path">
+      </arg>
+    </signal>
+    <property type="s" name="DaemonVersion" access="read">
+    </property>
+    <property type="s" name="SystemVendor" access="read">
+    </property>
+    <property type="s" name="SystemModel" access="read">
+    </property>
+  </interface>
+  <node name="profiles"/>
+</node>

@@ -1,0 +1,31 @@
+{
+  "Service": "org.freedesktop.ColorManager",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/freedesktop/ColorManager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.ColorManager",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type": "Profile",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.ColorManager.Profile",
+          "Type": "profile",
+          "Fixes": {
+            "p/Metadata": {
+              "Type": "PropProfileMetadata",
+              "ValueType": "map[string]string",
+              "EmptyValue": "nil"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
