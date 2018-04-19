@@ -1,4 +1,50 @@
 
+[0.0.2] 2018-04-19
+*   feat(generator): common property type define supported
+*   feat: autofill PropertyFix.EmptyValue
+*   add org.freedesktop.colormanager
+*   add org.freedesktop.modemmanager1
+*   add org.freedesktop.networkmanager device
+*   feat: add PropertyFix RenameTo
+*   add net.reactivated.fprint.Device
+*   add org.freedesktop.networkmanager
+*   add org.freedesktop.miracle.wfd
+*   add org.freedesktop.miracle.wifi
+*   add org.mpris.mediaplayer2
+*   update README
+*   add README
+*   add org.freedesktop.udisks2
+*   add org.ayatana.bamf
+*   add org.freedesktop.secrets
+*   add org.freedesktop.policykit1
+*   add org.freedesktop.timedate1
+*   add org.freedesktop.notifications
+*   add org.freedesktop.screensaver
+*   add com.deepin.daemon.daemon
+*   add com.deepin.daemon.greeter
+*   add com.deepin.api.cursorhelper
+*   add com.deepin.daemon.timedated
+*   add com.deepin.daemon.accounts
+*   add com.deepin.daemon.helper.backlight
+*   add com.deepin.daemon.inputdevices
+*   add com.deepin.daemon.gesture
+*   add com.deepin.daemon.network
+*   add com.deepin.api.localehelper
+*   add com.deepin.api.pinyin
+*   add com.deepin.system.power
+*   add com.deepin.daemon.audio
+*   add com.deepin.daemon.display
+*   add com.deepin.dde.launcher
+*   add com.deepin.daemon.apps
+*   add com.deepin.api.device
+*   add com.deepin.sessionmanager
+*   add org.freedesktop.dbus
+*   add org.bluez
+*   add net.reactivated.fprint
+*   add com.deepin.wm
+*   change package name
+*   add golang-dlib-dev
+
 [0.0.1] 2018-03-28
 *   regen
 *   check whether the callback is nil
