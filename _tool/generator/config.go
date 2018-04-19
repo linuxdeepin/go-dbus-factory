@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
@@ -97,6 +98,17 @@ func (ic *InterfaceConfig) getPropertyFix(name string) *PropertyFix {
 	if err != nil {
 		return nil
 	}
+
+	if propFix.EmptyValue == "" {
+		if strings.HasPrefix(propFix.ValueType, "map[") ||
+			strings.HasPrefix(propFix.ValueType, "[]") {
+			propFix.EmptyValue = "nil"
+		}
+	} else {
+		propFix.EmptyValue = strings.Replace(propFix.EmptyValue, "$T",
+			propFix.ValueType, 1)
+	}
+
 	return &propFix
 }
 

@@ -26,28 +26,25 @@
           "Fixes": {
             "p/Ports": {
               "Type": "PropModemPorts",
-              "ValueType": "[]ModemPort",
-              "EmptyValue": "nil"
+              "ValueType": "[]ModemPort"
             },
             "p/UnlockRetries": {
               "Type": "PropModemUnlockRetries",
-              "ValueType": "map[uint32]uint32",
-              "EmptyValue": "nil"
+              "ValueType": "map[uint32]uint32"
             },
             "p/SignalQuality": {
               "Type": "PropModemSignalQuality",
               "ValueType": "ModemSignalQuality",
-              "EmptyValue": "ModemSignalQuality{}"
+              "EmptyValue": "$T{}"
             },
             "p/SupportedModes": {
               "Type": "PropModemSupportedModes",
-              "ValueType": "[]ModemModes",
-              "EmptyValue": "nil"
+              "ValueType": "[]ModemModes"
             },
             "p/CurrentModes": {
               "Type": "PropModemCurrentModes",
               "ValueType": "ModemModes",
-              "EmptyValue": "ModemModes{}"
+              "EmptyValue": "$T{}"
             },
             "m/SetCurrentModes": [
               {
@@ -69,8 +66,7 @@
           "Fixes": {
             "p/Location": {
               "Type": "PropModemLocation",
-              "ValueType": "map[uint32]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[uint32]dbus.Variant"
             }
           }
         },
@@ -101,8 +97,7 @@
           "Fixes": {
             "p/PendingNetworkInitiatedSessions": {
               "Type": "PropModemOmaPendingNetworkInitiatedSessions",
-              "ValueType": "[]OmaSession",
-              "EmptyValue": "nil"
+              "ValueType": "[]OmaSession"
             }
           }
         },
@@ -113,28 +108,23 @@
           "Fixes": {
             "p/Cdma": {
               "Type": "PropModemSignalCdma",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             },
             "p/Evdo": {
               "Type": "PropModemSignalEvdo",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             },
             "p/Gsm": {
               "Type": "PropModemSignalGsm",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             },
             "p/Umts": {
               "Type": "PropModemSignalUmts",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             },
             "p/Lte": {
               "Type": "PropModemSignalLte",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         },
@@ -150,8 +140,7 @@
           "Fixes": {
             "p/NetworkTimezone": {
               "Type": "PropModemNetworkTimezone",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         },

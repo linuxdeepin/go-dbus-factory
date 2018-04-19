@@ -12,7 +12,7 @@
             "p/FrontendWindowRect": {
               "Type": "PropDockFrontendWindowRect",
               "ValueType": "FrontendWindowRect",
-              "EmptyValue": "FrontendWindowRect{}"
+              "EmptyValue": "$T{}"
             }
           }
         }
@@ -28,8 +28,7 @@
           "Fixes": {
             "p/WindowInfos": {
               "Type": "PropEntryWindowInfos",
-              "ValueType": "map[uint32]WindowInfo",
-              "EmptyValue": "nil"
+              "ValueType": "map[uint32]WindowInfo"
             }
           }
         }

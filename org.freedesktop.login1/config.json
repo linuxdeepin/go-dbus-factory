@@ -12,7 +12,7 @@
             "p/ScheduledShutdown": {
               "Type": "PropManagerScheduledShutdown",
               "ValueType": "ScheduledShutdown",
-              "EmptyValue": "ScheduledShutdown{}"
+              "EmptyValue": "$T{}"
             },
             "m/ListSessions": [
               {
@@ -52,12 +52,11 @@
             "p/ActiveSession": {
               "Type": "PropSeatActiveSession",
               "ValueType": "SessionInfo",
-              "EmptyValue": "SessionInfo{}"
+              "EmptyValue": "$T{}"
             },
             "p/Sessions": {
               "Type": "PropSeatSessions",
-              "ValueType": "[]SessionInfo",
-              "EmptyValue": "nil"
+              "ValueType": "[]SessionInfo"
             }
           }
         }
@@ -73,12 +72,12 @@
             "p/User": {
               "Type": "PropSessionUser",
               "ValueType": "UserInfo",
-              "EmptyValue": "UserInfo{}"
+              "EmptyValue": "$T{}"
             },
             "p/Seat": {
               "Type": "PropSessionSeat",
               "ValueType": "SeatInfo",
-              "EmptyValue": "SeatInfo{}"
+              "EmptyValue": "$T{}"
             }
           }
         }
@@ -94,12 +93,11 @@
             "p/Display": {
               "Type": "PropUserDisplay",
               "ValueType": "SessionInfo",
-              "EmptyValue": "SessionInfo{}"
+              "EmptyValue": "$T{}"
             },
             "p/Sessions": {
               "Type": "PropUserSessions",
-              "ValueType": "[]SessionInfo",
-              "EmptyValue": "nil"
+              "ValueType": "[]SessionInfo"
             }
           }
         }

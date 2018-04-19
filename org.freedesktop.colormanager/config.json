@@ -20,8 +20,7 @@
           "Fixes": {
             "p/Metadata": {
               "Type": "PropProfileMetadata",
-              "ValueType": "map[string]string",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]string"
             }
           }
         }

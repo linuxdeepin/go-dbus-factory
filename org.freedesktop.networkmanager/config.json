@@ -49,8 +49,7 @@
           "Fixes": {
             "p/Options": {
               "Type": "PropDhcp4ConfigOptions",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         }
@@ -66,8 +65,7 @@
           "Fixes": {
             "p/Options": {
               "Type": "PropDhcp6ConfigOptions",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         }
@@ -83,8 +81,7 @@
           "Fixes": {
             "p/Configuration": {
               "Type": "PropDnsManagerConfiguration",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             }
           }
         }
@@ -99,23 +96,19 @@
           "Fixes": {
             "p/Addresses": {
               "Type": "PropIP4ConfigAddresses",
-              "ValueType": "[][]uint32",
-              "EmptyValue": "nil"
+              "ValueType": "[][]uint32"
             },
             "p/Routes": {
               "Type": "PropIP4ConfigRoutes",
-              "ValueType": "[][]uint32",
-              "EmptyValue": "nil"
+              "ValueType": "[][]uint32"
             },
             "p/AddressData": {
               "Type": "PropIP4ConfigAddressData",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             },
             "p/RouteData": {
               "Type": "PropIP4ConfigRouteData",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             }
           }
         }
@@ -130,28 +123,23 @@
           "Fixes": {
             "p/AddressData": {
               "Type": "PropIP6ConfigAddressData",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             },
             "p/RouteData": {
               "Type": "PropIP6ConfigRouteData",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             },
             "p/Addresses": {
               "Type": "PropIP6ConfigAddresses",
-              "ValueType": "[]IP6Address",
-              "EmptyValue": "nil"
+              "ValueType": "[]IP6Address"
             },
             "p/Routes": {
               "Type": "PropIP6ConfigRoutes",
-              "ValueType": "[]IP6Route",
-              "EmptyValue": "nil"
+              "ValueType": "[]IP6Route"
             },
             "p/Nameservers": {
               "Type": "PropIP6NameServers",
-              "ValueType": "[][]byte",
-              "EmptyValue": "nil"
+              "ValueType": "[][]byte"
             }
           }
         }
@@ -168,8 +156,7 @@
           "Fixes": {
             "p/GlobalDnsConfiguration": {
               "Type": "PropManagerGlobalDnsConfiguration",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         }
@@ -245,12 +232,11 @@
             "p/StateReason": {
               "Type": "PropDeviceStateReason",
               "ValueType": "DeviceStateReason",
-              "EmptyValue": "DeviceStateReason{}"
+              "EmptyValue": "$T{}"
             },
             "p/LldpNeighbors": {
               "Type": "PropLldpNeighbors",
-              "ValueType": "[]map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "[]map[string]dbus.Variant"
             }
           }
         },

@@ -18,17 +18,15 @@
             "p/PrimaryRect": {
               "Type": "PropDisplayPrimaryRect",
               "ValueType": "Rectangle",
-              "EmptyValue": "Rectangle{}"
+              "EmptyValue": "$T{}"
             },
             "p/Brightness": {
               "Type": "PropDisplayBrightness",
-              "ValueType": "map[string]float64",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]float64"
             },
             "p/TouchMap": {
               "Type": "PropDisplayTouchMap",
-              "ValueType": "map[string]string",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]string"
             }
           }
         }
@@ -44,22 +42,20 @@
             "p/BestMode": {
               "Type": "PropMonitorBestMode",
               "ValueType": "ModeInfo",
-              "EmptyValue": "ModeInfo{}"
+              "EmptyValue": "$T{}"
             },
             "p/CurrentMode": {
               "Type": "PropMonitorCurrentMode",
               "ValueType": "ModeInfo",
-              "EmptyValue": "ModeInfo{}"
+              "EmptyValue": "$T{}"
             },
             "p/Modes": {
               "Type": "PropMonitorModes",
-              "ValueType": "[]ModeInfo",
-              "EmptyValue": "nil"
+              "ValueType": "[]ModeInfo"
             },
             "p/PreferredModes": {
               "Type": "PropMonitorPreferredModes",
-              "ValueType": "[]ModeInfo",
-              "EmptyValue": "nil"
+              "ValueType": "[]ModeInfo"
             }
           }
         }

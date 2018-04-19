@@ -30,8 +30,7 @@
           "Fixes": {
             "p/Configuration": {
               "Type": "PropDriveConfiguration",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         },
@@ -60,13 +59,11 @@
           "Fixes": {
             "p/Symlinks": {
               "Type": "PropBlockSymlinks",
-              "ValueType": "[][]byte",
-              "EmptyValue": "nil"
+              "ValueType": "[][]byte"
             },
             "p/Configuration": {
               "Type": "PropBlockConfiguration",
-              "ValueType": "[]ConfigurationItem",
-              "EmptyValue": "nil"
+              "ValueType": "[]ConfigurationItem"
             },
             "m/AddConfigurationItem": [
               {
@@ -115,8 +112,7 @@
           "Fixes": {
             "p/MountPoints": {
               "Type": "PropFsMountPoints",
-              "ValueType": "[][]byte",
-              "EmptyValue": "nil"
+              "ValueType": "[][]byte"
             }
           }
         }

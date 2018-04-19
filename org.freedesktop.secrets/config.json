@@ -45,8 +45,7 @@
           "Fixes": {
             "p/Attributes": {
               "Type": "PropItemAttributes",
-              "ValueType": "map[string]string",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]string"
             },
             "m/GetSecret": [
               {

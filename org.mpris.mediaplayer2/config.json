@@ -15,8 +15,7 @@
           "Fixes": {
             "p/Metadata": {
               "Type": "PropPlayerMetadata",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         }

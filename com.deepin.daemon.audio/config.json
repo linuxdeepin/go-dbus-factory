@@ -20,13 +20,12 @@
           "Fixes": {
             "p/Ports": {
               "Type": "PropSinkPorts",
-              "ValueType":"[]PortInfo",
-              "EmptyValue": "nil"
+              "ValueType":"[]PortInfo"
             },
             "p/ActivePort": {
               "Type": "PropSinkActivePort",
               "ValueType":"PortInfo",
-              "EmptyValue": "PortInfo{}"
+              "EmptyValue": "$T{}"
             }
           }
         }
@@ -41,13 +40,12 @@
           "Fixes": {
             "p/Ports": {
               "Type": "PropSourcePorts",
-              "ValueType":"[]PortInfo",
-              "EmptyValue": "nil"
+              "ValueType":"[]PortInfo"
             },
             "p/ActivePort": {
               "Type": "PropSourceActivePort",
               "ValueType":"PortInfo",
-              "EmptyValue": "PortInfo{}"
+              "EmptyValue": "$T{}"
             }
           }
         }

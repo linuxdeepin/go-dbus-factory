@@ -57,13 +57,11 @@
           "Fixes": {
             "p/ManufacturerData": {
               "Type": "PropDeviceManufacturerData",
-              "ValueType": "map[uint16]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[uint16]dbus.Variant"
             },
             "p/ServiceData": {
               "Type": "PropDeviceServiceData",
-              "ValueType": "map[string]dbus.Variant",
-              "EmptyValue": "nil"
+              "ValueType": "map[string]dbus.Variant"
             }
           }
         }
