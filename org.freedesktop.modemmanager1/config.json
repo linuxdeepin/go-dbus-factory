@@ -1,0 +1,166 @@
+{
+  "Service": "org.freedesktop.ModemManager1",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "XmlFile": "ModemManager",
+      "Path": "/org/freedesktop/ModemManager1",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        },
+        {
+          "Name":"org.freedesktop.ModemManager1",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type": "Modem",
+      "XmlFiles": ["Modem", "Modem.*"],
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem",
+          "Accessor": "Modem",
+          "Type": "modem",
+          "Fixes": {
+            "p/Ports": {
+              "Type": "PropModemPorts",
+              "ValueType": "[]ModemPort",
+              "EmptyValue": "nil"
+            },
+            "p/UnlockRetries": {
+              "Type": "PropModemUnlockRetries",
+              "ValueType": "map[uint32]uint32",
+              "EmptyValue": "nil"
+            },
+            "p/SignalQuality": {
+              "Type": "PropModemSignalQuality",
+              "ValueType": "ModemSignalQuality",
+              "EmptyValue": "ModemSignalQuality{}"
+            },
+            "p/SupportedModes": {
+              "Type": "PropModemSupportedModes",
+              "ValueType": "[]ModemModes",
+              "EmptyValue": "nil"
+            },
+            "p/CurrentModes": {
+              "Type": "PropModemCurrentModes",
+              "ValueType": "ModemModes",
+              "EmptyValue": "ModemModes{}"
+            },
+            "m/SetCurrentModes": [
+              {
+                "Name": "modes",
+                "Type": "ModemModes"
+              }
+            ]
+          }
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Firmware",
+          "Accessor": "Firmware",
+          "Type": "modemFirmware"
+        },
+        {
+          "Name":"org.freedesktop.ModemManager1.Modem.Location",
+          "Accessor": "Location",
+          "Type": "modemLocation",
+          "Fixes": {
+            "p/Location": {
+              "Type": "PropModemLocation",
+              "ValueType": "map[uint32]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name":"org.freedesktop.ModemManager1.Modem.Messaging",
+          "Accessor": "Messaging",
+          "Type": "modemMessaging"
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd",
+          "Accessor": "Modem3gppUssd",
+          "Type": "modem3gppUssd"
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Modem3gpp",
+          "Accessor": "Modem3gpp",
+          "Type": "modem3gpp"
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.ModemCdma",
+          "Accessor": "Cdma",
+          "Type": "modemCdma"
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Oma",
+          "Accessor": "Oma",
+          "Type": "modemOma",
+          "Fixes": {
+            "p/PendingNetworkInitiatedSessions": {
+              "Type": "PropModemOmaPendingNetworkInitiatedSessions",
+              "ValueType": "[]OmaSession",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Signal",
+          "Accessor": "Signal",
+          "Type": "modemSignal",
+          "Fixes": {
+            "p/Cdma": {
+              "Type": "PropModemSignalCdma",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/Evdo": {
+              "Type": "PropModemSignalEvdo",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/Gsm": {
+              "Type": "PropModemSignalGsm",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/Umts": {
+              "Type": "PropModemSignalUmts",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            },
+            "p/Lte": {
+              "Type": "PropModemSignalLte",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Simple",
+          "Accessor": "Simple",
+          "Type": "modemSimple"
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Time",
+          "Accessor": "Time",
+          "Type": "modemTime",
+          "Fixes": {
+            "p/NetworkTimezone": {
+              "Type": "PropModemNetworkTimezone",
+              "ValueType": "map[string]dbus.Variant",
+              "EmptyValue": "nil"
+            }
+          }
+        },
+        {
+          "Name": "org.freedesktop.ModemManager1.Modem.Voice",
+          "Accessor": "Voice",
+          "Type": "modemVoice"
+        }
+      ]
+    }
+  ]
+}

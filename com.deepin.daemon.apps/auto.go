@@ -14,8 +14,8 @@ var _ = fmt.Sprintf
 var _ unsafe.Pointer
 
 type Apps struct {
-	launchedRecorder   // interface com.deepin.daemon.Apps.LaunchedRecorder
 	desktopFileWatcher // interface com.deepin.daemon.Apps.DesktopFileWatcher
+	launchedRecorder   // interface com.deepin.daemon.Apps.LaunchedRecorder
 	proxy.Object
 }
 
@@ -23,6 +23,47 @@ func NewApps(conn *dbus.Conn) *Apps {
 	obj := new(Apps)
 	obj.Object.Init_(conn, "com.deepin.daemon.Apps", "/com/deepin/daemon/Apps")
 	return obj
+}
+
+func (obj *Apps) DesktopFileWatcher() *desktopFileWatcher {
+	return &obj.desktopFileWatcher
+}
+
+type desktopFileWatcher struct{}
+
+func (v *desktopFileWatcher) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*desktopFileWatcher) GetInterfaceName_() string {
+	return "com.deepin.daemon.Apps.DesktopFileWatcher"
+}
+
+// signal Event
+
+func (v *desktopFileWatcher) ConnectEvent(cb func(name string, op uint32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "Event", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".Event",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var name string
+		var op uint32
+		err := dbus.Store(sig.Body, &name, &op)
+		if err == nil {
+			cb(name, op)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
 func (obj *Apps) LaunchedRecorder() *launchedRecorder {
@@ -146,47 +187,6 @@ func (v *launchedRecorder) ConnectServiceRestarted(cb func()) (dbusutil.SignalHa
 	}
 	handlerFunc := func(sig *dbus.Signal) {
 		cb()
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
-func (obj *Apps) DesktopFileWatcher() *desktopFileWatcher {
-	return &obj.desktopFileWatcher
-}
-
-type desktopFileWatcher struct{}
-
-func (v *desktopFileWatcher) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
-}
-
-func (*desktopFileWatcher) GetInterfaceName_() string {
-	return "com.deepin.daemon.Apps.DesktopFileWatcher"
-}
-
-// signal Event
-
-func (v *desktopFileWatcher) ConnectEvent(cb func(name string, op uint32)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "Event", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".Event",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var name string
-		var op uint32
-		err := dbus.Store(sig.Body, &name, &op)
-		if err == nil {
-			cb(name, op)
-		}
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -44,6 +45,7 @@ func (oc *ObjectConfig) loadXml(dir string) ([]introspect.Interface, error) {
 	xmlFiles := oc.getXmlFiles(dir)
 	for _, file := range xmlFiles {
 		interfaces, err := getInterfacesFromXmlFile(file)
+		log.Println("load xml file:", file)
 		if err != nil {
 			return nil, err
 		}

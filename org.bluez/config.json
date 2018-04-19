@@ -6,17 +6,17 @@
       "Path": "/org/bluez",
       "Interfaces": [
         {
-          "Name": "org.bluez.AgentManager",
+          "Name": "org.bluez.AgentManager1",
           "Type": "agentManager",
           "Accessor": "AgentManager"
         },
         {
-          "Name": "org.bluez.HealthManager",
+          "Name": "org.bluez.HealthManager1",
           "Type": "healthManager",
           "Accessor": "HealthManager"
         },
         {
-          "Name": "org.bluez.ProfileManager",
+          "Name": "org.bluez.ProfileManager1",
           "Type": "profileManager",
           "Accessor": "ProfileManager"
         }

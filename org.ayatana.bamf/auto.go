@@ -465,8 +465,8 @@ func (v *matcher) ConnectRunningApplicationsChanged(cb func(opened_desktop_files
 }
 
 type Application struct {
-	view        // interface org.ayatana.bamf.view
 	application // interface org.ayatana.bamf.application
+	view        // interface org.ayatana.bamf.view
 	proxy.Object
 }
 
@@ -477,6 +477,232 @@ func NewApplication(conn *dbus.Conn, path dbus.ObjectPath) (*Application, error)
 	obj := new(Application)
 	obj.Object.Init_(conn, "org.ayatana.bamf", path)
 	return obj, nil
+}
+
+type application struct{}
+
+func (v *application) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*application) GetInterfaceName_() string {
+	return "org.ayatana.bamf.application"
+}
+
+// method ShowStubs
+
+func (v *application) GoShowStubs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowStubs", flags, ch)
+}
+
+func (*application) StoreShowStubs(call *dbus.Call) (show_stubs bool, err error) {
+	err = call.Store(&show_stubs)
+	return
+}
+
+func (v *application) ShowStubs(flags dbus.Flags) (show_stubs bool, err error) {
+	return v.StoreShowStubs(
+		<-v.GoShowStubs(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method Xids
+
+func (v *application) GoXids(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Xids", flags, ch)
+}
+
+func (*application) StoreXids(call *dbus.Call) (xids []uint32, err error) {
+	err = call.Store(&xids)
+	return
+}
+
+func (v *application) Xids(flags dbus.Flags) (xids []uint32, err error) {
+	return v.StoreXids(
+		<-v.GoXids(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method DesktopFile
+
+func (v *application) GoDesktopFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DesktopFile", flags, ch)
+}
+
+func (*application) StoreDesktopFile(call *dbus.Call) (desktop_file string, err error) {
+	err = call.Store(&desktop_file)
+	return
+}
+
+func (v *application) DesktopFile(flags dbus.Flags) (desktop_file string, err error) {
+	return v.StoreDesktopFile(
+		<-v.GoDesktopFile(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method SupportedMimeTypes
+
+func (v *application) GoSupportedMimeTypes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SupportedMimeTypes", flags, ch)
+}
+
+func (*application) StoreSupportedMimeTypes(call *dbus.Call) (mime_types []string, err error) {
+	err = call.Store(&mime_types)
+	return
+}
+
+func (v *application) SupportedMimeTypes(flags dbus.Flags) (mime_types []string, err error) {
+	return v.StoreSupportedMimeTypes(
+		<-v.GoSupportedMimeTypes(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method ApplicationType
+
+func (v *application) GoApplicationType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationType", flags, ch)
+}
+
+func (*application) StoreApplicationType(call *dbus.Call) (type0 string, err error) {
+	err = call.Store(&type0)
+	return
+}
+
+func (v *application) ApplicationType(flags dbus.Flags) (type0 string, err error) {
+	return v.StoreApplicationType(
+		<-v.GoApplicationType(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method ApplicationMenu
+
+func (v *application) GoApplicationMenu(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationMenu", flags, ch)
+}
+
+func (*application) StoreApplicationMenu(call *dbus.Call) (busname string, objectpath string, err error) {
+	err = call.Store(&busname, &objectpath)
+	return
+}
+
+func (v *application) ApplicationMenu(flags dbus.Flags) (busname string, objectpath string, err error) {
+	return v.StoreApplicationMenu(
+		<-v.GoApplicationMenu(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method FocusableChild
+
+func (v *application) GoFocusableChild(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".FocusableChild", flags, ch)
+}
+
+func (*application) StoreFocusableChild(call *dbus.Call) (path string, err error) {
+	err = call.Store(&path)
+	return
+}
+
+func (v *application) FocusableChild(flags dbus.Flags) (path string, err error) {
+	return v.StoreFocusableChild(
+		<-v.GoFocusableChild(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// signal WindowRemoved
+
+func (v *application) ConnectWindowRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "WindowRemoved", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".WindowRemoved",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var path string
+		err := dbus.Store(sig.Body, &path)
+		if err == nil {
+			cb(path)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal WindowAdded
+
+func (v *application) ConnectWindowAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "WindowAdded", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".WindowAdded",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var path string
+		err := dbus.Store(sig.Body, &path)
+		if err == nil {
+			cb(path)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal SupportedMimeTypesChanged
+
+func (v *application) ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "SupportedMimeTypesChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".SupportedMimeTypesChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var dnd_mimes []string
+		err := dbus.Store(sig.Body, &dnd_mimes)
+		if err == nil {
+			cb(dnd_mimes)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal DesktopFileUpdated
+
+func (v *application) ConnectDesktopFileUpdated(cb func(desktop_file string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DesktopFileUpdated", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DesktopFileUpdated",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var desktop_file string
+		err := dbus.Store(sig.Body, &desktop_file)
+		if err == nil {
+			cb(desktop_file)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
 type view struct{}
@@ -901,235 +1127,9 @@ func (v *view) Active() proxy.PropBool {
 	}
 }
 
-type application struct{}
-
-func (v *application) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
-}
-
-func (*application) GetInterfaceName_() string {
-	return "org.ayatana.bamf.application"
-}
-
-// method ShowStubs
-
-func (v *application) GoShowStubs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowStubs", flags, ch)
-}
-
-func (*application) StoreShowStubs(call *dbus.Call) (show_stubs bool, err error) {
-	err = call.Store(&show_stubs)
-	return
-}
-
-func (v *application) ShowStubs(flags dbus.Flags) (show_stubs bool, err error) {
-	return v.StoreShowStubs(
-		<-v.GoShowStubs(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method Xids
-
-func (v *application) GoXids(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Xids", flags, ch)
-}
-
-func (*application) StoreXids(call *dbus.Call) (xids []uint32, err error) {
-	err = call.Store(&xids)
-	return
-}
-
-func (v *application) Xids(flags dbus.Flags) (xids []uint32, err error) {
-	return v.StoreXids(
-		<-v.GoXids(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method DesktopFile
-
-func (v *application) GoDesktopFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".DesktopFile", flags, ch)
-}
-
-func (*application) StoreDesktopFile(call *dbus.Call) (desktop_file string, err error) {
-	err = call.Store(&desktop_file)
-	return
-}
-
-func (v *application) DesktopFile(flags dbus.Flags) (desktop_file string, err error) {
-	return v.StoreDesktopFile(
-		<-v.GoDesktopFile(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method SupportedMimeTypes
-
-func (v *application) GoSupportedMimeTypes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SupportedMimeTypes", flags, ch)
-}
-
-func (*application) StoreSupportedMimeTypes(call *dbus.Call) (mime_types []string, err error) {
-	err = call.Store(&mime_types)
-	return
-}
-
-func (v *application) SupportedMimeTypes(flags dbus.Flags) (mime_types []string, err error) {
-	return v.StoreSupportedMimeTypes(
-		<-v.GoSupportedMimeTypes(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method ApplicationType
-
-func (v *application) GoApplicationType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationType", flags, ch)
-}
-
-func (*application) StoreApplicationType(call *dbus.Call) (type0 string, err error) {
-	err = call.Store(&type0)
-	return
-}
-
-func (v *application) ApplicationType(flags dbus.Flags) (type0 string, err error) {
-	return v.StoreApplicationType(
-		<-v.GoApplicationType(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method ApplicationMenu
-
-func (v *application) GoApplicationMenu(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationMenu", flags, ch)
-}
-
-func (*application) StoreApplicationMenu(call *dbus.Call) (busname string, objectpath string, err error) {
-	err = call.Store(&busname, &objectpath)
-	return
-}
-
-func (v *application) ApplicationMenu(flags dbus.Flags) (busname string, objectpath string, err error) {
-	return v.StoreApplicationMenu(
-		<-v.GoApplicationMenu(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method FocusableChild
-
-func (v *application) GoFocusableChild(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".FocusableChild", flags, ch)
-}
-
-func (*application) StoreFocusableChild(call *dbus.Call) (path string, err error) {
-	err = call.Store(&path)
-	return
-}
-
-func (v *application) FocusableChild(flags dbus.Flags) (path string, err error) {
-	return v.StoreFocusableChild(
-		<-v.GoFocusableChild(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// signal WindowRemoved
-
-func (v *application) ConnectWindowRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "WindowRemoved", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".WindowRemoved",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var path string
-		err := dbus.Store(sig.Body, &path)
-		if err == nil {
-			cb(path)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
-// signal WindowAdded
-
-func (v *application) ConnectWindowAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "WindowAdded", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".WindowAdded",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var path string
-		err := dbus.Store(sig.Body, &path)
-		if err == nil {
-			cb(path)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
-// signal SupportedMimeTypesChanged
-
-func (v *application) ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []string)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "SupportedMimeTypesChanged", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".SupportedMimeTypesChanged",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var dnd_mimes []string
-		err := dbus.Store(sig.Body, &dnd_mimes)
-		if err == nil {
-			cb(dnd_mimes)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
-// signal DesktopFileUpdated
-
-func (v *application) ConnectDesktopFileUpdated(cb func(desktop_file string)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "DesktopFileUpdated", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".DesktopFileUpdated",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var desktop_file string
-		err := dbus.Store(sig.Body, &desktop_file)
-		if err == nil {
-			cb(desktop_file)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
 type Window struct {
-	view   // interface org.ayatana.bamf.view
 	window // interface org.ayatana.bamf.window
+	view   // interface org.ayatana.bamf.view
 	proxy.Object
 }
 

@@ -44,7 +44,7 @@
       "XMLFile": "DHCP4Config",
       "Interfaces": [
         {
-          "Name": "org.freedesktop.NetworkManager.Dhcp4Config",
+          "Name": "org.freedesktop.NetworkManager.DHCP4Config",
           "Type": "dhcp4Config",
           "Fixes": {
             "p/Options": {
@@ -61,7 +61,7 @@
       "XMLFile": "DHCP6Config",
       "Interfaces": [
         {
-          "Name": "org.freedesktop.NetworkManager.Dhcp6Config",
+          "Name": "org.freedesktop.NetworkManager.DHCP6Config",
           "Type": "dhcp6Config",
           "Fixes": {
             "p/Options": {

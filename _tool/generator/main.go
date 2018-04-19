@@ -47,6 +47,7 @@ func main() {
 	sf.GoBody.Pn("")
 
 	for _, objCfg := range srvCfg.Objects {
+		log.Println("Object", objCfg.Type)
 		interfaces, err := objCfg.loadXml(dir)
 		if err != nil {
 			log.Fatal(err)
@@ -54,17 +55,13 @@ func main() {
 
 		sf.GoBody.Pn("type %s struct {", objCfg.Type)
 
-		for _, ifc := range interfaces {
-			ifcCfg := objCfg.getInterface(ifc.Name)
-			if ifcCfg == nil {
-				continue
-			}
-			if ifc.Name == "org.freedesktop.DBus.ObjectManager" {
+		for _, ifcCfg := range objCfg.Interfaces {
+			if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
 				ifcCfg.TypeDefined = true
 				sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
-				sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifc.Name)
+				sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifcCfg.Name)
 			} else {
-				sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifc.Name)
+				sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifcCfg.Name)
 			}
 		}
 
@@ -73,10 +70,15 @@ func main() {
 
 		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
 
-		for _, ifc := range interfaces {
-			ifcCfg := objCfg.getInterface(ifc.Name)
-			if ifcCfg == nil || ifcCfg.TypeDefined {
+		for _, ifcCfg := range objCfg.Interfaces {
+			ifc := getInterfaceByName(interfaces, ifcCfg.Name)
+			if ifcCfg.TypeDefined {
 				continue
+			}
+
+			if ifc == nil {
+				log.Fatalf("not found interface %q for object %s",
+					ifcCfg.Name, objCfg.Type)
 			}
 
 			writeObjectAccessMethod(sf.GoBody, ifc, objCfg)
@@ -103,7 +105,6 @@ func main() {
 		}
 	}
 
-	// sf.Print()
 	sf.Save(filepath.Join(dir, "auto.go"))
 }
 
@@ -163,7 +164,7 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 	sb.Pn("}\n")
 }
 
-func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *ObjectConfig) {
+func writeObjectAccessMethod(sb *SourceBody, ifc *introspect.Interface, objCfg *ObjectConfig) {
 	ifcCfg := objCfg.getInterface(ifc.Name)
 	if ifcCfg.Accessor == "" {
 		return
@@ -175,7 +176,7 @@ func writeObjectAccessMethod(sb *SourceBody, ifc introspect.Interface, objCfg *O
 	sb.Pn("}\n")
 }
 
-func writeImplementerMethods(sb *SourceBody, ifc introspect.Interface, ifcCfg *InterfaceConfig) {
+func writeImplementerMethods(sb *SourceBody, ifc *introspect.Interface, ifcCfg *InterfaceConfig) {
 	sb.Pn("type %s struct{}", ifcCfg.Type)
 
 	sb.Pn("func (v *%s) GetObject_() *proxy.Object {", ifcCfg.Type)
@@ -517,4 +518,13 @@ func fixList(str string, begin bool) string {
 	}
 
 	return str[1:]
+}
+
+func getInterfaceByName(interfaces []introspect.Interface, name string) *introspect.Interface {
+	for _, ifc := range interfaces {
+		if ifc.Name == name {
+			return &ifc
+		}
+	}
+	return nil
 }

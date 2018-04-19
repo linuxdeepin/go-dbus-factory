@@ -14,6 +14,9 @@ var _ = fmt.Sprintf
 var _ unsafe.Pointer
 
 type Manager struct {
+	agentManager   // interface org.bluez.AgentManager1
+	healthManager  // interface org.bluez.HealthManager1
+	profileManager // interface org.bluez.ProfileManager1
 	proxy.Object
 }
 
@@ -21,6 +24,124 @@ func NewManager(conn *dbus.Conn) *Manager {
 	obj := new(Manager)
 	obj.Object.Init_(conn, "org.bluez", "/org/bluez")
 	return obj
+}
+
+func (obj *Manager) AgentManager() *agentManager {
+	return &obj.agentManager
+}
+
+type agentManager struct{}
+
+func (v *agentManager) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*agentManager) GetInterfaceName_() string {
+	return "org.bluez.AgentManager1"
+}
+
+// method RegisterAgent
+
+func (v *agentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterAgent", flags, ch, agent, capability)
+}
+
+func (v *agentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error {
+	return (<-v.GoRegisterAgent(flags, make(chan *dbus.Call, 1), agent, capability).Done).Err
+}
+
+// method UnregisterAgent
+
+func (v *agentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterAgent", flags, ch, agent)
+}
+
+func (v *agentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+	return (<-v.GoUnregisterAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
+}
+
+// method RequestDefaultAgent
+
+func (v *agentManager) GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDefaultAgent", flags, ch, agent)
+}
+
+func (v *agentManager) RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+	return (<-v.GoRequestDefaultAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
+}
+
+func (obj *Manager) HealthManager() *healthManager {
+	return &obj.healthManager
+}
+
+type healthManager struct{}
+
+func (v *healthManager) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*healthManager) GetInterfaceName_() string {
+	return "org.bluez.HealthManager1"
+}
+
+// method CreateApplication
+
+func (v *healthManager) GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateApplication", flags, ch, config)
+}
+
+func (*healthManager) StoreCreateApplication(call *dbus.Call) (application dbus.ObjectPath, err error) {
+	err = call.Store(&application)
+	return
+}
+
+func (v *healthManager) CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (application dbus.ObjectPath, err error) {
+	return v.StoreCreateApplication(
+		<-v.GoCreateApplication(flags, make(chan *dbus.Call, 1), config).Done)
+}
+
+// method DestroyApplication
+
+func (v *healthManager) GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DestroyApplication", flags, ch, application)
+}
+
+func (v *healthManager) DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error {
+	return (<-v.GoDestroyApplication(flags, make(chan *dbus.Call, 1), application).Done).Err
+}
+
+func (obj *Manager) ProfileManager() *profileManager {
+	return &obj.profileManager
+}
+
+type profileManager struct{}
+
+func (v *profileManager) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*profileManager) GetInterfaceName_() string {
+	return "org.bluez.ProfileManager1"
+}
+
+// method RegisterProfile
+
+func (v *profileManager) GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterProfile", flags, ch, profile, UUID, options)
+}
+
+func (v *profileManager) RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error {
+	return (<-v.GoRegisterProfile(flags, make(chan *dbus.Call, 1), profile, UUID, options).Done).Err
+}
+
+// method UnregisterProfile
+
+func (v *profileManager) GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterProfile", flags, ch, profile)
+}
+
+func (v *profileManager) UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error {
+	return (<-v.GoUnregisterProfile(flags, make(chan *dbus.Call, 1), profile).Done).Err
 }
 
 type HCI struct {

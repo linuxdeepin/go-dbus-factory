@@ -88,8 +88,8 @@ func (v *manager) Version() proxy.PropString {
 }
 
 type Drive struct {
-	driveAta // interface org.freedesktop.UDisks2.Drive.Ata
 	drive    // interface org.freedesktop.UDisks2.Drive
+	driveAta // interface org.freedesktop.UDisks2.Drive.Ata
 	proxy.Object
 }
 
@@ -100,6 +100,340 @@ func NewDrive(conn *dbus.Conn, path dbus.ObjectPath) (*Drive, error) {
 	obj := new(Drive)
 	obj.Object.Init_(conn, "org.freedesktop.UDisks2", path)
 	return obj, nil
+}
+
+func (obj *Drive) Drive() *drive {
+	return &obj.drive
+}
+
+type drive struct{}
+
+func (v *drive) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*drive) GetInterfaceName_() string {
+	return "org.freedesktop.UDisks2.Drive"
+}
+
+// method Eject
+
+func (v *drive) GoEject(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Eject", flags, ch, options)
+}
+
+func (v *drive) Eject(flags dbus.Flags, options map[string]dbus.Variant) error {
+	return (<-v.GoEject(flags, make(chan *dbus.Call, 1), options).Done).Err
+}
+
+// method SetConfiguration
+
+func (v *drive) GoSetConfiguration(flags dbus.Flags, ch chan *dbus.Call, value map[string]dbus.Variant, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetConfiguration", flags, ch, value, options)
+}
+
+func (v *drive) SetConfiguration(flags dbus.Flags, value map[string]dbus.Variant, options map[string]dbus.Variant) error {
+	return (<-v.GoSetConfiguration(flags, make(chan *dbus.Call, 1), value, options).Done).Err
+}
+
+// method PowerOff
+
+func (v *drive) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch, options)
+}
+
+func (v *drive) PowerOff(flags dbus.Flags, options map[string]dbus.Variant) error {
+	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1), options).Done).Err
+}
+
+// property Vendor s
+
+func (v *drive) Vendor() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Vendor",
+	}
+}
+
+// property Model s
+
+func (v *drive) Model() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Model",
+	}
+}
+
+// property Revision s
+
+func (v *drive) Revision() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Revision",
+	}
+}
+
+// property Serial s
+
+func (v *drive) Serial() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Serial",
+	}
+}
+
+// property WWN s
+
+func (v *drive) WWN() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "WWN",
+	}
+}
+
+// property Id s
+
+func (v *drive) Id() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Id",
+	}
+}
+
+// property Configuration a{sv}
+
+func (v *drive) Configuration() PropDriveConfiguration {
+	return PropDriveConfiguration{
+		Impl: v,
+	}
+}
+
+type PropDriveConfiguration struct {
+	Impl proxy.Implementer
+}
+
+func (p PropDriveConfiguration) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		"Configuration", &value)
+	return
+}
+
+func (p PropDriveConfiguration) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v map[string]dbus.Variant
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		"Configuration", cb0)
+}
+
+// property Media s
+
+func (v *drive) Media() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Media",
+	}
+}
+
+// property MediaCompatibility as
+
+func (v *drive) MediaCompatibility() proxy.PropStringArray {
+	return proxy.PropStringArray{
+		Impl: v,
+		Name: "MediaCompatibility",
+	}
+}
+
+// property MediaRemovable b
+
+func (v *drive) MediaRemovable() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "MediaRemovable",
+	}
+}
+
+// property MediaAvailable b
+
+func (v *drive) MediaAvailable() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "MediaAvailable",
+	}
+}
+
+// property MediaChangeDetected b
+
+func (v *drive) MediaChangeDetected() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "MediaChangeDetected",
+	}
+}
+
+// property Size t
+
+func (v *drive) Size() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "Size",
+	}
+}
+
+// property TimeDetected t
+
+func (v *drive) TimeDetected() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "TimeDetected",
+	}
+}
+
+// property TimeMediaDetected t
+
+func (v *drive) TimeMediaDetected() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "TimeMediaDetected",
+	}
+}
+
+// property Optical b
+
+func (v *drive) Optical() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Optical",
+	}
+}
+
+// property OpticalBlank b
+
+func (v *drive) OpticalBlank() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "OpticalBlank",
+	}
+}
+
+// property OpticalNumTracks u
+
+func (v *drive) OpticalNumTracks() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "OpticalNumTracks",
+	}
+}
+
+// property OpticalNumAudioTracks u
+
+func (v *drive) OpticalNumAudioTracks() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "OpticalNumAudioTracks",
+	}
+}
+
+// property OpticalNumDataTracks u
+
+func (v *drive) OpticalNumDataTracks() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "OpticalNumDataTracks",
+	}
+}
+
+// property OpticalNumSessions u
+
+func (v *drive) OpticalNumSessions() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "OpticalNumSessions",
+	}
+}
+
+// property RotationRate i
+
+func (v *drive) RotationRate() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "RotationRate",
+	}
+}
+
+// property ConnectionBus s
+
+func (v *drive) ConnectionBus() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "ConnectionBus",
+	}
+}
+
+// property Seat s
+
+func (v *drive) Seat() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Seat",
+	}
+}
+
+// property Removable b
+
+func (v *drive) Removable() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Removable",
+	}
+}
+
+// property Ejectable b
+
+func (v *drive) Ejectable() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Ejectable",
+	}
+}
+
+// property SortKey s
+
+func (v *drive) SortKey() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "SortKey",
+	}
+}
+
+// property CanPowerOff b
+
+func (v *drive) CanPowerOff() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "CanPowerOff",
+	}
+}
+
+// property SiblingId s
+
+func (v *drive) SiblingId() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "SiblingId",
+	}
 }
 
 func (obj *Drive) DriveAta() *driveAta {
@@ -443,345 +777,11 @@ func (v *driveAta) SecurityFrozen() proxy.PropBool {
 	}
 }
 
-func (obj *Drive) Drive() *drive {
-	return &obj.drive
-}
-
-type drive struct{}
-
-func (v *drive) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
-}
-
-func (*drive) GetInterfaceName_() string {
-	return "org.freedesktop.UDisks2.Drive"
-}
-
-// method Eject
-
-func (v *drive) GoEject(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Eject", flags, ch, options)
-}
-
-func (v *drive) Eject(flags dbus.Flags, options map[string]dbus.Variant) error {
-	return (<-v.GoEject(flags, make(chan *dbus.Call, 1), options).Done).Err
-}
-
-// method SetConfiguration
-
-func (v *drive) GoSetConfiguration(flags dbus.Flags, ch chan *dbus.Call, value map[string]dbus.Variant, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetConfiguration", flags, ch, value, options)
-}
-
-func (v *drive) SetConfiguration(flags dbus.Flags, value map[string]dbus.Variant, options map[string]dbus.Variant) error {
-	return (<-v.GoSetConfiguration(flags, make(chan *dbus.Call, 1), value, options).Done).Err
-}
-
-// method PowerOff
-
-func (v *drive) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch, options)
-}
-
-func (v *drive) PowerOff(flags dbus.Flags, options map[string]dbus.Variant) error {
-	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1), options).Done).Err
-}
-
-// property Vendor s
-
-func (v *drive) Vendor() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Vendor",
-	}
-}
-
-// property Model s
-
-func (v *drive) Model() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Model",
-	}
-}
-
-// property Revision s
-
-func (v *drive) Revision() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Revision",
-	}
-}
-
-// property Serial s
-
-func (v *drive) Serial() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Serial",
-	}
-}
-
-// property WWN s
-
-func (v *drive) WWN() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "WWN",
-	}
-}
-
-// property Id s
-
-func (v *drive) Id() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Id",
-	}
-}
-
-// property Configuration a{sv}
-
-func (v *drive) Configuration() PropDriveConfiguration {
-	return PropDriveConfiguration{
-		Impl: v,
-	}
-}
-
-type PropDriveConfiguration struct {
-	Impl proxy.Implementer
-}
-
-func (p PropDriveConfiguration) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Configuration", &value)
-	return
-}
-
-func (p PropDriveConfiguration) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]dbus.Variant
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Configuration", cb0)
-}
-
-// property Media s
-
-func (v *drive) Media() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Media",
-	}
-}
-
-// property MediaCompatibility as
-
-func (v *drive) MediaCompatibility() proxy.PropStringArray {
-	return proxy.PropStringArray{
-		Impl: v,
-		Name: "MediaCompatibility",
-	}
-}
-
-// property MediaRemovable b
-
-func (v *drive) MediaRemovable() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "MediaRemovable",
-	}
-}
-
-// property MediaAvailable b
-
-func (v *drive) MediaAvailable() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "MediaAvailable",
-	}
-}
-
-// property MediaChangeDetected b
-
-func (v *drive) MediaChangeDetected() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "MediaChangeDetected",
-	}
-}
-
-// property Size t
-
-func (v *drive) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "Size",
-	}
-}
-
-// property TimeDetected t
-
-func (v *drive) TimeDetected() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "TimeDetected",
-	}
-}
-
-// property TimeMediaDetected t
-
-func (v *drive) TimeMediaDetected() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "TimeMediaDetected",
-	}
-}
-
-// property Optical b
-
-func (v *drive) Optical() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "Optical",
-	}
-}
-
-// property OpticalBlank b
-
-func (v *drive) OpticalBlank() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "OpticalBlank",
-	}
-}
-
-// property OpticalNumTracks u
-
-func (v *drive) OpticalNumTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
-		Impl: v,
-		Name: "OpticalNumTracks",
-	}
-}
-
-// property OpticalNumAudioTracks u
-
-func (v *drive) OpticalNumAudioTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
-		Impl: v,
-		Name: "OpticalNumAudioTracks",
-	}
-}
-
-// property OpticalNumDataTracks u
-
-func (v *drive) OpticalNumDataTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
-		Impl: v,
-		Name: "OpticalNumDataTracks",
-	}
-}
-
-// property OpticalNumSessions u
-
-func (v *drive) OpticalNumSessions() proxy.PropUint32 {
-	return proxy.PropUint32{
-		Impl: v,
-		Name: "OpticalNumSessions",
-	}
-}
-
-// property RotationRate i
-
-func (v *drive) RotationRate() proxy.PropInt32 {
-	return proxy.PropInt32{
-		Impl: v,
-		Name: "RotationRate",
-	}
-}
-
-// property ConnectionBus s
-
-func (v *drive) ConnectionBus() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "ConnectionBus",
-	}
-}
-
-// property Seat s
-
-func (v *drive) Seat() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Seat",
-	}
-}
-
-// property Removable b
-
-func (v *drive) Removable() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "Removable",
-	}
-}
-
-// property Ejectable b
-
-func (v *drive) Ejectable() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "Ejectable",
-	}
-}
-
-// property SortKey s
-
-func (v *drive) SortKey() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "SortKey",
-	}
-}
-
-// property CanPowerOff b
-
-func (v *drive) CanPowerOff() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "CanPowerOff",
-	}
-}
-
-// property SiblingId s
-
-func (v *drive) SiblingId() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "SiblingId",
-	}
-}
-
 type Block struct {
-	partition      // interface org.freedesktop.UDisks2.Partition
-	filesystem     // interface org.freedesktop.UDisks2.Filesystem
 	block          // interface org.freedesktop.UDisks2.Block
 	partitionTable // interface org.freedesktop.UDisks2.PartitionTable
+	partition      // interface org.freedesktop.UDisks2.Partition
+	filesystem     // interface org.freedesktop.UDisks2.Filesystem
 	proxy.Object
 }
 
@@ -792,238 +792,6 @@ func NewBlock(conn *dbus.Conn, path dbus.ObjectPath) (*Block, error) {
 	obj := new(Block)
 	obj.Object.Init_(conn, "org.freedesktop.UDisks2", path)
 	return obj, nil
-}
-
-func (obj *Block) Partition() *partition {
-	return &obj.partition
-}
-
-type partition struct{}
-
-func (v *partition) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
-}
-
-func (*partition) GetInterfaceName_() string {
-	return "org.freedesktop.UDisks2.Partition"
-}
-
-// method SetType
-
-func (v *partition) GoSetType(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetType", flags, ch, type0, options)
-}
-
-func (v *partition) SetType(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
-	return (<-v.GoSetType(flags, make(chan *dbus.Call, 1), type0, options).Done).Err
-}
-
-// method SetName
-
-func (v *partition) GoSetName(flags dbus.Flags, ch chan *dbus.Call, name string, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetName", flags, ch, name, options)
-}
-
-func (v *partition) SetName(flags dbus.Flags, name string, options map[string]dbus.Variant) error {
-	return (<-v.GoSetName(flags, make(chan *dbus.Call, 1), name, options).Done).Err
-}
-
-// method SetFlags
-
-func (v *partition) GoSetFlags(flags dbus.Flags, ch chan *dbus.Call, flags0 uint64, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFlags", flags, ch, flags0, options)
-}
-
-func (v *partition) SetFlags(flags dbus.Flags, flags0 uint64, options map[string]dbus.Variant) error {
-	return (<-v.GoSetFlags(flags, make(chan *dbus.Call, 1), flags0, options).Done).Err
-}
-
-// method Delete
-
-func (v *partition) GoDelete(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, options)
-}
-
-func (v *partition) Delete(flags dbus.Flags, options map[string]dbus.Variant) error {
-	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), options).Done).Err
-}
-
-// property Number u
-
-func (v *partition) Number() proxy.PropUint32 {
-	return proxy.PropUint32{
-		Impl: v,
-		Name: "Number",
-	}
-}
-
-// property Type s
-
-func (v *partition) Type() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Type",
-	}
-}
-
-// property Flags t
-
-func (v *partition) Flags() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "Flags",
-	}
-}
-
-// property Offset t
-
-func (v *partition) Offset() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "Offset",
-	}
-}
-
-// property Size t
-
-func (v *partition) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "Size",
-	}
-}
-
-// property Name s
-
-func (v *partition) Name() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Name",
-	}
-}
-
-// property UUID s
-
-func (v *partition) UUID() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "UUID",
-	}
-}
-
-// property Table o
-
-func (v *partition) Table() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
-		Impl: v,
-		Name: "Table",
-	}
-}
-
-// property IsContainer b
-
-func (v *partition) IsContainer() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "IsContainer",
-	}
-}
-
-// property IsContained b
-
-func (v *partition) IsContained() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "IsContained",
-	}
-}
-
-func (obj *Block) Filesystem() *filesystem {
-	return &obj.filesystem
-}
-
-type filesystem struct{}
-
-func (v *filesystem) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
-}
-
-func (*filesystem) GetInterfaceName_() string {
-	return "org.freedesktop.UDisks2.Filesystem"
-}
-
-// method SetLabel
-
-func (v *filesystem) GoSetLabel(flags dbus.Flags, ch chan *dbus.Call, label string, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLabel", flags, ch, label, options)
-}
-
-func (v *filesystem) SetLabel(flags dbus.Flags, label string, options map[string]dbus.Variant) error {
-	return (<-v.GoSetLabel(flags, make(chan *dbus.Call, 1), label, options).Done).Err
-}
-
-// method Mount
-
-func (v *filesystem) GoMount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Mount", flags, ch, options)
-}
-
-func (*filesystem) StoreMount(call *dbus.Call) (mount_path string, err error) {
-	err = call.Store(&mount_path)
-	return
-}
-
-func (v *filesystem) Mount(flags dbus.Flags, options map[string]dbus.Variant) (mount_path string, err error) {
-	return v.StoreMount(
-		<-v.GoMount(flags, make(chan *dbus.Call, 1), options).Done)
-}
-
-// method Unmount
-
-func (v *filesystem) GoUnmount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unmount", flags, ch, options)
-}
-
-func (v *filesystem) Unmount(flags dbus.Flags, options map[string]dbus.Variant) error {
-	return (<-v.GoUnmount(flags, make(chan *dbus.Call, 1), options).Done).Err
-}
-
-// property MountPoints aay
-
-func (v *filesystem) MountPoints() PropFsMountPoints {
-	return PropFsMountPoints{
-		Impl: v,
-	}
-}
-
-type PropFsMountPoints struct {
-	Impl proxy.Implementer
-}
-
-func (p PropFsMountPoints) Get(flags dbus.Flags) (value [][]byte, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"MountPoints", &value)
-	return
-}
-
-func (p PropFsMountPoints) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v [][]byte
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"MountPoints", cb0)
 }
 
 func (obj *Block) Block() *block {
@@ -1465,4 +1233,236 @@ func (v *partitionTable) Type() proxy.PropString {
 		Impl: v,
 		Name: "Type",
 	}
+}
+
+func (obj *Block) Partition() *partition {
+	return &obj.partition
+}
+
+type partition struct{}
+
+func (v *partition) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*partition) GetInterfaceName_() string {
+	return "org.freedesktop.UDisks2.Partition"
+}
+
+// method SetType
+
+func (v *partition) GoSetType(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetType", flags, ch, type0, options)
+}
+
+func (v *partition) SetType(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
+	return (<-v.GoSetType(flags, make(chan *dbus.Call, 1), type0, options).Done).Err
+}
+
+// method SetName
+
+func (v *partition) GoSetName(flags dbus.Flags, ch chan *dbus.Call, name string, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetName", flags, ch, name, options)
+}
+
+func (v *partition) SetName(flags dbus.Flags, name string, options map[string]dbus.Variant) error {
+	return (<-v.GoSetName(flags, make(chan *dbus.Call, 1), name, options).Done).Err
+}
+
+// method SetFlags
+
+func (v *partition) GoSetFlags(flags dbus.Flags, ch chan *dbus.Call, flags0 uint64, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFlags", flags, ch, flags0, options)
+}
+
+func (v *partition) SetFlags(flags dbus.Flags, flags0 uint64, options map[string]dbus.Variant) error {
+	return (<-v.GoSetFlags(flags, make(chan *dbus.Call, 1), flags0, options).Done).Err
+}
+
+// method Delete
+
+func (v *partition) GoDelete(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, options)
+}
+
+func (v *partition) Delete(flags dbus.Flags, options map[string]dbus.Variant) error {
+	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), options).Done).Err
+}
+
+// property Number u
+
+func (v *partition) Number() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "Number",
+	}
+}
+
+// property Type s
+
+func (v *partition) Type() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Type",
+	}
+}
+
+// property Flags t
+
+func (v *partition) Flags() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "Flags",
+	}
+}
+
+// property Offset t
+
+func (v *partition) Offset() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "Offset",
+	}
+}
+
+// property Size t
+
+func (v *partition) Size() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "Size",
+	}
+}
+
+// property Name s
+
+func (v *partition) Name() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Name",
+	}
+}
+
+// property UUID s
+
+func (v *partition) UUID() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "UUID",
+	}
+}
+
+// property Table o
+
+func (v *partition) Table() proxy.PropObjectPath {
+	return proxy.PropObjectPath{
+		Impl: v,
+		Name: "Table",
+	}
+}
+
+// property IsContainer b
+
+func (v *partition) IsContainer() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "IsContainer",
+	}
+}
+
+// property IsContained b
+
+func (v *partition) IsContained() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "IsContained",
+	}
+}
+
+func (obj *Block) Filesystem() *filesystem {
+	return &obj.filesystem
+}
+
+type filesystem struct{}
+
+func (v *filesystem) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*filesystem) GetInterfaceName_() string {
+	return "org.freedesktop.UDisks2.Filesystem"
+}
+
+// method SetLabel
+
+func (v *filesystem) GoSetLabel(flags dbus.Flags, ch chan *dbus.Call, label string, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLabel", flags, ch, label, options)
+}
+
+func (v *filesystem) SetLabel(flags dbus.Flags, label string, options map[string]dbus.Variant) error {
+	return (<-v.GoSetLabel(flags, make(chan *dbus.Call, 1), label, options).Done).Err
+}
+
+// method Mount
+
+func (v *filesystem) GoMount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Mount", flags, ch, options)
+}
+
+func (*filesystem) StoreMount(call *dbus.Call) (mount_path string, err error) {
+	err = call.Store(&mount_path)
+	return
+}
+
+func (v *filesystem) Mount(flags dbus.Flags, options map[string]dbus.Variant) (mount_path string, err error) {
+	return v.StoreMount(
+		<-v.GoMount(flags, make(chan *dbus.Call, 1), options).Done)
+}
+
+// method Unmount
+
+func (v *filesystem) GoUnmount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unmount", flags, ch, options)
+}
+
+func (v *filesystem) Unmount(flags dbus.Flags, options map[string]dbus.Variant) error {
+	return (<-v.GoUnmount(flags, make(chan *dbus.Call, 1), options).Done).Err
+}
+
+// property MountPoints aay
+
+func (v *filesystem) MountPoints() PropFsMountPoints {
+	return PropFsMountPoints{
+		Impl: v,
+	}
+}
+
+type PropFsMountPoints struct {
+	Impl proxy.Implementer
+}
+
+func (p PropFsMountPoints) Get(flags dbus.Flags) (value [][]byte, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		"MountPoints", &value)
+	return
+}
+
+func (p PropFsMountPoints) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v [][]byte
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		"MountPoints", cb0)
 }
