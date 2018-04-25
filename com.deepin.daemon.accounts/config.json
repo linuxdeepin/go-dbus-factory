@@ -19,6 +19,16 @@
           "Type": "user"
         }
       ]
+    },
+    {
+      "Type": "ImageBlur",
+      "Path": "/com/deepin/daemon/ImageBlur",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.ImageBlur",
+          "Type": "imageBlur"
+        }
+      ]
     }
   ]
 }

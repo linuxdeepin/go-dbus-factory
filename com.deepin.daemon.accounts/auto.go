@@ -598,3 +598,78 @@ func (v *user) NoPasswdLogin() proxy.PropBool {
 		Name: "NoPasswdLogin",
 	}
 }
+
+type ImageBlur struct {
+	imageBlur // interface com.deepin.daemon.ImageBlur
+	proxy.Object
+}
+
+func NewImageBlur(conn *dbus.Conn) *ImageBlur {
+	obj := new(ImageBlur)
+	obj.Object.Init_(conn, "com.deepin.daemon.Accounts", "/com/deepin/daemon/ImageBlur")
+	return obj
+}
+
+type imageBlur struct{}
+
+func (v *imageBlur) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*imageBlur) GetInterfaceName_() string {
+	return "com.deepin.daemon.ImageBlur"
+}
+
+// method Delete
+
+func (v *imageBlur) GoDelete(flags dbus.Flags, ch chan *dbus.Call, file string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, file)
+}
+
+func (v *imageBlur) Delete(flags dbus.Flags, file string) error {
+	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), file).Done).Err
+}
+
+// method Get
+
+func (v *imageBlur) GoGet(flags dbus.Flags, ch chan *dbus.Call, source string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Get", flags, ch, source)
+}
+
+func (*imageBlur) StoreGet(call *dbus.Call) (blurred string, err error) {
+	err = call.Store(&blurred)
+	return
+}
+
+func (v *imageBlur) Get(flags dbus.Flags, source string) (blurred string, err error) {
+	return v.StoreGet(
+		<-v.GoGet(flags, make(chan *dbus.Call, 1), source).Done)
+}
+
+// signal BlurDone
+
+func (v *imageBlur) ConnectBlurDone(cb func(imgFile string, imgBlurFile string, ok bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "BlurDone", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".BlurDone",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var imgFile string
+		var imgBlurFile string
+		var ok bool
+		err := dbus.Store(sig.Body, &imgFile, &imgBlurFile, &ok)
+		if err == nil {
+			cb(imgFile, imgBlurFile, ok)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
