@@ -53,6 +53,9 @@ func (oc *ObjectConfig) getXmlFiles(dir string) []string {
 		}
 
 	} else if oc.XMLFile != "" {
+		if oc.XMLFile == "-" {
+			return nil
+		}
 		result = append(result, filepath.Join(dir, oc.XMLFile+".xml"))
 	} else {
 		result = append(result, filepath.Join(dir, oc.Type+".xml"))
