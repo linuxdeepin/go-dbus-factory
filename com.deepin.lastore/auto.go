@@ -495,6 +495,22 @@ func (*job) GetInterfaceName_() string {
 	return "com.deepin.lastore.Job"
 }
 
+// method String
+
+func (v *job) GoString(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".String", flags, ch)
+}
+
+func (*job) StoreString(call *dbus.Call) (arg0 string, err error) {
+	err = call.Store(&arg0)
+	return
+}
+
+func (v *job) String(flags dbus.Flags) (arg0 string, err error) {
+	return v.StoreString(
+		<-v.GoString(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // property Id s
 
 func (v *job) Id() proxy.PropString {
@@ -519,6 +535,15 @@ func (v *job) Packages() proxy.PropStringArray {
 	return proxy.PropStringArray{
 		Impl: v,
 		Name: "Packages",
+	}
+}
+
+// property CreateTime x
+
+func (v *job) CreateTime() proxy.PropInt64 {
+	return proxy.PropInt64{
+		Impl: v,
+		Name: "CreateTime",
 	}
 }
 
@@ -549,21 +574,30 @@ func (v *job) Progress() proxy.PropDouble {
 	}
 }
 
-// property Speed d
-
-func (v *job) Speed() proxy.PropDouble {
-	return proxy.PropDouble{
-		Impl: v,
-		Name: "Speed",
-	}
-}
-
 // property Description s
 
 func (v *job) Description() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "Description",
+	}
+}
+
+// property Speed x
+
+func (v *job) Speed() proxy.PropInt64 {
+	return proxy.PropInt64{
+		Impl: v,
+		Name: "Speed",
+	}
+}
+
+// property DownloadSize x
+
+func (v *job) DownloadSize() proxy.PropInt64 {
+	return proxy.PropInt64{
+		Impl: v,
+		Name: "DownloadSize",
 	}
 }
 
