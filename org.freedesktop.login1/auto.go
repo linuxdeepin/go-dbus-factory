@@ -184,12 +184,12 @@ func (v *manager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateSession", flags, ch, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 }
 
-func (*manager) StoreCreateSession(call *dbus.Call) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFDIndex, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
+func (*manager) StoreCreateSession(call *dbus.Call) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
 	err = call.Store(&sessionId, &sessionPath, &runtimePath, &fifoFd, &uid0, &seatId0, &vtnr0, &existing)
 	return
 }
 
-func (v *manager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFDIndex, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
+func (v *manager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
 	return v.StoreCreateSession(
 		<-v.GoCreateSession(flags, make(chan *dbus.Call, 1), uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties).Done)
 }
@@ -506,12 +506,12 @@ func (v *manager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, w
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Inhibit", flags, ch, what, who, why, mode)
 }
 
-func (*manager) StoreInhibit(call *dbus.Call) (pipeFd dbus.UnixFDIndex, err error) {
+func (*manager) StoreInhibit(call *dbus.Call) (pipeFd dbus.UnixFD, err error) {
 	err = call.Store(&pipeFd)
 	return
 }
 
-func (v *manager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (pipeFd dbus.UnixFDIndex, err error) {
+func (v *manager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (pipeFd dbus.UnixFD, err error) {
 	return v.StoreInhibit(
 		<-v.GoInhibit(flags, make(chan *dbus.Call, 1), what, who, why, mode).Done)
 }
@@ -1358,12 +1358,12 @@ func (v *session) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint3
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TakeDevice", flags, ch, major, minor)
 }
 
-func (*session) StoreTakeDevice(call *dbus.Call) (fd dbus.UnixFDIndex, inactive bool, err error) {
+func (*session) StoreTakeDevice(call *dbus.Call) (fd dbus.UnixFD, inactive bool, err error) {
 	err = call.Store(&fd, &inactive)
 	return
 }
 
-func (v *session) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (fd dbus.UnixFDIndex, inactive bool, err error) {
+func (v *session) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (fd dbus.UnixFD, inactive bool, err error) {
 	return v.StoreTakeDevice(
 		<-v.GoTakeDevice(flags, make(chan *dbus.Call, 1), major, minor).Done)
 }
@@ -1418,7 +1418,7 @@ func (v *session) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 s
 
 // signal ResumeDevice
 
-func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFDIndex)) (dbusutil.SignalHandlerId, error) {
+func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1434,7 +1434,7 @@ func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbu
 	handlerFunc := func(sig *dbus.Signal) {
 		var major uint32
 		var minor uint32
-		var fd dbus.UnixFDIndex
+		var fd dbus.UnixFD
 		err := dbus.Store(sig.Body, &major, &minor, &fd)
 		if err == nil {
 			cb(major, minor, fd)

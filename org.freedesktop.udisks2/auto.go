@@ -48,7 +48,7 @@ func (*manager) GetInterfaceName_() string {
 
 // method LoopSetup
 
-func (v *manager) GoLoopSetup(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFDIndex, options map[string]dbus.Variant) *dbus.Call {
+func (v *manager) GoLoopSetup(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LoopSetup", flags, ch, fd, options)
 }
 
@@ -57,7 +57,7 @@ func (*manager) StoreLoopSetup(call *dbus.Call) (resulting_device dbus.ObjectPat
 	return
 }
 
-func (v *manager) LoopSetup(flags dbus.Flags, fd dbus.UnixFDIndex, options map[string]dbus.Variant) (resulting_device dbus.ObjectPath, err error) {
+func (v *manager) LoopSetup(flags dbus.Flags, fd dbus.UnixFD, options map[string]dbus.Variant) (resulting_device dbus.ObjectPath, err error) {
 	return v.StoreLoopSetup(
 		<-v.GoLoopSetup(flags, make(chan *dbus.Call, 1), fd, options).Done)
 }
@@ -870,12 +870,12 @@ func (v *block) GoOpenForBackup(flags dbus.Flags, ch chan *dbus.Call, options ma
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForBackup", flags, ch, options)
 }
 
-func (*block) StoreOpenForBackup(call *dbus.Call) (fd dbus.UnixFDIndex, err error) {
+func (*block) StoreOpenForBackup(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForBackup(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFDIndex, err error) {
+func (v *block) OpenForBackup(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
 	return v.StoreOpenForBackup(
 		<-v.GoOpenForBackup(flags, make(chan *dbus.Call, 1), options).Done)
 }
@@ -886,12 +886,12 @@ func (v *block) GoOpenForRestore(flags dbus.Flags, ch chan *dbus.Call, options m
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForRestore", flags, ch, options)
 }
 
-func (*block) StoreOpenForRestore(call *dbus.Call) (fd dbus.UnixFDIndex, err error) {
+func (*block) StoreOpenForRestore(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForRestore(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFDIndex, err error) {
+func (v *block) OpenForRestore(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
 	return v.StoreOpenForRestore(
 		<-v.GoOpenForRestore(flags, make(chan *dbus.Call, 1), options).Done)
 }
@@ -902,12 +902,12 @@ func (v *block) GoOpenForBenchmark(flags dbus.Flags, ch chan *dbus.Call, options
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForBenchmark", flags, ch, options)
 }
 
-func (*block) StoreOpenForBenchmark(call *dbus.Call) (fd dbus.UnixFDIndex, err error) {
+func (*block) StoreOpenForBenchmark(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForBenchmark(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFDIndex, err error) {
+func (v *block) OpenForBenchmark(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
 	return v.StoreOpenForBenchmark(
 		<-v.GoOpenForBenchmark(flags, make(chan *dbus.Call, 1), options).Done)
 }

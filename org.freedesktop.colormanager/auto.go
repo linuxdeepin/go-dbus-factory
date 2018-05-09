@@ -228,7 +228,7 @@ func (v *manager) GetProfilesByKind(flags dbus.Flags, kind string) (devices []db
 
 // method CreateProfileWithFd
 
-func (v *manager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFDIndex, properties map[string]string) *dbus.Call {
+func (v *manager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateProfileWithFd", flags, ch, profile_id, scope, handle, properties)
 }
 
@@ -237,7 +237,7 @@ func (*manager) StoreCreateProfileWithFd(call *dbus.Call) (object_path dbus.Obje
 	return
 }
 
-func (v *manager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFDIndex, properties map[string]string) (object_path dbus.ObjectPath, err error) {
+func (v *manager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (object_path dbus.ObjectPath, err error) {
 	return v.StoreCreateProfileWithFd(
 		<-v.GoCreateProfileWithFd(flags, make(chan *dbus.Call, 1), profile_id, scope, handle, properties).Done)
 }

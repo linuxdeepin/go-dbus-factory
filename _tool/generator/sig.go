@@ -46,7 +46,7 @@ var sigToType = map[byte]reflect.Type{
 	'g': signatureType,
 	'o': objectPathType,
 	'v': variantType,
-	'h': unixFDIndexType,
+	'h': unixFDType,
 }
 
 // Try to read a single type from this string. If it was successful, err is nil
