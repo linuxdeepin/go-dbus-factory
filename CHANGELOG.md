@@ -1,4 +1,11 @@
 
+[0.0.3] 2018-05-14
+*   chore: replace UnixFdIndex with UnixFd
+*   update com.deepin.lastore/Job
+*   feat: add org.bluez ObjectManager
+*   add com.deepin.daemon.ImageBlur
+*   add com.deepin.daemon.sessionwatcher
+
 [0.0.2] 2018-04-19
 *   feat(generator): common property type define supported
 *   feat: autofill PropertyFix.EmptyValue
