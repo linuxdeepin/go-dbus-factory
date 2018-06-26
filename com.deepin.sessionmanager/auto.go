@@ -66,6 +66,22 @@ func (v *startManager) AutostartList(flags dbus.Flags) (arg0 []string, err error
 		<-v.GoAutostartList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+// method DumpMemRecord
+
+func (v *startManager) GoDumpMemRecord(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DumpMemRecord", flags, ch)
+}
+
+func (*startManager) StoreDumpMemRecord(call *dbus.Call) (arg0 string, err error) {
+	err = call.Store(&arg0)
+	return
+}
+
+func (v *startManager) DumpMemRecord(flags dbus.Flags) (arg0 string, err error) {
+	return v.StoreDumpMemRecord(
+		<-v.GoDumpMemRecord(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // method GetApps
 
 func (v *startManager) GoGetApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -96,6 +112,22 @@ func (*startManager) StoreIsAutostart(call *dbus.Call) (arg1 bool, err error) {
 func (v *startManager) IsAutostart(flags dbus.Flags, arg0 string) (arg1 bool, err error) {
 	return v.StoreIsAutostart(
 		<-v.GoIsAutostart(flags, make(chan *dbus.Call, 1), arg0).Done)
+}
+
+// method IsMemSufficient
+
+func (v *startManager) GoIsMemSufficient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMemSufficient", flags, ch)
+}
+
+func (*startManager) StoreIsMemSufficient(call *dbus.Call) (arg0 bool, err error) {
+	err = call.Store(&arg0)
+	return
+}
+
+func (v *startManager) IsMemSufficient(flags dbus.Flags) (arg0 bool, err error) {
+	return v.StoreIsMemSufficient(
+		<-v.GoIsMemSufficient(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Launch
@@ -132,6 +164,16 @@ func (v *startManager) GoLaunchAppAction(flags dbus.Flags, ch chan *dbus.Call, a
 
 func (v *startManager) LaunchAppAction(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32) error {
 	return (<-v.GoLaunchAppAction(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2).Done).Err
+}
+
+// method LaunchAppWithOptions
+
+func (v *startManager) GoLaunchAppWithOptions(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32, arg2 []string, arg3 map[string]dbus.Variant) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".LaunchAppWithOptions", flags, ch, arg0, arg1, arg2, arg3)
+}
+
+func (v *startManager) LaunchAppWithOptions(flags dbus.Flags, arg0 string, arg1 uint32, arg2 []string, arg3 map[string]dbus.Variant) error {
+	return (<-v.GoLaunchAppWithOptions(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2, arg3).Done).Err
 }
 
 // method LaunchWithTimestamp
@@ -176,6 +218,16 @@ func (v *startManager) RunCommand(flags dbus.Flags, arg0 string, arg1 []string) 
 	return (<-v.GoRunCommand(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
+// method TryAgain
+
+func (v *startManager) GoTryAgain(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".TryAgain", flags, ch, arg0)
+}
+
+func (v *startManager) TryAgain(flags dbus.Flags, arg0 bool) error {
+	return (<-v.GoTryAgain(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
 // signal AutostartChanged
 
 func (v *startManager) ConnectAutostartChanged(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
@@ -201,6 +253,15 @@ func (v *startManager) ConnectAutostartChanged(cb func(arg0 string, arg1 string)
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// property NeededMemory t
+
+func (v *startManager) NeededMemory() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "NeededMemory",
+	}
 }
 
 type SessionManager struct {

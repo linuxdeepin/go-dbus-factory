@@ -7,11 +7,17 @@
           <method name="AutostartList">
                <arg type="as" direction="out"></arg>
           </method>
+          <method name="DumpMemRecord">
+               <arg type="s" direction="out"></arg>
+          </method>
           <method name="GetApps">
                <arg type="a{us}" direction="out"></arg>
           </method>
           <method name="IsAutostart">
                <arg type="s" direction="in"></arg>
+               <arg type="b" direction="out"></arg>
+          </method>
+          <method name="IsMemSufficient">
                <arg type="b" direction="out"></arg>
           </method>
           <method name="Launch">
@@ -28,6 +34,12 @@
                <arg type="s" direction="in"></arg>
                <arg type="u" direction="in"></arg>
           </method>
+          <method name="LaunchAppWithOptions">
+               <arg type="s" direction="in"></arg>
+               <arg type="u" direction="in"></arg>
+               <arg type="as" direction="in"></arg>
+               <arg type="a{sv}" direction="in"></arg>
+          </method>
           <method name="LaunchWithTimestamp">
                <arg type="s" direction="in"></arg>
                <arg type="u" direction="in"></arg>
@@ -41,10 +53,14 @@
                <arg type="s" direction="in"></arg>
                <arg type="as" direction="in"></arg>
           </method>
+          <method name="TryAgain">
+               <arg type="b" direction="in"></arg>
+          </method>
           <signal name="AutostartChanged">
                <arg type="s"></arg>
                <arg type="s"></arg>
           </signal>
+          <property name="NeededMemory" type="t" access="read"></property>
      </interface>
      <interface name="org.freedesktop.DBus.Introspectable">
           <method name="Enable">
