@@ -27,8 +27,6 @@ type Identity struct {
 	Details map[string]dbus.Variant
 }
 
-// Identity
-
 type AuthorizationResult struct {
 	IsAuthorized bool
 	IsChallenge  bool
@@ -42,3 +40,27 @@ type TemporaryAuthorization struct {
 	TimeObtained uint64
 	TimeExpires  uint64
 }
+
+// SubjectKind
+const (
+	SubjectKindUnixProcess   = "unix-process"
+	SubjectKindUnixSession   = "unix-session"
+	SubjectKindSystemBusName = "system-bus-name"
+)
+
+func MakeSubject(kind string) Subject {
+	return Subject{
+		Kind:    kind,
+		Details: make(map[string]dbus.Variant),
+	}
+}
+
+func (s *Subject) SetDetail(key string, value interface{}) {
+	s.Details[key] = dbus.MakeVariant(value)
+}
+
+// CheckAuthorizationFlags
+const (
+	CheckAuthorizationFlagsNone                 = 0
+	CheckAuthorizationFlagsAllowUserInteraction = 1
+)
