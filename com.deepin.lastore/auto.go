@@ -45,24 +45,24 @@ func (v *manager) GoCleanArchives(flags dbus.Flags, ch chan *dbus.Call) *dbus.Ca
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CleanArchives", flags, ch)
 }
 
-func (*manager) StoreCleanArchives(call *dbus.Call) (arg0 dbus.ObjectPath, err error) {
-	err = call.Store(&arg0)
+func (*manager) StoreCleanArchives(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) CleanArchives(flags dbus.Flags) (arg0 dbus.ObjectPath, err error) {
+func (v *manager) CleanArchives(flags dbus.Flags) (job dbus.ObjectPath, err error) {
 	return v.StoreCleanArchives(
 		<-v.GoCleanArchives(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CleanJob
 
-func (v *manager) GoCleanJob(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".CleanJob", flags, ch, arg0)
+func (v *manager) GoCleanJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".CleanJob", flags, ch, jobId)
 }
 
-func (v *manager) CleanJob(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoCleanJob(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *manager) CleanJob(flags dbus.Flags, jobId string) error {
+	return (<-v.GoCleanJob(flags, make(chan *dbus.Call, 1), jobId).Done).Err
 }
 
 // method DistUpgrade
@@ -71,104 +71,120 @@ func (v *manager) GoDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DistUpgrade", flags, ch)
 }
 
-func (*manager) StoreDistUpgrade(call *dbus.Call) (arg0 dbus.ObjectPath, err error) {
-	err = call.Store(&arg0)
+func (*manager) StoreDistUpgrade(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) DistUpgrade(flags dbus.Flags) (arg0 dbus.ObjectPath, err error) {
+func (v *manager) DistUpgrade(flags dbus.Flags) (job dbus.ObjectPath, err error) {
 	return v.StoreDistUpgrade(
 		<-v.GoDistUpgrade(flags, make(chan *dbus.Call, 1)).Done)
 }
 
-// method InstallPackage
+// method FixError
 
-func (v *manager) GoInstallPackage(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".InstallPackage", flags, ch, arg0, arg1)
+func (v *manager) GoFixError(flags dbus.Flags, ch chan *dbus.Call, errType string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".FixError", flags, ch, errType)
 }
 
-func (*manager) StoreInstallPackage(call *dbus.Call) (arg2 dbus.ObjectPath, err error) {
-	err = call.Store(&arg2)
+func (*manager) StoreFixError(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) InstallPackage(flags dbus.Flags, arg0 string, arg1 string) (arg2 dbus.ObjectPath, err error) {
+func (v *manager) FixError(flags dbus.Flags, errType string) (job dbus.ObjectPath, err error) {
+	return v.StoreFixError(
+		<-v.GoFixError(flags, make(chan *dbus.Call, 1), errType).Done)
+}
+
+// method InstallPackage
+
+func (v *manager) GoInstallPackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".InstallPackage", flags, ch, jobName, packages)
+}
+
+func (*manager) StoreInstallPackage(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
+	return
+}
+
+func (v *manager) InstallPackage(flags dbus.Flags, jobName string, packages string) (job dbus.ObjectPath, err error) {
 	return v.StoreInstallPackage(
-		<-v.GoInstallPackage(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
+		<-v.GoInstallPackage(flags, make(chan *dbus.Call, 1), jobName, packages).Done)
 }
 
 // method PackageDesktopPath
 
-func (v *manager) GoPackageDesktopPath(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageDesktopPath", flags, ch, arg0)
+func (v *manager) GoPackageDesktopPath(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageDesktopPath", flags, ch, pkgId)
 }
 
-func (*manager) StorePackageDesktopPath(call *dbus.Call) (arg1 string, err error) {
-	err = call.Store(&arg1)
+func (*manager) StorePackageDesktopPath(call *dbus.Call) (desktopPath string, err error) {
+	err = call.Store(&desktopPath)
 	return
 }
 
-func (v *manager) PackageDesktopPath(flags dbus.Flags, arg0 string) (arg1 string, err error) {
+func (v *manager) PackageDesktopPath(flags dbus.Flags, pkgId string) (desktopPath string, err error) {
 	return v.StorePackageDesktopPath(
-		<-v.GoPackageDesktopPath(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoPackageDesktopPath(flags, make(chan *dbus.Call, 1), pkgId).Done)
 }
 
 // method PackageExists
 
-func (v *manager) GoPackageExists(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageExists", flags, ch, arg0)
+func (v *manager) GoPackageExists(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageExists", flags, ch, pkgId)
 }
 
-func (*manager) StorePackageExists(call *dbus.Call) (arg1 bool, err error) {
-	err = call.Store(&arg1)
+func (*manager) StorePackageExists(call *dbus.Call) (exist bool, err error) {
+	err = call.Store(&exist)
 	return
 }
 
-func (v *manager) PackageExists(flags dbus.Flags, arg0 string) (arg1 bool, err error) {
+func (v *manager) PackageExists(flags dbus.Flags, pkgId string) (exist bool, err error) {
 	return v.StorePackageExists(
-		<-v.GoPackageExists(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoPackageExists(flags, make(chan *dbus.Call, 1), pkgId).Done)
 }
 
 // method PackageInstallable
 
-func (v *manager) GoPackageInstallable(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageInstallable", flags, ch, arg0)
+func (v *manager) GoPackageInstallable(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackageInstallable", flags, ch, pkgId)
 }
 
-func (*manager) StorePackageInstallable(call *dbus.Call) (arg1 bool, err error) {
-	err = call.Store(&arg1)
+func (*manager) StorePackageInstallable(call *dbus.Call) (installable bool, err error) {
+	err = call.Store(&installable)
 	return
 }
 
-func (v *manager) PackageInstallable(flags dbus.Flags, arg0 string) (arg1 bool, err error) {
+func (v *manager) PackageInstallable(flags dbus.Flags, pkgId string) (installable bool, err error) {
 	return v.StorePackageInstallable(
-		<-v.GoPackageInstallable(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoPackageInstallable(flags, make(chan *dbus.Call, 1), pkgId).Done)
 }
 
 // method PackagesDownloadSize
 
-func (v *manager) GoPackagesDownloadSize(flags dbus.Flags, ch chan *dbus.Call, arg0 []string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackagesDownloadSize", flags, ch, arg0)
+func (v *manager) GoPackagesDownloadSize(flags dbus.Flags, ch chan *dbus.Call, packages []string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PackagesDownloadSize", flags, ch, packages)
 }
 
-func (*manager) StorePackagesDownloadSize(call *dbus.Call) (arg1 int64, err error) {
-	err = call.Store(&arg1)
+func (*manager) StorePackagesDownloadSize(call *dbus.Call) (size int64, err error) {
+	err = call.Store(&size)
 	return
 }
 
-func (v *manager) PackagesDownloadSize(flags dbus.Flags, arg0 []string) (arg1 int64, err error) {
+func (v *manager) PackagesDownloadSize(flags dbus.Flags, packages []string) (size int64, err error) {
 	return v.StorePackagesDownloadSize(
-		<-v.GoPackagesDownloadSize(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoPackagesDownloadSize(flags, make(chan *dbus.Call, 1), packages).Done)
 }
 
 // method PauseJob
 
-func (v *manager) GoPauseJob(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".PauseJob", flags, ch, arg0)
+func (v *manager) GoPauseJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PauseJob", flags, ch, jobId)
 }
 
-func (v *manager) PauseJob(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoPauseJob(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *manager) PauseJob(flags dbus.Flags, jobId string) error {
+	return (<-v.GoPauseJob(flags, make(chan *dbus.Call, 1), jobId).Done).Err
 }
 
 // method PrepareDistUpgrade
@@ -177,106 +193,86 @@ func (v *manager) GoPrepareDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *db
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PrepareDistUpgrade", flags, ch)
 }
 
-func (*manager) StorePrepareDistUpgrade(call *dbus.Call) (arg0 dbus.ObjectPath, err error) {
-	err = call.Store(&arg0)
+func (*manager) StorePrepareDistUpgrade(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) PrepareDistUpgrade(flags dbus.Flags) (arg0 dbus.ObjectPath, err error) {
+func (v *manager) PrepareDistUpgrade(flags dbus.Flags) (job dbus.ObjectPath, err error) {
 	return v.StorePrepareDistUpgrade(
 		<-v.GoPrepareDistUpgrade(flags, make(chan *dbus.Call, 1)).Done)
 }
 
-// method RecordLocaleInfo
-
-func (v *manager) GoRecordLocaleInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".RecordLocaleInfo", flags, ch, arg0)
-}
-
-func (v *manager) RecordLocaleInfo(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoRecordLocaleInfo(flags, make(chan *dbus.Call, 1), arg0).Done).Err
-}
-
 // method RemovePackage
 
-func (v *manager) GoRemovePackage(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemovePackage", flags, ch, arg0, arg1)
+func (v *manager) GoRemovePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemovePackage", flags, ch, jobName, packages)
 }
 
-func (*manager) StoreRemovePackage(call *dbus.Call) (arg2 dbus.ObjectPath, err error) {
-	err = call.Store(&arg2)
+func (*manager) StoreRemovePackage(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) RemovePackage(flags dbus.Flags, arg0 string, arg1 string) (arg2 dbus.ObjectPath, err error) {
+func (v *manager) RemovePackage(flags dbus.Flags, jobName string, packages string) (job dbus.ObjectPath, err error) {
 	return v.StoreRemovePackage(
-		<-v.GoRemovePackage(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
+		<-v.GoRemovePackage(flags, make(chan *dbus.Call, 1), jobName, packages).Done)
 }
 
 // method SetAutoClean
 
-func (v *manager) GoSetAutoClean(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoClean", flags, ch, arg0)
+func (v *manager) GoSetAutoClean(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoClean", flags, ch, enable)
 }
 
-func (v *manager) SetAutoClean(flags dbus.Flags, arg0 bool) error {
-	return (<-v.GoSetAutoClean(flags, make(chan *dbus.Call, 1), arg0).Done).Err
-}
-
-// method SetCurrentX11Id
-
-func (v *manager) GoSetCurrentX11Id(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentX11Id", flags, ch, arg0, arg1)
-}
-
-func (v *manager) SetCurrentX11Id(flags dbus.Flags, arg0 string, arg1 string) error {
-	return (<-v.GoSetCurrentX11Id(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+func (v *manager) SetAutoClean(flags dbus.Flags, enable bool) error {
+	return (<-v.GoSetAutoClean(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method SetLogger
 
-func (v *manager) GoSetLogger(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLogger", flags, ch, arg0, arg1, arg2)
+func (v *manager) GoSetLogger(flags dbus.Flags, ch chan *dbus.Call, levels string, format string, output string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLogger", flags, ch, levels, format, output)
 }
 
-func (v *manager) SetLogger(flags dbus.Flags, arg0 string, arg1 string, arg2 string) error {
-	return (<-v.GoSetLogger(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2).Done).Err
+func (v *manager) SetLogger(flags dbus.Flags, levels string, format string, output string) error {
+	return (<-v.GoSetLogger(flags, make(chan *dbus.Call, 1), levels, format, output).Done).Err
 }
 
 // method SetRegion
 
-func (v *manager) GoSetRegion(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRegion", flags, ch, arg0)
+func (v *manager) GoSetRegion(flags dbus.Flags, ch chan *dbus.Call, region string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRegion", flags, ch, region)
 }
 
-func (v *manager) SetRegion(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoSetRegion(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *manager) SetRegion(flags dbus.Flags, region string) error {
+	return (<-v.GoSetRegion(flags, make(chan *dbus.Call, 1), region).Done).Err
 }
 
 // method StartJob
 
-func (v *manager) GoStartJob(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartJob", flags, ch, arg0)
+func (v *manager) GoStartJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartJob", flags, ch, jobId)
 }
 
-func (v *manager) StartJob(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoStartJob(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *manager) StartJob(flags dbus.Flags, jobId string) error {
+	return (<-v.GoStartJob(flags, make(chan *dbus.Call, 1), jobId).Done).Err
 }
 
 // method UpdatePackage
 
-func (v *manager) GoUpdatePackage(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdatePackage", flags, ch, arg0, arg1)
+func (v *manager) GoUpdatePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdatePackage", flags, ch, jobName, packages)
 }
 
-func (*manager) StoreUpdatePackage(call *dbus.Call) (arg2 dbus.ObjectPath, err error) {
-	err = call.Store(&arg2)
+func (*manager) StoreUpdatePackage(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) UpdatePackage(flags dbus.Flags, arg0 string, arg1 string) (arg2 dbus.ObjectPath, err error) {
+func (v *manager) UpdatePackage(flags dbus.Flags, jobName string, packages string) (job dbus.ObjectPath, err error) {
 	return v.StoreUpdatePackage(
-		<-v.GoUpdatePackage(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
+		<-v.GoUpdatePackage(flags, make(chan *dbus.Call, 1), jobName, packages).Done)
 }
 
 // method UpdateSource
@@ -285,12 +281,12 @@ func (v *manager) GoUpdateSource(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateSource", flags, ch)
 }
 
-func (*manager) StoreUpdateSource(call *dbus.Call) (arg0 dbus.ObjectPath, err error) {
-	err = call.Store(&arg0)
+func (*manager) StoreUpdateSource(call *dbus.Call) (job dbus.ObjectPath, err error) {
+	err = call.Store(&job)
 	return
 }
 
-func (v *manager) UpdateSource(flags dbus.Flags) (arg0 dbus.ObjectPath, err error) {
+func (v *manager) UpdateSource(flags dbus.Flags) (job dbus.ObjectPath, err error) {
 	return v.StoreUpdateSource(
 		<-v.GoUpdateSource(flags, make(chan *dbus.Call, 1)).Done)
 }
@@ -356,34 +352,34 @@ func (*updater) GetInterfaceName_() string {
 
 // method ApplicationUpdateInfos
 
-func (v *updater) GoApplicationUpdateInfos(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationUpdateInfos", flags, ch, arg0)
+func (v *updater) GoApplicationUpdateInfos(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationUpdateInfos", flags, ch, lang)
 }
 
-func (*updater) StoreApplicationUpdateInfos(call *dbus.Call) (arg1 []ApplicationUpdateInfo, err error) {
-	err = call.Store(&arg1)
+func (*updater) StoreApplicationUpdateInfos(call *dbus.Call) (updateInfos [][]interface{}, err error) {
+	err = call.Store(&updateInfos)
 	return
 }
 
-func (v *updater) ApplicationUpdateInfos(flags dbus.Flags, arg0 string) (arg1 []ApplicationUpdateInfo, err error) {
+func (v *updater) ApplicationUpdateInfos(flags dbus.Flags, lang string) (updateInfos [][]interface{}, err error) {
 	return v.StoreApplicationUpdateInfos(
-		<-v.GoApplicationUpdateInfos(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoApplicationUpdateInfos(flags, make(chan *dbus.Call, 1), lang).Done)
 }
 
 // method ListMirrorSources
 
-func (v *updater) GoListMirrorSources(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListMirrorSources", flags, ch, arg0)
+func (v *updater) GoListMirrorSources(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListMirrorSources", flags, ch, lang)
 }
 
-func (*updater) StoreListMirrorSources(call *dbus.Call) (arg1 []MirrorSource, err error) {
-	err = call.Store(&arg1)
+func (*updater) StoreListMirrorSources(call *dbus.Call) (mirrorSources [][]interface{}, err error) {
+	err = call.Store(&mirrorSources)
 	return
 }
 
-func (v *updater) ListMirrorSources(flags dbus.Flags, arg0 string) (arg1 []MirrorSource, err error) {
+func (v *updater) ListMirrorSources(flags dbus.Flags, lang string) (mirrorSources [][]interface{}, err error) {
 	return v.StoreListMirrorSources(
-		<-v.GoListMirrorSources(flags, make(chan *dbus.Call, 1), arg0).Done)
+		<-v.GoListMirrorSources(flags, make(chan *dbus.Call, 1), lang).Done)
 }
 
 // method RestoreSystemSource
@@ -398,32 +394,32 @@ func (v *updater) RestoreSystemSource(flags dbus.Flags) error {
 
 // method SetAutoCheckUpdates
 
-func (v *updater) GoSetAutoCheckUpdates(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoCheckUpdates", flags, ch, arg0)
+func (v *updater) GoSetAutoCheckUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoCheckUpdates", flags, ch, enable)
 }
 
-func (v *updater) SetAutoCheckUpdates(flags dbus.Flags, arg0 bool) error {
-	return (<-v.GoSetAutoCheckUpdates(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *updater) SetAutoCheckUpdates(flags dbus.Flags, enable bool) error {
+	return (<-v.GoSetAutoCheckUpdates(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method SetAutoDownloadUpdates
 
-func (v *updater) GoSetAutoDownloadUpdates(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoDownloadUpdates", flags, ch, arg0)
+func (v *updater) GoSetAutoDownloadUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutoDownloadUpdates", flags, ch, enable)
 }
 
-func (v *updater) SetAutoDownloadUpdates(flags dbus.Flags, arg0 bool) error {
-	return (<-v.GoSetAutoDownloadUpdates(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *updater) SetAutoDownloadUpdates(flags dbus.Flags, enable bool) error {
+	return (<-v.GoSetAutoDownloadUpdates(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method SetMirrorSource
 
-func (v *updater) GoSetMirrorSource(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMirrorSource", flags, ch, arg0)
+func (v *updater) GoSetMirrorSource(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMirrorSource", flags, ch, id)
 }
 
-func (v *updater) SetMirrorSource(flags dbus.Flags, arg0 string) error {
-	return (<-v.GoSetMirrorSource(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+func (v *updater) SetMirrorSource(flags dbus.Flags, id string) error {
+	return (<-v.GoSetMirrorSource(flags, make(chan *dbus.Call, 1), id).Done).Err
 }
 
 // property AutoCheckUpdates b
