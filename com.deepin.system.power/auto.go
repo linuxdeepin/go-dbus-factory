@@ -202,12 +202,12 @@ func (v *power) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property BatteryTimeToFull t
+// property PowerSavingModeAuto b
 
-func (v *power) BatteryTimeToFull() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *power) PowerSavingModeAuto() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
-		Name: "BatteryTimeToFull",
+		Name: "PowerSavingModeAuto",
 	}
 }
 
@@ -229,21 +229,30 @@ func (v *power) HasLidSwitch() proxy.PropBool {
 	}
 }
 
-// property HasBattery b
-
-func (v *power) HasBattery() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "HasBattery",
-	}
-}
-
 // property BatteryPercentage d
 
 func (v *power) BatteryPercentage() proxy.PropDouble {
 	return proxy.PropDouble{
 		Impl: v,
 		Name: "BatteryPercentage",
+	}
+}
+
+// property BatteryTimeToEmpty t
+
+func (v *power) BatteryTimeToEmpty() proxy.PropUint64 {
+	return proxy.PropUint64{
+		Impl: v,
+		Name: "BatteryTimeToEmpty",
+	}
+}
+
+// property HasBattery b
+
+func (v *power) HasBattery() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "HasBattery",
 	}
 }
 
@@ -256,12 +265,21 @@ func (v *power) BatteryStatus() proxy.PropUint32 {
 	}
 }
 
-// property BatteryTimeToEmpty t
+// property BatteryTimeToFull t
 
-func (v *power) BatteryTimeToEmpty() proxy.PropUint64 {
+func (v *power) BatteryTimeToFull() proxy.PropUint64 {
 	return proxy.PropUint64{
 		Impl: v,
-		Name: "BatteryTimeToEmpty",
+		Name: "BatteryTimeToFull",
+	}
+}
+
+// property PowerSavingModeEnabled b
+
+func (v *power) PowerSavingModeEnabled() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "PowerSavingModeEnabled",
 	}
 }
 

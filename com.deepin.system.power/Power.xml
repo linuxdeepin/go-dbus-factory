@@ -19,13 +19,15 @@
         </signal>
         <signal name="LidClosed"></signal>
         <signal name="LidOpened"></signal>
-        <property name="BatteryTimeToFull" type="t" access="read"></property>
+        <property name="PowerSavingModeAuto" type="b" access="readwrite"></property>
         <property name="OnBattery" type="b" access="read"></property>
         <property name="HasLidSwitch" type="b" access="read"></property>
-        <property name="HasBattery" type="b" access="read"></property>
         <property name="BatteryPercentage" type="d" access="read"></property>
-        <property name="BatteryStatus" type="u" access="read"></property>
         <property name="BatteryTimeToEmpty" type="t" access="read"></property>
+        <property name="HasBattery" type="b" access="read"></property>
+        <property name="BatteryStatus" type="u" access="read"></property>
+        <property name="BatteryTimeToFull" type="t" access="read"></property>
+        <property name="PowerSavingModeEnabled" type="b" access="readwrite"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
