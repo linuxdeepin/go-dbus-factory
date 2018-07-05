@@ -1,3 +1,8 @@
+[0.0.4] 2018-07-05
+*   update com.deepin.system.power
+*   update com.deepin.lastore
+*   feat: policykit1 add manual code
+*   update com.deepin.SessionManager
 
 [0.0.3] 2018-05-14
 *   chore: replace UnixFdIndex with UnixFd
