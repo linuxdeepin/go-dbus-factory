@@ -1,68 +1,73 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!-- GDBus 2.53.4 -->
 <node>
-  <interface name="org.freedesktop.Notifications">
-    <signal name="NotificationClosed">
-      <arg name="in0" type="u" direction="out"/>
-      <arg name="in1" type="u" direction="out"/>
-    </signal>
-    <method name="CloseNotification">
-      <arg name="in0" type="u" direction="in"/>
-    </method>
-    <method name="GetCapbilities">
-      <arg type="as" direction="out"/>
-    </method>
-    <method name="GetServerInformation">
-      <arg type="s" direction="out"/>
-      <arg name="out1" type="s" direction="out"/>
-      <arg name="out2" type="s" direction="out"/>
-      <arg name="out3" type="s" direction="out"/>
-    </method>
-    <method name="Notify">
-      <arg type="u" direction="out"/>
-      <arg name="in0" type="s" direction="in"/>
-      <arg name="in1" type="u" direction="in"/>
-      <arg name="in2" type="s" direction="in"/>
-      <arg name="in3" type="s" direction="in"/>
-      <arg name="in4" type="s" direction="in"/>
-      <arg name="in5" type="as" direction="in"/>
-      <arg name="in6" type="a{sv}" direction="in"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In6" value="QVariantMap"/>
-      <arg name="in7" type="i" direction="in"/>
-    </method>
-  </interface>
   <interface name="org.freedesktop.DBus.Properties">
     <method name="Get">
-      <arg name="interface_name" type="s" direction="in"/>
-      <arg name="property_name" type="s" direction="in"/>
-      <arg name="value" type="v" direction="out"/>
-    </method>
-    <method name="Set">
-      <arg name="interface_name" type="s" direction="in"/>
-      <arg name="property_name" type="s" direction="in"/>
-      <arg name="value" type="v" direction="in"/>
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="out"/>
     </method>
     <method name="GetAll">
-      <arg name="interface_name" type="s" direction="in"/>
-      <arg name="values" type="a{sv}" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
     </method>
     <signal name="PropertiesChanged">
-      <arg name="interface_name" type="s" direction="out"/>
-      <arg name="changed_properties" type="a{sv}" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
-      <arg name="invalidated_properties" type="as" direction="out"/>
+      <arg type="s" name="interface_name"/>
+      <arg type="a{sv}" name="changed_properties"/>
+      <arg type="as" name="invalidated_properties"/>
     </signal>
   </interface>
   <interface name="org.freedesktop.DBus.Introspectable">
     <method name="Introspect">
-      <arg name="xml_data" type="s" direction="out"/>
+      <arg type="s" name="xml_data" direction="out"/>
     </method>
   </interface>
   <interface name="org.freedesktop.DBus.Peer">
     <method name="Ping"/>
     <method name="GetMachineId">
-      <arg name="machine_uuid" type="s" direction="out"/>
+      <arg type="s" name="machine_uuid" direction="out"/>
     </method>
+  </interface>
+  <interface name="org.xfce.Notifyd">
+    <method name="Quit"/>
+  </interface>
+  <interface name="org.freedesktop.Notifications">
+    <method name="GetCapabilities">
+      <arg type="as" name="capabilities" direction="out"/>
+    </method>
+    <method name="Notify">
+      <arg type="s" name="app_name" direction="in"/>
+      <arg type="u" name="replaces_id" direction="in"/>
+      <arg type="s" name="app_icon" direction="in"/>
+      <arg type="s" name="summary" direction="in"/>
+      <arg type="s" name="body" direction="in"/>
+      <arg type="as" name="actions" direction="in"/>
+      <arg type="a{sv}" name="hints" direction="in"/>
+      <arg type="i" name="expire_timeout" direction="in"/>
+      <arg type="u" name="id" direction="out"/>
+    </method>
+    <method name="CloseNotification">
+      <arg type="u" name="id" direction="in"/>
+    </method>
+    <method name="GetServerInformation">
+      <arg type="s" name="name" direction="out"/>
+      <arg type="s" name="vendor" direction="out"/>
+      <arg type="s" name="version" direction="out"/>
+      <arg type="s" name="spec_version" direction="out"/>
+    </method>
+    <signal name="NotificationClosed">
+      <arg type="u" name="id"/>
+      <arg type="u" name="reason"/>
+    </signal>
+    <signal name="ActionInvoked">
+      <arg type="u" name="id"/>
+      <arg type="s" name="action_key"/>
+    </signal>
   </interface>
 </node>
