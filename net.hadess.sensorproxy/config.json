@@ -1,0 +1,15 @@
+{
+  "Service": "net.hadess.SensorProxy",
+  "Objects": [
+    {
+      "Type": "SensorProxy",
+      "Path": "/net/hadess/SensorProxy",
+      "Interfaces": [
+        {
+          "Type": "sensorProxy",
+          "Name": "net.hadess.SensorProxy"
+        }
+      ]
+    }
+  ]
+}
