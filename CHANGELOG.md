@@ -1,3 +1,8 @@
+[0.0.5] 2018-07-19
+*   update com.deepin.sessionmanager XSettings
+*   add net.hadess.sensorproxy
+*   update org.freedesktop.notifications
+
 [0.0.4] 2018-07-05
 *   update com.deepin.system.power
 *   update com.deepin.lastore
