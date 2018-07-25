@@ -6,7 +6,8 @@
       "Interfaces": [
         {
           "Name": "org.freedesktop.NetworkManager.AccessPoint",
-          "Type": "accessPoint"
+          "Type": "accessPoint",
+          "Accessor": "AccessPoint"
         }
       ]
     },

@@ -27,6 +27,10 @@ func NewAccessPoint(conn *dbus.Conn, path dbus.ObjectPath) (*AccessPoint, error)
 	return obj, nil
 }
 
+func (obj *AccessPoint) AccessPoint() *accessPoint {
+	return &obj.accessPoint
+}
+
 type accessPoint struct{}
 
 func (v *accessPoint) GetObject_() *proxy.Object {
