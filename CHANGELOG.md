@@ -1,3 +1,6 @@
+[0.0.6] 2018-07-31
+*   chore: networkmanager accessPoint add accessor
+
 [0.0.5] 2018-07-19
 *   update com.deepin.sessionmanager XSettings
 *   add net.hadess.sensorproxy
