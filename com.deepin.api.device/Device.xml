@@ -2,12 +2,10 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name="com.deepin.api.Device">
-        <method name="BlockDevice">
-            <arg name="deviceType" type="s" direction="in"></arg>
+        <method name="HasBluetoothDeviceBlocked">
+            <arg name="has" type="b" direction="out"></arg>
         </method>
-        <method name="UnblockDevice">
-            <arg name="deviceType" type="s" direction="in"></arg>
-        </method>
+        <method name="UnblockBluetoothDevices"></method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

@@ -34,22 +34,28 @@ func (*device) GetInterfaceName_() string {
 	return "com.deepin.api.Device"
 }
 
-// method BlockDevice
+// method HasBluetoothDeviceBlocked
 
-func (v *device) GoBlockDevice(flags dbus.Flags, ch chan *dbus.Call, deviceType string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".BlockDevice", flags, ch, deviceType)
+func (v *device) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".HasBluetoothDeviceBlocked", flags, ch)
 }
 
-func (v *device) BlockDevice(flags dbus.Flags, deviceType string) error {
-	return (<-v.GoBlockDevice(flags, make(chan *dbus.Call, 1), deviceType).Done).Err
+func (*device) StoreHasBluetoothDeviceBlocked(call *dbus.Call) (has bool, err error) {
+	err = call.Store(&has)
+	return
 }
 
-// method UnblockDevice
-
-func (v *device) GoUnblockDevice(flags dbus.Flags, ch chan *dbus.Call, deviceType string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnblockDevice", flags, ch, deviceType)
+func (v *device) HasBluetoothDeviceBlocked(flags dbus.Flags) (has bool, err error) {
+	return v.StoreHasBluetoothDeviceBlocked(
+		<-v.GoHasBluetoothDeviceBlocked(flags, make(chan *dbus.Call, 1)).Done)
 }
 
-func (v *device) UnblockDevice(flags dbus.Flags, deviceType string) error {
-	return (<-v.GoUnblockDevice(flags, make(chan *dbus.Call, 1), deviceType).Done).Err
+// method UnblockBluetoothDevices
+
+func (v *device) GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnblockBluetoothDevices", flags, ch)
+}
+
+func (v *device) UnblockBluetoothDevices(flags dbus.Flags) error {
+	return (<-v.GoUnblockBluetoothDevices(flags, make(chan *dbus.Call, 1)).Done).Err
 }
