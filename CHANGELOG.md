@@ -1,3 +1,6 @@
+[0.0.7] 2018-08-07
+*   feat: update com.deepin.api.device
+
 [0.0.6] 2018-07-31
 *   chore: networkmanager accessPoint add accessor
 
