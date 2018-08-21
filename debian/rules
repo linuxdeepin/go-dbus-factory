@@ -1,7 +1,12 @@
 #!/usr/bin/make -f
 
+ifeq ($(DEB_BUILD_ARCH),sw_64)
+%:
+	dh $@
+else
 %:
 	dh $@ --buildsystem=golang --with=golang
+endif
 
 
 
