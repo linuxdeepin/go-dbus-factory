@@ -43,3 +43,13 @@ func (v *daemon) GoScalePlymouth(flags dbus.Flags, ch chan *dbus.Call, scale uin
 func (v *daemon) ScalePlymouth(flags dbus.Flags, scale uint32) error {
 	return (<-v.GoScalePlymouth(flags, make(chan *dbus.Call, 1), scale).Done).Err
 }
+
+// method SetLongPressDuration
+
+func (v *daemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLongPressDuration", flags, ch, duration)
+}
+
+func (v *daemon) SetLongPressDuration(flags dbus.Flags, duration uint32) error {
+	return (<-v.GoSetLongPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
+}

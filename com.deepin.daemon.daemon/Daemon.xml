@@ -5,6 +5,9 @@
         <method name="ScalePlymouth">
             <arg name="scale" type="u" direction="in"></arg>
         </method>
+        <method name="SetLongPressDuration">
+            <arg name="duration" type="u" direction="in"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
