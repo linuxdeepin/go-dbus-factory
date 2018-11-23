@@ -1,3 +1,7 @@
+[0.1.0] 2018-11-23
+*   feat: update com.deepin.daemon.daemon
+*   chore: add makefile for `sw_64`
+
 [0.0.7] 2018-08-07
 *   feat: update com.deepin.api.device
 
