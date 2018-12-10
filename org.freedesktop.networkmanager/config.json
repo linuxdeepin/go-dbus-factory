@@ -2,6 +2,16 @@
   "Service": "org.freedesktop.NetworkManager",
   "Objects": [
     {
+      "Type": "ObjectManager",
+      "XMLFile": "-",
+      "Path": "/org/freedesktop",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        }
+      ]
+    },
+    {
       "Type": "AccessPoint",
       "Interfaces": [
         {
