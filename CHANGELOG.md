@@ -1,3 +1,6 @@
+[0.2.0] 2018-12-13
+*   feat: add org.freedesktop.NetworkManager ObjectManager
+
 [0.1.0] 2018-11-23
 *   feat: update com.deepin.daemon.daemon
 *   chore: add makefile for `sw_64`
