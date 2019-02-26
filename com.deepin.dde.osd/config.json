@@ -1,0 +1,15 @@
+{
+  "Service":"com.deepin.dde.osd",
+  "Objects": [
+    {
+      "Type": "OSD",
+      "Path": "/",
+      "Interfaces": [
+        {
+          "Name":"com.deepin.dde.osd",
+          "Type":"osd"
+        }
+      ]
+    }
+  ]
+}
