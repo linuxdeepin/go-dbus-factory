@@ -1,6 +1,6 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
                       "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<!-- GDBus 2.53.4 -->
+<!-- GDBus 2.56.1 -->
 <node>
   <interface name="org.freedesktop.DBus.Properties">
     <method name="Get">
@@ -84,6 +84,9 @@
     <signal name="WorkspaceSwitched">
       <arg type="i" name="from"/>
       <arg type="i" name="to"/>
+    </signal>
+    <signal name="StartupReady">
+      <arg type="s" name="wm_name"/>
     </signal>
   </interface>
 </node>

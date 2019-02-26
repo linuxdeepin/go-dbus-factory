@@ -268,3 +268,29 @@ func (v *wm) ConnectWorkspaceSwitched(cb func(from int32, to int32)) (dbusutil.S
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
+
+// signal StartupReady
+
+func (v *wm) ConnectStartupReady(cb func(wm_name string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "StartupReady", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".StartupReady",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var wm_name string
+		err := dbus.Store(sig.Body, &wm_name)
+		if err == nil {
+			cb(wm_name)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
