@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.api.SoundThemePlayer",
+  "Objects": [
+    {
+      "Type": "SoundThemePlayer",
+      "Path": "/com/deepin/api/SoundThemePlayer",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.api.SoundThemePlayer",
+          "Type": "soundThemePlayer"
+        }
+      ]
+    }
+  ]
+}
