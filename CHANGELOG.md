@@ -1,3 +1,9 @@
+[0.3.0] 2019-03-01
+*   change(api): add com.deepin.dde.osd
+*   change(api): update com.deepin.wm
+*   feat: add com.deepin.api.soundthemeplayer
+*   chore: update com.deepin.daemon.Network
+
 [0.2.0] 2018-12-13
 *   feat: add org.freedesktop.NetworkManager ObjectManager
 
