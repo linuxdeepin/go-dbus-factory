@@ -2,10 +2,20 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name="com.deepin.api.SoundThemePlayer">
+        <method name="EnableSoundDesktopLogin">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
         <method name="Play">
             <arg name="theme" type="s" direction="in"></arg>
             <arg name="event" type="s" direction="in"></arg>
             <arg name="device" type="s" direction="in"></arg>
+        </method>
+        <method name="PlaySoundDesktopLogin"></method>
+        <method name="SaveAudioState">
+            <arg name="activePlayback" type="a{sv}" direction="in"></arg>
+        </method>
+        <method name="SetSoundTheme">
+            <arg name="theme" type="s" direction="in"></arg>
         </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
