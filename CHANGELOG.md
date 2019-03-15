@@ -1,3 +1,7 @@
+[0.4.0] 2019-03-15
+*   change(api): update com.deepin.api.SoundThemePlayer
+*   change(api): add com.deepin.system.Network
+
 [0.3.0] 2019-03-01
 *   change(api): add com.deepin.dde.osd
 *   change(api): update com.deepin.wm
