@@ -1,92 +1,109 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<!-- GDBus 2.56.1 -->
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
+  <interface name="com.deepin.wm">
+    <method name="ChangeCurrentWorkspaceBackground">
+      <arg direction="in" type="s" name="uri"/>
+    </method>
+    <method name="SwitchToWorkspace">
+      <arg direction="in" type="b" name="backward"/>
+    </method>
+    <method name="SwitchApplication">
+      <arg direction="in" type="b" name="backward"/>
+    </method>
+    <method name="TileActiveWindow">
+      <arg direction="in" type="u" name="side"/>
+    </method>
+    <method name="BeginToMoveActiveWindow"/>
+    <method name="PerformAction">
+      <arg direction="in" type="i" name="type"/>
+    </method>
+    <method name="PreviewWindow">
+      <arg direction="in" type="u" name="xid"/>
+    </method>
+    <method name="CancelPreviewWindow"/>
+    <method name="GetCurrentWorkspaceBackground">
+      <arg direction="out" type="s" name="result"/>
+    </method>
+    <method name="SetCurrentWorkspaceBackground">
+      <arg direction="in" type="s" name="uri"/>
+    </method>
+    <method name="GetWorkspaceBackground">
+      <arg direction="in" type="i" name="index"/>
+      <arg direction="out" type="s" name="result"/>
+    </method>
+    <method name="SetWorkspaceBackground">
+      <arg direction="in" type="i" name="index"/>
+      <arg direction="in" type="s" name="uri"/>
+    </method>
+    <method name="GetCurrentWorkspace">
+      <arg direction="out" type="i" name="index"/>
+    </method>
+    <method name="SetCurrentWorkspace">
+      <arg direction="in" type="i" name="index"/>
+    </method>
+    <method name="PreviousWorkspace"/>
+    <method name="NextWorkspace"/>
+    <method name="GetAllAccels">
+      <arg direction="out" type="s" name="data"/>
+    </method>
+    <method name="GetAccel">
+      <arg direction="in" type="s" name="id"/>
+      <arg direction="out" type="as" name="data"/>
+    </method>
+    <method name="SetAccel">
+      <arg direction="in" type="s" name="data"/>
+      <arg direction="out" type="b" name="result"/>
+    </method>
+    <method name="RemoveAccel">
+      <arg direction="in" type="s" name="id"/>
+    </method>
+    <method name="PresentWindows">
+      <arg type="au" name="xids" direction="in"/>
+    </method>
+    <method name="EnableZoneDetected">
+      <arg type="b" name="val" direction="in"/>
+    </method>
+    <signal name="WorkspaceBackgroundChanged">
+      <arg type="i" name="index"/>
+      <arg type="s" name="newUri"/>
+    </signal>
+    <signal name="StartupReady">
+      <arg type="s" name="wm_name"/>
+    </signal>
+  </interface>
   <interface name="org.freedesktop.DBus.Properties">
     <method name="Get">
-      <arg type="s" name="interface_name" direction="in"/>
-      <arg type="s" name="property_name" direction="in"/>
-      <arg type="v" name="value" direction="out"/>
-    </method>
-    <method name="GetAll">
-      <arg type="s" name="interface_name" direction="in"/>
-      <arg type="a{sv}" name="properties" direction="out"/>
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="out"/>
     </method>
     <method name="Set">
-      <arg type="s" name="interface_name" direction="in"/>
-      <arg type="s" name="property_name" direction="in"/>
-      <arg type="v" name="value" direction="in"/>
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="values" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
     </method>
     <signal name="PropertiesChanged">
-      <arg type="s" name="interface_name"/>
-      <arg type="a{sv}" name="changed_properties"/>
-      <arg type="as" name="invalidated_properties"/>
+      <arg name="interface_name" type="s" direction="out"/>
+      <arg name="changed_properties" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+      <arg name="invalidated_properties" type="as" direction="out"/>
     </signal>
   </interface>
   <interface name="org.freedesktop.DBus.Introspectable">
     <method name="Introspect">
-      <arg type="s" name="xml_data" direction="out"/>
+      <arg name="xml_data" type="s" direction="out"/>
     </method>
   </interface>
   <interface name="org.freedesktop.DBus.Peer">
     <method name="Ping"/>
     <method name="GetMachineId">
-      <arg type="s" name="machine_uuid" direction="out"/>
+      <arg name="machine_uuid" type="s" direction="out"/>
     </method>
-  </interface>
-  <interface name="com.deepin.wm">
-    <method name="PerformAction">
-      <arg type="i" name="type" direction="in"/>
-    </method>
-    <method name="ToggleDebug">
-    </method>
-    <method name="CancelPreviewWindow">
-    </method>
-    <method name="PreviewWindow">
-      <arg type="u" name="xid" direction="in"/>
-    </method>
-    <method name="PresentWindows">
-      <arg type="au" name="xids" direction="in"/>
-    </method>
-    <method name="RequestHideWindows">
-    </method>
-    <method name="CancelHideWindows">
-    </method>
-    <method name="ChangeCurrentWorkspaceBackground">
-      <arg type="s" name="uri" direction="in"/>
-    </method>
-    <method name="SetTransientBackground">
-      <arg type="s" name="uri" direction="in"/>
-    </method>
-    <method name="GetCurrentWorkspaceBackground">
-      <arg type="s" name="result" direction="out"/>
-    </method>
-    <method name="EnableZoneDetected">
-      <arg type="b" name="val" direction="in"/>
-    </method>
-    <method name="SwitchApplication">
-      <arg type="b" name="backward" direction="in"/>
-    </method>
-    <method name="SwitchToWorkspace">
-      <arg type="b" name="backward" direction="in"/>
-    </method>
-    <method name="TileActiveWindow">
-      <arg type="u" name="side" direction="in"/>
-    </method>
-    <method name="BeginToMoveActiveWindow">
-    </method>
-    <signal name="WorkspaceRemoved">
-      <arg type="i" name="index"/>
-    </signal>
-    <signal name="WorkspaceAdded">
-      <arg type="i" name="index"/>
-    </signal>
-    <signal name="WorkspaceSwitched">
-      <arg type="i" name="from"/>
-      <arg type="i" name="to"/>
-    </signal>
-    <signal name="StartupReady">
-      <arg type="s" name="wm_name"/>
-    </signal>
   </interface>
 </node>
