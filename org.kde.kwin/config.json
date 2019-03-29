@@ -1,0 +1,15 @@
+{
+  "Service": "org.kde.KWin",
+  "Objects": [
+    {
+      "Type": "Compositor",
+      "Path": "/Compositor",
+      "Interfaces": [
+        {
+          "Name": "org.kde.kwin.Compositing",
+          "Type": "compositing"
+        }
+      ]
+    }
+  ]
+}
