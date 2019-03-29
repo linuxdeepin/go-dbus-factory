@@ -195,6 +195,7 @@ func writeImplementerMethods(sb *SourceBody, ifc *introspect.Interface, ifcCfg *
 
 func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
 	sb.Pn("// method %s\n", method.Name)
+	methodName := strings.Title(method.Name)
 	args := getArgs(method.Args)
 	inArgs := getInArgs(args)
 	outArgs := getOutArgs(args)
@@ -214,7 +215,7 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// GoXXX
 
 	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
-		ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes))
+		ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes))
 	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
 		method.Name, getArgsName(inArgs, false))
 	sb.Pn("}\n")
@@ -222,7 +223,7 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// StoreXXX
 	if len(outArgs) > 0 {
 		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.Type,
-			method.Name, getArgsProto(outArgs, true, argFixes))
+			methodName, getArgsProto(outArgs, true, argFixes))
 		sb.Pn("    err = call.Store(%s)", getArgsRefName(outArgs, true))
 		sb.Pn("    return")
 		sb.Pn("}\n")
@@ -231,17 +232,17 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// Call
 	if len(outArgs) == 0 {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
-			ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes))
+			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes))
 		sb.Pn("return (<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done).Err",
-			method.Name, getArgsName(inArgs, false))
+			methodName, getArgsName(inArgs, false))
 		sb.Pn("}\n")
 	} else {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
-			ifcCfg.Type, method.Name, getArgsProto(inArgs, false, argFixes),
+			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes),
 			getArgsProto(outArgs, true, argFixes))
 		sb.Pn("return v.Store%s(", method.Name)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
-			method.Name, getArgsName(inArgs, false))
+			methodName, getArgsName(inArgs, false))
 		sb.Pn("}\n")
 	}
 }
@@ -251,9 +252,10 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 
 	args := getArgs(signal.Args)
 	argFixes := ifcCfg.getArgFixes("s/" + signal.Name)
+	methodName := strings.Title(signal.Name)
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
-		ifcCfg.Type, signal.Name, getArgsProto(args, true, argFixes))
+		ifcCfg.Type, methodName, getArgsProto(args, true, argFixes))
 	sb.Pn("if cb == nil {")
 	sb.Pn("   return 0, errors.New(\"nil callback\")")
 	sb.Pn("}")
@@ -387,11 +389,11 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 	}
 
 	// get funcName
-	funcName := prop.Name
+	funcName := strings.Title(prop.Name)
 	if renameTo != "" {
 		funcName = renameTo
 	} else if methodSameName {
-		funcName = "Prop" + prop.Name
+		funcName = "Prop" + funcName
 	}
 
 	propType := getPropType(prop.Type)
