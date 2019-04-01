@@ -5,8 +5,14 @@
         <method name="GetScaleFactor">
             <arg name="factor" type="d" direction="out"></arg>
         </method>
+        <method name="GetScreenScaleFactors">
+            <arg name="factors" type="a{sd}" direction="out"></arg>
+        </method>
         <method name="SetScaleFactor">
             <arg name="factor" type="d" direction="in"></arg>
+        </method>
+        <method name="SetScreenScaleFactors">
+            <arg name="factors" type="a{sd}" direction="in"></arg>
         </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
