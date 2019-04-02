@@ -1,3 +1,8 @@
+[0.5.0] 2019-04-02
+*   change(api): update com.deepin.daemon.greeter
+*   change(api): update com.deepin.wm
+*   change(api): add org.kde.kwin Compositor
+
 [0.4.0] 2019-03-15
 *   change(api): update com.deepin.api.SoundThemePlayer
 *   change(api): add com.deepin.system.Network
