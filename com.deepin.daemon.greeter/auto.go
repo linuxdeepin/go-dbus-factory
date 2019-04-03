@@ -34,54 +34,12 @@ func (*greeter) GetInterfaceName_() string {
 	return "com.deepin.daemon.Greeter"
 }
 
-// method GetScaleFactor
+// method UpdateGreeterQtTheme
 
-func (v *greeter) GoGetScaleFactor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetScaleFactor", flags, ch)
+func (v *greeter) GoUpdateGreeterQtTheme(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateGreeterQtTheme", flags, ch, fd)
 }
 
-func (*greeter) StoreGetScaleFactor(call *dbus.Call) (factor float64, err error) {
-	err = call.Store(&factor)
-	return
-}
-
-func (v *greeter) GetScaleFactor(flags dbus.Flags) (factor float64, err error) {
-	return v.StoreGetScaleFactor(
-		<-v.GoGetScaleFactor(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method GetScreenScaleFactors
-
-func (v *greeter) GoGetScreenScaleFactors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetScreenScaleFactors", flags, ch)
-}
-
-func (*greeter) StoreGetScreenScaleFactors(call *dbus.Call) (factors map[string]float64, err error) {
-	err = call.Store(&factors)
-	return
-}
-
-func (v *greeter) GetScreenScaleFactors(flags dbus.Flags) (factors map[string]float64, err error) {
-	return v.StoreGetScreenScaleFactors(
-		<-v.GoGetScreenScaleFactors(flags, make(chan *dbus.Call, 1)).Done)
-}
-
-// method SetScaleFactor
-
-func (v *greeter) GoSetScaleFactor(flags dbus.Flags, ch chan *dbus.Call, factor float64) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetScaleFactor", flags, ch, factor)
-}
-
-func (v *greeter) SetScaleFactor(flags dbus.Flags, factor float64) error {
-	return (<-v.GoSetScaleFactor(flags, make(chan *dbus.Call, 1), factor).Done).Err
-}
-
-// method SetScreenScaleFactors
-
-func (v *greeter) GoSetScreenScaleFactors(flags dbus.Flags, ch chan *dbus.Call, factors map[string]float64) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetScreenScaleFactors", flags, ch, factors)
-}
-
-func (v *greeter) SetScreenScaleFactors(flags dbus.Flags, factors map[string]float64) error {
-	return (<-v.GoSetScreenScaleFactors(flags, make(chan *dbus.Call, 1), factors).Done).Err
+func (v *greeter) UpdateGreeterQtTheme(flags dbus.Flags, fd dbus.UnixFD) error {
+	return (<-v.GoUpdateGreeterQtTheme(flags, make(chan *dbus.Call, 1), fd).Done).Err
 }

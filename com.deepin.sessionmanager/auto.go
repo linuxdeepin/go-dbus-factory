@@ -701,6 +701,22 @@ func (v *xSettings) GetScaleFactor(flags dbus.Flags) (arg0 float64, err error) {
 		<-v.GoGetScaleFactor(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+// method GetScreenScaleFactors
+
+func (v *xSettings) GoGetScreenScaleFactors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetScreenScaleFactors", flags, ch)
+}
+
+func (*xSettings) StoreGetScreenScaleFactors(call *dbus.Call) (arg0 map[string]float64, err error) {
+	err = call.Store(&arg0)
+	return
+}
+
+func (v *xSettings) GetScreenScaleFactors(flags dbus.Flags) (arg0 map[string]float64, err error) {
+	return v.StoreGetScreenScaleFactors(
+		<-v.GoGetScreenScaleFactors(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // method GetString
 
 func (v *xSettings) GoGetString(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
@@ -763,6 +779,16 @@ func (v *xSettings) SetScaleFactor(flags dbus.Flags, arg0 float64) error {
 	return (<-v.GoSetScaleFactor(flags, make(chan *dbus.Call, 1), arg0).Done).Err
 }
 
+// method SetScreenScaleFactors
+
+func (v *xSettings) GoSetScreenScaleFactors(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]float64) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetScreenScaleFactors", flags, ch, arg0)
+}
+
+func (v *xSettings) SetScreenScaleFactors(flags dbus.Flags, arg0 map[string]float64) error {
+	return (<-v.GoSetScreenScaleFactors(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
 // method SetString
 
 func (v *xSettings) GoSetString(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
@@ -771,6 +797,28 @@ func (v *xSettings) GoSetString(flags dbus.Flags, ch chan *dbus.Call, arg0 strin
 
 func (v *xSettings) SetString(flags dbus.Flags, arg0 string, arg1 string) error {
 	return (<-v.GoSetString(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+// signal SetScaleFactorStarted
+
+func (v *xSettings) ConnectSetScaleFactorStarted(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "SetScaleFactorStarted", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".SetScaleFactorStarted",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
 // signal SetScaleFactorDone
