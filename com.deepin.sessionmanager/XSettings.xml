@@ -11,6 +11,9 @@
           <method name="GetScaleFactor">
                <arg type="d" direction="out"></arg>
           </method>
+          <method name="GetScreenScaleFactors">
+               <arg type="a{sd}" direction="out"></arg>
+          </method>
           <method name="GetString">
                <arg type="s" direction="in"></arg>
                <arg type="s" direction="out"></arg>
@@ -29,10 +32,14 @@
           <method name="SetScaleFactor">
                <arg type="d" direction="in"></arg>
           </method>
+          <method name="SetScreenScaleFactors">
+               <arg type="a{sd}" direction="in"></arg>
+          </method>
           <method name="SetString">
                <arg type="s" direction="in"></arg>
                <arg type="s" direction="in"></arg>
           </method>
+          <signal name="SetScaleFactorStarted"></signal>
           <signal name="SetScaleFactorDone"></signal>
      </interface>
      <interface name="org.freedesktop.DBus.Introspectable">
