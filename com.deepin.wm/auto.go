@@ -290,6 +290,16 @@ func (v *wm) EnableZoneDetected(flags dbus.Flags, val bool) error {
 	return (<-v.GoEnableZoneDetected(flags, make(chan *dbus.Call, 1), val).Done).Err
 }
 
+// method SetDecorationDeepinTheme
+
+func (v *wm) GoSetDecorationDeepinTheme(flags dbus.Flags, ch chan *dbus.Call, deepinThemeName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDecorationDeepinTheme", flags, ch, deepinThemeName)
+}
+
+func (v *wm) SetDecorationDeepinTheme(flags dbus.Flags, deepinThemeName string) error {
+	return (<-v.GoSetDecorationDeepinTheme(flags, make(chan *dbus.Call, 1), deepinThemeName).Done).Err
+}
+
 // signal WorkspaceBackgroundChanged
 
 func (v *wm) ConnectWorkspaceBackgroundChanged(cb func(index int32, newUri string)) (dbusutil.SignalHandlerId, error) {
