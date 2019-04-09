@@ -1,3 +1,6 @@
+[0.7.0] 2019-04-09
+*   change(api): update com.deepin.wm
+
 [0.6.0] 2019-04-08
 *   feat: update com.deepin.daemon.greeter and com.deepin.XSettings
 
