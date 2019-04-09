@@ -64,6 +64,9 @@
     <method name="EnableZoneDetected">
       <arg type="b" name="val" direction="in"/>
     </method>
+    <method name="SetDecorationDeepinTheme">
+      <arg direction="in" type="s" name="deepinThemeName"/>
+    </method>
     <signal name="WorkspaceBackgroundChanged">
       <arg type="i" name="index"/>
       <arg type="s" name="newUri"/>
