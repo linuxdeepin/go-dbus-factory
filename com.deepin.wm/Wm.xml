@@ -2,6 +2,8 @@
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="com.deepin.wm">
+    <property access="readwrite" type="b" name="compositingEnabled"/>
+    <property access="read" type="b" name="compositingPossible"/>
     <method name="ChangeCurrentWorkspaceBackground">
       <arg direction="in" type="s" name="uri"/>
     </method>
@@ -73,6 +75,9 @@
     </signal>
     <signal name="StartupReady">
       <arg type="s" name="wm_name"/>
+    </signal>
+    <signal name="compositingEnabledChanged">
+      <arg type="b" name="enabled"/>
     </signal>
   </interface>
   <interface name="org.freedesktop.DBus.Properties">

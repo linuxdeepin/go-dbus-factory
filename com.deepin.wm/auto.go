@@ -352,3 +352,47 @@ func (v *wm) ConnectStartupReady(cb func(wm_name string)) (dbusutil.SignalHandle
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
+
+// signal compositingEnabledChanged
+
+func (v *wm) ConnectCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "compositingEnabledChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".compositingEnabledChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var enabled bool
+		err := dbus.Store(sig.Body, &enabled)
+		if err == nil {
+			cb(enabled)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// property compositingEnabled b
+
+func (v *wm) CompositingEnabled() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "compositingEnabled",
+	}
+}
+
+// property compositingPossible b
+
+func (v *wm) CompositingPossible() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "compositingPossible",
+	}
+}
