@@ -4,6 +4,9 @@
   <interface name="com.deepin.wm">
     <property access="readwrite" type="b" name="compositingEnabled"/>
     <property access="read" type="b" name="compositingPossible"/>
+    <property access="readwrite" type="b" name="zoneEnabled"/>
+    <property access="readwrite" type="s" name="cursorTheme"/>
+    <property access="readwrite" type="i" name="cursorSize"/>
     <method name="ChangeCurrentWorkspaceBackground">
       <arg direction="in" type="s" name="uri"/>
     </method>
