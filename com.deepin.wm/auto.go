@@ -396,3 +396,30 @@ func (v *wm) CompositingPossible() proxy.PropBool {
 		Name: "compositingPossible",
 	}
 }
+
+// property zoneEnabled b
+
+func (v *wm) ZoneEnabled() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "zoneEnabled",
+	}
+}
+
+// property cursorTheme s
+
+func (v *wm) CursorTheme() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "cursorTheme",
+	}
+}
+
+// property cursorSize i
+
+func (v *wm) CursorSize() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "cursorSize",
+	}
+}
