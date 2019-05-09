@@ -1,3 +1,6 @@
+[0.8.0] 2019-05-09
+*   change(api): update com.deepin.wm
+
 [0.7.0] 2019-04-09
 *   change(api): update com.deepin.wm
 
