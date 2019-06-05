@@ -1,3 +1,6 @@
+[0.9.0] 2019-06-05
+*   change(api): add com.deepin.WMSwitcher
+
 [0.8.0] 2019-05-09
 *   change(api): update com.deepin.wm
 
