@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.userexperience.Daemon",
+  "Objects": [
+    {
+      "Type": "Daemon",
+      "Path": "/com/deepin/userexperience/Daemon",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.userexperience.Daemon",
+          "Type": "daemon"
+        }
+      ]
+    }
+  ]
+}
