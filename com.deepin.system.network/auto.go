@@ -60,6 +60,16 @@ func (v *network) IsDeviceEnabled(flags dbus.Flags, pathOrIface string) (enabled
 		<-v.GoIsDeviceEnabled(flags, make(chan *dbus.Call, 1), pathOrIface).Done)
 }
 
+// method Ping
+
+func (v *network) GoPing(flags dbus.Flags, ch chan *dbus.Call, host string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Ping", flags, ch, host)
+}
+
+func (v *network) Ping(flags dbus.Flags, host string) error {
+	return (<-v.GoPing(flags, make(chan *dbus.Call, 1), host).Done).Err
+}
+
 // signal DeviceEnabled
 
 func (v *network) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled bool)) (dbusutil.SignalHandlerId, error) {
