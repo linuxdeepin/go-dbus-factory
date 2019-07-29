@@ -2,6 +2,17 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name="com.deepin.daemon.Daemon">
+        <method name="BluetoothGetDeviceTechnologies">
+            <arg name="adapter" type="s" direction="in"></arg>
+            <arg name="device" type="s" direction="in"></arg>
+            <arg name="technologies" type="as" direction="out"></arg>
+        </method>
+        <method name="NetworkGetConnections">
+            <arg name="data" type="ay" direction="out"></arg>
+        </method>
+        <method name="NetworkSetConnections">
+            <arg name="data" type="ay" direction="in"></arg>
+        </method>
         <method name="ScalePlymouth">
             <arg name="scale" type="u" direction="in"></arg>
         </method>
