@@ -1,0 +1,40 @@
+{
+  "Service": "org.freedesktop.GeoClue2",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/freedesktop/GeoClue2/Manager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.GeoClue2.Manager",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type":"Client",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.GeoClue2.Client",
+          "Type": "client"
+        }
+      ]
+    },
+    {
+      "Type":"Location",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.GeoClue2.Location",
+          "Type": "location",
+          "Fixes": {
+            "p/Timestamp": {
+              "Type": "PropTimestamp",
+              "ValueType": "Timestamp",
+              "EmptyValue": "Timestamp{}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
