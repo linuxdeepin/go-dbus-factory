@@ -285,6 +285,22 @@ func (*sessionManager) GetInterfaceName_() string {
 	return "com.deepin.SessionManager"
 }
 
+// method AllowSessionDaemonRun
+
+func (v *sessionManager) GoAllowSessionDaemonRun(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".AllowSessionDaemonRun", flags, ch)
+}
+
+func (*sessionManager) StoreAllowSessionDaemonRun(call *dbus.Call) (arg0 bool, err error) {
+	err = call.Store(&arg0)
+	return
+}
+
+func (v *sessionManager) AllowSessionDaemonRun(flags dbus.Flags) (arg0 bool, err error) {
+	return v.StoreAllowSessionDaemonRun(
+		<-v.GoAllowSessionDaemonRun(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // method CanHibernate
 
 func (v *sessionManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -501,6 +517,16 @@ func (v *sessionManager) RequestSuspend(flags dbus.Flags) error {
 	return (<-v.GoRequestSuspend(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
+// method SetLocked
+
+func (v *sessionManager) GoSetLocked(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocked", flags, ch, arg0)
+}
+
+func (v *sessionManager) SetLocked(flags dbus.Flags, arg0 bool) error {
+	return (<-v.GoSetLocked(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
 // method Shutdown
 
 func (v *sessionManager) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -519,6 +545,37 @@ func (v *sessionManager) GoToggleDebug(flags dbus.Flags, ch chan *dbus.Call) *db
 
 func (v *sessionManager) ToggleDebug(flags dbus.Flags) error {
 	return (<-v.GoToggleDebug(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// signal Unlock
+
+func (v *sessionManager) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "Unlock", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".Unlock",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// property Locked b
+
+func (v *sessionManager) Locked() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Locked",
+	}
 }
 
 // property CurrentUid s

@@ -1,5 +1,8 @@
 <node>
      <interface name="com.deepin.SessionManager">
+          <method name="AllowSessionDaemonRun">
+               <arg type="b" direction="out"></arg>
+          </method>
           <method name="CanHibernate">
                <arg type="b" direction="out"></arg>
           </method>
@@ -31,8 +34,13 @@
           <method name="RequestReboot"></method>
           <method name="RequestShutdown"></method>
           <method name="RequestSuspend"></method>
+          <method name="SetLocked">
+               <arg type="b" direction="in"></arg>
+          </method>
           <method name="Shutdown"></method>
           <method name="ToggleDebug"></method>
+          <signal name="Unlock"></signal>
+          <property name="Locked" type="b" access="read"></property>
           <property name="CurrentUid" type="s" access="read"></property>
           <property name="Stage" type="i" access="read"></property>
      </interface>
