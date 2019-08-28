@@ -269,6 +269,26 @@ func (*user) GetInterfaceName_() string {
 	return "com.deepin.daemon.Accounts.User"
 }
 
+// method AddGroup
+
+func (v *user) GoAddGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddGroup", flags, ch, group)
+}
+
+func (v *user) AddGroup(flags dbus.Flags, group string) error {
+	return (<-v.GoAddGroup(flags, make(chan *dbus.Call, 1), group).Done).Err
+}
+
+// method DeleteGroup
+
+func (v *user) GoDeleteGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteGroup", flags, ch, group)
+}
+
+func (v *user) DeleteGroup(flags dbus.Flags, group string) error {
+	return (<-v.GoDeleteGroup(flags, make(chan *dbus.Call, 1), group).Done).Err
+}
+
 // method DeleteIconFile
 
 func (v *user) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
@@ -289,24 +309,14 @@ func (v *user) EnableNoPasswdLogin(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoEnableNoPasswdLogin(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
-// method SetAccountType
-
-func (v *user) GoSetAccountType(flags dbus.Flags, ch chan *dbus.Call, accountType int32) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAccountType", flags, ch, accountType)
-}
-
-func (v *user) SetAccountType(flags dbus.Flags, accountType int32) error {
-	return (<-v.GoSetAccountType(flags, make(chan *dbus.Call, 1), accountType).Done).Err
-}
-
 // method SetAutomaticLogin
 
-func (v *user) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.Call, auto bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutomaticLogin", flags, ch, auto)
+func (v *user) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAutomaticLogin", flags, ch, enabled)
 }
 
-func (v *user) SetAutomaticLogin(flags dbus.Flags, auto bool) error {
-	return (<-v.GoSetAutomaticLogin(flags, make(chan *dbus.Call, 1), auto).Done).Err
+func (v *user) SetAutomaticLogin(flags dbus.Flags, enabled bool) error {
+	return (<-v.GoSetAutomaticLogin(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
 // method SetDesktopBackgrounds
@@ -419,6 +429,52 @@ func (v *user) SetShell(flags dbus.Flags, shell string) error {
 	return (<-v.GoSetShell(flags, make(chan *dbus.Call, 1), shell).Done).Err
 }
 
+// method SetUse24HourFormat
+
+func (v *user) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUse24HourFormat", flags, ch, value)
+}
+
+func (v *user) SetUse24HourFormat(flags dbus.Flags, value bool) error {
+	return (<-v.GoSetUse24HourFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+// property Uid s
+
+func (v *user) Uid() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Uid",
+	}
+}
+
+// property HomeDir s
+
+func (v *user) HomeDir() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "HomeDir",
+	}
+}
+
+// property Locale s
+
+func (v *user) Locale() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Locale",
+	}
+}
+
+// property GreeterBackground s
+
+func (v *user) GreeterBackground() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "GreeterBackground",
+	}
+}
+
 // property XSession s
 
 func (v *user) XSession() proxy.PropString {
@@ -428,12 +484,57 @@ func (v *user) XSession() proxy.PropString {
 	}
 }
 
-// property AccountType i
+// property Locked b
 
-func (v *user) AccountType() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *user) Locked() proxy.PropBool {
+	return proxy.PropBool{
 		Impl: v,
-		Name: "AccountType",
+		Name: "Locked",
+	}
+}
+
+// property NoPasswdLogin b
+
+func (v *user) NoPasswdLogin() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "NoPasswdLogin",
+	}
+}
+
+// property IconFile s
+
+func (v *user) IconFile() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "IconFile",
+	}
+}
+
+// property Groups as
+
+func (v *user) Groups() proxy.PropStringArray {
+	return proxy.PropStringArray{
+		Impl: v,
+		Name: "Groups",
+	}
+}
+
+// property PasswordStatus s
+
+func (v *user) PasswordStatus() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "PasswordStatus",
+	}
+}
+
+// property AutomaticLogin b
+
+func (v *user) AutomaticLogin() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "AutomaticLogin",
 	}
 }
 
@@ -455,12 +556,21 @@ func (v *user) HistoryLayout() proxy.PropStringArray {
 	}
 }
 
-// property FullName s
+// property UserName s
 
-func (v *user) FullName() proxy.PropString {
+func (v *user) UserName() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
-		Name: "FullName",
+		Name: "UserName",
+	}
+}
+
+// property Gid s
+
+func (v *user) Gid() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Gid",
 	}
 }
 
@@ -473,21 +583,39 @@ func (v *user) Shell() proxy.PropString {
 	}
 }
 
-// property GreeterBackground s
+// property Layout s
 
-func (v *user) GreeterBackground() proxy.PropString {
+func (v *user) Layout() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
-		Name: "GreeterBackground",
+		Name: "Layout",
 	}
 }
 
-// property IconFile s
+// property AccountType i
 
-func (v *user) IconFile() proxy.PropString {
+func (v *user) AccountType() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "AccountType",
+	}
+}
+
+// property FullName s
+
+func (v *user) FullName() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
-		Name: "IconFile",
+		Name: "FullName",
+	}
+}
+
+// property Use24HourFormat b
+
+func (v *user) Use24HourFormat() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Use24HourFormat",
 	}
 }
 
@@ -509,93 +637,12 @@ func (v *user) SystemAccount() proxy.PropBool {
 	}
 }
 
-// property Locale s
-
-func (v *user) Locale() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Locale",
-	}
-}
-
-// property Locked b
-
-func (v *user) Locked() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "Locked",
-	}
-}
-
-// property AutomaticLogin b
-
-func (v *user) AutomaticLogin() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "AutomaticLogin",
-	}
-}
-
 // property LoginTime t
 
 func (v *user) LoginTime() proxy.PropUint64 {
 	return proxy.PropUint64{
 		Impl: v,
 		Name: "LoginTime",
-	}
-}
-
-// property UserName s
-
-func (v *user) UserName() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "UserName",
-	}
-}
-
-// property Uid s
-
-func (v *user) Uid() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Uid",
-	}
-}
-
-// property Gid s
-
-func (v *user) Gid() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Gid",
-	}
-}
-
-// property HomeDir s
-
-func (v *user) HomeDir() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "HomeDir",
-	}
-}
-
-// property Layout s
-
-func (v *user) Layout() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Layout",
-	}
-}
-
-// property NoPasswdLogin b
-
-func (v *user) NoPasswdLogin() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "NoPasswdLogin",
 	}
 }
 
