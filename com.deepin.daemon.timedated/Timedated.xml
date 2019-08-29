@@ -11,6 +11,10 @@
             <arg name="enabled" type="b" direction="in"></arg>
             <arg name="message" type="s" direction="in"></arg>
         </method>
+        <method name="SetNTPServer">
+            <arg name="server" type="s" direction="in"></arg>
+            <arg name="message" type="s" direction="in"></arg>
+        </method>
         <method name="SetTime">
             <arg name="usec" type="x" direction="in"></arg>
             <arg name="relative" type="b" direction="in"></arg>
@@ -20,6 +24,7 @@
             <arg name="timezone" type="s" direction="in"></arg>
             <arg name="message" type="s" direction="in"></arg>
         </method>
+        <property name="NTPServer" type="s" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

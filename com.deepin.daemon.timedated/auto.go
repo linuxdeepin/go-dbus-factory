@@ -54,6 +54,16 @@ func (v *timedated) SetNTP(flags dbus.Flags, enabled bool, message string) error
 	return (<-v.GoSetNTP(flags, make(chan *dbus.Call, 1), enabled, message).Done).Err
 }
 
+// method SetNTPServer
+
+func (v *timedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetNTPServer", flags, ch, server, message)
+}
+
+func (v *timedated) SetNTPServer(flags dbus.Flags, server string, message string) error {
+	return (<-v.GoSetNTPServer(flags, make(chan *dbus.Call, 1), server, message).Done).Err
+}
+
 // method SetTime
 
 func (v *timedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call {
@@ -72,4 +82,13 @@ func (v *timedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone
 
 func (v *timedated) SetTimezone(flags dbus.Flags, timezone string, message string) error {
 	return (<-v.GoSetTimezone(flags, make(chan *dbus.Call, 1), timezone, message).Done).Err
+}
+
+// property NTPServer s
+
+func (v *timedated) NTPServer() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "NTPServer",
+	}
 }
