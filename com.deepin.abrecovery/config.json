@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.ABRecovery",
+  "Objects": [
+    {
+      "Type": "ABRecovery",
+      "Path": "/com/deepin/ABRecovery",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.ABRecovery",
+          "Type": "abRecovery"
+        }
+      ]
+    }
+  ]
+}
