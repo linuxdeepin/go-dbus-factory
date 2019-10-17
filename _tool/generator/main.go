@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"pkg.deepin.io/lib/utils"
+
 	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
@@ -46,6 +48,8 @@ func main() {
 	sf.GoBody.Pn("var _ unsafe.Pointer")
 	sf.GoBody.Pn("")
 
+	srvCfg.autoFill()
+
 	for _, objCfg := range srvCfg.Objects {
 		log.Println("Object", objCfg.Type)
 		interfaces, err := objCfg.loadXml(dir)
@@ -81,7 +85,9 @@ func main() {
 					ifcCfg.Name, objCfg.Type)
 			}
 
-			writeObjectAccessMethod(sf.GoBody, ifc, objCfg)
+			if len(objCfg.Interfaces) > 1 {
+				writeImplementerAccessorMethod(sf.GoBody, ifc, objCfg)
+			}
 			writeImplementerMethods(sf.GoBody, ifc, ifcCfg)
 
 			for _, method := range ifc.Methods {
@@ -106,11 +112,20 @@ func main() {
 	}
 
 	for _, propTypeCfg := range srvCfg.PropertyTypes {
-		propTypeCfg.autoFill()
 		writePropType(sf.GoBody, propTypeCfg)
 	}
 
-	sf.Save(filepath.Join(dir, "auto.go"))
+	autoGoFile := filepath.Join(dir, "auto.go")
+	md5sum, ok := utils.SumFileMd5(autoGoFile)
+
+	sf.Save(autoGoFile)
+
+	if ok {
+		md5sum1, ok1 := utils.SumFileMd5(autoGoFile)
+		if ok1 && md5sum == md5sum1 {
+			log.Println("auto.go not changed")
+		}
+	}
 }
 
 func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
@@ -169,11 +184,8 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 	sb.Pn("}\n")
 }
 
-func writeObjectAccessMethod(sb *SourceBody, ifc *introspect.Interface, objCfg *ObjectConfig) {
+func writeImplementerAccessorMethod(sb *SourceBody, ifc *introspect.Interface, objCfg *ObjectConfig) {
 	ifcCfg := objCfg.getInterface(ifc.Name)
-	if ifcCfg.Accessor == "" {
-		return
-	}
 
 	sb.Pn("func (obj *%s) %s() *%s {", objCfg.Type, ifcCfg.Accessor,
 		ifcCfg.Type)
@@ -202,7 +214,7 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// sb.Pn("// in %#v", inArgs)
 	// sb.Pn("// out %#v", outArgs)
 
-	argFixes := ifcCfg.getArgFixes("m/" + method.Name)
+	argFixes := ifcCfg.getMethodFix(method.Name)
 	// check and warn
 	for _, arg := range args {
 		argType := getArgType(arg, argFixes)
@@ -251,7 +263,7 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	sb.Pn("// signal %s\n", signal.Name)
 
 	args := getArgs(signal.Args)
-	argFixes := ifcCfg.getArgFixes("s/" + signal.Name)
+	argFixes := ifcCfg.getSignalFix(signal.Name)
 	methodName := strings.Title(signal.Name)
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
@@ -321,7 +333,7 @@ func getPropType(ty string) string {
 	return ""
 }
 
-func writePropType(sb *SourceBody, propTypeCfg PropertyTypeConfig) {
+func writePropType(sb *SourceBody, propTypeCfg *PropertyTypeConfig) {
 	const propName = "p.Name"
 
 	sb.Pn("type %s struct {", propTypeCfg.Type)
@@ -334,7 +346,7 @@ func writePropType(sb *SourceBody, propTypeCfg PropertyTypeConfig) {
 	writePropConnectChanged(sb, propTypeCfg, propName)
 }
 
-func writePropGet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+func writePropGet(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
 	sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
@@ -343,7 +355,7 @@ func writePropGet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName strin
 	sb.Pn("}\n")
 }
 
-func writePropSet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+func writePropSet(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
 	sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
@@ -351,7 +363,7 @@ func writePropSet(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName strin
 	sb.Pn("}\n")
 }
 
-func writePropConnectChanged(sb *SourceBody, propTypeCfg PropertyTypeConfig, propName string) {
+func writePropConnectChanged(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
 	sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("if cb == nil {")
@@ -427,12 +439,12 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 
 		quotedPropName := strconv.Quote(prop.Name)
 		if strings.Contains(prop.Access, "read") {
-			writePropGet(sb, propFix.PropertyTypeConfig, quotedPropName)
+			writePropGet(sb, &propFix.PropertyTypeConfig, quotedPropName)
 		}
 		if strings.Contains(prop.Access, "write") {
-			writePropSet(sb, propFix.PropertyTypeConfig, quotedPropName)
+			writePropSet(sb, &propFix.PropertyTypeConfig, quotedPropName)
 		}
-		writePropConnectChanged(sb, propFix.PropertyTypeConfig, quotedPropName)
+		writePropConnectChanged(sb, &propFix.PropertyTypeConfig, quotedPropName)
 	}
 }
 

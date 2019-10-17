@@ -35,16 +35,11 @@ func (v *SourceFile) Save(filename string) {
 		log.Fatal("fail to create file:", err)
 	}
 	defer f.Close()
-
 	v.WriteTo(f)
 
-	err = f.Sync()
+	out, err := exec.Command("go", "fmt", filename).CombinedOutput()
 	if err != nil {
-		log.Fatal("fail to sync file:", err)
-	}
-
-	err = exec.Command("go", "fmt", filename).Run()
-	if err != nil {
+		log.Printf("%s", out)
 		log.Fatal("failed to format file:", filename)
 	}
 }

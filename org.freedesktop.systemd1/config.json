@@ -1,0 +1,334 @@
+{
+  "Service": "org.freedesktop.systemd1",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/freedesktop/systemd1",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.systemd1.Manager",
+          "Fixes": {
+            "m/SetUnitProperties": [
+              {
+                "Name": "properties",
+                "Type": "[]Property"
+              }
+            ],
+            "m/StartTransientUnit": [
+              {
+                "Name": "properties",
+                "Type": "[]Property"
+              },
+              {
+                "Name": "aux",
+                "Type": "[]PropertyCollection"
+              }
+            ],
+            "m/ListUnits": [
+              {
+                "Name": "units",
+                "Type": "[]UnitInfo"
+              }
+            ],
+            "m/ListUnitsFiltered": [
+              {
+                "Name": "units",
+                "Type": "[]UnitInfo"
+              }
+            ],
+            "m/ListUnitsByPatterns": [
+              {
+                "Name": "units",
+                "Type": "[]UnitInfo"
+              }
+            ],
+            "m/ListUnitsByNames": [
+              {
+                "Name": "units",
+                "Type": "[]UnitInfo"
+              }
+            ],
+            "m/ListJobs": [
+              {
+                "Name": "jobs",
+                "Type": "[]JobInfo"
+              }
+            ],
+            "m/ListUnitFiles": [
+              {
+                "Name": "files",
+                "Type": "[]UnitFile"
+              }
+            ],
+            "m/ListUnitFilesByPatterns": [
+              {
+                "Name": "files",
+                "Type": "[]UnitFile"
+              }
+            ],
+            "m/EnableUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/DisableUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/ReenableUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/LinkUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/PresetUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/PresetUnitFilesWithMode": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/MaskUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/UnmaskUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/RevertUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/SetDefaultTarget": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/PresetAllUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/AddDependencyUnitFiles": [
+              {
+                "Name": "changes",
+                "Type": "[]UnitFileChange"
+              }
+            ],
+            "m/GetDynamicUsers": [
+              {
+                "Name": "users",
+                "Type": "[]DynamicUser"
+              }
+            ],
+            "m/GetUnitProcesses": [
+              {
+                "Name": "processes",
+                "Type": "[]UnitProcess"
+              }
+            ],
+            "m/GetJobAfter": [
+              {
+                "Name": "jobs",
+                "Type": "[]JobInfo"
+              }
+            ],
+            "m/GetJobBefore": [
+              {
+                "Name": "jobs",
+                "Type": "[]JobInfo"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Unit",
+      "XMLFiles": [
+        "Unit*"
+      ],
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.systemd1.Unit",
+          "Fixes": {
+            "p/Job": {
+              "ValueType": "JobIdPath"
+            },
+            "p/Conditions": {
+              "ValueType": "[]Condition"
+            },
+            "p/Asserts": {
+              "ValueType": "[]Assert"
+            },
+            "p/LoadError": {
+              "ValueType": "LoadError"
+            },
+            "m/SetProperties": [
+              {
+                "Name": "properties",
+                "Type": "[]Property"
+              }
+            ]
+          }
+        },
+        {
+          "Name": "org.freedesktop.systemd1.Service",
+          "Fixes": {
+            "p/RestartPreventExitStatus": {
+              "RefType": "PropExitStatus"
+            },
+            "p/RestartForceExitStatus": {
+              "RefType": "PropExitStatus"
+            },
+            "p/SuccessExitStatus": {
+              "RefType": "PropExitStatus"
+            },
+            "p/ExecStartPre": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecStart": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecStartPost": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecReload": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecStop": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecStopPre": {
+              "RefType": "PropExecInfos"
+            },
+            "p/ExecStopPost": {
+              "RefType": "PropExecInfos"
+            },
+            "p/IODeviceWeight": {
+              "RefType": "PropIOParams"
+            },
+            "p/IOReadBandwidthMax": {
+              "RefType": "PropIOParams"
+            },
+            "p/IOWriteBandwidthMax": {
+              "RefType": "PropIOParams"
+            },
+            "p/IOReadIOPSMax": {
+              "RefType": "PropIOParams"
+            },
+            "p/IOWriteIOPSMax": {
+              "RefType": "PropIOParams"
+            },
+            "p/IODeviceLatencyTargetUSec": {
+              "RefType": "PropIOParams"
+            },
+            "p/BlockIODeviceWeight": {
+              "RefType": "PropIOParams"
+            },
+            "p/BlockIOReadBandwidth": {
+              "RefType": "PropIOParams"
+            },
+            "p/BlockIOWriteBandwidth": {
+              "RefType": "PropIOParams"
+            },
+            "p/DeviceAllow": {
+              "ValueType": "[]DeviceAllowItem"
+            },
+            "p/IPAddressAllow": {
+              "ValueType": "[]IPAddressAllowItem"
+            },
+            "p/IPAddressDeny": {
+              "ValueType": "[]IPAddressDenyItem"
+            },
+            "p/EnvironmentFiles": {
+              "RefType": "PropEnvironmentFiles"
+            },
+            "p/LogExtraFields": {
+              "ValueType": "[][]byte"
+            },
+            "p/SELinuxContext": {
+              "RefType": "PropBS"
+            },
+            "p/AppArmorProfile": {
+              "RefType": "PropBS"
+            },
+            "p/SmackProcessLabel": {
+              "RefType": "PropBS"
+            },
+            "p/SystemCallFilter": {
+              "ValueType": "SystemCallFilter"
+            },
+            "p/RestrictAddressFamilies": {
+              "ValueType": "RestrictAddressFamilies"
+            },
+            "p/BindPaths": {
+              "RefType": "PropBindPaths"
+            },
+            "p/BindReadOnlyPaths": {
+              "RefType": "PropBindPaths"
+            },
+            "p/TemporaryFileSystem": {
+              "ValueType": "[]TemporaryFileSystemItem"
+            },
+            "m/GetProcesses": [
+              {
+                "Name": "processes",
+                "Type": "[]UnitProcess"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropExitStatus",
+      "ValueType": "ExitStatus"
+    },
+    {
+      "Type": "PropExecInfos",
+      "ValueType": "[]ExecInfo"
+    },
+    {
+      "Type": "PropIOParams",
+      "ValueType": "[]IOParam"
+    },
+    {
+      "Type": "PropEnvironmentFiles",
+      "ValueType": "[]EnvironmentFile"
+    },
+    {
+      "Type": "PropBS",
+      "ValueType": "BS"
+    },
+    {
+      "Type": "PropBindPaths",
+      "ValueType": "[]BindPath"
+    }
+  ]
+}

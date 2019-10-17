@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,7 +16,16 @@ import (
 type ServiceConfig struct {
 	Service       string // optional
 	Objects       []*ObjectConfig
-	PropertyTypes []PropertyTypeConfig
+	PropertyTypes []*PropertyTypeConfig
+}
+
+func (sc *ServiceConfig) autoFill() {
+	for _, objCfg := range sc.Objects {
+		objCfg.autoFill()
+	}
+	for _, propTypeCfg := range sc.PropertyTypes {
+		propTypeCfg.autoFill("", nil)
+	}
 }
 
 type PropertyTypeConfig struct {
@@ -24,11 +34,20 @@ type PropertyTypeConfig struct {
 	EmptyValue string
 }
 
-func (ptc *PropertyTypeConfig) autoFill() {
+func (ptc *PropertyTypeConfig) autoFill(propName string, ifcCfg *InterfaceConfig) {
+	if ptc.Type == "" &&
+		ifcCfg != nil &&
+		ifcCfg.Accessor != "" &&
+		propName != "" {
+		ptc.Type = "Prop" + ifcCfg.Accessor + propName
+	}
+
 	if ptc.EmptyValue == "" {
 		if strings.HasPrefix(ptc.ValueType, "map[") ||
 			strings.HasPrefix(ptc.ValueType, "[]") {
 			ptc.EmptyValue = "nil"
+		} else {
+			ptc.EmptyValue = ptc.ValueType + "{}"
 		}
 	} else {
 		ptc.EmptyValue = strings.Replace(ptc.EmptyValue, "$T",
@@ -42,6 +61,12 @@ type ObjectConfig struct {
 	XMLFile    string   // optional
 	XMLFiles   []string // optional
 	Interfaces []*InterfaceConfig
+}
+
+func (oc *ObjectConfig) autoFill() {
+	for _, ifcCfg := range oc.Interfaces {
+		ifcCfg.autoFill()
+	}
 }
 
 func (oc *ObjectConfig) getXmlFiles(dir string) []string {
@@ -108,35 +133,82 @@ type InterfaceConfig struct {
 	Accessor    string
 	Fixes       map[string]json.RawMessage
 	TypeDefined bool
+
+	MethodFixes map[string]ArgFixes
+	PropFixes   map[string]*PropertyFix
+	SignalFixes map[string]ArgFixes
+}
+
+func (ic *InterfaceConfig) autoFill() {
+	dotRIdx := strings.LastIndex(ic.Name, ".")
+	if dotRIdx == -1 {
+		panic(fmt.Sprintf("not found dot in interface name %q", ic.Name))
+	}
+	if ic.Accessor == "" {
+		ic.Accessor = strings.Title(ic.Name[dotRIdx+1:])
+	}
+
+	if ic.Type == "" && ic.Accessor != "" {
+		firstLetter := strings.ToLower(string(ic.Accessor[0]))
+		ic.Type = firstLetter + ic.Accessor[1:]
+	}
+
+	for key, fix := range ic.Fixes {
+		if strings.HasPrefix(key, "p/") {
+			propName := strings.TrimPrefix(key, "p/")
+			var propFix PropertyFix
+			err := json.Unmarshal(fix, &propFix)
+			if err != nil {
+				panic(err)
+			}
+			if ic.PropFixes == nil {
+				ic.PropFixes = make(map[string]*PropertyFix)
+			}
+			ic.PropFixes[propName] = &propFix
+
+		} else if strings.HasPrefix(key, "s/") {
+			signalName := strings.TrimPrefix(key, "s/")
+			var argFixes ArgFixes
+			err := json.Unmarshal(fix, &argFixes)
+			if err != nil {
+				panic(err)
+			}
+			if ic.SignalFixes == nil {
+				ic.SignalFixes = make(map[string]ArgFixes)
+			}
+			ic.SignalFixes[signalName] = argFixes
+
+		} else if strings.HasPrefix(key, "m/") {
+			methodName := strings.TrimPrefix(key, "m/")
+			var argFixes ArgFixes
+			err := json.Unmarshal(fix, &argFixes)
+			if err != nil {
+				panic(err)
+			}
+			if ic.MethodFixes == nil {
+				ic.MethodFixes = make(map[string]ArgFixes)
+			}
+			ic.MethodFixes[methodName] = argFixes
+		}
+	}
+	for propName, propFix := range ic.PropFixes {
+		propFix.autoFill(propName, ic)
+	}
 }
 
 func (ic *InterfaceConfig) getPropertyFix(name string) *PropertyFix {
-	rawMsg, ok := ic.Fixes["p/"+name]
-	if !ok {
-		return nil
-	}
-	var propFix PropertyFix
-	err := json.Unmarshal(rawMsg, &propFix)
-	if err != nil {
-		return nil
-	}
-	if propFix.RefType == "" {
-		propFix.autoFill()
-	}
-	return &propFix
+	v := ic.PropFixes[name]
+	return v
 }
 
-func (ic *InterfaceConfig) getArgFixes(name string) ArgFixes {
-	rawMsg, ok := ic.Fixes[name]
-	if !ok {
-		return nil
-	}
-	var argFixes ArgFixes
-	err := json.Unmarshal(rawMsg, &argFixes)
-	if err != nil {
-		return nil
-	}
-	return argFixes
+func (ic *InterfaceConfig) getMethodFix(name string) ArgFixes {
+	v := ic.MethodFixes[name]
+	return v
+}
+
+func (ic *InterfaceConfig) getSignalFix(name string) ArgFixes {
+	v := ic.SignalFixes[name]
+	return v
 }
 
 type ArgFixes []ArgFix
