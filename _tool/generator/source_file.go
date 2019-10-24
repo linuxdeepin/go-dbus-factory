@@ -25,8 +25,9 @@ func NewSourceFile(pkg string) *SourceFile {
 	return sf
 }
 
-func (v *SourceFile) Print() {
-	v.WriteTo(os.Stdout)
+func (v *SourceFile) Print() error {
+	_, err := v.WriteTo(os.Stdout)
+	return err
 }
 
 func (v *SourceFile) Save(filename string) {
@@ -35,7 +36,10 @@ func (v *SourceFile) Save(filename string) {
 		log.Fatal("fail to create file:", err)
 	}
 	defer f.Close()
-	v.WriteTo(f)
+	_, err = v.WriteTo(f)
+	if err != nil {
+		log.Fatal("failed to write to file:", err)
+	}
 
 	out, err := exec.Command("go", "fmt", filename).CombinedOutput()
 	if err != nil {
@@ -44,15 +48,26 @@ func (v *SourceFile) Save(filename string) {
 	}
 }
 
-func (v *SourceFile) WriteTo(w io.Writer) {
-	io.WriteString(w, "package "+v.Pkg+"\n")
+func (v *SourceFile) WriteTo(w io.Writer) (n int64, err error) {
+	var wn int
+	wn, err = io.WriteString(w, "package "+v.Pkg+"\n")
+	n += int64(wn)
+	if err != nil {
+		return
+	}
 
 	sort.Strings(v.GoImports)
 	for _, imp := range v.GoImports {
-		io.WriteString(w, "import "+imp+"\n")
+		wn, err = io.WriteString(w, "import "+imp+"\n")
+		n += int64(wn)
+		if err != nil {
+			return
+		}
 	}
 
-	w.Write(v.GoBody.buf.Bytes())
+	wn, err = w.Write(v.GoBody.buf.Bytes())
+	n += int64(wn)
+	return
 }
 
 // unsafe => "unsafe"

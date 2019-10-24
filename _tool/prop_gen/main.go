@@ -89,7 +89,7 @@ func main() {
 
 	t := template.Must(template.New("propCode").Parse(propCode))
 
-	fmt.Println("package proxy\n")
+	fmt.Println("package proxy")
 	fmt.Println("import \"errors\"")
 	fmt.Println("import \"pkg.deepin.io/lib/dbus1\"")
 	fmt.Println("\nvar errNilCallback = errors.New(\"nil callback\")")

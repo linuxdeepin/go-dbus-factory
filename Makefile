@@ -17,3 +17,8 @@ install:
 		mkdir -p ${SRC_DIR}/$$dir;\
 		cp $$dir/*.go ${SRC_DIR}/$$dir;\
 	done
+
+vet:
+	go vet ./...
+	go vet ./_tool/generator
+	go vet ./_tool/prop_gen
