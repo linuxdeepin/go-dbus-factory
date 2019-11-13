@@ -1,0 +1,71 @@
+{
+  "Service": "fi.w1.wpa_supplicant1",
+  "Objects": [
+    {
+      "Type": "WPASupplicant",
+      "Path": "/fi/w1/wpa_supplicant1",
+      "Interfaces": [
+        {
+          "Name": "fi.w1.wpa_supplicant1",
+          "Type": "wpaSupplicant"
+        }
+      ]
+    },
+    {
+      "Type": "Interface",
+      "Interfaces": [
+        {
+          "Name": "fi.w1.wpa_supplicant1.Interface",
+          "Type": "interface1",
+          "Fixes": {
+            "p/Capabilities": {
+              "RefType": "MapStrVariant"
+            },
+            "p/Blobs": {
+              "ValueType": "map[string][]byte"
+            }
+          }
+        },
+        {
+          "Name": "fi.w1.wpa_supplicant1.Interface.WPS",
+          "Type": "interfaceWPS"
+        },
+        {
+          "Name": "fi.w1.wpa_supplicant1.Interface.P2PDevice",
+          "Type": "interfaceP2PDevice",
+          "Fixes": {
+            "p/P2PDeviceConfig": {
+              "RefType": "MapStrVariant"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "BSS",
+      "Interfaces": [
+        {
+          "Name": "fi.w1.wpa_supplicant1.BSS",
+          "Type": "bss",
+          "Fixes": {
+            "p/WPS": {
+              "RefType": "MapStrVariant"
+            },
+            "p/WPA": {
+              "RefType": "MapStrVariant"
+            },
+            "p/RSN": {
+              "RefType": "MapStrVariant"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "MapStrVariant",
+      "ValueType": "map[string]dbus.Variant"
+    }
+  ]
+}
