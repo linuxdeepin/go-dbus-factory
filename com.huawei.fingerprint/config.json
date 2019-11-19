@@ -1,0 +1,15 @@
+{
+  "Service": "com.huawei.Fingerprint",
+  "Objects": [
+    {
+      "Type": "Fingerprint",
+      "Path": "/com/huawei/Fingerprint",
+      "Interfaces": [
+        {
+          "Name": "com.huawei.Fingerprint",
+          "Type": "fingerprint"
+        }
+      ]
+    }
+  ]
+}

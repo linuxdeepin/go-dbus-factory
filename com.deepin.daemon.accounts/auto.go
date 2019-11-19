@@ -439,75 +439,21 @@ func (v *user) SetUse24HourFormat(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetUse24HourFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
-// property Uid s
+// property HistoryLayout as
 
-func (v *user) Uid() proxy.PropString {
+func (v *user) HistoryLayout() proxy.PropStringArray {
+	return proxy.PropStringArray{
+		Impl: v,
+		Name: "HistoryLayout",
+	}
+}
+
+// property Gid s
+
+func (v *user) Gid() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
-		Name: "Uid",
-	}
-}
-
-// property HomeDir s
-
-func (v *user) HomeDir() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "HomeDir",
-	}
-}
-
-// property Locale s
-
-func (v *user) Locale() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Locale",
-	}
-}
-
-// property GreeterBackground s
-
-func (v *user) GreeterBackground() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "GreeterBackground",
-	}
-}
-
-// property XSession s
-
-func (v *user) XSession() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "XSession",
-	}
-}
-
-// property Locked b
-
-func (v *user) Locked() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "Locked",
-	}
-}
-
-// property NoPasswdLogin b
-
-func (v *user) NoPasswdLogin() proxy.PropBool {
-	return proxy.PropBool{
-		Impl: v,
-		Name: "NoPasswdLogin",
-	}
-}
-
-// property IconFile s
-
-func (v *user) IconFile() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "IconFile",
+		Name: "Gid",
 	}
 }
 
@@ -520,6 +466,15 @@ func (v *user) Groups() proxy.PropStringArray {
 	}
 }
 
+// property XSession s
+
+func (v *user) XSession() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "XSession",
+	}
+}
+
 // property PasswordStatus s
 
 func (v *user) PasswordStatus() proxy.PropString {
@@ -529,30 +484,30 @@ func (v *user) PasswordStatus() proxy.PropString {
 	}
 }
 
-// property AutomaticLogin b
+// property LoginTime t
 
-func (v *user) AutomaticLogin() proxy.PropBool {
-	return proxy.PropBool{
+func (v *user) LoginTime() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
-		Name: "AutomaticLogin",
+		Name: "LoginTime",
 	}
 }
 
-// property IconList as
+// property GreeterBackground s
 
-func (v *user) IconList() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *user) GreeterBackground() proxy.PropString {
+	return proxy.PropString{
 		Impl: v,
-		Name: "IconList",
+		Name: "GreeterBackground",
 	}
 }
 
-// property HistoryLayout as
+// property CreatedTime t
 
-func (v *user) HistoryLayout() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *user) CreatedTime() proxy.PropUint64 {
+	return proxy.PropUint64{
 		Impl: v,
-		Name: "HistoryLayout",
+		Name: "CreatedTime",
 	}
 }
 
@@ -562,15 +517,6 @@ func (v *user) UserName() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "UserName",
-	}
-}
-
-// property Gid s
-
-func (v *user) Gid() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Gid",
 	}
 }
 
@@ -592,21 +538,12 @@ func (v *user) Layout() proxy.PropString {
 	}
 }
 
-// property AccountType i
+// property IconFile s
 
-func (v *user) AccountType() proxy.PropInt32 {
-	return proxy.PropInt32{
-		Impl: v,
-		Name: "AccountType",
-	}
-}
-
-// property FullName s
-
-func (v *user) FullName() proxy.PropString {
+func (v *user) IconFile() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
-		Name: "FullName",
+		Name: "IconFile",
 	}
 }
 
@@ -619,6 +556,33 @@ func (v *user) Use24HourFormat() proxy.PropBool {
 	}
 }
 
+// property AccountType i
+
+func (v *user) AccountType() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "AccountType",
+	}
+}
+
+// property HomeDir s
+
+func (v *user) HomeDir() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "HomeDir",
+	}
+}
+
+// property Locale s
+
+func (v *user) Locale() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Locale",
+	}
+}
+
 // property DesktopBackgrounds as
 
 func (v *user) DesktopBackgrounds() proxy.PropStringArray {
@@ -628,21 +592,75 @@ func (v *user) DesktopBackgrounds() proxy.PropStringArray {
 	}
 }
 
+// property Locked b
+
+func (v *user) Locked() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Locked",
+	}
+}
+
+// property NoPasswdLogin b
+
+func (v *user) NoPasswdLogin() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "NoPasswdLogin",
+	}
+}
+
+// property IconList as
+
+func (v *user) IconList() proxy.PropStringArray {
+	return proxy.PropStringArray{
+		Impl: v,
+		Name: "IconList",
+	}
+}
+
+// property UUID s
+
+func (v *user) UUID() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "UUID",
+	}
+}
+
+// property FullName s
+
+func (v *user) FullName() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "FullName",
+	}
+}
+
+// property Uid s
+
+func (v *user) Uid() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Uid",
+	}
+}
+
+// property AutomaticLogin b
+
+func (v *user) AutomaticLogin() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "AutomaticLogin",
+	}
+}
+
 // property SystemAccount b
 
 func (v *user) SystemAccount() proxy.PropBool {
 	return proxy.PropBool{
 		Impl: v,
 		Name: "SystemAccount",
-	}
-}
-
-// property LoginTime t
-
-func (v *user) LoginTime() proxy.PropUint64 {
-	return proxy.PropUint64{
-		Impl: v,
-		Name: "LoginTime",
 	}
 }
 

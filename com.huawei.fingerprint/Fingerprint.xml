@@ -1,0 +1,53 @@
+<node name="/com/huawei/Fingerprint">
+    <interface name="com.huawei.Fingerprint">
+        <method name="SearchDevice">
+            <arg name="result" type="b" direction="out"/>
+        </method>
+
+        <method name="Identify">
+            <arg name="uuid" type="s" direction="in"/>
+        </method>
+
+        <method name="GetStatus">
+            <arg name="result" type="i" direction="out"/>
+        </method>
+
+<!--        <method name="SetStatus">-->
+<!--            <arg name="status" type="i" direction="in"/>-->
+<!--            <arg name="result" type="i" direction="out"/>-->
+<!--        </method>-->
+
+        <method name="Enroll">
+            <arg name="filePath" type="s" direction="in"/>
+            <arg name="uuid" type="s" direction="in"/>
+        </method>
+
+<!--        <method name="Stop">-->
+<!--            <arg name="result" type="i" direction="out"/>-->
+<!--        </method>-->
+
+        <method name="Close">
+            <arg name="result" type="i" direction="out"/>
+        </method>
+
+        <method name="Reload">
+            <arg name="deleteType" type="i" direction="in"/>
+            <arg name="result" type="i" direction="out"/>
+        </method>
+
+        <signal name="EnrollStatus">
+            <arg name="progress" type="i"/>
+            <arg name="result" type="i"/>
+        </signal>
+
+        <signal name="IdentifyStatus">
+            <arg name="result" type="i"/>
+        </signal>
+
+        <signal name="VerifyStatus">
+            <arg name="result" type="i"/>
+        </signal>
+
+    </interface>
+</node>
+
