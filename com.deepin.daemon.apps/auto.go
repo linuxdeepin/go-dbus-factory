@@ -98,12 +98,22 @@ func (v *launchedRecorder) GetNew(flags dbus.Flags) (newApps map[string][]string
 
 // method MarkLaunched
 
-func (v *launchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, file string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".MarkLaunched", flags, ch, file)
+func (v *launchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".MarkLaunched", flags, ch, desktopFile)
 }
 
-func (v *launchedRecorder) MarkLaunched(flags dbus.Flags, file string) error {
-	return (<-v.GoMarkLaunched(flags, make(chan *dbus.Call, 1), file).Done).Err
+func (v *launchedRecorder) MarkLaunched(flags dbus.Flags, desktopFile string) error {
+	return (<-v.GoMarkLaunched(flags, make(chan *dbus.Call, 1), desktopFile).Done).Err
+}
+
+// method UninstallHints
+
+func (v *launchedRecorder) GoUninstallHints(flags dbus.Flags, ch chan *dbus.Call, desktopFiles []string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UninstallHints", flags, ch, desktopFiles)
+}
+
+func (v *launchedRecorder) UninstallHints(flags dbus.Flags, desktopFiles []string) error {
+	return (<-v.GoUninstallHints(flags, make(chan *dbus.Call, 1), desktopFiles).Done).Err
 }
 
 // method WatchDirs

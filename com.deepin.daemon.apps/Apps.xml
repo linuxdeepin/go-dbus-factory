@@ -6,7 +6,10 @@
             <arg name="newApps" type="a{sas}" direction="out"></arg>
         </method>
         <method name="MarkLaunched">
-            <arg name="file" type="s" direction="in"></arg>
+            <arg name="desktopFile" type="s" direction="in"></arg>
+        </method>
+        <method name="UninstallHints">
+            <arg name="desktopFiles" type="as" direction="in"></arg>
         </method>
         <method name="WatchDirs">
             <arg name="dirs" type="as" direction="in"></arg>
