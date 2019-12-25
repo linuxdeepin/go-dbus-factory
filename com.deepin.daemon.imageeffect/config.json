@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.ImageEffect",
+  "Objects": [
+    {
+      "Type": "ImageEffect",
+      "Path": "/com/deepin/daemon/ImageEffect",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.ImageEffect",
+          "Type": "imageEffect"
+        }
+      ]
+    }
+  ]
+}
