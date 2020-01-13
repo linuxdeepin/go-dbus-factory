@@ -70,6 +70,22 @@ func (v *network) Ping(flags dbus.Flags, host string) error {
 	return (<-v.GoPing(flags, make(chan *dbus.Call, 1), host).Done).Err
 }
 
+// method ToggleWirelessEnabled
+
+func (v *network) GoToggleWirelessEnabled(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ToggleWirelessEnabled", flags, ch)
+}
+
+func (*network) StoreToggleWirelessEnabled(call *dbus.Call) (enabled bool, err error) {
+	err = call.Store(&enabled)
+	return
+}
+
+func (v *network) ToggleWirelessEnabled(flags dbus.Flags) (enabled bool, err error) {
+	return v.StoreToggleWirelessEnabled(
+		<-v.GoToggleWirelessEnabled(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // signal DeviceEnabled
 
 func (v *network) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled bool)) (dbusutil.SignalHandlerId, error) {
