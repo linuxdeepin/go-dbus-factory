@@ -1,0 +1,27 @@
+{
+  "Service": "com.deepin.daemon.Authenticate",
+  "Objects": [
+    {
+      "Type": "Authenticate",
+      "Path": "/com/deepin/daemon/Authenticate",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate",
+          "Type": "authenticate",
+          "Accessor": "Authenticate"
+        }
+      ]
+    },
+    {
+      "Type": "Fingerprint",
+      "Path": "/com/deepin/daemon/Authenticate/Fingerprint",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.Fingerprint",
+          "Type": "fingerprint",
+          "Accessor": "Fingerprint"
+        }
+      ]
+    }
+  ]
+}
