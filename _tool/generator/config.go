@@ -133,6 +133,7 @@ type InterfaceConfig struct {
 	Accessor    string
 	Fixes       map[string]json.RawMessage
 	TypeDefined bool
+	NoGetInterfaceName bool
 
 	MethodFixes map[string]ArgFixes
 	PropFixes   map[string]*PropertyFix

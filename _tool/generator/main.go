@@ -200,9 +200,11 @@ func writeImplementerMethods(sb *SourceBody, ifc *introspect.Interface, ifcCfg *
 	sb.Pn("    return (*proxy.Object)(unsafe.Pointer(v))")
 	sb.Pn("}\n")
 
-	sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
-	sb.Pn("    return %q", ifc.Name)
-	sb.Pn("}\n")
+	if !ifcCfg.NoGetInterfaceName {
+		sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
+		sb.Pn("    return %q", ifc.Name)
+		sb.Pn("}\n")
+	}
 }
 
 func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
