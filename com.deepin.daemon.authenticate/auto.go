@@ -130,32 +130,32 @@ func (*fingerprint) GetInterfaceName_() string {
 
 // method Claim
 
-func (v *fingerprint) GoClaim(flags dbus.Flags, ch chan *dbus.Call, id string, claimed bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, id, claimed)
+func (v *fingerprint) GoClaim(flags dbus.Flags, ch chan *dbus.Call, username string, claimed bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, username, claimed)
 }
 
-func (v *fingerprint) Claim(flags dbus.Flags, id string, claimed bool) error {
-	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), id, claimed).Done).Err
+func (v *fingerprint) Claim(flags dbus.Flags, username string, claimed bool) error {
+	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), username, claimed).Done).Err
 }
 
 // method DeleteAllFingers
 
-func (v *fingerprint) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, id)
+func (v *fingerprint) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, username)
 }
 
-func (v *fingerprint) DeleteAllFingers(flags dbus.Flags, id string) error {
-	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), id).Done).Err
+func (v *fingerprint) DeleteAllFingers(flags dbus.Flags, username string) error {
+	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), username).Done).Err
 }
 
 // method DeleteFinger
 
-func (v *fingerprint) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, id string, finger string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, id, finger)
+func (v *fingerprint) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, username, finger)
 }
 
-func (v *fingerprint) DeleteFinger(flags dbus.Flags, id string, finger string) error {
-	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), id, finger).Done).Err
+func (v *fingerprint) DeleteFinger(flags dbus.Flags, username string, finger string) error {
+	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), username, finger).Done).Err
 }
 
 // method Enroll
@@ -170,8 +170,8 @@ func (v *fingerprint) Enroll(flags dbus.Flags, finger string) error {
 
 // method ListFingers
 
-func (v *fingerprint) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, id)
+func (v *fingerprint) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, username)
 }
 
 func (*fingerprint) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
@@ -179,9 +179,9 @@ func (*fingerprint) StoreListFingers(call *dbus.Call) (fingers []string, err err
 	return
 }
 
-func (v *fingerprint) ListFingers(flags dbus.Flags, id string) (fingers []string, err error) {
+func (v *fingerprint) ListFingers(flags dbus.Flags, username string) (fingers []string, err error) {
 	return v.StoreListFingers(
-		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), id).Done)
+		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), username).Done)
 }
 
 // method SetDefaultDevice
@@ -307,20 +307,20 @@ func (v *fingerprint) ConnectTouch(cb func(id string, pressed bool)) (dbusutil.S
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property Devices s
-
-func (v *fingerprint) Devices() proxy.PropString {
-	return proxy.PropString{
-		Impl: v,
-		Name: "Devices",
-	}
-}
-
 // property DefaultDevice s
 
 func (v *fingerprint) DefaultDevice() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "DefaultDevice",
+	}
+}
+
+// property Devices s
+
+func (v *fingerprint) Devices() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Devices",
 	}
 }
