@@ -10,6 +10,25 @@
           "Type": "compositing"
         }
       ]
+    },
+    {
+      "Type": "InputDeviceManager",
+      "Path": "/org/kde/KWin/InputDevice",
+      "Interfaces": [
+        {
+          "Name": "org.kde.KWin.InputDeviceManager",
+          "Type": "inputDeviceManager"
+        }
+      ]
+    },
+    {
+      "Type": "InputDevice",
+      "Interfaces": [
+        {
+          "Name": "org.kde.KWin.InputDevice",
+          "Type": "inputDevice"
+        }
+      ]
     }
   ]
 }

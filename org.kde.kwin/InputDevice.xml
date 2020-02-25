@@ -1,0 +1,78 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.KWin.InputDevice">
+    <property name="keyboard" type="b" access="read"/>
+    <property name="alphaNumericKeyboard" type="b" access="read"/>
+    <property name="pointer" type="b" access="read"/>
+    <property name="touchpad" type="b" access="read"/>
+    <property name="touch" type="b" access="read"/>
+    <property name="tabletTool" type="b" access="read"/>
+    <property name="tabletPad" type="b" access="read"/>
+    <property name="gestureSupport" type="b" access="read"/>
+    <property name="name" type="s" access="read"/>
+    <property name="sysName" type="s" access="read"/>
+    <property name="outputName" type="s" access="read"/>
+    <!--<property name="size" type="(dd)" access="read">-->
+      <!--<annotation name="org.qtproject.QtDBus.QtTypeName" value="QSizeF"/>-->
+    <!--</property>-->
+    <property name="product" type="u" access="read"/>
+    <property name="vendor" type="u" access="read"/>
+    <property name="supportsDisableEvents" type="b" access="read"/>
+    <property name="enabled" type="b" access="readwrite"/>
+    <property name="supportedButtons" type="i" access="read"/>
+    <property name="supportsCalibrationMatrix" type="b" access="read"/>
+    <property name="supportsLeftHanded" type="b" access="read"/>
+    <property name="leftHandedEnabledByDefault" type="b" access="read"/>
+    <property name="leftHanded" type="b" access="readwrite"/>
+    <property name="supportsDisableEventsOnExternalMouse" type="b" access="read"/>
+    <property name="supportsDisableWhileTyping" type="b" access="read"/>
+    <property name="disableWhileTypingEnabledByDefault" type="b" access="read"/>
+    <property name="disableWhileTyping" type="b" access="readwrite"/>
+    <property name="supportsPointerAcceleration" type="b" access="read"/>
+    <property name="defaultPointerAcceleration" type="d" access="read"/>
+    <property name="pointerAcceleration" type="d" access="readwrite"/>
+    <property name="supportsPointerAccelerationProfileFlat" type="b" access="read"/>
+    <property name="defaultPointerAccelerationProfileFlat" type="b" access="read"/>
+    <property name="pointerAccelerationProfileFlat" type="b" access="readwrite"/>
+    <property name="supportsPointerAccelerationProfileAdaptive" type="b" access="read"/>
+    <property name="defaultPointerAccelerationProfileAdaptive" type="b" access="read"/>
+    <property name="pointerAccelerationProfileAdaptive" type="b" access="readwrite"/>
+    <property name="tapFingerCount" type="i" access="read"/>
+    <property name="tapToClickEnabledByDefault" type="b" access="read"/>
+    <property name="tapToClick" type="b" access="readwrite"/>
+    <property name="supportsLmrTapButtonMap" type="b" access="read"/>
+    <property name="lmrTapButtonMapEnabledByDefault" type="b" access="read"/>
+    <property name="lmrTapButtonMap" type="b" access="readwrite"/>
+    <property name="tapAndDragEnabledByDefault" type="b" access="read"/>
+    <property name="tapAndDrag" type="b" access="readwrite"/>
+    <property name="tapDragLockEnabledByDefault" type="b" access="read"/>
+    <property name="tapDragLock" type="b" access="readwrite"/>
+    <property name="supportsMiddleEmulation" type="b" access="read"/>
+    <property name="middleEmulationEnabledByDefault" type="b" access="read"/>
+    <property name="middleEmulation" type="b" access="readwrite"/>
+    <property name="supportsNaturalScroll" type="b" access="read"/>
+    <property name="naturalScrollEnabledByDefault" type="b" access="read"/>
+    <property name="naturalScroll" type="b" access="readwrite"/>
+    <property name="supportsScrollTwoFinger" type="b" access="read"/>
+    <property name="scrollTwoFingerEnabledByDefault" type="b" access="read"/>
+    <property name="scrollTwoFinger" type="b" access="readwrite"/>
+    <property name="supportsScrollEdge" type="b" access="read"/>
+    <property name="scrollEdgeEnabledByDefault" type="b" access="read"/>
+    <property name="scrollEdge" type="b" access="readwrite"/>
+    <property name="supportsScrollOnButtonDown" type="b" access="read"/>
+    <property name="scrollOnButtonDownEnabledByDefault" type="b" access="read"/>
+    <property name="defaultScrollButton" type="u" access="read"/>
+    <property name="scrollOnButtonDown" type="b" access="readwrite"/>
+    <property name="scrollButton" type="u" access="readwrite"/>
+    <property name="switchDevice" type="b" access="read"/>
+    <property name="lidSwitch" type="b" access="read"/>
+    <property name="tabletModeSwitch" type="b" access="read"/>
+    <property name="supportsClickMethodAreas" type="b" access="read"/>
+    <property name="defaultClickMethodAreas" type="b" access="read"/>
+    <property name="clickMethodAreas" type="b" access="readwrite"/>
+    <property name="supportsClickMethodClickfinger" type="b" access="read"/>
+    <property name="defaultClickMethodClickfinger" type="b" access="read"/>
+    <property name="clickMethodClickfinger" type="b" access="readwrite"/>
+  </interface>
+</node>
