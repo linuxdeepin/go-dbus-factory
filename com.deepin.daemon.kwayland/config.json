@@ -1,0 +1,16 @@
+{
+  "Service": "com.deepin.daemon.KWayland",
+  "Objects": [
+    {
+      "Type": "OutputManagement",
+      "Path": "/com/deepin/daemon/KWayland/Output",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.KWayland.Output",
+          "Type": "outputManagement",
+          "Accessor": "OutputManagement"
+        }
+      ]
+    }
+  ]
+}
