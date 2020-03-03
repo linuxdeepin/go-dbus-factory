@@ -1,0 +1,16 @@
+{
+  "Service": "com.deepin.daemon.AirplaneMode",
+  "Objects": [
+    {
+      "Type": "AirplaneMode",
+      "Path": "/com/deepin/daemon/AirplaneMode",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.AirplaneMode",
+          "Type": "airplaneMode",
+          "Accessor": "AirplaneMode"
+        }
+      ]
+    }
+  ]
+}
