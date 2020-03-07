@@ -160,6 +160,16 @@ func (v *device) DeleteEnrolledFingers(flags dbus.Flags, username string) error 
 	return (<-v.GoDeleteEnrolledFingers(flags, make(chan *dbus.Call, 1), username).Done).Err
 }
 
+// method DeleteEnrolledFinger
+
+func (v *device) GoDeleteEnrolledFinger(flags dbus.Flags, ch chan *dbus.Call, username string, finger_name string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteEnrolledFinger", flags, ch, username, finger_name)
+}
+
+func (v *device) DeleteEnrolledFinger(flags dbus.Flags, username string, finger_name string) error {
+	return (<-v.GoDeleteEnrolledFinger(flags, make(chan *dbus.Call, 1), username, finger_name).Done).Err
+}
+
 // method ListEnrolledFingers
 
 func (v *device) GoListEnrolledFingers(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {

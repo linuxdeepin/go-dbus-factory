@@ -41,6 +41,10 @@
     <method name="DeleteEnrolledFingers">
       <arg name="username" type="s" direction="in"/>
     </method>
+    <method name="DeleteEnrolledFinger">
+      <arg name="username" type="s" direction="in"/>
+      <arg name="finger_name" type="s" direction="in"/>
+    </method>
     <method name="ListEnrolledFingers">
       <arg name="username" type="s" direction="in"/>
       <arg name="enrolled_fingers" type="as" direction="out"/>
