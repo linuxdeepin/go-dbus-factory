@@ -1,0 +1,16 @@
+{
+  "Service": "org.freedesktop.hostname1",
+  "Objects": [
+    {
+      "Type": "Hostname",
+      "Path": "/org/freedesktop/hostname1",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.hostname1",
+          "Type": "hostname",
+          "Accessor": "Hostname"
+        }
+      ]
+    }
+  ]
+}
