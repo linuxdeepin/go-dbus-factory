@@ -11,6 +11,35 @@
           "Accessor": "OutputManagement"
         }
       ]
+    },
+    {
+      "Type": "WindowManager",
+      "Path": "/com/deepin/daemon/KWayland/WindowManager",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.KWayland.WindowManager",
+          "Type": "windowManager",
+          "Accessor": "WindowManager"
+        }
+      ]
+    },
+    {
+      "Type": "Window",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.KWayland.PlasmaWindow",
+          "Type": "window",
+          "Accessor": "Window",
+          "Fixes": {
+            "m/Geometry": [
+              {
+                "Name": "argout0",
+                "Type": "Rect"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
