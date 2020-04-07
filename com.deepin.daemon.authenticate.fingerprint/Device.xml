@@ -20,6 +20,11 @@
             <arg name="userId" type="s" direction="in"></arg>
             <arg name="fingers" type="as" direction="out"></arg>
         </method>
+        <method name="RenameFinger">
+            <arg name="userId" type="s" direction="in"></arg>
+            <arg name="finger" type="s" direction="in"></arg>
+            <arg name="newName" type="s" direction="in"></arg>
+        </method>
         <method name="StopEnroll"></method>
         <method name="StopVerify"></method>
         <method name="Verify">

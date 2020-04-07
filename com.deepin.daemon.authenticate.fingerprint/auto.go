@@ -89,6 +89,16 @@ func (v *device) ListFingers(flags dbus.Flags, userId string) (fingers []string,
 		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), userId).Done)
 }
 
+// method RenameFinger
+
+func (v *device) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
+}
+
+func (v *device) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
+	return (<-v.GoRenameFinger(flags, make(chan *dbus.Call, 1), userId, finger, newName).Done).Err
+}
+
 // method StopEnroll
 
 func (v *device) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
