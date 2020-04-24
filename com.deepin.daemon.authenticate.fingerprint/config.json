@@ -12,6 +12,18 @@
           "Accessor": "Device"
         }
       ]
+    },
+    {
+      "Type": "CommonDevice",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.Fingerprint.CommonDevice",
+          "NoGetInterfaceName": true,
+          "Type": "commonDevice",
+          "Accessor": "CommonDevice"
+        }
+      ]
     }
   ]
 }
