@@ -53,6 +53,21 @@
         <method name="SetUse24HourFormat">
             <arg name="value" type="b" direction="in"></arg>
         </method>
+        <method name="SetWeekdayFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetShortDateFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetLongDateFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetShortTimeFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetLongTimeFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
         <property name="HistoryLayout" type="as" access="read"></property>
         <property name="Gid" type="s" access="read"></property>
         <property name="Groups" type="as" access="read"></property>
@@ -78,6 +93,11 @@
         <property name="Uid" type="s" access="read"></property>
         <property name="AutomaticLogin" type="b" access="read"></property>
         <property name="SystemAccount" type="b" access="read"></property>
+        <property name="WeekdayFormat" type="i" access="read"></property>
+        <property name="ShortDateFormat" type="i" access="read"></property>
+        <property name="LongDateFormat" type="i" access="read"></property>
+        <property name="ShortTimeFormat" type="i" access="read"></property>
+        <property name="LongTimeFormat" type="i" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
