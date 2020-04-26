@@ -439,6 +439,56 @@ func (v *user) SetUse24HourFormat(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetUse24HourFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
+// method SetWeekdayFormat
+
+func (v *user) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWeekdayFormat", flags, ch, value)
+}
+
+func (v *user) SetWeekdayFormat(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetWeekdayFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+// method SetShortDateFormat
+
+func (v *user) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetShortDateFormat", flags, ch, value)
+}
+
+func (v *user) SetShortDateFormat(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetShortDateFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+// method SetLongDateFormat
+
+func (v *user) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLongDateFormat", flags, ch, value)
+}
+
+func (v *user) SetLongDateFormat(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetLongDateFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+// method SetShortTimeFormat
+
+func (v *user) GoSetShortTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetShortTimeFormat", flags, ch, value)
+}
+
+func (v *user) SetShortTimeFormat(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetShortTimeFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+// method SetLongTimeFormat
+
+func (v *user) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLongTimeFormat", flags, ch, value)
+}
+
+func (v *user) SetLongTimeFormat(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetLongTimeFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
 // property HistoryLayout as
 
 func (v *user) HistoryLayout() proxy.PropStringArray {
@@ -661,6 +711,51 @@ func (v *user) SystemAccount() proxy.PropBool {
 	return proxy.PropBool{
 		Impl: v,
 		Name: "SystemAccount",
+	}
+}
+
+// property WeekdayFormat i
+
+func (v *user) WeekdayFormat() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "WeekdayFormat",
+	}
+}
+
+// property ShortDateFormat i
+
+func (v *user) ShortDateFormat() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "ShortDateFormat",
+	}
+}
+
+// property LongDateFormat i
+
+func (v *user) LongDateFormat() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "LongDateFormat",
+	}
+}
+
+// property ShortTimeFormat i
+
+func (v *user) ShortTimeFormat() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "ShortTimeFormat",
+	}
+}
+
+// property LongTimeFormat i
+
+func (v *user) LongTimeFormat() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "LongTimeFormat",
 	}
 }
 
