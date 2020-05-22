@@ -1,0 +1,6 @@
+{
+	"type": "homebrew",
+	"3rdparty": [],
+	"ignore": ["./debian", "README*", "LICENSE", "Makefile", "copyright", "changelog", "docs", "doc", "*.version", "*auto.go"],
+	"license": ["GPLv3"]
+}
