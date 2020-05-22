@@ -206,6 +206,68 @@ func (v *wm) SetTransientBackground(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoSetTransientBackground(flags, make(chan *dbus.Call, 1), arg0).Done).Err
 }
 
+// method GetCurrentWorkspaceBackgroundForMonitor
+
+func (v *wm) GoGetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, strMonitorName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetCurrentWorkspaceBackgroundForMonitor", flags, ch, strMonitorName)
+}
+
+func (*wm) StoreGetCurrentWorkspaceBackgroundForMonitor(call *dbus.Call) (result string, err error) {
+	err = call.Store(&result)
+	return
+}
+
+func (v *wm) GetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, strMonitorName string) (result string, err error) {
+	return v.StoreGetCurrentWorkspaceBackgroundForMonitor(
+		<-v.GoGetCurrentWorkspaceBackgroundForMonitor(flags, make(chan *dbus.Call, 1), strMonitorName).Done)
+}
+
+// method SetCurrentWorkspaceBackgroundForMonitor
+
+func (v *wm) GoSetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentWorkspaceBackgroundForMonitor", flags, ch, uri, strMonitorName)
+}
+
+func (v *wm) SetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
+	return (<-v.GoSetCurrentWorkspaceBackgroundForMonitor(flags, make(chan *dbus.Call, 1), uri, strMonitorName).Done).Err
+}
+
+// method GetWorkspaceBackgroundForMonitor
+
+func (v *wm) GoGetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetWorkspaceBackgroundForMonitor", flags, ch, index, strMonitorName)
+}
+
+func (*wm) StoreGetWorkspaceBackgroundForMonitor(call *dbus.Call) (result string, err error) {
+	err = call.Store(&result)
+	return
+}
+
+func (v *wm) GetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string) (result string, err error) {
+	return v.StoreGetWorkspaceBackgroundForMonitor(
+		<-v.GoGetWorkspaceBackgroundForMonitor(flags, make(chan *dbus.Call, 1), index, strMonitorName).Done)
+}
+
+// method SetWorkspaceBackgroundForMonitor
+
+func (v *wm) GoSetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string, uri string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWorkspaceBackgroundForMonitor", flags, ch, index, strMonitorName, uri)
+}
+
+func (v *wm) SetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string, uri string) error {
+	return (<-v.GoSetWorkspaceBackgroundForMonitor(flags, make(chan *dbus.Call, 1), index, strMonitorName, uri).Done).Err
+}
+
+// method SetTransientBackgroundForMonitor
+
+func (v *wm) GoSetTransientBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTransientBackgroundForMonitor", flags, ch, uri, strMonitorName)
+}
+
+func (v *wm) SetTransientBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
+	return (<-v.GoSetTransientBackgroundForMonitor(flags, make(chan *dbus.Call, 1), uri, strMonitorName).Done).Err
+}
+
 // method GetCurrentWorkspace
 
 func (v *wm) GoGetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -549,6 +611,15 @@ func (v *wm) CompositingPossible() proxy.PropBool {
 	return proxy.PropBool{
 		Impl: v,
 		Name: "compositingPossible",
+	}
+}
+
+// property compositingAllowSwitch b
+
+func (v *wm) CompositingAllowSwitch() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "compositingAllowSwitch",
 	}
 }
 

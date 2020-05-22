@@ -4,6 +4,7 @@
   <interface name="com.deepin.wm">
     <property access="readwrite" type="b" name="compositingEnabled"/>
     <property access="read" type="b" name="compositingPossible"/>
+    <property access="read" type="b" name="compositingAllowSwitch"/>
     <property access="readwrite" type="b" name="zoneEnabled"/>
     <property access="readwrite" type="s" name="cursorTheme"/>
     <property access="readwrite" type="i" name="cursorSize"/>
@@ -42,6 +43,28 @@
     </method>
     <method name="SetTransientBackground">
       <arg direction="in" type="s"/>
+    </method>
+    <method name="GetCurrentWorkspaceBackgroundForMonitor">
+      <arg direction="in" type="s" name="strMonitorName"/>
+      <arg direction="out" type="s" name="result"/>
+    </method>
+    <method name="SetCurrentWorkspaceBackgroundForMonitor">
+      <arg direction="in" type="s" name="uri"/>
+      <arg direction="in" type="s" name="strMonitorName"/>
+    </method>
+    <method name="GetWorkspaceBackgroundForMonitor">
+      <arg direction="in" type="i" name="index"/>
+      <arg direction="in" type="s" name="strMonitorName"/>
+      <arg direction="out" type="s" name="result"/>
+    </method>
+    <method name="SetWorkspaceBackgroundForMonitor">
+      <arg direction="in" type="i" name="index"/>
+      <arg direction="in" type="s" name="strMonitorName"/>
+      <arg direction="in" type="s" name="uri"/>
+    </method>
+    <method name="SetTransientBackgroundForMonitor">
+      <arg direction="in" type="s" name="uri"/>
+      <arg direction="in" type="s" name="strMonitorName"/>
     </method>
     <method name="GetCurrentWorkspace">
       <arg direction="out" type="i" name="index"/>
