@@ -60,6 +60,16 @@ func (v *fingerprint) Identify(flags dbus.Flags, uuid string) error {
 	return (<-v.GoIdentify(flags, make(chan *dbus.Call, 1), uuid).Done).Err
 }
 
+// method IdentifyWithMultipleUser
+
+func (v *fingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IdentifyWithMultipleUser", flags, ch)
+}
+
+func (v *fingerprint) IdentifyWithMultipleUser(flags dbus.Flags) error {
+	return (<-v.GoIdentifyWithMultipleUser(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
 // method GetStatus
 
 func (v *fingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -165,6 +175,33 @@ func (v *fingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.Sig
 		err := dbus.Store(sig.Body, &result)
 		if err == nil {
 			cb(result)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal IdentifyNoAccount
+
+func (v *fingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "IdentifyNoAccount", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".IdentifyNoAccount",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var result int32
+		var userName string
+		err := dbus.Store(sig.Body, &result, &userName)
+		if err == nil {
+			cb(result, userName)
 		}
 	}
 
