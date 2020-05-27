@@ -8,6 +8,9 @@
             <arg name="uuid" type="s" direction="in"/>
         </method>
 
+        <method name="IdentifyWithMultipleUser">
+        </method>
+
         <method name="GetStatus">
             <arg name="result" type="i" direction="out"/>
         </method>
@@ -42,6 +45,11 @@
 
         <signal name="IdentifyStatus">
             <arg name="result" type="i"/>
+        </signal>
+
+        <signal name="IdentifyNoAccount">
+            <arg name="result" type="i"/>
+            <arg name="userName" type="s"/>
         </signal>
 
         <signal name="VerifyStatus">
