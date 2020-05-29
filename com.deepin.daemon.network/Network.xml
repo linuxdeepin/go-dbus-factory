@@ -28,6 +28,7 @@
         <method name="EnableDevice">
             <arg name="devPath" type="o" direction="in"></arg>
             <arg name="enabled" type="b" direction="in"></arg>
+            <arg name="cpath"   type="o" direction="out"></arg>
         </method>
         <method name="EnableWirelessHotspotMode">
             <arg name="devPath" type="o" direction="in"></arg>
