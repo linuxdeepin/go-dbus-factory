@@ -40,8 +40,14 @@ func (v *network) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIfa
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableDevice", flags, ch, pathOrIface, enabled)
 }
 
-func (v *network) EnableDevice(flags dbus.Flags, pathOrIface string, enabled bool) error {
-	return (<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done).Err
+func (*network) StoreEnableDevice(call *dbus.Call) (cpath dbus.ObjectPath, err error) {
+	err = call.Store(&cpath)
+	return
+}
+
+func (v *network) EnableDevice(flags dbus.Flags, pathOrIface string, enabled bool) (cpath dbus.ObjectPath, err error) {
+	return v.StoreEnableDevice(
+		<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done)
 }
 
 // method IsDeviceEnabled
