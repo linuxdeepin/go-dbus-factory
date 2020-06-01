@@ -274,12 +274,39 @@ func (v *power) BatteryTimeToFull() proxy.PropUint64 {
 	}
 }
 
+// property BatteryCapacity d
+
+func (v *power) BatteryCapacity() proxy.PropDouble {
+	return proxy.PropDouble{
+		Impl: v,
+		Name: "BatteryCapacity",
+	}
+}
+
 // property PowerSavingModeEnabled b
 
 func (v *power) PowerSavingModeEnabled() proxy.PropBool {
 	return proxy.PropBool{
 		Impl: v,
 		Name: "PowerSavingModeEnabled",
+	}
+}
+
+// property PowerSavingModeAutoWhenBatteryLow b
+
+func (v *power) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "PowerSavingModeAutoWhenBatteryLow",
+	}
+}
+
+// property PowerSavingModeBrightnessDropPercent u
+
+func (v *power) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "PowerSavingModeBrightnessDropPercent",
 	}
 }
 

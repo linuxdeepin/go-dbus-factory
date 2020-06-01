@@ -27,7 +27,10 @@
         <property name="HasBattery" type="b" access="read"></property>
         <property name="BatteryStatus" type="u" access="read"></property>
         <property name="BatteryTimeToFull" type="t" access="read"></property>
+        <property name="BatteryCapacity" type="d" access="read"></property>
         <property name="PowerSavingModeEnabled" type="b" access="readwrite"></property>
+        <property name="PowerSavingModeAutoWhenBatteryLow" type="b" access="readwrite"></property>
+        <property name="PowerSavingModeBrightnessDropPercent" type="u" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
