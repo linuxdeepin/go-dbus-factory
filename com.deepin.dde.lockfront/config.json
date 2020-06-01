@@ -1,0 +1,17 @@
+
+{
+    "Service":"com.deepin.dde.lockFront",
+    "Objects": [
+      {
+        "Type": "LockFront",
+        "Path": "/com/deepin/dde/lockFront",
+        "Interfaces": [
+          {
+            "Name":"com.deepin.dde.lockFront",
+            "Type":"lockfront"
+          }
+        ]
+      }
+    ]
+  }
+  
