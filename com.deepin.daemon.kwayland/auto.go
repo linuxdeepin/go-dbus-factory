@@ -76,6 +76,16 @@ func (v *outputManagement) Apply(flags dbus.Flags, outputs string) error {
 	return (<-v.GoApply(flags, make(chan *dbus.Call, 1), outputs).Done).Err
 }
 
+// method WlSimulateKey
+
+func (v *outputManagement) GoWlSimulateKey(flags dbus.Flags, ch chan *dbus.Call, state int32) *dbus.Call {
+        return v.GetObject_().Go_(v.GetInterfaceName_()+".WlSimulateKey", flags, ch, state)
+}
+
+func (v *outputManagement) WlSimulateKey(flags dbus.Flags, state int32) error {
+        return (<-v.GoWlSimulateKey(flags, make(chan *dbus.Call, 1), state).Done).Err
+}
+
 // signal OutputAdded
 
 func (v *outputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {

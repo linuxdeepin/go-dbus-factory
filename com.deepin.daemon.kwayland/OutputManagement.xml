@@ -21,6 +21,9 @@
     <method name="Apply">
       <arg name="outputs" type="s" direction="in"/>
     </method>
+    <method name="WlSimulateKey">
+      <arg name="state" type="i" direction="in"/>
+    </method>
   </interface>
   <interface name="org.freedesktop.DBus.Properties">
     <method name="Get">
