@@ -69,7 +69,9 @@
             <arg name="devPath" type="o" direction="in"></arg>
             <arg name="connections" type="ao" direction="out"></arg>
         </method>
-        <method name="RequestWirelessScan"></method>
+        <method name="RequestWirelessScan">
+            <arg name="apsJSONs" type="s" direction="out"></arg>
+        </method>
         <method name="SetAutoProxy">
             <arg name="proxyAuto" type="s" direction="in"></arg>
         </method>
@@ -111,6 +113,7 @@
         <property name="Connections" type="s" access="read"></property>
         <property name="ActiveConnections" type="s" access="read"></property>
         <property name="State" type="u" access="read"></property>
+        <property name="WirelessAccessPoints" type="s" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

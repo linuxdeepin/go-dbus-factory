@@ -112,8 +112,14 @@ func (v *network) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, devPath d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableDevice", flags, ch, devPath, enabled)
 }
 
-func (v *network) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) error {
-	return (<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done).Err
+func (*network) StoreEnableDevice(call *dbus.Call) (cpath dbus.ObjectPath, err error) {
+	err = call.Store(&cpath)
+	return
+}
+
+func (v *network) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) (cpath dbus.ObjectPath, err error) {
+	return v.StoreEnableDevice(
+		<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done)
 }
 
 // method EnableWirelessHotspotMode
@@ -292,8 +298,14 @@ func (v *network) GoRequestWirelessScan(flags dbus.Flags, ch chan *dbus.Call) *d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestWirelessScan", flags, ch)
 }
 
-func (v *network) RequestWirelessScan(flags dbus.Flags) error {
-	return (<-v.GoRequestWirelessScan(flags, make(chan *dbus.Call, 1)).Done).Err
+func (*network) StoreRequestWirelessScan(call *dbus.Call) (apsJSONs string, err error) {
+	err = call.Store(&apsJSONs)
+	return
+}
+
+func (v *network) RequestWirelessScan(flags dbus.Flags) (apsJSONs string, err error) {
+	return v.StoreRequestWirelessScan(
+		<-v.GoRequestWirelessScan(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetAutoProxy
@@ -514,5 +526,14 @@ func (v *network) State() proxy.PropUint32 {
 	return proxy.PropUint32{
 		Impl: v,
 		Name: "State",
+	}
+}
+
+// property WirelessAccessPoints s
+
+func (v *network) WirelessAccessPoints() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "WirelessAccessPoints",
 	}
 }
