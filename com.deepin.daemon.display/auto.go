@@ -398,6 +398,15 @@ func (p PropDisplayTouchMap) ConnectChanged(cb func(hasValue bool, value map[str
 		"TouchMap", cb0)
 }
 
+// property MaxBacklightBrightness u
+
+func (v *display) MaxBacklightBrightness() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "MaxBacklightBrightness",
+	}
+}
+
 type Monitor struct {
 	monitor // interface com.deepin.daemon.Display.Monitor
 	proxy.Object
