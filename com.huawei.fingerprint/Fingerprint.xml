@@ -38,6 +38,10 @@
             <arg name="result" type="i" direction="out"/>
         </method>
 
+        <method name="ClearPovImage">
+            <arg name="result" type="i" direction="out"/>
+        </method>
+
         <signal name="EnrollStatus">
             <arg name="progress" type="i"/>
             <arg name="result" type="i"/>
