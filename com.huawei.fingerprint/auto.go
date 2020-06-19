@@ -128,6 +128,22 @@ func (v *fingerprint) Reload(flags dbus.Flags, deleteType int32) (result int32, 
 		<-v.GoReload(flags, make(chan *dbus.Call, 1), deleteType).Done)
 }
 
+// method ClearPovImage
+
+func (v *fingerprint) GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearPovImage", flags, ch)
+}
+
+func (*fingerprint) StoreClearPovImage(call *dbus.Call) (result int32, err error) {
+	err = call.Store(&result)
+	return
+}
+
+func (v *fingerprint) ClearPovImage(flags dbus.Flags) (result int32, err error) {
+	return v.StoreClearPovImage(
+		<-v.GoClearPovImage(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // signal EnrollStatus
 
 func (v *fingerprint) ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error) {
