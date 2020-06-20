@@ -34,6 +34,56 @@ func (*lockfront) GetInterfaceName_() string {
 	return "com.deepin.dde.lockFront"
 }
 
+// method Show
+
+func (v *lockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
+}
+
+func (v *lockfront) Show(flags dbus.Flags) error {
+	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method ShowUserList
+
+func (v *lockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowUserList", flags, ch)
+}
+
+func (v *lockfront) ShowUserList(flags dbus.Flags) error {
+	return (<-v.GoShowUserList(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method ShowAuth
+
+func (v *lockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowAuth", flags, ch, active)
+}
+
+func (v *lockfront) ShowAuth(flags dbus.Flags, active bool) error {
+	return (<-v.GoShowAuth(flags, make(chan *dbus.Call, 1), active).Done).Err
+}
+
+// method Suspend
+
+func (v *lockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch, enable)
+}
+
+func (v *lockfront) Suspend(flags dbus.Flags, enable bool) error {
+	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1), enable).Done).Err
+}
+
+// method Hibernate
+
+func (v *lockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch, enable)
+}
+
+func (v *lockfront) Hibernate(flags dbus.Flags, enable bool) error {
+	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1), enable).Done).Err
+}
+
 // signal ChangKey
 
 func (v *lockfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
