@@ -106,3 +106,13 @@ func (v *ddcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecks
 func (v *ddcci) SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error {
 	return (<-v.GoSetBrightness(flags, make(chan *dbus.Call, 1), edidChecksum, value).Done).Err
 }
+
+// method RefreshDisplays
+
+func (v *ddcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshDisplays", flags, ch)
+}
+
+func (v *ddcci) RefreshDisplays(flags dbus.Flags) error {
+	return (<-v.GoRefreshDisplays(flags, make(chan *dbus.Call, 1)).Done).Err
+}

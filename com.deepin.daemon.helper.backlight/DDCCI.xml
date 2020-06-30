@@ -14,6 +14,7 @@
             <arg name="edidChecksum" type="s" direction="in"></arg>
             <arg name="value" type="i" direction="in"></arg>
         </method>
+        <method name="RefreshDisplays"></method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
