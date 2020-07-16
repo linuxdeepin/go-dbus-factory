@@ -491,6 +491,34 @@ func (v *wm) ConnectWorkspaceBackgroundChanged(cb func(index int32, newUri strin
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal WorkspaceBackgroundChangedForMonitor
+
+func (v *wm) ConnectWorkspaceBackgroundChangedForMonitor(cb func(index int32, monitor string, newUri string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "WorkspaceBackgroundChangedForMonitor", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".WorkspaceBackgroundChangedForMonitor",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var index int32
+		var monitor string
+		var newUri string
+		err := dbus.Store(sig.Body, &index, &monitor, &newUri)
+		if err == nil {
+			cb(index, monitor, newUri)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // signal compositingEnabledChanged
 
 func (v *wm) ConnectCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
