@@ -1,0 +1,46 @@
+{
+  "Service": "org.bluez.obex",
+  "Objects": [
+    {
+      "Type": "Manager",
+      "Path": "/org/bluez/obex",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.obex.AgentManager1",
+          "Type": "agentManager",
+          "Accessor": "AgentManager"
+        },
+        {
+          "Name": "org.bluez.obex.Client1",
+          "Type": "client",
+          "Accessor": "Client"
+        }
+      ]
+    },
+    {
+      "Type": "Session",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.obex.Session1",
+          "Type": "session",
+          "Accessor": "Session"
+        },
+        {
+          "Name": "org.bluez.obex.ObjectPush1",
+          "Type": "objectPush",
+          "Accessor": "ObjectPush"
+        }
+      ]
+    },
+    {
+      "Type": "Transfer",
+      "Interfaces": [
+        {
+          "Name": "org.bluez.obex.Transfer1",
+          "Type": "transfer",
+          "Accessor": "Transfer"
+        }
+      ]
+    }
+  ]
+}
