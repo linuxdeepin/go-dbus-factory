@@ -19,6 +19,9 @@
         <method name="SetLongPressDuration">
             <arg name="duration" type="u" direction="in"></arg>
         </method>
+        <signal name="HandleForSleep">
+            <arg name="start" type="b"></arg>
+        </signal>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
