@@ -1252,19 +1252,19 @@ func (v *manager) CheckConnectivity(flags dbus.Flags) (connectivity uint32, err 
 
 // method state
 
-func (v *manager) Gostate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
-}
-
-func (*manager) Storestate(call *dbus.Call) (state uint32, err error) {
-	err = call.Store(&state)
-	return
-}
-
-func (v *manager) state(flags dbus.Flags) (state uint32, err error) {
-	return v.Storestate(
-		<-v.Gostate(flags, make(chan *dbus.Call, 1)).Done)
-}
+//func (v *manager) Gostate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+//	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
+//}
+//
+//func (*manager) Storestate(call *dbus.Call) (state uint32, err error) {
+//	err = call.Store(&state)
+//	return
+//}
+//
+//func (v *manager) state(flags dbus.Flags) (state uint32, err error) {
+//	return v.Storestate(
+//		<-v.Gostate(flags, make(chan *dbus.Call, 1)).Done)
+//}
 
 // method CheckpointCreate
 
@@ -3826,7 +3826,7 @@ func (v *deviceOlpcMesh) ActiveChannel() proxy.PropUint32 {
 	}
 }
 
-func (obj *Device) statistics() *deviceStatistics {
+func (obj *Device) Statistics() *deviceStatistics {
 	return &obj.deviceStatistics
 }
 

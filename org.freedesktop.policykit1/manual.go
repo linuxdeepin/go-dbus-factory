@@ -12,7 +12,6 @@ type ActionDescription struct {
 	ImplicitAny      ImplicitAuthorization
 	ImplicitInactive ImplicitAuthorization
 	ImplicitActive   ImplicitAuthorization
-	annotations      map[string]string
 }
 
 type ImplicitAuthorization uint32

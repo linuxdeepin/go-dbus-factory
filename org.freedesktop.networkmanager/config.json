@@ -297,7 +297,7 @@
         },
         {
           "Name": "org.freedesktop.NetworkManager.Device.Statistics",
-          "Accessor": "statistics",
+          "Accessor": "Statistics",
           "Type": "deviceStatistics"
         },
         {
