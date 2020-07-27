@@ -34,6 +34,16 @@ func (*gesture) GetInterfaceName_() string {
 	return "com.deepin.daemon.Gesture"
 }
 
+// method SetShortPressDuration
+
+func (v *gesture) GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetShortPressDuration", flags, ch, duration)
+}
+
+func (v *gesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error {
+	return (<-v.GoSetShortPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
+}
+
 // signal Event
 
 func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {
@@ -56,6 +66,173 @@ func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers in
 		err := dbus.Store(sig.Body, &name, &direction, &fingers)
 		if err == nil {
 			cb(name, direction, fingers)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchEdgeEvent
+
+func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, distance uint32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchEdgeEvent", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchEdgeEvent",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var direction string
+		var distance uint32
+		err := dbus.Store(sig.Body, &direction, &distance)
+		if err == nil {
+			cb(direction, distance)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchSinglePressTimeout
+
+func (v *gesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchSinglePressTimeout", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchSinglePressTimeout",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var time int32
+		var scalex float64
+		var scaley float64
+		err := dbus.Store(sig.Body, &time, &scalex, &scaley)
+		if err == nil {
+			cb(time, scalex, scaley)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchUpOrCancel
+
+func (v *gesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchUpOrCancel", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchUpOrCancel",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var scalex float64
+		var scaley float64
+		err := dbus.Store(sig.Body, &scalex, &scaley)
+		if err == nil {
+			cb(scalex, scaley)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchEdgeMoveStop
+
+func (v *gesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchEdgeMoveStop", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchEdgeMoveStop",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var direction string
+		var scalex float64
+		var scaley float64
+		var duration int32
+		err := dbus.Store(sig.Body, &direction, &scalex, &scaley, &duration)
+		if err == nil {
+			cb(direction, scalex, scaley, duration)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchEdgeMoveStopLeave
+
+func (v *gesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchEdgeMoveStopLeave", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchEdgeMoveStopLeave",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var direction string
+		var scalex float64
+		var scaley float64
+		var duration int32
+		err := dbus.Store(sig.Body, &direction, &scalex, &scaley, &duration)
+		if err == nil {
+			cb(direction, scalex, scaley, duration)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal TouchMoving
+
+func (v *gesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchMoving", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchMoving",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var scalex float64
+		var scaley float64
+		err := dbus.Store(sig.Body, &scalex, &scaley)
+		if err == nil {
+			cb(scalex, scaley)
 		}
 	}
 
