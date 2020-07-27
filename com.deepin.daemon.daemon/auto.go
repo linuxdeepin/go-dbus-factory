@@ -95,3 +95,29 @@ func (v *daemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus.Call, du
 func (v *daemon) SetLongPressDuration(flags dbus.Flags, duration uint32) error {
 	return (<-v.GoSetLongPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
 }
+
+// signal HandleForSleep
+
+func (v *daemon) ConnectHandleForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "HandleForSleep", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".HandleForSleep",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var start bool
+		err := dbus.Store(sig.Body, &start)
+		if err == nil {
+			cb(start)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
