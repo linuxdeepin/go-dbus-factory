@@ -92,3 +92,12 @@ func (v *timedated) NTPServer() proxy.PropString {
 		Name: "NTPServer",
 	}
 }
+
+// property Timezone s
+
+func (v *timedated) Timezone() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Timezone",
+	}
+}
