@@ -25,6 +25,7 @@
             <arg name="message" type="s" direction="in"></arg>
         </method>
         <property name="NTPServer" type="s" access="read"></property>
+        <property name="Timezone" type="s" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
