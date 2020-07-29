@@ -64,6 +64,32 @@ func (v *audio) SetPort(flags dbus.Flags, cardId uint32, portName string, direct
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), cardId, portName, direction).Done).Err
 }
 
+// method SetPortEnabled
+
+func (v *audio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPortEnabled", flags, ch, cardId, portName, enabled)
+}
+
+func (v *audio) SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error {
+	return (<-v.GoSetPortEnabled(flags, make(chan *dbus.Call, 1), cardId, portName, enabled).Done).Err
+}
+
+// method IsPortEnabled
+
+func (v *audio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsPortEnabled", flags, ch, cardId, portName)
+}
+
+func (*audio) StoreIsPortEnabled(call *dbus.Call) (enabled bool, err error) {
+	err = call.Store(&enabled)
+	return
+}
+
+func (v *audio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (enabled bool, err error) {
+	return v.StoreIsPortEnabled(
+		<-v.GoIsPortEnabled(flags, make(chan *dbus.Call, 1), cardId, portName).Done)
+}
+
 // property MaxUIVolume d
 
 func (v *audio) MaxUIVolume() proxy.PropDouble {
@@ -106,6 +132,15 @@ func (v *audio) Cards() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "Cards",
+	}
+}
+
+// property CardsWithoutUnavailable s
+
+func (v *audio) CardsWithoutUnavailable() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "CardsWithoutUnavailable",
 	}
 }
 

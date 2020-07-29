@@ -13,11 +13,22 @@
             <arg name="portName" type="s" direction="in"></arg>
             <arg name="direction" type="i" direction="in"></arg>
         </method>
+        <method name="SetPortEnabled">
+            <arg name="cardId" type="u" direction="in"></arg>
+            <arg name="portName" type="s" direction="in"></arg>
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="IsPortEnabled">
+            <arg name="cardId" type="u" direction="in"></arg>
+            <arg name="portName" type="s" direction="in"></arg>
+            <arg name="enabled" type="b" direction="out"></arg>
+        </method>
         <property name="MaxUIVolume" type="d" access="read"></property>
         <property name="SinkInputs" type="ao" access="read"></property>
         <property name="DefaultSink" type="o" access="read"></property>
         <property name="DefaultSource" type="o" access="read"></property>
         <property name="Cards" type="s" access="read"></property>
+        <property name="CardsWithoutUnavailable" type="s" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
