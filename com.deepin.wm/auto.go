@@ -464,6 +464,38 @@ func (v *wm) EnableZoneDetected(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoEnableZoneDetected(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
+// method GetIsShowDesktop
+
+func (v *wm) GoGetIsShowDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetIsShowDesktop", flags, ch)
+}
+
+func (*wm) StoreGetIsShowDesktop(call *dbus.Call) (isShowDesktop bool, err error) {
+	err = call.Store(&isShowDesktop)
+	return
+}
+
+func (v *wm) GetIsShowDesktop(flags dbus.Flags) (isShowDesktop bool, err error) {
+	return v.StoreGetIsShowDesktop(
+		<-v.GoGetIsShowDesktop(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method GetMultiTaskingStatus
+
+func (v *wm) GoGetMultiTaskingStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetMultiTaskingStatus", flags, ch)
+}
+
+func (*wm) StoreGetMultiTaskingStatus(call *dbus.Call) (isActive bool, err error) {
+	err = call.Store(&isActive)
+	return
+}
+
+func (v *wm) GetMultiTaskingStatus(flags dbus.Flags) (isActive bool, err error) {
+	return v.StoreGetMultiTaskingStatus(
+		<-v.GoGetMultiTaskingStatus(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // signal WorkspaceBackgroundChanged
 
 func (v *wm) ConnectWorkspaceBackgroundChanged(cb func(index int32, newUri string)) (dbusutil.SignalHandlerId, error) {

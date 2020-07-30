@@ -133,6 +133,12 @@
     <method name="EnableZoneDetected">
       <arg direction="in" type="b" name="enabled"/>
     </method>
+    <method name="GetIsShowDesktop">
+      <arg direction="out" type="b" name="isShowDesktop"/>
+    </method>
+    <method name="GetMultiTaskingStatus">
+      <arg direction="out" type="b" name="isActive"/>
+    </method>
     <signal name="WorkspaceSwitched">
       <arg type="i" name="from"/>
       <arg type="i" name="to"/>
