@@ -68,6 +68,9 @@
         <method name="SetLongTimeFormat">
             <arg name="value" type="i" direction="in"></arg>
         </method>
+        <method name="SetWeekdayBegins">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
         <property name="HistoryLayout" type="as" access="read"></property>
         <property name="Gid" type="s" access="read"></property>
         <property name="Groups" type="as" access="read"></property>
@@ -98,6 +101,7 @@
         <property name="LongDateFormat" type="i" access="read"></property>
         <property name="ShortTimeFormat" type="i" access="read"></property>
         <property name="LongTimeFormat" type="i" access="read"></property>
+        <property name="WeekdayBegins" type="i" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
