@@ -2,6 +2,7 @@ package obex
 
 import "errors"
 import "fmt"
+import "github.com/linuxdeepin/go-dbus-factory/object_manager"
 import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
@@ -12,6 +13,17 @@ var _ = errors.New
 var _ dbusutil.SignalHandlerId
 var _ = fmt.Sprintf
 var _ unsafe.Pointer
+
+type ObjectManager struct {
+	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.Object
+}
+
+func NewObjectManager(conn *dbus.Conn) *ObjectManager {
+	obj := new(ObjectManager)
+	obj.Object.Init_(conn, "org.bluez.obex", "/")
+	return obj
+}
 
 type Manager struct {
 	agentManager // interface org.bluez.obex.AgentManager1

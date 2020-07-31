@@ -2,6 +2,16 @@
   "Service": "org.bluez.obex",
   "Objects": [
     {
+      "Type": "ObjectManager",
+      "XMLFile": "-",
+      "Path": "/",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        }
+      ]
+    },
+    {
       "Type": "Manager",
       "Path": "/org/bluez/obex",
       "Interfaces": [
