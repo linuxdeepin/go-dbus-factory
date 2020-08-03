@@ -44,6 +44,16 @@ func (v *gesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error
 	return (<-v.GoSetShortPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
 }
 
+// method SetEdgeMoveStopDuration
+
+func (v *gesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetEdgeMoveStopDuration", flags, ch, duration)
+}
+
+func (v *gesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
+	return (<-v.GoSetEdgeMoveStopDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
+}
+
 // signal Event
 
 func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {

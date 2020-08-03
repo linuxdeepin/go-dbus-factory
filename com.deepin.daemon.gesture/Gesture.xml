@@ -5,6 +5,9 @@
         <method name="SetShortPressDuration">
             <arg name="duration" type="u" direction="in"></arg>
         </method>
+        <method name="SetEdgeMoveStopDuration">
+            <arg name="duration" type="u" direction="in"></arg>
+        </method>
         <signal name="Event">
             <arg name="name" type="s"></arg>
             <arg name="direction" type="s"></arg>
