@@ -489,14 +489,14 @@ func (v *user) SetLongTimeFormat(flags dbus.Flags, value int32) error {
 	return (<-v.GoSetLongTimeFormat(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
-// method SetWeekdayBegins
+// method SetWeekBegins
 
-func (v *user) GoSetWeekdayBegins(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWeekdayBegins", flags, ch, value)
+func (v *user) GoSetWeekBegins(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWeekBegins", flags, ch, value)
 }
 
-func (v *user) SetWeekdayBegins(flags dbus.Flags, value int32) error {
-	return (<-v.GoSetWeekdayBegins(flags, make(chan *dbus.Call, 1), value).Done).Err
+func (v *user) SetWeekBegins(flags dbus.Flags, value int32) error {
+	return (<-v.GoSetWeekBegins(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // property HistoryLayout as
@@ -769,12 +769,12 @@ func (v *user) LongTimeFormat() proxy.PropInt32 {
 	}
 }
 
-// property WeekdayBegins i
+// property WeekBegins i
 
-func (v *user) WeekdayBegins() proxy.PropInt32 {
+func (v *user) WeekBegins() proxy.PropInt32 {
 	return proxy.PropInt32{
 		Impl: v,
-		Name: "WeekdayBegins",
+		Name: "WeekBegins",
 	}
 }
 
