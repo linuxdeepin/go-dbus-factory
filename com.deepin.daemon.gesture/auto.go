@@ -84,7 +84,7 @@ func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers in
 
 // signal TouchEdgeEvent
 
-func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, distance uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -99,10 +99,11 @@ func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, distance uint3
 	}
 	handlerFunc := func(sig *dbus.Signal) {
 		var direction string
-		var distance uint32
-		err := dbus.Store(sig.Body, &direction, &distance)
+		var scalex float64
+		var scaley float64
+		err := dbus.Store(sig.Body, &direction, &scalex, &scaley)
 		if err == nil {
-			cb(direction, distance)
+			cb(direction, scalex, scaley)
 		}
 	}
 

@@ -15,7 +15,8 @@
         </signal>
         <signal name="TouchEdgeEvent">
             <arg name="direction" type="s"></arg>
-            <arg name="distance" type="u"></arg>
+            <arg name="scalex" type="d"></arg>
+            <arg name="scaley" type="d"></arg>
         </signal>
         <signal name="TouchSinglePressTimeout">
             <arg name="time" type="i"></arg>
