@@ -20,6 +20,10 @@
             <arg name="devPath" type="o"></arg>
             <arg name="enabled" type="b"></arg>
         </signal>
+        <signal name="EnableVpn">
+            <arg name="enable" type="b"></arg>
+            <arg name="active" type="b"></arg>
+        </signal>
         <property name="VpnEnabled" type="b" access="readwrite"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">

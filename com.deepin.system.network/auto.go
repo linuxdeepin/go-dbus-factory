@@ -119,6 +119,33 @@ func (v *network) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal EnableVpn
+
+func (v *network) ConnectEnableVpn(cb func(enable bool, active bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "EnableVpn", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".EnableVpn",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var enable bool
+		var active bool
+		err := dbus.Store(sig.Body, &enable, &active)
+		if err == nil {
+			cb(enable, active)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // property VpnEnabled b
 
 func (v *network) VpnEnabled() proxy.PropBool {
