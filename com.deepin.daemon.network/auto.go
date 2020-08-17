@@ -302,6 +302,22 @@ func (v *network) RequestWirelessScan(flags dbus.Flags) error {
 	return (<-v.GoRequestWirelessScan(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
+// method RequestWirelessScanHasReturn
+
+func (v *network) GoRequestWirelessScanHasReturn(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestWirelessScanHasReturn", flags, ch)
+}
+
+func (*network) StoreRequestWirelessScanHasReturn(call *dbus.Call) (apsJSONs string, err error) {
+	err = call.Store(&apsJSONs)
+	return
+}
+
+func (v *network) RequestWirelessScanHasReturn(flags dbus.Flags) (apsJSONs string, err error) {
+	return v.StoreRequestWirelessScanHasReturn(
+		<-v.GoRequestWirelessScanHasReturn(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // method SetAutoProxy
 
 func (v *network) GoSetAutoProxy(flags dbus.Flags, ch chan *dbus.Call, proxyAuto string) *dbus.Call {

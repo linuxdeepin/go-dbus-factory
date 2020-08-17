@@ -70,6 +70,9 @@
             <arg name="connections" type="ao" direction="out"></arg>
         </method>
         <method name="RequestWirelessScan"></method>
+        <method name="RequestWirelessScanHasReturn">
+            <arg name="apsJSONs" type="s" direction="out"></arg>
+        </method>
         <method name="SetAutoProxy">
             <arg name="proxyAuto" type="s" direction="in"></arg>
         </method>
