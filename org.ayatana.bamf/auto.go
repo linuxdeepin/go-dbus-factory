@@ -2,7 +2,7 @@ package bamf
 
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -479,6 +479,10 @@ func NewApplication(conn *dbus.Conn, path dbus.ObjectPath) (*Application, error)
 	return obj, nil
 }
 
+func (obj *Application) Application() *application {
+	return &obj.application
+}
+
 type application struct{}
 
 func (v *application) GetObject_() *proxy.Object {
@@ -703,6 +707,10 @@ func (v *application) ConnectDesktopFileUpdated(cb func(desktop_file string)) (d
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+func (obj *Application) View() *view {
+	return &obj.view
 }
 
 type view struct{}
@@ -1140,6 +1148,10 @@ func NewWindow(conn *dbus.Conn, path dbus.ObjectPath) (*Window, error) {
 	obj := new(Window)
 	obj.Object.Init_(conn, "org.ayatana.bamf", path)
 	return obj, nil
+}
+
+func (obj *Window) Window() *window {
+	return &obj.window
 }
 
 type window struct{}

@@ -2,7 +2,7 @@ package network
 
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -112,8 +112,14 @@ func (v *network) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, devPath d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableDevice", flags, ch, devPath, enabled)
 }
 
-func (v *network) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) error {
-	return (<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done).Err
+func (*network) StoreEnableDevice(call *dbus.Call) (cpath dbus.ObjectPath, err error) {
+	err = call.Store(&cpath)
+	return
+}
+
+func (v *network) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) (cpath dbus.ObjectPath, err error) {
+	return v.StoreEnableDevice(
+		<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done)
 }
 
 // method EnableWirelessHotspotMode

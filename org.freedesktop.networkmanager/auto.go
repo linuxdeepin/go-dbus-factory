@@ -3,7 +3,7 @@ package networkmanager
 import "errors"
 import "fmt"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"

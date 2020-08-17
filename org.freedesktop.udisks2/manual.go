@@ -1,6 +1,6 @@
 package udisks2
 
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 
 type Attribute struct {
 	Id         byte

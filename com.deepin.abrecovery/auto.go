@@ -2,7 +2,7 @@ package abrecovery
 
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
