@@ -5,6 +5,7 @@
         <method name="EnableDevice">
             <arg name="pathOrIface" type="s" direction="in"></arg>
             <arg name="enabled" type="b" direction="in"></arg>
+            <arg name="cpath" type="o" direction="out"></arg>
         </method>
         <method name="IsDeviceEnabled">
             <arg name="pathOrIface" type="s" direction="in"></arg>
