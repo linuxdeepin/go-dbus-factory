@@ -138,6 +138,35 @@ func (v *gesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex floa
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal TouchPressTimeout
+
+func (v *gesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchPressTimeout", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchPressTimeout",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var fingers int32
+		var time int32
+		var scalex float64
+		var scaley float64
+		err := dbus.Store(sig.Body, &fingers, &time, &scalex, &scaley)
+		if err == nil {
+			cb(fingers, time, scalex, scaley)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // signal TouchUpOrCancel
 
 func (v *gesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
