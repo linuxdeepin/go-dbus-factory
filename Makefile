@@ -8,6 +8,9 @@ all: build
 build:
 	echo ignore build
 
+print_gopath:
+	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
+
 bin:
 	go build -o generator _tool/generator/*.go
 
