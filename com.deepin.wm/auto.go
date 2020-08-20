@@ -114,6 +114,26 @@ func (v *wm) ShowAllWindow(flags dbus.Flags) error {
 	return (<-v.GoShowAllWindow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
+// method ClearMoveStatus
+
+func (v *wm) GoClearMoveStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearMoveStatus", flags, ch)
+}
+
+func (v *wm) ClearMoveStatus(flags dbus.Flags) error {
+	return (<-v.GoClearMoveStatus(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method TouchToMove
+
+func (v *wm) GoTouchToMove(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".TouchToMove", flags, ch, x, y)
+}
+
+func (v *wm) TouchToMove(flags dbus.Flags, x int32, y int32) error {
+	return (<-v.GoTouchToMove(flags, make(chan *dbus.Call, 1), x, y).Done).Err
+}
+
 // method PerformAction
 
 func (v *wm) GoPerformAction(flags dbus.Flags, ch chan *dbus.Call, type0 int32) *dbus.Call {

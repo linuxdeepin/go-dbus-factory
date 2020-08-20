@@ -13,6 +13,17 @@
             <arg name="direction" type="s"></arg>
             <arg name="fingers" type="i"></arg>
         </signal>
+        <signal name="DbclickDown">
+            <arg name="fingers" type="i"></arg>
+        </signal>
+        <signal name="SwipeMoving">
+            <arg name="fingers" type="i"></arg>
+            <arg name="accelX" type="d"></arg>
+            <arg name="accely" type="d"></arg>
+        </signal>
+        <signal name="SwipeStop">
+            <arg name="fingers" type="i"></arg>
+        </signal>
         <signal name="TouchEdgeEvent">
             <arg name="direction" type="s"></arg>
             <arg name="scalex" type="d"></arg>

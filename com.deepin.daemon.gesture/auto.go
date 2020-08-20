@@ -82,6 +82,86 @@ func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers in
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal DbclickDown
+
+func (v *gesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DbclickDown", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DbclickDown",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var fingers int32
+		err := dbus.Store(sig.Body, &fingers)
+		if err == nil {
+			cb(fingers)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal SwipeMoving
+
+func (v *gesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "SwipeMoving", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".SwipeMoving",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var fingers int32
+		var accelX float64
+		var accely float64
+		err := dbus.Store(sig.Body, &fingers, &accelX, &accely)
+		if err == nil {
+			cb(fingers, accelX, accely)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal SwipeStop
+
+func (v *gesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "SwipeStop", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".SwipeStop",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var fingers int32
+		err := dbus.Store(sig.Body, &fingers)
+		if err == nil {
+			cb(fingers)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // signal TouchEdgeEvent
 
 func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
