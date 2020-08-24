@@ -2,7 +2,7 @@ package greeter
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
+import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"

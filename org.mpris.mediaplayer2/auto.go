@@ -2,7 +2,7 @@ package mediaplayer2
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
+import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -23,10 +23,6 @@ func NewMediaPlayer(conn *dbus.Conn, serviceName string) *MediaPlayer {
 	obj := new(MediaPlayer)
 	obj.Object.Init_(conn, serviceName, "/org/mpris/MediaPlayer2")
 	return obj
-}
-
-func (obj *MediaPlayer) MediaPlayer2() *mediaPlayer {
-	return &obj.mediaPlayer
 }
 
 type mediaPlayer struct{}
@@ -93,10 +89,6 @@ func (v *mediaPlayer) Identity() proxy.PropString {
 		Impl: v,
 		Name: "Identity",
 	}
-}
-
-func (obj *MediaPlayer) Player() *player {
-	return &obj.player
 }
 
 type player struct{}

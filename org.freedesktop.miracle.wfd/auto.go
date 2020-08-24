@@ -2,8 +2,8 @@ package wfd
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
+import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -24,10 +24,6 @@ func NewWfd(conn *dbus.Conn) *Wfd {
 	obj := new(Wfd)
 	obj.Object.Init_(conn, "org.freedesktop.miracle.wfd", "/org/freedesktop/miracle/wfd")
 	return obj
-}
-
-func (obj *Wfd) Wfd() *wfd {
-	return &obj.wfd
 }
 
 type wfd struct{}

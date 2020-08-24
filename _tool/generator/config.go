@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/godbus/dbus/introspect"
+	"pkg.deepin.io/lib/dbus1/introspect"
 )
 
 type ServiceConfig struct {

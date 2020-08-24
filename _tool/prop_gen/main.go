@@ -91,7 +91,7 @@ func main() {
 
 	fmt.Println("package proxy")
 	fmt.Println("import \"errors\"")
-	fmt.Println("import \"github.com/godbus/dbus\"")
+	fmt.Println("import \"pkg.deepin.io/lib/dbus1\"")
 	fmt.Println("\nvar errNilCallback = errors.New(\"nil callback\")")
 
 	for _, cfg := range configs {

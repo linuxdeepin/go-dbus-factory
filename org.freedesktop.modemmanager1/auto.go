@@ -2,8 +2,8 @@ package modemmanager1
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
+import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -24,10 +24,6 @@ func NewManager(conn *dbus.Conn) *Manager {
 	obj := new(Manager)
 	obj.Object.Init_(conn, "org.freedesktop.ModemManager1", "/org/freedesktop/ModemManager1")
 	return obj
-}
-
-func (obj *Manager) ModemManager1() *manager {
-	return &obj.manager
 }
 
 type manager struct{}

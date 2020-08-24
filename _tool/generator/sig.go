@@ -4,10 +4,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/godbus/dbus"
+	"pkg.deepin.io/lib/dbus1"
 )
 
-// copy from github.com/godbus/dbus/sig.go
+// copy from pkg.deepin.io/lib/dbus1/sig.go
 
 var (
 	byteType        = reflect.TypeOf(byte(0))

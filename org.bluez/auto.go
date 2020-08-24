@@ -2,8 +2,8 @@ package bluez
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
+import "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "unsafe"
@@ -469,6 +469,10 @@ func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (*Device, error) {
 	obj := new(Device)
 	obj.Object.Init_(conn, "org.bluez", path)
 	return obj, nil
+}
+
+func (obj *Device) Device() *device {
+	return &obj.device
 }
 
 type device struct{}

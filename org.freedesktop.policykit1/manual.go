@@ -1,6 +1,6 @@
 package policykit1
 
-import "github.com/godbus/dbus"
+import "pkg.deepin.io/lib/dbus1"
 
 type ActionDescription struct {
 	ActionId         string
