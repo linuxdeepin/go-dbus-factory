@@ -1,0 +1,16 @@
+{
+    "Service": "com.deepin.daemon.Uadp",
+    "Objects": [
+      {
+        "Type": "Uadp",
+        "Path": "/com/deepin/daemon/Uadp",
+        "Interfaces": [
+          {
+            "Name": "com.deepin.daemon.Uadp",
+            "Type": "uadp"
+          }
+        ]
+      }
+    ]
+  }
+  

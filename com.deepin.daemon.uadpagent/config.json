@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.UadpAgent",
+  "Objects": [
+    {
+      "Type": "UadpAgent",
+      "Path": "/com/deepin/daemon/UadpAgent",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.UadpAgent",
+          "Type": "uadpagent"
+        }
+      ]
+    }
+  ]
+}
