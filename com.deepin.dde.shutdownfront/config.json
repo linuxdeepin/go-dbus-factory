@@ -1,0 +1,15 @@
+{
+  "Service":"com.deepin.dde.shutdownFront",
+  "Objects": [
+    {
+      "Type": "ShutdownFront",
+      "Path": "/com/deepin/dde/shutdownFront",
+      "Interfaces": [
+        {
+          "Name":"com.deepin.dde.shutdownFront",
+          "Type":"shutdownfront"
+        }
+      ]
+    }
+  ]
+}
