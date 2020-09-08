@@ -74,6 +74,28 @@ func (v *airplaneMode) EnableWifi(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoEnableWifi(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
+// signal AirplaneOn
+
+func (v *airplaneMode) ConnectAirplaneOn(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "AirplaneOn", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".AirplaneOn",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // property Enabled b
 
 func (v *airplaneMode) Enabled() proxy.PropBool {
