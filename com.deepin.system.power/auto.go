@@ -80,6 +80,26 @@ func (v *power) RefreshMains(flags dbus.Flags) error {
 	return (<-v.GoRefreshMains(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
+// method SetCpuGovernor
+
+func (v *power) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCpuGovernor", flags, ch, governor)
+}
+
+func (v *power) SetCpuGovernor(flags dbus.Flags, governor string) error {
+	return (<-v.GoSetCpuGovernor(flags, make(chan *dbus.Call, 1), governor).Done).Err
+}
+
+// method SetCpuBoost
+
+func (v *power) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCpuBoost", flags, ch, enabled)
+}
+
+func (v *power) SetCpuBoost(flags dbus.Flags, enabled bool) error {
+	return (<-v.GoSetCpuBoost(flags, make(chan *dbus.Call, 1), enabled).Done).Err
+}
+
 // signal BatteryDisplayUpdate
 
 func (v *power) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
@@ -307,6 +327,33 @@ func (v *power) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
 	return proxy.PropUint32{
 		Impl: v,
 		Name: "PowerSavingModeBrightnessDropPercent",
+	}
+}
+
+// property CpuGovernor s
+
+func (v *power) CpuGovernor() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "CpuGovernor",
+	}
+}
+
+// property CpuBoost b
+
+func (v *power) CpuBoost() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "CpuBoost",
+	}
+}
+
+// property IsBoostSupported b
+
+func (v *power) IsBoostSupported() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "IsBoostSupported",
 	}
 }
 

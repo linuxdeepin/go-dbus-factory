@@ -31,6 +31,15 @@
         <property name="PowerSavingModeEnabled" type="b" access="readwrite"></property>
         <property name="PowerSavingModeAutoWhenBatteryLow" type="b" access="readwrite"></property>
         <property name="PowerSavingModeBrightnessDropPercent" type="u" access="read"></property>
+        <property name="CpuGovernor" type="s" access="read"></property>
+        <property name="CpuBoost" type="b" access="read"></property>
+        <property name="IsBoostSupported" type="b" access="read"></property>
+        <method name="SetCpuGovernor">
+            <arg name="governor" type="s" direction="in"></arg>
+        </method>
+         <method name="SetCpuBoost">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
