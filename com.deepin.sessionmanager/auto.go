@@ -596,6 +596,15 @@ func (v *sessionManager) Stage() proxy.PropInt32 {
 	}
 }
 
+// property CurrentSessionPath o
+
+func (v *sessionManager) CurrentSessionPath() proxy.PropObjectPath {
+	return proxy.PropObjectPath{
+		Impl: v,
+		Name: "CurrentSessionPath",
+	}
+}
+
 type WMSwitcher struct {
 	wmSwitcher // interface com.deepin.WMSwitcher
 	proxy.Object

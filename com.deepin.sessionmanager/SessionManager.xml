@@ -43,6 +43,7 @@
           <property name="Locked" type="b" access="read"></property>
           <property name="CurrentUid" type="s" access="read"></property>
           <property name="Stage" type="i" access="read"></property>
+          <property name="CurrentSessionPath" type="o" access="read"></property>
      </interface>
      <interface name="org.freedesktop.DBus.Introspectable">
           <method name="Enable">
