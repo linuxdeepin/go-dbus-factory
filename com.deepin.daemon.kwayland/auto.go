@@ -79,11 +79,11 @@ func (v *outputManagement) Apply(flags dbus.Flags, outputs string) error {
 // method WlSimulateKey
 
 func (v *outputManagement) GoWlSimulateKey(flags dbus.Flags, ch chan *dbus.Call, state int32) *dbus.Call {
-        return v.GetObject_().Go_(v.GetInterfaceName_()+".WlSimulateKey", flags, ch, state)
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".WlSimulateKey", flags, ch, state)
 }
 
 func (v *outputManagement) WlSimulateKey(flags dbus.Flags, state int32) error {
-        return (<-v.GoWlSimulateKey(flags, make(chan *dbus.Call, 1), state).Done).Err
+	return (<-v.GoWlSimulateKey(flags, make(chan *dbus.Call, 1), state).Done).Err
 }
 
 // signal OutputAdded
@@ -861,6 +861,22 @@ func (v *window) VirtualDesktop(flags dbus.Flags) (argout0 uint32, err error) {
 		<-v.GoVirtualDesktop(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+// method WindowId
+
+func (v *window) GoWindowId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".WindowId", flags, ch)
+}
+
+func (*window) StoreWindowId(call *dbus.Call) (argout0 uint32, err error) {
+	err = call.Store(&argout0)
+	return
+}
+
+func (v *window) WindowId(flags dbus.Flags) (argout0 uint32, err error) {
+	return v.StoreWindowId(
+		<-v.GoWindowId(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // signal ActiveChanged
 
 func (v *window) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
@@ -1428,6 +1444,32 @@ func (v *window) ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandler
 	}
 	handlerFunc := func(sig *dbus.Signal) {
 		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal WindowIdChanged
+
+func (v *window) ConnectWindowIdChanged(cb func(wid uint32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "WindowIdChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".WindowIdChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var wid uint32
+		err := dbus.Store(sig.Body, &wid)
+		if err == nil {
+			cb(wid)
+		}
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
