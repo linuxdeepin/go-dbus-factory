@@ -40,6 +40,10 @@
          <method name="SetCpuBoost">
             <arg name="enabled" type="b" direction="in"></arg>
         </method>
+        <method name="LockCpuFreq">
+            <arg name="governor" type="s" direction="in"></arg>
+            <arg name="lockTime" type="i" direction="in"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

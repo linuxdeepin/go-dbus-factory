@@ -100,6 +100,16 @@ func (v *power) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoSetCpuBoost(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
+// method LockCpuFreq
+
+func (v *power) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockCpuFreq", flags, ch, governor, lockTime)
+}
+
+func (v *power) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error {
+	return (<-v.GoLockCpuFreq(flags, make(chan *dbus.Call, 1), governor, lockTime).Done).Err
+}
+
 // signal BatteryDisplayUpdate
 
 func (v *power) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
