@@ -64,6 +64,16 @@ func (v *airplaneMode) EnableBluetooth(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoEnableBluetooth(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
+// method RestartBluetooth
+
+func (v *airplaneMode) GoRestartBluetooth(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RestartBluetooth", flags, ch, enabled)
+}
+
+func (v *airplaneMode) RestartBluetooth(flags dbus.Flags, enabled bool) error {
+	return (<-v.GoRestartBluetooth(flags, make(chan *dbus.Call, 1), enabled).Done).Err
+}
+
 // method EnableWifi
 
 func (v *airplaneMode) GoEnableWifi(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
