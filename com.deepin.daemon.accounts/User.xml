@@ -26,6 +26,9 @@
         <method name="SetGreeterBackground">
             <arg name="background" type="s" direction="in"></arg>
         </method>
+        <method name="SetCurrentWorkspace">
+            <arg name="currentWorkspace" type="i" direction="in"></arg>
+        </method>
         <method name="SetHistoryLayout">
             <arg name="layouts" type="as" direction="in"></arg>
         </method>

@@ -349,6 +349,16 @@ func (v *user) SetGreeterBackground(flags dbus.Flags, background string) error {
 	return (<-v.GoSetGreeterBackground(flags, make(chan *dbus.Call, 1), background).Done).Err
 }
 
+// method SetCurrentWorkspace
+
+func (v *user) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, currentWorkspace int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentWorkspace", flags, ch, currentWorkspace)
+}
+
+func (v *user) SetCurrentWorkspace(flags dbus.Flags, currentWorkspace int32) error {
+	return (<-v.GoSetCurrentWorkspace(flags, make(chan *dbus.Call, 1), currentWorkspace).Done).Err
+}
+
 // method SetHistoryLayout
 
 func (v *user) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.Call, layouts []string) *dbus.Call {
