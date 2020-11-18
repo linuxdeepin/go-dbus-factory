@@ -201,6 +201,22 @@ func (v *windowManager) ActiveWindow(flags dbus.Flags) (argout0 uint32, err erro
 		<-v.GoActiveWindow(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+// method IsShowingDesktop
+
+func (v *windowManager) GoIsShowingDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsShowingDesktop", flags, ch)
+}
+
+func (*windowManager) StoreIsShowingDesktop(call *dbus.Call) (argout0 bool, err error) {
+	err = call.Store(&argout0)
+	return
+}
+
+func (v *windowManager) IsShowingDesktop(flags dbus.Flags) (argout0 bool, err error) {
+	return v.StoreIsShowingDesktop(
+		<-v.GoIsShowingDesktop(flags, make(chan *dbus.Call, 1)).Done)
+}
+
 // method Windows
 
 func (v *windowManager) GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {

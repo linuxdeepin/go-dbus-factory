@@ -5,6 +5,9 @@
 		<method name="ActiveWindow">
 			<arg name="argout0" type="u" direction="out"></arg>
 		</method>
+		<method name="IsShowingDesktop">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
 		<method name="Windows">
 			<arg name="argout0" type="av" direction="out"></arg>
 		</method>
