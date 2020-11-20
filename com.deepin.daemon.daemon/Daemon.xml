@@ -22,10 +22,6 @@
         <signal name="HandleForSleep">
             <arg name="start" type="b"></arg>
         </signal>
-        <signal name="ScalePlymouthDone">
-            <arg name="scale" type="u"></arg>
-            <arg name="_err" type="s"></arg>
-        </signal>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

@@ -121,30 +121,3 @@ func (v *daemon) ConnectHandleForSleep(cb func(start bool)) (dbusutil.SignalHand
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
-
-// signal ScalePlymouthDone
-
-func (v *daemon) ConnectScalePlymouthDone(cb func(scale uint32, _err string)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "ScalePlymouthDone", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".ScalePlymouthDone",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var scale uint32
-		var _err string
-		err := dbus.Store(sig.Body, &scale, &_err)
-		if err == nil {
-			cb(scale, _err)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
