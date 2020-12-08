@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.KeyEvent",
+  "Objects": [
+    {
+      "Type": "KeyEvent",
+      "Path": "/com/deepin/daemon/KeyEvent",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.KeyEvent",
+          "Type": "keyEvent"
+        }
+      ]
+    }
+  ]
+}
