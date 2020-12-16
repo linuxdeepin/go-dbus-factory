@@ -324,3 +324,135 @@ func (v *fingerprint) Devices() proxy.PropString {
 		Name: "Devices",
 	}
 }
+
+type UKey struct {
+	ukey // interface com.deepin.daemon.Authenticate.UKey
+	proxy.Object
+}
+
+func NewUKey(conn *dbus.Conn) *UKey {
+	obj := new(UKey)
+	obj.Object.Init_(conn, "com.deepin.daemon.Authenticate", "/com/deepin/daemon/Authenticate/UKey")
+	return obj
+}
+
+type ukey struct{}
+
+func (v *ukey) GetObject_() *proxy.Object {
+	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (*ukey) GetInterfaceName_() string {
+	return "com.deepin.daemon.Authenticate.UKey"
+}
+
+// method ConstructVerification
+
+func (v *ukey) GoConstructVerification(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string, useDefaultService bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ConstructVerification", flags, ch, serviceName, username, useDefaultService)
+}
+
+func (*ukey) StoreConstructVerification(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *ukey) ConstructVerification(flags dbus.Flags, serviceName string, username string, useDefaultService bool) (id string, err error) {
+	return v.StoreConstructVerification(
+		<-v.GoConstructVerification(flags, make(chan *dbus.Call, 1), serviceName, username, useDefaultService).Done)
+}
+
+// method SetDefaultDevice
+
+func (v *ukey) GoSetDefaultDevice(flags dbus.Flags, ch chan *dbus.Call, device string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultDevice", flags, ch, device)
+}
+
+func (v *ukey) SetDefaultDevice(flags dbus.Flags, device string) error {
+	return (<-v.GoSetDefaultDevice(flags, make(chan *dbus.Call, 1), device).Done).Err
+}
+
+// method SetPin
+
+func (v *ukey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, id string, pin string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPin", flags, ch, id, pin)
+}
+
+func (v *ukey) SetPin(flags dbus.Flags, id string, pin string) error {
+	return (<-v.GoSetPin(flags, make(chan *dbus.Call, 1), id, pin).Done).Err
+}
+
+// method SetSessionPath
+
+func (v *ukey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSessionPath", flags, ch, id)
+}
+
+func (v *ukey) SetSessionPath(flags dbus.Flags, id string) error {
+	return (<-v.GoSetSessionPath(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+// method StartVerify
+
+func (v *ukey) GoStartVerify(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartVerify", flags, ch, id)
+}
+
+func (v *ukey) StartVerify(flags dbus.Flags, id string) error {
+	return (<-v.GoStartVerify(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+// method StopVerify
+
+func (v *ukey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch, id)
+}
+
+func (v *ukey) StopVerify(flags dbus.Flags, id string) error {
+	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+// signal VerifyResult
+
+func (v *ukey) ConnectVerifyResult(cb func(id string, msg string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "VerifyResult", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".VerifyResult",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var id string
+		var msg string
+		err := dbus.Store(sig.Body, &id, &msg)
+		if err == nil {
+			cb(id, msg)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// property ValidDevices s
+
+func (v *ukey) ValidDevices() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "ValidDevices",
+	}
+}
+
+// property DefaultDevice s
+
+func (v *ukey) DefaultDevice() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "DefaultDevice",
+	}
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+	<interface name="com.deepin.daemon.Authenticate.UKey">
+		<method name="ConstructVerification">
+			<arg name="serviceName" type="s" direction="in"></arg>
+			<arg name="username" type="s" direction="in"></arg>
+			<arg name="useDefaultService" type="b" direction="in"></arg>
+			<arg name="id" type="s" direction="out"></arg>
+		</method>
+		<method name="SetDefaultDevice">
+			<arg name="device" type="s" direction="in"></arg>
+		</method>
+		<method name="SetPin">
+			<arg name="id" type="s" direction="in"></arg>
+			<arg name="pin" type="s" direction="in"></arg>
+		</method>
+		<method name="SetSessionPath">
+			<arg name="id" type="s" direction="in"></arg>
+		</method>
+		<method name="StartVerify">
+			<arg name="id" type="s" direction="in"></arg>
+		</method>
+		<method name="StopVerify">
+			<arg name="id" type="s" direction="in"></arg>
+		</method>
+		<signal name="VerifyResult">
+			<arg name="id" type="s"></arg>
+			<arg name="msg" type="s"></arg>
+		</signal>
+		<property name="ValidDevices" type="s" access="read"></property>
+		<property name="DefaultDevice" type="s" access="read"></property>
+	</interface>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg name="out" type="s" direction="out"></arg>
+		</method>
+	</interface>
+	<interface name="org.freedesktop.DBus.Properties">
+		<method name="Get">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="out"></arg>
+		</method>
+		<method name="GetAll">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="props" type="a{sv}" direction="out"></arg>
+		</method>
+		<method name="Set">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="in"></arg>
+		</method>
+		<signal name="PropertiesChanged">
+			<arg name="interface" type="s" direction="out"></arg>
+			<arg name="changed_properties" type="a{sv}" direction="out"></arg>
+			<arg name="invalidates_properties" type="as" direction="out"></arg>
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Peer">
+		<method name="Ping"></method>
+		<method name="GetMachineId">
+			<arg name="machine_uuid" type="s" direction="out"></arg>
+		</method>
+	</interface>
+</node>
