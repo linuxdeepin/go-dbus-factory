@@ -22,6 +22,17 @@
           "Accessor": "Fingerprint"
         }
       ]
+    },
+    {
+      "Type": "UKey",
+      "Path": "/com/deepin/daemon/Authenticate/UKey",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.UKey",
+          "Type": "ukey",
+          "Accessor": "UKey"
+        }
+      ]
     }
   ]
 }
