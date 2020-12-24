@@ -7,7 +7,7 @@
             <arg name="device" type="s" direction="in"></arg>
             <arg name="technologies" type="as" direction="out"></arg>
         </method>
-	<method name="IsPidVirtual">
+	<method name="IsPidVirtualMachine">
             <arg name="pid" type="u" direction="in"></arg>
             <arg name="ret" type="b" direction="out"></arg>
         </method>
