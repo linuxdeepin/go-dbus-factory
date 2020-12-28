@@ -76,6 +76,22 @@ func (v *daemon) ClearTtys(flags dbus.Flags) error {
 	return (<-v.GoClearTtys(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
+// method ClearTty
+
+func (v *daemon) GoClearTty(flags dbus.Flags, ch chan *dbus.Call, num uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearTty", flags, ch, num)
+}
+
+func (*daemon) StoreClearTty(call *dbus.Call) (ret string, err error) {
+	err = call.Store(&ret)
+	return
+}
+
+func (v *daemon) ClearTty(flags dbus.Flags, num uint32) (ret string, err error) {
+	return v.StoreClearTty(
+		<-v.GoClearTty(flags, make(chan *dbus.Call, 1), num).Done)
+}
+
 // method NetworkGetConnections
 
 func (v *daemon) GoNetworkGetConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
