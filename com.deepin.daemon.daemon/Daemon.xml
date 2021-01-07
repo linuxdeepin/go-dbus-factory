@@ -15,7 +15,6 @@
         </method>
         <method name="ClearTty">
             <arg name="num" type="u" direction="in"></arg>
-            <arg name="ret" type="s" direction="out"></arg>
         </method>
         <method name="NetworkGetConnections">
             <arg name="data" type="ay" direction="out"></arg>
