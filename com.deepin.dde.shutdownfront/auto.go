@@ -34,6 +34,86 @@ func (*shutdownfront) GetInterfaceName_() string {
 	return "com.deepin.dde.shutdownFront"
 }
 
+// method Hibernate
+
+func (v *shutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch)
+}
+
+func (v *shutdownfront) Hibernate(flags dbus.Flags) error {
+	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Lock
+
+func (v *shutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Lock", flags, ch)
+}
+
+func (v *shutdownfront) Lock(flags dbus.Flags) error {
+	return (<-v.GoLock(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Logout
+
+func (v *shutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Logout", flags, ch)
+}
+
+func (v *shutdownfront) Logout(flags dbus.Flags) error {
+	return (<-v.GoLogout(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Restart
+
+func (v *shutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Restart", flags, ch)
+}
+
+func (v *shutdownfront) Restart(flags dbus.Flags) error {
+	return (<-v.GoRestart(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Show
+
+func (v *shutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
+}
+
+func (v *shutdownfront) Show(flags dbus.Flags) error {
+	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Shutdown
+
+func (v *shutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Shutdown", flags, ch)
+}
+
+func (v *shutdownfront) Shutdown(flags dbus.Flags) error {
+	return (<-v.GoShutdown(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method Suspend
+
+func (v *shutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch)
+}
+
+func (v *shutdownfront) Suspend(flags dbus.Flags) error {
+	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method SwitchUser
+
+func (v *shutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchUser", flags, ch)
+}
+
+func (v *shutdownfront) SwitchUser(flags dbus.Flags) error {
+	return (<-v.GoSwitchUser(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
 // signal ChangKey
 
 func (v *shutdownfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
