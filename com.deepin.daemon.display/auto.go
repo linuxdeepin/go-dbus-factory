@@ -407,6 +407,24 @@ func (v *display) MaxBacklightBrightness() proxy.PropUint32 {
 	}
 }
 
+// property ColorTemperatureMode i
+
+func (v *display) ColorTemperatureMode() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "ColorTemperatureMode",
+	}
+}
+
+// property ColorTemperatureManual i
+
+func (v *display) ColorTemperatureManual() proxy.PropInt32 {
+	return proxy.PropInt32{
+		Impl: v,
+		Name: "ColorTemperatureManual",
+	}
+}
+
 type Monitor struct {
 	monitor // interface com.deepin.daemon.Display.Monitor
 	proxy.Object

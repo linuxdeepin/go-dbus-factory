@@ -90,6 +90,8 @@
           <property name="Brightness" type="a{sd}" access="read"></property>
           <property name="TouchMap" type="a{ss}" access="read"></property>
           <property name="MaxBacklightBrightness" type="u" access="read"></property>
+          <property name="ColorTemperatureMode" type="i" access="read"></property>
+          <property name="ColorTemperatureManual" type="i" access="read"></property>
      </interface>
      <node name="MonitoreDP_1"></node>
 </node>
