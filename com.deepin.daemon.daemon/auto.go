@@ -50,6 +50,42 @@ func (v *daemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string
 		<-v.GoBluetoothGetDeviceTechnologies(flags, make(chan *dbus.Call, 1), adapter, device).Done)
 }
 
+// method IsPidVirtualMachine
+
+func (v *daemon) GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsPidVirtualMachine", flags, ch, pid)
+}
+
+func (*daemon) StoreIsPidVirtualMachine(call *dbus.Call) (ret bool, err error) {
+	err = call.Store(&ret)
+	return
+}
+
+func (v *daemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) (ret bool, err error) {
+	return v.StoreIsPidVirtualMachine(
+		<-v.GoIsPidVirtualMachine(flags, make(chan *dbus.Call, 1), pid).Done)
+}
+
+// method ClearTtys
+
+func (v *daemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearTtys", flags, ch)
+}
+
+func (v *daemon) ClearTtys(flags dbus.Flags) error {
+	return (<-v.GoClearTtys(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method ClearTty
+
+func (v *daemon) GoClearTty(flags dbus.Flags, ch chan *dbus.Call, num uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearTty", flags, ch, num)
+}
+
+func (v *daemon) ClearTty(flags dbus.Flags, num uint32) error {
+	return (<-v.GoClearTty(flags, make(chan *dbus.Call, 1), num).Done).Err
+}
+
 // method NetworkGetConnections
 
 func (v *daemon) GoNetworkGetConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
