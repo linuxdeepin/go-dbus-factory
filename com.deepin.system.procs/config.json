@@ -1,0 +1,26 @@
+{
+  "Service": "com.deepin.system.Procs",
+  "Objects": [
+    {
+      "Type": "Procs",
+      "Path": "/com/deepin/system/Procs",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.Procs",
+          "Type": "procs",
+          "Fixes": {
+            "p/Procs": {
+              "RefType": "PropProcsMap"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropProcsMap",
+      "ValueType": "map[string]ProcMessage"
+    }
+  ]
+}

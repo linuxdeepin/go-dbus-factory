@@ -1,0 +1,25 @@
+{
+  "Service": "com.deepin.system.proxy",
+  "Objects": [
+    {
+      "Type": "App",
+      "Path": "/com/deepin/system/proxy/App",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.proxy.App",
+          "Type": "app"
+        }
+      ]
+    },
+    {
+      "Type": "Global",
+      "Path": "/com/deepin/system/proxy/Global",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.proxy.Global",
+          "Type": "global"
+        }
+      ]
+    }
+  ]
+}
