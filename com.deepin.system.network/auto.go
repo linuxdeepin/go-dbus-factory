@@ -92,6 +92,16 @@ func (v *network) ToggleWirelessEnabled(flags dbus.Flags) (enabled bool, err err
 		<-v.GoToggleWirelessEnabled(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+// method OpenWifiDevice
+
+func (v *network) GoOpenWifiDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenWifiDevice", flags, ch, pathOrIface, enabled)
+}
+
+func (v *network) OpenWifiDevice(flags dbus.Flags, pathOrIface string, enabled bool) error {
+	return (<-v.GoOpenWifiDevice(flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done).Err
+}
+
 // signal DeviceEnabled
 
 func (v *network) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled bool)) (dbusutil.SignalHandlerId, error) {
