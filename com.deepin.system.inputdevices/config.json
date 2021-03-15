@@ -1,0 +1,24 @@
+{
+  "Service": "com.deepin.system.InputDevices",
+  "Objects": [
+    {
+      "Type": "InputDevices",
+      "Path": "/com/deepin/system/InputDevices",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.InputDevices",
+          "Type": "inputDevices"
+        }
+      ]
+    },
+    {
+      "Type": "Touchscreen",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.InputDevices.Touchscreen",
+          "Type": "touchscreen"
+        }
+      ]
+    }
+  ]
+}
