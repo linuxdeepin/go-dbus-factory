@@ -16,5 +16,5 @@ Architecture: all
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          golang-dlib-dev
-Description: The project is a packaging dependency
- mirrored from https://cr.deepin.io/#/admin/projects/go-dbus-factory
+Description: mirrored from https://cr.deepin.io/#/admin/projects/go-dbus-factory
+ Convenient go binding code for automatically generating DBus services
