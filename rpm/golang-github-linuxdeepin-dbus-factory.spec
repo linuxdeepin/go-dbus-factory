@@ -14,13 +14,13 @@
 
 %global sname golang-github-linuxdeepin-go-dbus-factory
 
-Name:           go-dbus-factory-maintain
-Version:        1.9.1
+Name:           golang-github-linuxdeepin-dbus-factory
+Version:        1.9.2
 Release:        1
 Summary:        GO DBus factory for Deepin Desktop Environment
 License:        GPLv3
 URL:            %{gourl}
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{sname}-%{version}.tar.gz
 BuildRequires:  compiler(go-compiler)
 BuildRequires:  go-srpm-macros
 
@@ -63,5 +63,5 @@ echo "%%{gopath}/src/%%{pkgname}/CHANGELOG.md" >> devel.file-list
 %doc README.md CHANGELOG.md
 
 %changelog
-* Thu Mar 18 2021 uoser <uoser@uniontech.com> - 1.9.1-1
-- Update to 1.9.1
+* Thu Mar 18 2021 uoser <uoser@uniontech.com> - 1.9.2-1
+- Update to 1.9.2
