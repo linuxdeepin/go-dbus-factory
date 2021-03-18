@@ -60,6 +60,14 @@
             <arg name="scalex" type="d"></arg>
             <arg name="scaley" type="d"></arg>
         </signal>
+        <signal name="TouchMovementEvent">
+            <arg name="duration" type="s"></arg>
+            <arg name="fingers" type="i"></arg>
+            <arg name="startScalex" type="d"></arg>
+            <arg name="startScaley" type="d"></arg>
+            <arg name="endScalex" type="d"></arg>
+            <arg name="endScaley" type="d"></arg>
+        </signal>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

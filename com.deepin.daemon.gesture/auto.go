@@ -358,3 +358,34 @@ func (v *gesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (d
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
+
+// signal TouchMovementEvent
+
+func (v *gesture) ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchMovementEvent", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchMovementEvent",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var duration string
+		var fingers int32
+		var startScalex float64
+		var startScaley float64
+		var endScalex float64
+		var endScaley float64
+		err := dbus.Store(sig.Body, &duration, &fingers, &startScalex, &startScaley, &endScalex, &endScaley)
+		if err == nil {
+			cb(duration, fingers, startScalex, startScaley, endScalex, endScaley)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
