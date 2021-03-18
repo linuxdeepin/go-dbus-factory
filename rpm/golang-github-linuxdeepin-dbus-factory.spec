@@ -12,27 +12,25 @@
 %global debug_package   %{nil}
 %endif
 
-%global sname golang-github-linuxdeepin-go-dbus-factory
-
-Name:           golang-github-linuxdeepin-dbus-factory
+Name:           golang-github-linuxdeepin-go-dbus-factory
 Version:        1.9.2
 Release:        1
 Summary:        GO DBus factory for Deepin Desktop Environment
 License:        GPLv3
 URL:            %{gourl}
-Source0:        %{sname}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  compiler(go-compiler)
 BuildRequires:  go-srpm-macros
 
 %description
 %{summary}.
 
-%package -n %{sname}-devel
+%package -n %{name}-devel
 Summary:        %{summary}
 BuildArch:      noarch
 
 
-%description -n %{sname}-devel
+%description -n %{name}-devel
 %{summary}.
 
 
@@ -59,7 +57,7 @@ echo "%%{gopath}/src/%%{pkgname}/CHANGELOG.md" >> devel.file-list
 %gochecks
 %endif
 
-%files -n %{sname}-devel -f devel.file-list
+%files -n %{name}-devel -f devel.file-list
 %doc README.md CHANGELOG.md
 
 %changelog
