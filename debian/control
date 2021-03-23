@@ -1,20 +1,22 @@
 Source: golang-github-linuxdeepin-go-dbus-factory
 Section: devel
-Priority: extra
+Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper,
-               dh-golang,
-               golang-any,
-               golang-dlib-dev
-Standards-Version: 4.0.0
+Build-Depends:
+ debhelper-compat (= 11),
+ dh-golang,
+ golang-any,
+ golang-dlib-dev,
+Standards-Version: 4.5.1
 Homepage: https://github.com/linuxdeepin/go-dbus-factory
 XS-Go-Import-Path: github.com/linuxdeepin/go-dbus-factory
 Testsuite: autopkgtest-pkg-go
 
 Package: golang-github-linuxdeepin-go-dbus-factory-dev
 Architecture: all
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         golang-dlib-dev
+Depends:
+ golang-dlib-dev,
+ ${misc:Depends},
+ ${shlibs:Depends},
 Description: mirrored from https://cr.deepin.io/#/admin/projects/go-dbus-factory
  Convenient go binding code for automatically generating DBus services
