@@ -9,9 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"pkg.deepin.io/lib/utils"
-
 	"github.com/godbus/dbus/introspect"
+	"pkg.deepin.io/lib/utils"
 )
 
 func init() {
@@ -40,13 +39,7 @@ func main() {
 	sf.AddGoImport("github.com/godbus/dbus")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
-
-	sf.GoBody.Pn("/* prevent compile error */")
-	sf.GoBody.Pn("var _ = errors.New")
-	sf.GoBody.Pn("var _ dbusutil.SignalHandlerId")
-	sf.GoBody.Pn("var _ = fmt.Sprintf")
-	sf.GoBody.Pn("var _ unsafe.Pointer")
-	sf.GoBody.Pn("")
+	sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
 
 	srvCfg.autoFill()
 
@@ -62,7 +55,6 @@ func main() {
 		for _, ifcCfg := range objCfg.Interfaces {
 			if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
 				ifcCfg.TypeDefined = true
-				sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
 				sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifcCfg.Name)
 			} else {
 				sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifcCfg.Name)

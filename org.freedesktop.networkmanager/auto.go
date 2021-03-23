@@ -1,18 +1,15 @@
 package networkmanager
 
-import "errors"
-import "fmt"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "github.com/godbus/dbus"
-import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/proxy"
-import "unsafe"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
 
-/* prevent compile error */
-var _ = errors.New
-var _ dbusutil.SignalHandlerId
-var _ = fmt.Sprintf
-var _ unsafe.Pointer
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
+	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
+)
 
 type ObjectManager struct {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
@@ -1252,18 +1249,18 @@ func (v *manager) CheckConnectivity(flags dbus.Flags) (connectivity uint32, err 
 
 // method state
 
-//func (v *manager) Gostate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+//func (v *manager) GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 //	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
 //}
 //
-//func (*manager) Storestate(call *dbus.Call) (state uint32, err error) {
+//func (*manager) StoreState(call *dbus.Call) (state uint32, err error) {
 //	err = call.Store(&state)
 //	return
 //}
 //
-//func (v *manager) state(flags dbus.Flags) (state uint32, err error) {
-//	return v.Storestate(
-//		<-v.Gostate(flags, make(chan *dbus.Call, 1)).Done)
+//func (v *manager) State(flags dbus.Flags) (state uint32, err error) {
+//	return v.StoreState(
+//		<-v.GoState(flags, make(chan *dbus.Call, 1)).Done)
 //}
 
 // method CheckpointCreate

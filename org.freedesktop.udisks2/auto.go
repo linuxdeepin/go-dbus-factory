@@ -1,18 +1,13 @@
 package udisks2
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/proxy"
-import "unsafe"
+import (
+	"errors"
+	"unsafe"
 
-/* prevent compile error */
-var _ = errors.New
-var _ dbusutil.SignalHandlerId
-var _ = fmt.Sprintf
-var _ unsafe.Pointer
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
+	"pkg.deepin.io/lib/dbusutil/proxy"
+)
 
 type UDisks struct {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager

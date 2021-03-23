@@ -41,7 +41,7 @@ func (v *SourceFile) Save(filename string) {
 		log.Fatal("failed to write to file:", err)
 	}
 
-	out, err := exec.Command("go", "fmt", filename).CombinedOutput()
+	out, err := exec.Command("goimports", "-w", filename).CombinedOutput()
 	if err != nil {
 		log.Printf("%s", out)
 		log.Fatal("failed to format file:", filename)

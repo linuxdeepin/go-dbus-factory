@@ -1,17 +1,11 @@
-package Clipboard
+package clipboard
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
-import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/proxy"
-import "unsafe"
+import (
+	"unsafe"
 
-/* prevent compile error */
-var _ = errors.New
-var _ dbusutil.SignalHandlerId
-var _ = fmt.Sprintf
-var _ unsafe.Pointer
+	"github.com/godbus/dbus"
+	"pkg.deepin.io/lib/dbusutil/proxy"
+)
 
 type Clipboard struct {
 	clipboard // interface com.deepin.dde.Clipboard
