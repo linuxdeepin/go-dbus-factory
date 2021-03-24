@@ -109,7 +109,7 @@ func main() {
 			for _, prop := range ifc.Properties {
 				var methodSameName bool
 				for _, method := range ifc.Methods {
-					if method.Name == prop.Name {
+					if strings.Title(method.Name) == strings.Title(prop.Name) {
 						methodSameName = true
 						break
 					}
