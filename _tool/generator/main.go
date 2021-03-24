@@ -254,7 +254,7 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
 			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes),
 			getArgsProto(outArgs, true, argFixes))
-		sb.Pn("return v.Store%s(", method.Name)
+		sb.Pn("return v.Store%s(", methodName)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
 			methodName, getArgsName(inArgs, false))
 		sb.Pn("}\n")
