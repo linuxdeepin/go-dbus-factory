@@ -21,7 +21,7 @@
     <method name="ShowWindow"/>
     <method name="ShowAllWindow"/>
     <method name="ClearMoveStatus"/>
-    <method name="TouchToMove"/>
+    <method name="TouchToMove">
       <arg direction="in" type="i" name="x"/>
       <arg direction="in" type="i" name="y"/>
     </method>
