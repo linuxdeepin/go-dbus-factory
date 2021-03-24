@@ -1251,19 +1251,19 @@ func (v *manager) CheckConnectivity(flags dbus.Flags) (connectivity uint32, err 
 
 // method state
 
-//func (v *manager) GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-//	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
-//}
-//
-//func (*manager) StoreState(call *dbus.Call) (state uint32, err error) {
-//	err = call.Store(&state)
-//	return
-//}
-//
-//func (v *manager) State(flags dbus.Flags) (state uint32, err error) {
-//	return v.StoreState(
-//		<-v.GoState(flags, make(chan *dbus.Call, 1)).Done)
-//}
+func (v *manager) GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
+}
+
+func (*manager) StoreState(call *dbus.Call) (state uint32, err error) {
+	err = call.Store(&state)
+	return
+}
+
+func (v *manager) State(flags dbus.Flags) (state uint32, err error) {
+	return v.StoreState(
+		<-v.GoState(flags, make(chan *dbus.Call, 1)).Done)
+}
 
 // method CheckpointCreate
 
@@ -1588,7 +1588,7 @@ func (v *manager) Capabilities() proxy.PropUint32Array {
 
 // property State u
 
-func (v *manager) State() proxy.PropUint32 {
+func (v *manager) PropState() proxy.PropUint32 {
 	return proxy.PropUint32{
 		Impl: v,
 		Name: "State",
