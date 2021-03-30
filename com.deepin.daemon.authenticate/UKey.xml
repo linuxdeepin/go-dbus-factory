@@ -28,6 +28,10 @@
 			<arg name="id" type="s"></arg>
 			<arg name="msg" type="s"></arg>
 		</signal>
+		<signal name="State">
+			<arg name="id" type="s"></arg>
+			<arg name="state" type="i"></arg>
+		</signal>
 		<property name="ValidDevices" type="s" access="read"></property>
 		<property name="DefaultDevice" type="s" access="read"></property>
 	</interface>
