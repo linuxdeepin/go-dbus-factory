@@ -252,7 +252,7 @@ func (v *fingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.Signa
 
 // signal DeviceStatus
 
-func (v *fingerprint) ConnectDeviceStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *fingerprint) ConnectDeviceStatus(cb func(result bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -266,7 +266,7 @@ func (v *fingerprint) ConnectDeviceStatus(cb func(result int32)) (dbusutil.Signa
 		Name: v.GetInterfaceName_() + ".DeviceStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
-		var result int32
+		var result bool
 		err := dbus.Store(sig.Body, &result)
 		if err == nil {
 			cb(result)

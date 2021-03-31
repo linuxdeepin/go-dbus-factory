@@ -61,7 +61,7 @@
         </signal>
 
         <signal name="DeviceStatus">
-            <arg name="result" type="i"/>
+            <arg name="result" type="b"/>
         </signal>
 
     </interface>
