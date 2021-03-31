@@ -249,3 +249,29 @@ func (v *fingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.Signa
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
+
+// signal DeviceStatus
+
+func (v *fingerprint) ConnectDeviceStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DeviceStatus", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DeviceStatus",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var result int32
+		err := dbus.Store(sig.Body, &result)
+		if err == nil {
+			cb(result)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}

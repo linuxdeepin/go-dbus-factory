@@ -60,6 +60,10 @@
             <arg name="result" type="i"/>
         </signal>
 
+        <signal name="DeviceStatus">
+            <arg name="result" type="i"/>
+        </signal>
+
     </interface>
 </node>
 
