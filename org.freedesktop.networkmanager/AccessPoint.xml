@@ -96,6 +96,13 @@
     <property name="LastSeen" type="i" access="read"/>
 
     <!--
+        Category:
+
+        The current AP profile type ,0 for normal ,1 for wifi6, 2 for wifi6+
+    -->
+    <property name="Category" type="u" access="read"/>
+
+    <!--
         PropertiesChanged:
         @properties: A dictionary mapping property names to variant boxed values
 

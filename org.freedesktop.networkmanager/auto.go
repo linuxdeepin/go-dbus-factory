@@ -167,6 +167,15 @@ func (v *accessPoint) LastSeen() proxy.PropInt32 {
 	}
 }
 
+// property Category i
+
+func (v *accessPoint) Category() proxy.PropUint32 {
+	return proxy.PropUint32{
+		Impl: v,
+		Name: "Category",
+	}
+}
+
 type AgentManager struct {
 	agentManager // interface org.freedesktop.NetworkManager.AgentManager
 	proxy.Object
