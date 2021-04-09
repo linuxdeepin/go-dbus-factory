@@ -89,10 +89,11 @@ func main() {
 
 	t := template.Must(template.New("propCode").Parse(propCode))
 
-	fmt.Println("package proxy")
-	fmt.Println("import \"errors\"")
-	fmt.Println("import \"github.com/godbus/dbus\"")
-	fmt.Println("\nvar errNilCallback = errors.New(\"nil callback\")")
+	fmt.Println(`package proxy`)
+	fmt.Println(`import "errors"`)
+	fmt.Println(`import "github.com/godbus/dbus`)
+	fmt.Println(``)
+	fmt.Println(`var errNilCallback = errors.New("nil callback")`)
 
 	for _, cfg := range configs {
 		err := t.Execute(os.Stdout, cfg)
