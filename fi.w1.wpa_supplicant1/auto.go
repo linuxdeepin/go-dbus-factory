@@ -87,7 +87,7 @@ func (v *wpaSupplicant) ExpectDisconnect(flags dbus.Flags) error {
 
 // signal InterfaceAdded
 
-func (v *wpaSupplicant) ConnectInterfaceAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *wpaSupplicant) ConnectSignalInterfaceAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -114,7 +114,7 @@ func (v *wpaSupplicant) ConnectInterfaceAdded(cb func(path dbus.ObjectPath, prop
 
 // signal InterfaceRemoved
 
-func (v *wpaSupplicant) ConnectInterfaceRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *wpaSupplicant) ConnectSignalInterfaceRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -140,7 +140,7 @@ func (v *wpaSupplicant) ConnectInterfaceRemoved(cb func(path dbus.ObjectPath)) (
 
 // signal PropertiesChanged
 
-func (v *wpaSupplicant) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *wpaSupplicant) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -819,7 +819,7 @@ func (v *interface1) ConnectNetworkSelected(cb func(path dbus.ObjectPath)) (dbus
 
 // signal PropertiesChanged
 
-func (v *interface1) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interface1) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2457,7 +2457,7 @@ func (v *interfaceWPS) ConnectCredentials(cb func(credentials map[string]dbus.Va
 
 // signal PropertiesChanged
 
-func (v *interfaceWPS) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWPS) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3543,7 +3543,7 @@ func (*bss) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *bss) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *bss) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

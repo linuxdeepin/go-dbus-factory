@@ -10,8 +10,15 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus/introspect"
+	"pkg.deepin.io/lib/strv"
 	"pkg.deepin.io/lib/utils"
 )
+
+var reservedSignals = strv.Strv{
+	"PropertiesChanged",
+	"InterfaceAdded",
+	"InterfaceRemoved",
+}
 
 func init() {
 	log.SetFlags(log.Lshortfile)
@@ -259,6 +266,10 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	args := getArgs(signal.Args)
 	argFixes := ifcCfg.getSignalFix(signal.Name)
 	methodName := strings.Title(signal.Name)
+
+	if reservedSignals.Contains(methodName) {
+		methodName = "Signal" + methodName
+	}
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
 		ifcCfg.Type, methodName, getArgsProto(args, true, argFixes))

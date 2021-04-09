@@ -38,10 +38,6 @@ func NewAccessPoint(conn *dbus.Conn, path dbus.ObjectPath) (*AccessPoint, error)
 	return obj, nil
 }
 
-func (obj *AccessPoint) AccessPoint() *accessPoint {
-	return &obj.accessPoint
-}
-
 type accessPoint struct{}
 
 func (v *accessPoint) GetObject_() *proxy.Object {
@@ -54,7 +50,7 @@ func (*accessPoint) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *accessPoint) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *accessPoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -245,7 +241,7 @@ func (*checkpoint) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *checkpoint) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *checkpoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -349,7 +345,7 @@ func (v *activeConnection) ConnectStateChanged(cb func(state uint32, reason uint
 
 // signal PropertiesChanged
 
-func (v *activeConnection) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *activeConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -534,7 +530,7 @@ func (*dhcp4Config) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *dhcp4Config) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *dhcp4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -593,7 +589,7 @@ func (*dhcp6Config) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *dhcp6Config) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *dhcp6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -700,7 +696,7 @@ func (*ip4Config) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *ip4Config) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *ip4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -849,7 +845,7 @@ func (*ip6Config) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *ip6Config) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *ip6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1357,7 +1353,7 @@ func (v *manager) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHan
 
 // signal PropertiesChanged
 
-func (v *manager) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *manager) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1905,7 +1901,7 @@ func (v *connectionSettings) ConnectRemoved(cb func()) (dbusutil.SignalHandlerId
 
 // signal PropertiesChanged
 
-func (v *connectionSettings) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *connectionSettings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2067,7 +2063,7 @@ func (v *settings) SaveHostname(flags dbus.Flags, hostname string) error {
 
 // signal PropertiesChanged
 
-func (v *settings) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *settings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2196,7 +2192,7 @@ func (*vpnConnection) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *vpnConnection) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *vpnConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2978,7 +2974,7 @@ func (*deviceAdsl) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceAdsl) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceAdsl) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3027,7 +3023,7 @@ func (*deviceBluetooth) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceBluetooth) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceBluetooth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3094,7 +3090,7 @@ func (*deviceBond) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceBond) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceBond) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3161,7 +3157,7 @@ func (*deviceBridge) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceBridge) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceBridge) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3228,7 +3224,7 @@ func (*deviceGeneric) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceGeneric) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceGeneric) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3286,7 +3282,7 @@ func (*deviceInfiniband) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceInfiniband) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceInfiniband) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3344,7 +3340,7 @@ func (*deviceIPTunnel) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceIPTunnel) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceIPTunnel) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3483,7 +3479,7 @@ func (*deviceMacsec) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceMacsec) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceMacsec) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3640,7 +3636,7 @@ func (*deviceMacvlan) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceMacvlan) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceMacvlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3716,7 +3712,7 @@ func (*deviceModem) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceModem) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceModem) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3774,7 +3770,7 @@ func (*deviceOlpcMesh) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceOlpcMesh) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceOlpcMesh) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3841,7 +3837,7 @@ func (*deviceStatistics) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceStatistics) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceStatistics) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3908,7 +3904,7 @@ func (*deviceTeam) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceTeam) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceTeam) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3984,7 +3980,7 @@ func (*deviceTun) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceTun) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceTun) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4087,7 +4083,7 @@ func (*deviceVeth) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceVeth) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceVeth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4136,7 +4132,7 @@ func (*deviceVlan) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceVlan) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceVlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4212,7 +4208,7 @@ func (*deviceVxlan) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceVxlan) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceVxlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4421,7 +4417,7 @@ func (v *deviceWiMax) GetNspList(flags dbus.Flags) (nsps []dbus.ObjectPath, err 
 
 // signal PropertiesChanged
 
-func (v *deviceWiMax) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceWiMax) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4585,7 +4581,7 @@ func (*deviceWired) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *deviceWired) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceWired) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4712,7 +4708,7 @@ func (v *deviceWireless) RequestScan(flags dbus.Flags, options map[string]dbus.V
 
 // signal PropertiesChanged
 
-func (v *deviceWireless) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *deviceWireless) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4877,7 +4873,7 @@ func (*wiMaxNsp) GetInterfaceName_() string {
 
 // signal PropertiesChanged
 
-func (v *wiMaxNsp) ConnectPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *wiMaxNsp) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
