@@ -13,65 +13,90 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Wifi struct {
+type Wifi interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
 	proxy.Object
 }
 
-func NewWifi(conn *dbus.Conn) *Wifi {
-	obj := new(Wifi)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wifi", "/org/freedesktop/miracle/wifi")
+type objectWifi struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewWifi(conn *dbus.Conn) Wifi {
+	obj := new(objectWifi)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wifi", "/org/freedesktop/miracle/wifi")
 	return obj
 }
 
-type Link struct {
+type Link interface {
 	link // interface org.freedesktop.miracle.wifi.Link
 	proxy.Object
 }
 
-func NewLink(conn *dbus.Conn, path dbus.ObjectPath) (*Link, error) {
+type objectLink struct {
+	interfaceLink // interface org.freedesktop.miracle.wifi.Link
+	proxy.ImplObject
+}
+
+func NewLink(conn *dbus.Conn, path dbus.ObjectPath) (Link, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Link)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wifi", path)
+	obj := new(objectLink)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wifi", path)
 	return obj, nil
 }
 
-type link struct{}
-
-func (v *link) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type link interface {
+	GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Manage(flags dbus.Flags) error
+	GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Unmanage(flags dbus.Flags) error
+	InterfaceIndex() proxy.PropUint32
+	MACAddress() proxy.PropString
+	InterfaceName() proxy.PropString
+	FriendlyName() proxy.PropString
+	Managed() proxy.PropBool
+	P2PState() proxy.PropInt32
+	P2PScanning() proxy.PropBool
+	WfdSubelements() proxy.PropString
 }
 
-func (*link) GetInterfaceName_() string {
+type interfaceLink struct{}
+
+func (v *interfaceLink) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLink) GetInterfaceName_() string {
 	return "org.freedesktop.miracle.wifi.Link"
 }
 
 // method Manage
 
-func (v *link) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLink) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Manage", flags, ch)
 }
 
-func (v *link) Manage(flags dbus.Flags) error {
+func (v *interfaceLink) Manage(flags dbus.Flags) error {
 	return (<-v.GoManage(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Unmanage
 
-func (v *link) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLink) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unmanage", flags, ch)
 }
 
-func (v *link) Unmanage(flags dbus.Flags) error {
+func (v *interfaceLink) Unmanage(flags dbus.Flags) error {
 	return (<-v.GoUnmanage(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property InterfaceIndex u
 
-func (v *link) InterfaceIndex() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceLink) InterfaceIndex() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "InterfaceIndex",
 	}
@@ -79,8 +104,8 @@ func (v *link) InterfaceIndex() proxy.PropUint32 {
 
 // property MACAddress s
 
-func (v *link) MACAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceLink) MACAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "MACAddress",
 	}
@@ -88,8 +113,8 @@ func (v *link) MACAddress() proxy.PropString {
 
 // property InterfaceName s
 
-func (v *link) InterfaceName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceLink) InterfaceName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "InterfaceName",
 	}
@@ -97,8 +122,8 @@ func (v *link) InterfaceName() proxy.PropString {
 
 // property FriendlyName s
 
-func (v *link) FriendlyName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceLink) FriendlyName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FriendlyName",
 	}
@@ -106,8 +131,8 @@ func (v *link) FriendlyName() proxy.PropString {
 
 // property Managed b
 
-func (v *link) Managed() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceLink) Managed() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Managed",
 	}
@@ -115,8 +140,8 @@ func (v *link) Managed() proxy.PropBool {
 
 // property P2PState i
 
-func (v *link) P2PState() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceLink) P2PState() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "P2PState",
 	}
@@ -124,8 +149,8 @@ func (v *link) P2PState() proxy.PropInt32 {
 
 // property P2PScanning b
 
-func (v *link) P2PScanning() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceLink) P2PScanning() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "P2PScanning",
 	}
@@ -133,60 +158,83 @@ func (v *link) P2PScanning() proxy.PropBool {
 
 // property WfdSubelements s
 
-func (v *link) WfdSubelements() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceLink) WfdSubelements() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WfdSubelements",
 	}
 }
 
-type Peer struct {
+type Peer interface {
 	peer // interface org.freedesktop.miracle.wifi.Peer
 	proxy.Object
 }
 
-func NewPeer(conn *dbus.Conn, path dbus.ObjectPath) (*Peer, error) {
+type objectPeer struct {
+	interfacePeer // interface org.freedesktop.miracle.wifi.Peer
+	proxy.ImplObject
+}
+
+func NewPeer(conn *dbus.Conn, path dbus.ObjectPath) (Peer, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Peer)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wifi", path)
+	obj := new(objectPeer)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wifi", path)
 	return obj, nil
 }
 
-type peer struct{}
-
-func (v *peer) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type peer interface {
+	GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call
+	Connect(flags dbus.Flags, arg0 string, arg1 string) error
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error)
+	ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error)
+	ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHandlerId, error)
+	Link() proxy.PropObjectPath
+	P2PMac() proxy.PropString
+	FriendlyName() proxy.PropString
+	Connected() proxy.PropBool
+	Interface() proxy.PropString
+	LocalAddress() proxy.PropString
+	RemoteAddress() proxy.PropString
+	WfdSubelements() proxy.PropString
 }
 
-func (*peer) GetInterfaceName_() string {
+type interfacePeer struct{}
+
+func (v *interfacePeer) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePeer) GetInterfaceName_() string {
 	return "org.freedesktop.miracle.wifi.Peer"
 }
 
 // method Connect
 
-func (v *peer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+func (v *interfacePeer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch, arg0, arg1)
 }
 
-func (v *peer) Connect(flags dbus.Flags, arg0 string, arg1 string) error {
+func (v *interfacePeer) Connect(flags dbus.Flags, arg0 string, arg1 string) error {
 	return (<-v.GoConnect(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method Disconnect
 
-func (v *peer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePeer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *peer) Disconnect(flags dbus.Flags) error {
+func (v *interfacePeer) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal ProvisionDiscovery
 
-func (v *peer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePeer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -213,7 +261,7 @@ func (v *peer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbu
 
 // signal GoNegRequest
 
-func (v *peer) ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePeer) ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -240,7 +288,7 @@ func (v *peer) ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.
 
 // signal FormationFailure
 
-func (v *peer) ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePeer) ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -266,8 +314,8 @@ func (v *peer) ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHan
 
 // property Link o
 
-func (v *peer) Link() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfacePeer) Link() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Link",
 	}
@@ -275,8 +323,8 @@ func (v *peer) Link() proxy.PropObjectPath {
 
 // property P2PMac s
 
-func (v *peer) P2PMac() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) P2PMac() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2PMac",
 	}
@@ -284,8 +332,8 @@ func (v *peer) P2PMac() proxy.PropString {
 
 // property FriendlyName s
 
-func (v *peer) FriendlyName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) FriendlyName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FriendlyName",
 	}
@@ -293,8 +341,8 @@ func (v *peer) FriendlyName() proxy.PropString {
 
 // property Connected b
 
-func (v *peer) Connected() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePeer) Connected() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Connected",
 	}
@@ -302,8 +350,8 @@ func (v *peer) Connected() proxy.PropBool {
 
 // property Interface s
 
-func (v *peer) Interface() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) Interface() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Interface",
 	}
@@ -311,8 +359,8 @@ func (v *peer) Interface() proxy.PropString {
 
 // property LocalAddress s
 
-func (v *peer) LocalAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) LocalAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "LocalAddress",
 	}
@@ -320,8 +368,8 @@ func (v *peer) LocalAddress() proxy.PropString {
 
 // property RemoteAddress s
 
-func (v *peer) RemoteAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) RemoteAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RemoteAddress",
 	}
@@ -329,8 +377,8 @@ func (v *peer) RemoteAddress() proxy.PropString {
 
 // property WfdSubelements s
 
-func (v *peer) WfdSubelements() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePeer) WfdSubelements() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WfdSubelements",
 	}

@@ -12,56 +12,73 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type MediaPlayer struct {
-	mediaPlayer // interface org.mpris.MediaPlayer2
-	player      // interface org.mpris.MediaPlayer2.Player
+type MediaPlayer interface {
+	MediaPlayer2() mediaPlayer // interface org.mpris.MediaPlayer2
+	Player() player            // interface org.mpris.MediaPlayer2.Player
 	proxy.Object
 }
 
-func NewMediaPlayer(conn *dbus.Conn, serviceName string) *MediaPlayer {
-	obj := new(MediaPlayer)
-	obj.Object.Init_(conn, serviceName, "/org/mpris/MediaPlayer2")
+type objectMediaPlayer struct {
+	interfaceMediaPlayer // interface org.mpris.MediaPlayer2
+	interfacePlayer      // interface org.mpris.MediaPlayer2.Player
+	proxy.ImplObject
+}
+
+func NewMediaPlayer(conn *dbus.Conn, serviceName string) MediaPlayer {
+	obj := new(objectMediaPlayer)
+	obj.ImplObject.Init_(conn, serviceName, "/org/mpris/MediaPlayer2")
 	return obj
 }
 
-func (obj *MediaPlayer) MediaPlayer2() *mediaPlayer {
-	return &obj.mediaPlayer
+func (obj *objectMediaPlayer) MediaPlayer2() mediaPlayer {
+	return &obj.interfaceMediaPlayer
 }
 
-type mediaPlayer struct{}
-
-func (v *mediaPlayer) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type mediaPlayer interface {
+	GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Quit(flags dbus.Flags) error
+	GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Raise(flags dbus.Flags) error
+	CanQuit() proxy.PropBool
+	CanRaise() proxy.PropBool
+	DesktopEntry() proxy.PropString
+	Identity() proxy.PropString
 }
 
-func (*mediaPlayer) GetInterfaceName_() string {
+type interfaceMediaPlayer struct{}
+
+func (v *interfaceMediaPlayer) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceMediaPlayer) GetInterfaceName_() string {
 	return "org.mpris.MediaPlayer2"
 }
 
 // method Quit
 
-func (v *mediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Quit", flags, ch)
 }
 
-func (v *mediaPlayer) Quit(flags dbus.Flags) error {
+func (v *interfaceMediaPlayer) Quit(flags dbus.Flags) error {
 	return (<-v.GoQuit(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Raise
 
-func (v *mediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Raise", flags, ch)
 }
 
-func (v *mediaPlayer) Raise(flags dbus.Flags) error {
+func (v *interfaceMediaPlayer) Raise(flags dbus.Flags) error {
 	return (<-v.GoRaise(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property CanQuit b
 
-func (v *mediaPlayer) CanQuit() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceMediaPlayer) CanQuit() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanQuit",
 	}
@@ -69,8 +86,8 @@ func (v *mediaPlayer) CanQuit() proxy.PropBool {
 
 // property CanRaise b
 
-func (v *mediaPlayer) CanRaise() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceMediaPlayer) CanRaise() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanRaise",
 	}
@@ -78,8 +95,8 @@ func (v *mediaPlayer) CanRaise() proxy.PropBool {
 
 // property DesktopEntry s
 
-func (v *mediaPlayer) DesktopEntry() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceMediaPlayer) DesktopEntry() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DesktopEntry",
 	}
@@ -87,110 +104,140 @@ func (v *mediaPlayer) DesktopEntry() proxy.PropString {
 
 // property Identity s
 
-func (v *mediaPlayer) Identity() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceMediaPlayer) Identity() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Identity",
 	}
 }
 
-func (obj *MediaPlayer) Player() *player {
-	return &obj.player
+func (obj *objectMediaPlayer) Player() player {
+	return &obj.interfacePlayer
 }
 
-type player struct{}
-
-func (v *player) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type player interface {
+	GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Next(flags dbus.Flags) error
+	GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Pause(flags dbus.Flags) error
+	GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Play(flags dbus.Flags) error
+	GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	PlayPause(flags dbus.Flags) error
+	GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Previous(flags dbus.Flags) error
+	GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call
+	Seek(flags dbus.Flags, Offset int64) error
+	GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call
+	SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error
+	GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Stop(flags dbus.Flags) error
+	ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerId, error)
+	CanControl() proxy.PropBool
+	CanGoNext() proxy.PropBool
+	CanGoPrevious() proxy.PropBool
+	CanPause() proxy.PropBool
+	CanPlay() proxy.PropBool
+	CanSeek() proxy.PropBool
+	Metadata() PropPlayerMetadata
+	PlaybackStatus() proxy.PropString
+	Position() proxy.PropInt64
+	Volume() proxy.PropDouble
 }
 
-func (*player) GetInterfaceName_() string {
+type interfacePlayer struct{}
+
+func (v *interfacePlayer) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePlayer) GetInterfaceName_() string {
 	return "org.mpris.MediaPlayer2.Player"
 }
 
 // method Next
 
-func (v *player) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Next", flags, ch)
 }
 
-func (v *player) Next(flags dbus.Flags) error {
+func (v *interfacePlayer) Next(flags dbus.Flags) error {
 	return (<-v.GoNext(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Pause
 
-func (v *player) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pause", flags, ch)
 }
 
-func (v *player) Pause(flags dbus.Flags) error {
+func (v *interfacePlayer) Pause(flags dbus.Flags) error {
 	return (<-v.GoPause(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Play
 
-func (v *player) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Play", flags, ch)
 }
 
-func (v *player) Play(flags dbus.Flags) error {
+func (v *interfacePlayer) Play(flags dbus.Flags) error {
 	return (<-v.GoPlay(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method PlayPause
 
-func (v *player) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PlayPause", flags, ch)
 }
 
-func (v *player) PlayPause(flags dbus.Flags) error {
+func (v *interfacePlayer) PlayPause(flags dbus.Flags) error {
 	return (<-v.GoPlayPause(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Previous
 
-func (v *player) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Previous", flags, ch)
 }
 
-func (v *player) Previous(flags dbus.Flags) error {
+func (v *interfacePlayer) Previous(flags dbus.Flags) error {
 	return (<-v.GoPrevious(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Seek
 
-func (v *player) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call {
+func (v *interfacePlayer) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Seek", flags, ch, Offset)
 }
 
-func (v *player) Seek(flags dbus.Flags, Offset int64) error {
+func (v *interfacePlayer) Seek(flags dbus.Flags, Offset int64) error {
 	return (<-v.GoSeek(flags, make(chan *dbus.Call, 1), Offset).Done).Err
 }
 
 // method SetPosition
 
-func (v *player) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call {
+func (v *interfacePlayer) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPosition", flags, ch, TrackId, Position)
 }
 
-func (v *player) SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
+func (v *interfacePlayer) SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
 	return (<-v.GoSetPosition(flags, make(chan *dbus.Call, 1), TrackId, Position).Done).Err
 }
 
 // method Stop
 
-func (v *player) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePlayer) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch)
 }
 
-func (v *player) Stop(flags dbus.Flags) error {
+func (v *interfacePlayer) Stop(flags dbus.Flags) error {
 	return (<-v.GoStop(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal Seeked
 
-func (v *player) ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePlayer) ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -216,8 +263,8 @@ func (v *player) ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerI
 
 // property CanControl b
 
-func (v *player) CanControl() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanControl() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanControl",
 	}
@@ -225,8 +272,8 @@ func (v *player) CanControl() proxy.PropBool {
 
 // property CanGoNext b
 
-func (v *player) CanGoNext() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanGoNext() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanGoNext",
 	}
@@ -234,8 +281,8 @@ func (v *player) CanGoNext() proxy.PropBool {
 
 // property CanGoPrevious b
 
-func (v *player) CanGoPrevious() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanGoPrevious() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanGoPrevious",
 	}
@@ -243,8 +290,8 @@ func (v *player) CanGoPrevious() proxy.PropBool {
 
 // property CanPause b
 
-func (v *player) CanPause() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanPause() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanPause",
 	}
@@ -252,8 +299,8 @@ func (v *player) CanPause() proxy.PropBool {
 
 // property CanPlay b
 
-func (v *player) CanPlay() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanPlay() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanPlay",
 	}
@@ -261,32 +308,35 @@ func (v *player) CanPlay() proxy.PropBool {
 
 // property CanSeek b
 
-func (v *player) CanSeek() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePlayer) CanSeek() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanSeek",
 	}
 }
 
-// property Metadata a{sv}
-
-func (v *player) Metadata() PropPlayerMetadata {
-	return PropPlayerMetadata{
-		Impl: v,
-	}
+type PropPlayerMetadata interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
 }
 
-type PropPlayerMetadata struct {
+type implPropPlayerMetadata struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropPlayerMetadata) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+func (p implPropPlayerMetadata) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Metadata", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropPlayerMetadata) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implPropPlayerMetadata) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropPlayerMetadata) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -303,13 +353,22 @@ func (p PropPlayerMetadata) ConnectChanged(cb func(hasValue bool, value map[stri
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Metadata", cb0)
+		p.Name, cb0)
+}
+
+// property Metadata a{sv}
+
+func (v *interfacePlayer) Metadata() PropPlayerMetadata {
+	return &implPropPlayerMetadata{
+		Impl: v,
+		Name: "Metadata",
+	}
 }
 
 // property PlaybackStatus s
 
-func (v *player) PlaybackStatus() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePlayer) PlaybackStatus() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PlaybackStatus",
 	}
@@ -317,8 +376,8 @@ func (v *player) PlaybackStatus() proxy.PropString {
 
 // property Position x
 
-func (v *player) Position() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfacePlayer) Position() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "Position",
 	}
@@ -326,8 +385,8 @@ func (v *player) Position() proxy.PropInt64 {
 
 // property Volume d
 
-func (v *player) Volume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfacePlayer) Volume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Volume",
 	}

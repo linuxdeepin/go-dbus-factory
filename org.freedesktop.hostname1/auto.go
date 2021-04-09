@@ -9,117 +9,154 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Hostname struct {
+type Hostname interface {
 	hostname // interface org.freedesktop.hostname1
 	proxy.Object
 }
 
-func NewHostname(conn *dbus.Conn) *Hostname {
-	obj := new(Hostname)
-	obj.Object.Init_(conn, "org.freedesktop.hostname1", "/org/freedesktop/hostname1")
+type objectHostname struct {
+	interfaceHostname // interface org.freedesktop.hostname1
+	proxy.ImplObject
+}
+
+func NewHostname(conn *dbus.Conn) Hostname {
+	obj := new(objectHostname)
+	obj.ImplObject.Init_(conn, "org.freedesktop.hostname1", "/org/freedesktop/hostname1")
 	return obj
 }
 
-type hostname struct{}
-
-func (v *hostname) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type hostname interface {
+	GoSetHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetHostname(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetStaticHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetStaticHostname(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetPrettyHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetPrettyHostname(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetIconName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetIconName(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetChassis(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetChassis(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetDeployment(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetDeployment(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetLocation(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetLocation(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoGetProductUUID(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call
+	GetProductUUID(flags dbus.Flags, arg0 bool) ([]uint8, error)
+	Hostname() proxy.PropString
+	StaticHostname() proxy.PropString
+	PrettyHostname() proxy.PropString
+	IconName() proxy.PropString
+	Chassis() proxy.PropString
+	Deployment() proxy.PropString
+	Location() proxy.PropString
+	KernelName() proxy.PropString
+	KernelRelease() proxy.PropString
+	KernelVersion() proxy.PropString
+	OperatingSystemPrettyName() proxy.PropString
+	OperatingSystemCPEName() proxy.PropString
+	HomeURL() proxy.PropString
 }
 
-func (*hostname) GetInterfaceName_() string {
+type interfaceHostname struct{}
+
+func (v *interfaceHostname) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceHostname) GetInterfaceName_() string {
 	return "org.freedesktop.hostname1"
 }
 
 // method SetHostname
 
-func (v *hostname) GoSetHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetHostname", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetHostname(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetStaticHostname
 
-func (v *hostname) GoSetStaticHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetStaticHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetStaticHostname", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetStaticHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetStaticHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetStaticHostname(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetPrettyHostname
 
-func (v *hostname) GoSetPrettyHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetPrettyHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPrettyHostname", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetPrettyHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetPrettyHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetPrettyHostname(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetIconName
 
-func (v *hostname) GoSetIconName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetIconName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIconName", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetIconName(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetIconName(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetIconName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetChassis
 
-func (v *hostname) GoSetChassis(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetChassis(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetChassis", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetChassis(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetChassis(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetChassis(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetDeployment
 
-func (v *hostname) GoSetDeployment(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetDeployment(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDeployment", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetDeployment(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetDeployment(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetDeployment(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetLocation
 
-func (v *hostname) GoSetLocation(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceHostname) GoSetLocation(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocation", flags, ch, arg0, arg1)
 }
 
-func (v *hostname) SetLocation(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceHostname) SetLocation(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetLocation(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method GetProductUUID
 
-func (v *hostname) GoGetProductUUID(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+func (v *interfaceHostname) GoGetProductUUID(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProductUUID", flags, ch, arg0)
 }
 
-func (*hostname) StoreGetProductUUID(call *dbus.Call) (arg1 []uint8, err error) {
+func (*interfaceHostname) StoreGetProductUUID(call *dbus.Call) (arg1 []uint8, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *hostname) GetProductUUID(flags dbus.Flags, arg0 bool) (arg1 []uint8, err error) {
+func (v *interfaceHostname) GetProductUUID(flags dbus.Flags, arg0 bool) ([]uint8, error) {
 	return v.StoreGetProductUUID(
 		<-v.GoGetProductUUID(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // property Hostname s
 
-func (v *hostname) Hostname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) Hostname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Hostname",
 	}
@@ -127,8 +164,8 @@ func (v *hostname) Hostname() proxy.PropString {
 
 // property StaticHostname s
 
-func (v *hostname) StaticHostname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) StaticHostname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StaticHostname",
 	}
@@ -136,8 +173,8 @@ func (v *hostname) StaticHostname() proxy.PropString {
 
 // property PrettyHostname s
 
-func (v *hostname) PrettyHostname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) PrettyHostname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PrettyHostname",
 	}
@@ -145,8 +182,8 @@ func (v *hostname) PrettyHostname() proxy.PropString {
 
 // property IconName s
 
-func (v *hostname) IconName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) IconName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IconName",
 	}
@@ -154,8 +191,8 @@ func (v *hostname) IconName() proxy.PropString {
 
 // property Chassis s
 
-func (v *hostname) Chassis() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) Chassis() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Chassis",
 	}
@@ -163,8 +200,8 @@ func (v *hostname) Chassis() proxy.PropString {
 
 // property Deployment s
 
-func (v *hostname) Deployment() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) Deployment() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Deployment",
 	}
@@ -172,8 +209,8 @@ func (v *hostname) Deployment() proxy.PropString {
 
 // property Location s
 
-func (v *hostname) Location() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) Location() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Location",
 	}
@@ -181,8 +218,8 @@ func (v *hostname) Location() proxy.PropString {
 
 // property KernelName s
 
-func (v *hostname) KernelName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) KernelName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KernelName",
 	}
@@ -190,8 +227,8 @@ func (v *hostname) KernelName() proxy.PropString {
 
 // property KernelRelease s
 
-func (v *hostname) KernelRelease() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) KernelRelease() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KernelRelease",
 	}
@@ -199,8 +236,8 @@ func (v *hostname) KernelRelease() proxy.PropString {
 
 // property KernelVersion s
 
-func (v *hostname) KernelVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) KernelVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KernelVersion",
 	}
@@ -208,8 +245,8 @@ func (v *hostname) KernelVersion() proxy.PropString {
 
 // property OperatingSystemPrettyName s
 
-func (v *hostname) OperatingSystemPrettyName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) OperatingSystemPrettyName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OperatingSystemPrettyName",
 	}
@@ -217,8 +254,8 @@ func (v *hostname) OperatingSystemPrettyName() proxy.PropString {
 
 // property OperatingSystemCPEName s
 
-func (v *hostname) OperatingSystemCPEName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) OperatingSystemCPEName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OperatingSystemCPEName",
 	}
@@ -226,8 +263,8 @@ func (v *hostname) OperatingSystemCPEName() proxy.PropString {
 
 // property HomeURL s
 
-func (v *hostname) HomeURL() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceHostname) HomeURL() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HomeURL",
 	}

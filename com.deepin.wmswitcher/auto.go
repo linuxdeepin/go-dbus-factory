@@ -12,72 +12,87 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type WMSwitcher struct {
+type WMSwitcher interface {
 	wmSwitcher // interface com.deepin.WMSwitcher
 	proxy.Object
 }
 
-func NewWMSwitcher(conn *dbus.Conn) *WMSwitcher {
-	obj := new(WMSwitcher)
-	obj.Object.Init_(conn, "com.deepin.WMSwitcher", "/com/deepin/WMSwitcher")
+type objectWMSwitcher struct {
+	interfaceWmSwitcher // interface com.deepin.WMSwitcher
+	proxy.ImplObject
+}
+
+func NewWMSwitcher(conn *dbus.Conn) WMSwitcher {
+	obj := new(objectWMSwitcher)
+	obj.ImplObject.Init_(conn, "com.deepin.WMSwitcher", "/com/deepin/WMSwitcher")
 	return obj
 }
 
-type wmSwitcher struct{}
-
-func (v *wmSwitcher) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type wmSwitcher interface {
+	GoAllowSwitch(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	AllowSwitch(flags dbus.Flags) (bool, error)
+	GoCurrentWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CurrentWM(flags dbus.Flags) (string, error)
+	GoRequestSwitchWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestSwitchWM(flags dbus.Flags) error
+	ConnectWMChanged(cb func(wmName string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*wmSwitcher) GetInterfaceName_() string {
+type interfaceWmSwitcher struct{}
+
+func (v *interfaceWmSwitcher) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWmSwitcher) GetInterfaceName_() string {
 	return "com.deepin.WMSwitcher"
 }
 
 // method AllowSwitch
 
-func (v *wmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AllowSwitch", flags, ch)
 }
 
-func (*wmSwitcher) StoreAllowSwitch(call *dbus.Call) (allow bool, err error) {
+func (*interfaceWmSwitcher) StoreAllowSwitch(call *dbus.Call) (allow bool, err error) {
 	err = call.Store(&allow)
 	return
 }
 
-func (v *wmSwitcher) AllowSwitch(flags dbus.Flags) (allow bool, err error) {
+func (v *interfaceWmSwitcher) AllowSwitch(flags dbus.Flags) (bool, error) {
 	return v.StoreAllowSwitch(
 		<-v.GoAllowSwitch(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CurrentWM
 
-func (v *wmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CurrentWM", flags, ch)
 }
 
-func (*wmSwitcher) StoreCurrentWM(call *dbus.Call) (wmName string, err error) {
+func (*interfaceWmSwitcher) StoreCurrentWM(call *dbus.Call) (wmName string, err error) {
 	err = call.Store(&wmName)
 	return
 }
 
-func (v *wmSwitcher) CurrentWM(flags dbus.Flags) (wmName string, err error) {
+func (v *interfaceWmSwitcher) CurrentWM(flags dbus.Flags) (string, error) {
 	return v.StoreCurrentWM(
 		<-v.GoCurrentWM(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RequestSwitchWM
 
-func (v *wmSwitcher) GoRequestSwitchWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWmSwitcher) GoRequestSwitchWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestSwitchWM", flags, ch)
 }
 
-func (v *wmSwitcher) RequestSwitchWM(flags dbus.Flags) error {
+func (v *interfaceWmSwitcher) RequestSwitchWM(flags dbus.Flags) error {
 	return (<-v.GoRequestSwitchWM(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal WMChanged
 
-func (v *wmSwitcher) ConnectWMChanged(cb func(wmName string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWmSwitcher) ConnectWMChanged(cb func(wmName string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

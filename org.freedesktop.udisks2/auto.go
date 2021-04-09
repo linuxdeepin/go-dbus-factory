@@ -11,142 +11,204 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type UDisks struct {
+type UDisks interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
 	proxy.Object
 }
 
-func NewUDisks(conn *dbus.Conn) *UDisks {
-	obj := new(UDisks)
-	obj.Object.Init_(conn, "org.freedesktop.UDisks2", "/org/freedesktop/UDisks2")
+type objectUDisks struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewUDisks(conn *dbus.Conn) UDisks {
+	obj := new(objectUDisks)
+	obj.ImplObject.Init_(conn, "org.freedesktop.UDisks2", "/org/freedesktop/UDisks2")
 	return obj
 }
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.UDisks2.Manager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.UDisks2", "/org/freedesktop/UDisks2/Manager")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.UDisks2.Manager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.UDisks2", "/org/freedesktop/UDisks2/Manager")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoLoopSetup(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD, options map[string]dbus.Variant) *dbus.Call
+	LoopSetup(flags dbus.Flags, fd dbus.UnixFD, options map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoMDRaidCreate(flags dbus.Flags, ch chan *dbus.Call, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) *dbus.Call
+	MDRaidCreate(flags dbus.Flags, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) (dbus.ObjectPath, error)
+	Version() proxy.PropString
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Manager"
 }
 
 // method LoopSetup
 
-func (v *manager) GoLoopSetup(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceManager) GoLoopSetup(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LoopSetup", flags, ch, fd, options)
 }
 
-func (*manager) StoreLoopSetup(call *dbus.Call) (resulting_device dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreLoopSetup(call *dbus.Call) (resulting_device dbus.ObjectPath, err error) {
 	err = call.Store(&resulting_device)
 	return
 }
 
-func (v *manager) LoopSetup(flags dbus.Flags, fd dbus.UnixFD, options map[string]dbus.Variant) (resulting_device dbus.ObjectPath, err error) {
+func (v *interfaceManager) LoopSetup(flags dbus.Flags, fd dbus.UnixFD, options map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreLoopSetup(
 		<-v.GoLoopSetup(flags, make(chan *dbus.Call, 1), fd, options).Done)
 }
 
 // method MDRaidCreate
 
-func (v *manager) GoMDRaidCreate(flags dbus.Flags, ch chan *dbus.Call, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceManager) GoMDRaidCreate(flags dbus.Flags, ch chan *dbus.Call, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MDRaidCreate", flags, ch, blocks, level, name, chunk, options)
 }
 
-func (*manager) StoreMDRaidCreate(call *dbus.Call) (resulting_array dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreMDRaidCreate(call *dbus.Call) (resulting_array dbus.ObjectPath, err error) {
 	err = call.Store(&resulting_array)
 	return
 }
 
-func (v *manager) MDRaidCreate(flags dbus.Flags, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) (resulting_array dbus.ObjectPath, err error) {
+func (v *interfaceManager) MDRaidCreate(flags dbus.Flags, blocks []dbus.ObjectPath, level string, name string, chunk uint64, options map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreMDRaidCreate(
 		<-v.GoMDRaidCreate(flags, make(chan *dbus.Call, 1), blocks, level, name, chunk, options).Done)
 }
 
 // property Version s
 
-func (v *manager) Version() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Version() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Version",
 	}
 }
 
-type Drive struct {
-	drive    // interface org.freedesktop.UDisks2.Drive
-	driveAta // interface org.freedesktop.UDisks2.Drive.Ata
+type Drive interface {
+	Drive() drive       // interface org.freedesktop.UDisks2.Drive
+	DriveAta() driveAta // interface org.freedesktop.UDisks2.Drive.Ata
 	proxy.Object
 }
 
-func NewDrive(conn *dbus.Conn, path dbus.ObjectPath) (*Drive, error) {
+type objectDrive struct {
+	interfaceDrive    // interface org.freedesktop.UDisks2.Drive
+	interfaceDriveAta // interface org.freedesktop.UDisks2.Drive.Ata
+	proxy.ImplObject
+}
+
+func NewDrive(conn *dbus.Conn, path dbus.ObjectPath) (Drive, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Drive)
-	obj.Object.Init_(conn, "org.freedesktop.UDisks2", path)
+	obj := new(objectDrive)
+	obj.ImplObject.Init_(conn, "org.freedesktop.UDisks2", path)
 	return obj, nil
 }
 
-func (obj *Drive) Drive() *drive {
-	return &obj.drive
+func (obj *objectDrive) Drive() drive {
+	return &obj.interfaceDrive
 }
 
-type drive struct{}
-
-func (v *drive) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type drive interface {
+	GoEject(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	Eject(flags dbus.Flags, options map[string]dbus.Variant) error
+	GoSetConfiguration(flags dbus.Flags, ch chan *dbus.Call, value map[string]dbus.Variant, options map[string]dbus.Variant) *dbus.Call
+	SetConfiguration(flags dbus.Flags, value map[string]dbus.Variant, options map[string]dbus.Variant) error
+	GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	PowerOff(flags dbus.Flags, options map[string]dbus.Variant) error
+	Vendor() proxy.PropString
+	Model() proxy.PropString
+	Revision() proxy.PropString
+	Serial() proxy.PropString
+	WWN() proxy.PropString
+	Id() proxy.PropString
+	Configuration() PropDriveConfiguration
+	Media() proxy.PropString
+	MediaCompatibility() proxy.PropStringArray
+	MediaRemovable() proxy.PropBool
+	MediaAvailable() proxy.PropBool
+	MediaChangeDetected() proxy.PropBool
+	Size() proxy.PropUint64
+	TimeDetected() proxy.PropUint64
+	TimeMediaDetected() proxy.PropUint64
+	Optical() proxy.PropBool
+	OpticalBlank() proxy.PropBool
+	OpticalNumTracks() proxy.PropUint32
+	OpticalNumAudioTracks() proxy.PropUint32
+	OpticalNumDataTracks() proxy.PropUint32
+	OpticalNumSessions() proxy.PropUint32
+	RotationRate() proxy.PropInt32
+	ConnectionBus() proxy.PropString
+	Seat() proxy.PropString
+	Removable() proxy.PropBool
+	Ejectable() proxy.PropBool
+	SortKey() proxy.PropString
+	CanPowerOff() proxy.PropBool
+	SiblingId() proxy.PropString
 }
 
-func (*drive) GetInterfaceName_() string {
+type interfaceDrive struct{}
+
+func (v *interfaceDrive) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDrive) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Drive"
 }
 
 // method Eject
 
-func (v *drive) GoEject(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDrive) GoEject(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Eject", flags, ch, options)
 }
 
-func (v *drive) Eject(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDrive) Eject(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoEject(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // method SetConfiguration
 
-func (v *drive) GoSetConfiguration(flags dbus.Flags, ch chan *dbus.Call, value map[string]dbus.Variant, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDrive) GoSetConfiguration(flags dbus.Flags, ch chan *dbus.Call, value map[string]dbus.Variant, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetConfiguration", flags, ch, value, options)
 }
 
-func (v *drive) SetConfiguration(flags dbus.Flags, value map[string]dbus.Variant, options map[string]dbus.Variant) error {
+func (v *interfaceDrive) SetConfiguration(flags dbus.Flags, value map[string]dbus.Variant, options map[string]dbus.Variant) error {
 	return (<-v.GoSetConfiguration(flags, make(chan *dbus.Call, 1), value, options).Done).Err
 }
 
 // method PowerOff
 
-func (v *drive) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDrive) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch, options)
 }
 
-func (v *drive) PowerOff(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDrive) PowerOff(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // property Vendor s
 
-func (v *drive) Vendor() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Vendor() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Vendor",
 	}
@@ -154,8 +216,8 @@ func (v *drive) Vendor() proxy.PropString {
 
 // property Model s
 
-func (v *drive) Model() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Model() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Model",
 	}
@@ -163,8 +225,8 @@ func (v *drive) Model() proxy.PropString {
 
 // property Revision s
 
-func (v *drive) Revision() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Revision() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Revision",
 	}
@@ -172,8 +234,8 @@ func (v *drive) Revision() proxy.PropString {
 
 // property Serial s
 
-func (v *drive) Serial() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Serial() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Serial",
 	}
@@ -181,8 +243,8 @@ func (v *drive) Serial() proxy.PropString {
 
 // property WWN s
 
-func (v *drive) WWN() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) WWN() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WWN",
 	}
@@ -190,32 +252,35 @@ func (v *drive) WWN() proxy.PropString {
 
 // property Id s
 
-func (v *drive) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
 }
 
-// property Configuration a{sv}
-
-func (v *drive) Configuration() PropDriveConfiguration {
-	return PropDriveConfiguration{
-		Impl: v,
-	}
+type PropDriveConfiguration interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
 }
 
-type PropDriveConfiguration struct {
+type implPropDriveConfiguration struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropDriveConfiguration) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+func (p implPropDriveConfiguration) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Configuration", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropDriveConfiguration) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implPropDriveConfiguration) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDriveConfiguration) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -232,13 +297,22 @@ func (p PropDriveConfiguration) ConnectChanged(cb func(hasValue bool, value map[
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Configuration", cb0)
+		p.Name, cb0)
+}
+
+// property Configuration a{sv}
+
+func (v *interfaceDrive) Configuration() PropDriveConfiguration {
+	return &implPropDriveConfiguration{
+		Impl: v,
+		Name: "Configuration",
+	}
 }
 
 // property Media s
 
-func (v *drive) Media() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Media() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Media",
 	}
@@ -246,8 +320,8 @@ func (v *drive) Media() proxy.PropString {
 
 // property MediaCompatibility as
 
-func (v *drive) MediaCompatibility() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceDrive) MediaCompatibility() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "MediaCompatibility",
 	}
@@ -255,8 +329,8 @@ func (v *drive) MediaCompatibility() proxy.PropStringArray {
 
 // property MediaRemovable b
 
-func (v *drive) MediaRemovable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) MediaRemovable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MediaRemovable",
 	}
@@ -264,8 +338,8 @@ func (v *drive) MediaRemovable() proxy.PropBool {
 
 // property MediaAvailable b
 
-func (v *drive) MediaAvailable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) MediaAvailable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MediaAvailable",
 	}
@@ -273,8 +347,8 @@ func (v *drive) MediaAvailable() proxy.PropBool {
 
 // property MediaChangeDetected b
 
-func (v *drive) MediaChangeDetected() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) MediaChangeDetected() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MediaChangeDetected",
 	}
@@ -282,8 +356,8 @@ func (v *drive) MediaChangeDetected() proxy.PropBool {
 
 // property Size t
 
-func (v *drive) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDrive) Size() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Size",
 	}
@@ -291,8 +365,8 @@ func (v *drive) Size() proxy.PropUint64 {
 
 // property TimeDetected t
 
-func (v *drive) TimeDetected() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDrive) TimeDetected() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeDetected",
 	}
@@ -300,8 +374,8 @@ func (v *drive) TimeDetected() proxy.PropUint64 {
 
 // property TimeMediaDetected t
 
-func (v *drive) TimeMediaDetected() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDrive) TimeMediaDetected() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeMediaDetected",
 	}
@@ -309,8 +383,8 @@ func (v *drive) TimeMediaDetected() proxy.PropUint64 {
 
 // property Optical b
 
-func (v *drive) Optical() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) Optical() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Optical",
 	}
@@ -318,8 +392,8 @@ func (v *drive) Optical() proxy.PropBool {
 
 // property OpticalBlank b
 
-func (v *drive) OpticalBlank() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) OpticalBlank() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "OpticalBlank",
 	}
@@ -327,8 +401,8 @@ func (v *drive) OpticalBlank() proxy.PropBool {
 
 // property OpticalNumTracks u
 
-func (v *drive) OpticalNumTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDrive) OpticalNumTracks() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "OpticalNumTracks",
 	}
@@ -336,8 +410,8 @@ func (v *drive) OpticalNumTracks() proxy.PropUint32 {
 
 // property OpticalNumAudioTracks u
 
-func (v *drive) OpticalNumAudioTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDrive) OpticalNumAudioTracks() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "OpticalNumAudioTracks",
 	}
@@ -345,8 +419,8 @@ func (v *drive) OpticalNumAudioTracks() proxy.PropUint32 {
 
 // property OpticalNumDataTracks u
 
-func (v *drive) OpticalNumDataTracks() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDrive) OpticalNumDataTracks() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "OpticalNumDataTracks",
 	}
@@ -354,8 +428,8 @@ func (v *drive) OpticalNumDataTracks() proxy.PropUint32 {
 
 // property OpticalNumSessions u
 
-func (v *drive) OpticalNumSessions() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDrive) OpticalNumSessions() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "OpticalNumSessions",
 	}
@@ -363,8 +437,8 @@ func (v *drive) OpticalNumSessions() proxy.PropUint32 {
 
 // property RotationRate i
 
-func (v *drive) RotationRate() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDrive) RotationRate() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "RotationRate",
 	}
@@ -372,8 +446,8 @@ func (v *drive) RotationRate() proxy.PropInt32 {
 
 // property ConnectionBus s
 
-func (v *drive) ConnectionBus() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) ConnectionBus() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ConnectionBus",
 	}
@@ -381,8 +455,8 @@ func (v *drive) ConnectionBus() proxy.PropString {
 
 // property Seat s
 
-func (v *drive) Seat() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) Seat() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Seat",
 	}
@@ -390,8 +464,8 @@ func (v *drive) Seat() proxy.PropString {
 
 // property Removable b
 
-func (v *drive) Removable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) Removable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Removable",
 	}
@@ -399,8 +473,8 @@ func (v *drive) Removable() proxy.PropBool {
 
 // property Ejectable b
 
-func (v *drive) Ejectable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) Ejectable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Ejectable",
 	}
@@ -408,8 +482,8 @@ func (v *drive) Ejectable() proxy.PropBool {
 
 // property SortKey s
 
-func (v *drive) SortKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) SortKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SortKey",
 	}
@@ -417,8 +491,8 @@ func (v *drive) SortKey() proxy.PropString {
 
 // property CanPowerOff b
 
-func (v *drive) CanPowerOff() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDrive) CanPowerOff() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanPowerOff",
 	}
@@ -426,133 +500,179 @@ func (v *drive) CanPowerOff() proxy.PropBool {
 
 // property SiblingId s
 
-func (v *drive) SiblingId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDrive) SiblingId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SiblingId",
 	}
 }
 
-func (obj *Drive) DriveAta() *driveAta {
-	return &obj.driveAta
+func (obj *objectDrive) DriveAta() driveAta {
+	return &obj.interfaceDriveAta
 }
 
-type driveAta struct{}
-
-func (v *driveAta) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type driveAta interface {
+	GoSmartUpdate(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	SmartUpdate(flags dbus.Flags, options map[string]dbus.Variant) error
+	GoSmartGetAttributes(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	SmartGetAttributes(flags dbus.Flags, options map[string]dbus.Variant) ([]Attribute, error)
+	GoSmartSelftestStart(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call
+	SmartSelftestStart(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error
+	GoSmartSelftestAbort(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	SmartSelftestAbort(flags dbus.Flags, options map[string]dbus.Variant) error
+	GoSmartSetEnabled(flags dbus.Flags, ch chan *dbus.Call, value bool, options map[string]dbus.Variant) *dbus.Call
+	SmartSetEnabled(flags dbus.Flags, value bool, options map[string]dbus.Variant) error
+	GoPmGetState(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	PmGetState(flags dbus.Flags, options map[string]dbus.Variant) (uint8, error)
+	GoPmStandby(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	PmStandby(flags dbus.Flags, options map[string]dbus.Variant) error
+	GoPmWakeup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	PmWakeup(flags dbus.Flags, options map[string]dbus.Variant) error
+	GoSecurityEraseUnit(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	SecurityEraseUnit(flags dbus.Flags, options map[string]dbus.Variant) error
+	SmartSupported() proxy.PropBool
+	SmartEnabled() proxy.PropBool
+	SmartUpdated() proxy.PropUint64
+	SmartFailing() proxy.PropBool
+	SmartPowerOnSeconds() proxy.PropUint64
+	SmartTemperature() proxy.PropDouble
+	SmartNumAttributesFailing() proxy.PropInt32
+	SmartNumAttributesFailedInThePast() proxy.PropInt32
+	SmartNumBadSectors() proxy.PropInt64
+	SmartSelftestStatus() proxy.PropString
+	SmartSelftestPercentRemaining() proxy.PropInt32
+	PmSupported() proxy.PropBool
+	PmEnabled() proxy.PropBool
+	ApmSupported() proxy.PropBool
+	ApmEnabled() proxy.PropBool
+	AamSupported() proxy.PropBool
+	AamEnabled() proxy.PropBool
+	AamVendorRecommendedValue() proxy.PropInt32
+	WriteCacheSupported() proxy.PropBool
+	WriteCacheEnabled() proxy.PropBool
+	ReadLookaheadSupported() proxy.PropBool
+	ReadLookaheadEnabled() proxy.PropBool
+	SecurityEraseUnitMinutes() proxy.PropInt32
+	SecurityEnhancedEraseUnitMinutes() proxy.PropInt32
+	SecurityFrozen() proxy.PropBool
 }
 
-func (*driveAta) GetInterfaceName_() string {
+type interfaceDriveAta struct{}
+
+func (v *interfaceDriveAta) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDriveAta) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Drive.Ata"
 }
 
 // method SmartUpdate
 
-func (v *driveAta) GoSmartUpdate(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSmartUpdate(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SmartUpdate", flags, ch, options)
 }
 
-func (v *driveAta) SmartUpdate(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) SmartUpdate(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoSmartUpdate(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // method SmartGetAttributes
 
-func (v *driveAta) GoSmartGetAttributes(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSmartGetAttributes(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SmartGetAttributes", flags, ch, options)
 }
 
-func (*driveAta) StoreSmartGetAttributes(call *dbus.Call) (attributes []Attribute, err error) {
+func (*interfaceDriveAta) StoreSmartGetAttributes(call *dbus.Call) (attributes []Attribute, err error) {
 	err = call.Store(&attributes)
 	return
 }
 
-func (v *driveAta) SmartGetAttributes(flags dbus.Flags, options map[string]dbus.Variant) (attributes []Attribute, err error) {
+func (v *interfaceDriveAta) SmartGetAttributes(flags dbus.Flags, options map[string]dbus.Variant) ([]Attribute, error) {
 	return v.StoreSmartGetAttributes(
 		<-v.GoSmartGetAttributes(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method SmartSelftestStart
 
-func (v *driveAta) GoSmartSelftestStart(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSmartSelftestStart(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SmartSelftestStart", flags, ch, type0, options)
 }
 
-func (v *driveAta) SmartSelftestStart(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) SmartSelftestStart(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
 	return (<-v.GoSmartSelftestStart(flags, make(chan *dbus.Call, 1), type0, options).Done).Err
 }
 
 // method SmartSelftestAbort
 
-func (v *driveAta) GoSmartSelftestAbort(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSmartSelftestAbort(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SmartSelftestAbort", flags, ch, options)
 }
 
-func (v *driveAta) SmartSelftestAbort(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) SmartSelftestAbort(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoSmartSelftestAbort(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // method SmartSetEnabled
 
-func (v *driveAta) GoSmartSetEnabled(flags dbus.Flags, ch chan *dbus.Call, value bool, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSmartSetEnabled(flags dbus.Flags, ch chan *dbus.Call, value bool, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SmartSetEnabled", flags, ch, value, options)
 }
 
-func (v *driveAta) SmartSetEnabled(flags dbus.Flags, value bool, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) SmartSetEnabled(flags dbus.Flags, value bool, options map[string]dbus.Variant) error {
 	return (<-v.GoSmartSetEnabled(flags, make(chan *dbus.Call, 1), value, options).Done).Err
 }
 
 // method PmGetState
 
-func (v *driveAta) GoPmGetState(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoPmGetState(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PmGetState", flags, ch, options)
 }
 
-func (*driveAta) StorePmGetState(call *dbus.Call) (state uint8, err error) {
+func (*interfaceDriveAta) StorePmGetState(call *dbus.Call) (state uint8, err error) {
 	err = call.Store(&state)
 	return
 }
 
-func (v *driveAta) PmGetState(flags dbus.Flags, options map[string]dbus.Variant) (state uint8, err error) {
+func (v *interfaceDriveAta) PmGetState(flags dbus.Flags, options map[string]dbus.Variant) (uint8, error) {
 	return v.StorePmGetState(
 		<-v.GoPmGetState(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method PmStandby
 
-func (v *driveAta) GoPmStandby(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoPmStandby(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PmStandby", flags, ch, options)
 }
 
-func (v *driveAta) PmStandby(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) PmStandby(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoPmStandby(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // method PmWakeup
 
-func (v *driveAta) GoPmWakeup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoPmWakeup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PmWakeup", flags, ch, options)
 }
 
-func (v *driveAta) PmWakeup(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) PmWakeup(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoPmWakeup(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // method SecurityEraseUnit
 
-func (v *driveAta) GoSecurityEraseUnit(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDriveAta) GoSecurityEraseUnit(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SecurityEraseUnit", flags, ch, options)
 }
 
-func (v *driveAta) SecurityEraseUnit(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDriveAta) SecurityEraseUnit(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoSecurityEraseUnit(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // property SmartSupported b
 
-func (v *driveAta) SmartSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) SmartSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SmartSupported",
 	}
@@ -560,8 +680,8 @@ func (v *driveAta) SmartSupported() proxy.PropBool {
 
 // property SmartEnabled b
 
-func (v *driveAta) SmartEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) SmartEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SmartEnabled",
 	}
@@ -569,8 +689,8 @@ func (v *driveAta) SmartEnabled() proxy.PropBool {
 
 // property SmartUpdated t
 
-func (v *driveAta) SmartUpdated() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDriveAta) SmartUpdated() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SmartUpdated",
 	}
@@ -578,8 +698,8 @@ func (v *driveAta) SmartUpdated() proxy.PropUint64 {
 
 // property SmartFailing b
 
-func (v *driveAta) SmartFailing() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) SmartFailing() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SmartFailing",
 	}
@@ -587,8 +707,8 @@ func (v *driveAta) SmartFailing() proxy.PropBool {
 
 // property SmartPowerOnSeconds t
 
-func (v *driveAta) SmartPowerOnSeconds() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDriveAta) SmartPowerOnSeconds() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SmartPowerOnSeconds",
 	}
@@ -596,8 +716,8 @@ func (v *driveAta) SmartPowerOnSeconds() proxy.PropUint64 {
 
 // property SmartTemperature d
 
-func (v *driveAta) SmartTemperature() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceDriveAta) SmartTemperature() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "SmartTemperature",
 	}
@@ -605,8 +725,8 @@ func (v *driveAta) SmartTemperature() proxy.PropDouble {
 
 // property SmartNumAttributesFailing i
 
-func (v *driveAta) SmartNumAttributesFailing() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) SmartNumAttributesFailing() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SmartNumAttributesFailing",
 	}
@@ -614,8 +734,8 @@ func (v *driveAta) SmartNumAttributesFailing() proxy.PropInt32 {
 
 // property SmartNumAttributesFailedInThePast i
 
-func (v *driveAta) SmartNumAttributesFailedInThePast() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) SmartNumAttributesFailedInThePast() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SmartNumAttributesFailedInThePast",
 	}
@@ -623,8 +743,8 @@ func (v *driveAta) SmartNumAttributesFailedInThePast() proxy.PropInt32 {
 
 // property SmartNumBadSectors x
 
-func (v *driveAta) SmartNumBadSectors() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceDriveAta) SmartNumBadSectors() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "SmartNumBadSectors",
 	}
@@ -632,8 +752,8 @@ func (v *driveAta) SmartNumBadSectors() proxy.PropInt64 {
 
 // property SmartSelftestStatus s
 
-func (v *driveAta) SmartSelftestStatus() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDriveAta) SmartSelftestStatus() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SmartSelftestStatus",
 	}
@@ -641,8 +761,8 @@ func (v *driveAta) SmartSelftestStatus() proxy.PropString {
 
 // property SmartSelftestPercentRemaining i
 
-func (v *driveAta) SmartSelftestPercentRemaining() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) SmartSelftestPercentRemaining() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SmartSelftestPercentRemaining",
 	}
@@ -650,8 +770,8 @@ func (v *driveAta) SmartSelftestPercentRemaining() proxy.PropInt32 {
 
 // property PmSupported b
 
-func (v *driveAta) PmSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) PmSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PmSupported",
 	}
@@ -659,8 +779,8 @@ func (v *driveAta) PmSupported() proxy.PropBool {
 
 // property PmEnabled b
 
-func (v *driveAta) PmEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) PmEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PmEnabled",
 	}
@@ -668,8 +788,8 @@ func (v *driveAta) PmEnabled() proxy.PropBool {
 
 // property ApmSupported b
 
-func (v *driveAta) ApmSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) ApmSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ApmSupported",
 	}
@@ -677,8 +797,8 @@ func (v *driveAta) ApmSupported() proxy.PropBool {
 
 // property ApmEnabled b
 
-func (v *driveAta) ApmEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) ApmEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ApmEnabled",
 	}
@@ -686,8 +806,8 @@ func (v *driveAta) ApmEnabled() proxy.PropBool {
 
 // property AamSupported b
 
-func (v *driveAta) AamSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) AamSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "AamSupported",
 	}
@@ -695,8 +815,8 @@ func (v *driveAta) AamSupported() proxy.PropBool {
 
 // property AamEnabled b
 
-func (v *driveAta) AamEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) AamEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "AamEnabled",
 	}
@@ -704,8 +824,8 @@ func (v *driveAta) AamEnabled() proxy.PropBool {
 
 // property AamVendorRecommendedValue i
 
-func (v *driveAta) AamVendorRecommendedValue() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) AamVendorRecommendedValue() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "AamVendorRecommendedValue",
 	}
@@ -713,8 +833,8 @@ func (v *driveAta) AamVendorRecommendedValue() proxy.PropInt32 {
 
 // property WriteCacheSupported b
 
-func (v *driveAta) WriteCacheSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) WriteCacheSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WriteCacheSupported",
 	}
@@ -722,8 +842,8 @@ func (v *driveAta) WriteCacheSupported() proxy.PropBool {
 
 // property WriteCacheEnabled b
 
-func (v *driveAta) WriteCacheEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) WriteCacheEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WriteCacheEnabled",
 	}
@@ -731,8 +851,8 @@ func (v *driveAta) WriteCacheEnabled() proxy.PropBool {
 
 // property ReadLookaheadSupported b
 
-func (v *driveAta) ReadLookaheadSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) ReadLookaheadSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ReadLookaheadSupported",
 	}
@@ -740,8 +860,8 @@ func (v *driveAta) ReadLookaheadSupported() proxy.PropBool {
 
 // property ReadLookaheadEnabled b
 
-func (v *driveAta) ReadLookaheadEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) ReadLookaheadEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ReadLookaheadEnabled",
 	}
@@ -749,8 +869,8 @@ func (v *driveAta) ReadLookaheadEnabled() proxy.PropBool {
 
 // property SecurityEraseUnitMinutes i
 
-func (v *driveAta) SecurityEraseUnitMinutes() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) SecurityEraseUnitMinutes() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SecurityEraseUnitMinutes",
 	}
@@ -758,8 +878,8 @@ func (v *driveAta) SecurityEraseUnitMinutes() proxy.PropInt32 {
 
 // property SecurityEnhancedEraseUnitMinutes i
 
-func (v *driveAta) SecurityEnhancedEraseUnitMinutes() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDriveAta) SecurityEnhancedEraseUnitMinutes() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SecurityEnhancedEraseUnitMinutes",
 	}
@@ -767,162 +887,215 @@ func (v *driveAta) SecurityEnhancedEraseUnitMinutes() proxy.PropInt32 {
 
 // property SecurityFrozen b
 
-func (v *driveAta) SecurityFrozen() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDriveAta) SecurityFrozen() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SecurityFrozen",
 	}
 }
 
-type Block struct {
-	block          // interface org.freedesktop.UDisks2.Block
-	partitionTable // interface org.freedesktop.UDisks2.PartitionTable
-	partition      // interface org.freedesktop.UDisks2.Partition
-	filesystem     // interface org.freedesktop.UDisks2.Filesystem
+type Block interface {
+	Block() block                   // interface org.freedesktop.UDisks2.Block
+	PartitionTable() partitionTable // interface org.freedesktop.UDisks2.PartitionTable
+	Partition() partition           // interface org.freedesktop.UDisks2.Partition
+	Filesystem() filesystem         // interface org.freedesktop.UDisks2.Filesystem
 	proxy.Object
 }
 
-func NewBlock(conn *dbus.Conn, path dbus.ObjectPath) (*Block, error) {
+type objectBlock struct {
+	interfaceBlock          // interface org.freedesktop.UDisks2.Block
+	interfacePartitionTable // interface org.freedesktop.UDisks2.PartitionTable
+	interfacePartition      // interface org.freedesktop.UDisks2.Partition
+	interfaceFilesystem     // interface org.freedesktop.UDisks2.Filesystem
+	proxy.ImplObject
+}
+
+func NewBlock(conn *dbus.Conn, path dbus.ObjectPath) (Block, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Block)
-	obj.Object.Init_(conn, "org.freedesktop.UDisks2", path)
+	obj := new(objectBlock)
+	obj.ImplObject.Init_(conn, "org.freedesktop.UDisks2", path)
 	return obj, nil
 }
 
-func (obj *Block) Block() *block {
-	return &obj.block
+func (obj *objectBlock) Block() block {
+	return &obj.interfaceBlock
 }
 
-type block struct{}
-
-func (v *block) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type block interface {
+	GoAddConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call
+	AddConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error
+	GoRemoveConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call
+	RemoveConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error
+	GoUpdateConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call
+	UpdateConfigurationItem(flags dbus.Flags, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) error
+	GoGetSecretConfiguration(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	GetSecretConfiguration(flags dbus.Flags, options map[string]dbus.Variant) ([]ConfigurationItem, error)
+	GoFormat(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call
+	Format(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error
+	GoOpenForBackup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	OpenForBackup(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error)
+	GoOpenForRestore(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	OpenForRestore(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error)
+	GoOpenForBenchmark(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	OpenForBenchmark(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error)
+	GoRescan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	Rescan(flags dbus.Flags, options map[string]dbus.Variant) error
+	Device() proxy.PropByteArray
+	PreferredDevice() proxy.PropByteArray
+	Symlinks() PropByteSliceSlice
+	DeviceNumber() proxy.PropUint64
+	Id() proxy.PropString
+	Size() proxy.PropUint64
+	ReadOnly() proxy.PropBool
+	Drive() proxy.PropObjectPath
+	MDRaid() proxy.PropObjectPath
+	MDRaidMember() proxy.PropObjectPath
+	IdUsage() proxy.PropString
+	IdType() proxy.PropString
+	IdVersion() proxy.PropString
+	IdLabel() proxy.PropString
+	IdUUID() proxy.PropString
+	Configuration() PropBlockConfiguration
+	CryptoBackingDevice() proxy.PropObjectPath
+	HintPartitionable() proxy.PropBool
+	HintSystem() proxy.PropBool
+	HintIgnore() proxy.PropBool
+	HintAuto() proxy.PropBool
+	HintName() proxy.PropString
+	HintIconName() proxy.PropString
+	HintSymbolicIconName() proxy.PropString
 }
 
-func (*block) GetInterfaceName_() string {
+type interfaceBlock struct{}
+
+func (v *interfaceBlock) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBlock) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Block"
 }
 
 // method AddConfigurationItem
 
-func (v *block) GoAddConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoAddConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddConfigurationItem", flags, ch, item, options)
 }
 
-func (v *block) AddConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error {
+func (v *interfaceBlock) AddConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error {
 	return (<-v.GoAddConfigurationItem(flags, make(chan *dbus.Call, 1), item, options).Done).Err
 }
 
 // method RemoveConfigurationItem
 
-func (v *block) GoRemoveConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoRemoveConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveConfigurationItem", flags, ch, item, options)
 }
 
-func (v *block) RemoveConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error {
+func (v *interfaceBlock) RemoveConfigurationItem(flags dbus.Flags, item ConfigurationItem, options map[string]dbus.Variant) error {
 	return (<-v.GoRemoveConfigurationItem(flags, make(chan *dbus.Call, 1), item, options).Done).Err
 }
 
 // method UpdateConfigurationItem
 
-func (v *block) GoUpdateConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoUpdateConfigurationItem(flags dbus.Flags, ch chan *dbus.Call, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateConfigurationItem", flags, ch, old_item, new_item, options)
 }
 
-func (v *block) UpdateConfigurationItem(flags dbus.Flags, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) error {
+func (v *interfaceBlock) UpdateConfigurationItem(flags dbus.Flags, old_item ConfigurationItem, new_item ConfigurationItem, options map[string]dbus.Variant) error {
 	return (<-v.GoUpdateConfigurationItem(flags, make(chan *dbus.Call, 1), old_item, new_item, options).Done).Err
 }
 
 // method GetSecretConfiguration
 
-func (v *block) GoGetSecretConfiguration(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoGetSecretConfiguration(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSecretConfiguration", flags, ch, options)
 }
 
-func (*block) StoreGetSecretConfiguration(call *dbus.Call) (configuration []ConfigurationItem, err error) {
+func (*interfaceBlock) StoreGetSecretConfiguration(call *dbus.Call) (configuration []ConfigurationItem, err error) {
 	err = call.Store(&configuration)
 	return
 }
 
-func (v *block) GetSecretConfiguration(flags dbus.Flags, options map[string]dbus.Variant) (configuration []ConfigurationItem, err error) {
+func (v *interfaceBlock) GetSecretConfiguration(flags dbus.Flags, options map[string]dbus.Variant) ([]ConfigurationItem, error) {
 	return v.StoreGetSecretConfiguration(
 		<-v.GoGetSecretConfiguration(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method Format
 
-func (v *block) GoFormat(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoFormat(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Format", flags, ch, type0, options)
 }
 
-func (v *block) Format(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
+func (v *interfaceBlock) Format(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
 	return (<-v.GoFormat(flags, make(chan *dbus.Call, 1), type0, options).Done).Err
 }
 
 // method OpenForBackup
 
-func (v *block) GoOpenForBackup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoOpenForBackup(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForBackup", flags, ch, options)
 }
 
-func (*block) StoreOpenForBackup(call *dbus.Call) (fd dbus.UnixFD, err error) {
+func (*interfaceBlock) StoreOpenForBackup(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForBackup(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
+func (v *interfaceBlock) OpenForBackup(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error) {
 	return v.StoreOpenForBackup(
 		<-v.GoOpenForBackup(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method OpenForRestore
 
-func (v *block) GoOpenForRestore(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoOpenForRestore(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForRestore", flags, ch, options)
 }
 
-func (*block) StoreOpenForRestore(call *dbus.Call) (fd dbus.UnixFD, err error) {
+func (*interfaceBlock) StoreOpenForRestore(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForRestore(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
+func (v *interfaceBlock) OpenForRestore(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error) {
 	return v.StoreOpenForRestore(
 		<-v.GoOpenForRestore(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method OpenForBenchmark
 
-func (v *block) GoOpenForBenchmark(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoOpenForBenchmark(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenForBenchmark", flags, ch, options)
 }
 
-func (*block) StoreOpenForBenchmark(call *dbus.Call) (fd dbus.UnixFD, err error) {
+func (*interfaceBlock) StoreOpenForBenchmark(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *block) OpenForBenchmark(flags dbus.Flags, options map[string]dbus.Variant) (fd dbus.UnixFD, err error) {
+func (v *interfaceBlock) OpenForBenchmark(flags dbus.Flags, options map[string]dbus.Variant) (dbus.UnixFD, error) {
 	return v.StoreOpenForBenchmark(
 		<-v.GoOpenForBenchmark(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method Rescan
 
-func (v *block) GoRescan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceBlock) GoRescan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Rescan", flags, ch, options)
 }
 
-func (v *block) Rescan(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceBlock) Rescan(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoRescan(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // property Device ay
 
-func (v *block) Device() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceBlock) Device() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "Device",
 	}
@@ -930,8 +1103,8 @@ func (v *block) Device() proxy.PropByteArray {
 
 // property PreferredDevice ay
 
-func (v *block) PreferredDevice() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceBlock) PreferredDevice() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "PreferredDevice",
 	}
@@ -939,8 +1112,8 @@ func (v *block) PreferredDevice() proxy.PropByteArray {
 
 // property Symlinks aay
 
-func (v *block) Symlinks() PropByteSliceSlice {
-	return PropByteSliceSlice{
+func (v *interfaceBlock) Symlinks() PropByteSliceSlice {
+	return &implPropByteSliceSlice{
 		Impl: v,
 		Name: "Symlinks",
 	}
@@ -948,8 +1121,8 @@ func (v *block) Symlinks() PropByteSliceSlice {
 
 // property DeviceNumber t
 
-func (v *block) DeviceNumber() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceBlock) DeviceNumber() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DeviceNumber",
 	}
@@ -957,8 +1130,8 @@ func (v *block) DeviceNumber() proxy.PropUint64 {
 
 // property Id s
 
-func (v *block) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -966,8 +1139,8 @@ func (v *block) Id() proxy.PropString {
 
 // property Size t
 
-func (v *block) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceBlock) Size() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Size",
 	}
@@ -975,8 +1148,8 @@ func (v *block) Size() proxy.PropUint64 {
 
 // property ReadOnly b
 
-func (v *block) ReadOnly() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBlock) ReadOnly() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ReadOnly",
 	}
@@ -984,8 +1157,8 @@ func (v *block) ReadOnly() proxy.PropBool {
 
 // property Drive o
 
-func (v *block) Drive() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceBlock) Drive() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Drive",
 	}
@@ -993,8 +1166,8 @@ func (v *block) Drive() proxy.PropObjectPath {
 
 // property MDRaid o
 
-func (v *block) MDRaid() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceBlock) MDRaid() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "MDRaid",
 	}
@@ -1002,8 +1175,8 @@ func (v *block) MDRaid() proxy.PropObjectPath {
 
 // property MDRaidMember o
 
-func (v *block) MDRaidMember() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceBlock) MDRaidMember() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "MDRaidMember",
 	}
@@ -1011,8 +1184,8 @@ func (v *block) MDRaidMember() proxy.PropObjectPath {
 
 // property IdUsage s
 
-func (v *block) IdUsage() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) IdUsage() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdUsage",
 	}
@@ -1020,8 +1193,8 @@ func (v *block) IdUsage() proxy.PropString {
 
 // property IdType s
 
-func (v *block) IdType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) IdType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdType",
 	}
@@ -1029,8 +1202,8 @@ func (v *block) IdType() proxy.PropString {
 
 // property IdVersion s
 
-func (v *block) IdVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) IdVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdVersion",
 	}
@@ -1038,8 +1211,8 @@ func (v *block) IdVersion() proxy.PropString {
 
 // property IdLabel s
 
-func (v *block) IdLabel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) IdLabel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdLabel",
 	}
@@ -1047,32 +1220,35 @@ func (v *block) IdLabel() proxy.PropString {
 
 // property IdUUID s
 
-func (v *block) IdUUID() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) IdUUID() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdUUID",
 	}
 }
 
-// property Configuration a(sa{sv})
-
-func (v *block) Configuration() PropBlockConfiguration {
-	return PropBlockConfiguration{
-		Impl: v,
-	}
+type PropBlockConfiguration interface {
+	Get(flags dbus.Flags) (value []ConfigurationItem, err error)
+	Set(flags dbus.Flags, value []ConfigurationItem) error
+	ConnectChanged(cb func(hasValue bool, value []ConfigurationItem)) error
 }
 
-type PropBlockConfiguration struct {
+type implPropBlockConfiguration struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropBlockConfiguration) Get(flags dbus.Flags) (value []ConfigurationItem, err error) {
+func (p implPropBlockConfiguration) Get(flags dbus.Flags) (value []ConfigurationItem, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Configuration", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropBlockConfiguration) ConnectChanged(cb func(hasValue bool, value []ConfigurationItem)) error {
+func (p implPropBlockConfiguration) Set(flags dbus.Flags, value []ConfigurationItem) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropBlockConfiguration) ConnectChanged(cb func(hasValue bool, value []ConfigurationItem)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1089,13 +1265,22 @@ func (p PropBlockConfiguration) ConnectChanged(cb func(hasValue bool, value []Co
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Configuration", cb0)
+		p.Name, cb0)
+}
+
+// property Configuration a(sa{sv})
+
+func (v *interfaceBlock) Configuration() PropBlockConfiguration {
+	return &implPropBlockConfiguration{
+		Impl: v,
+		Name: "Configuration",
+	}
 }
 
 // property CryptoBackingDevice o
 
-func (v *block) CryptoBackingDevice() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceBlock) CryptoBackingDevice() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "CryptoBackingDevice",
 	}
@@ -1103,8 +1288,8 @@ func (v *block) CryptoBackingDevice() proxy.PropObjectPath {
 
 // property HintPartitionable b
 
-func (v *block) HintPartitionable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBlock) HintPartitionable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HintPartitionable",
 	}
@@ -1112,8 +1297,8 @@ func (v *block) HintPartitionable() proxy.PropBool {
 
 // property HintSystem b
 
-func (v *block) HintSystem() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBlock) HintSystem() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HintSystem",
 	}
@@ -1121,8 +1306,8 @@ func (v *block) HintSystem() proxy.PropBool {
 
 // property HintIgnore b
 
-func (v *block) HintIgnore() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBlock) HintIgnore() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HintIgnore",
 	}
@@ -1130,8 +1315,8 @@ func (v *block) HintIgnore() proxy.PropBool {
 
 // property HintAuto b
 
-func (v *block) HintAuto() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBlock) HintAuto() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HintAuto",
 	}
@@ -1139,8 +1324,8 @@ func (v *block) HintAuto() proxy.PropBool {
 
 // property HintName s
 
-func (v *block) HintName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) HintName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HintName",
 	}
@@ -1148,8 +1333,8 @@ func (v *block) HintName() proxy.PropString {
 
 // property HintIconName s
 
-func (v *block) HintIconName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) HintIconName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HintIconName",
 	}
@@ -1157,110 +1342,137 @@ func (v *block) HintIconName() proxy.PropString {
 
 // property HintSymbolicIconName s
 
-func (v *block) HintSymbolicIconName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBlock) HintSymbolicIconName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HintSymbolicIconName",
 	}
 }
 
-func (obj *Block) PartitionTable() *partitionTable {
-	return &obj.partitionTable
+func (obj *objectBlock) PartitionTable() partitionTable {
+	return &obj.interfacePartitionTable
 }
 
-type partitionTable struct{}
-
-func (v *partitionTable) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type partitionTable interface {
+	GoCreatePartition(flags dbus.Flags, ch chan *dbus.Call, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) *dbus.Call
+	CreatePartition(flags dbus.Flags, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) (dbus.ObjectPath, error)
+	Type() proxy.PropString
 }
 
-func (*partitionTable) GetInterfaceName_() string {
+type interfacePartitionTable struct{}
+
+func (v *interfacePartitionTable) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePartitionTable) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.PartitionTable"
 }
 
 // method CreatePartition
 
-func (v *partitionTable) GoCreatePartition(flags dbus.Flags, ch chan *dbus.Call, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePartitionTable) GoCreatePartition(flags dbus.Flags, ch chan *dbus.Call, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreatePartition", flags, ch, offset, size, type0, name, options)
 }
 
-func (*partitionTable) StoreCreatePartition(call *dbus.Call) (created_partition dbus.ObjectPath, err error) {
+func (*interfacePartitionTable) StoreCreatePartition(call *dbus.Call) (created_partition dbus.ObjectPath, err error) {
 	err = call.Store(&created_partition)
 	return
 }
 
-func (v *partitionTable) CreatePartition(flags dbus.Flags, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) (created_partition dbus.ObjectPath, err error) {
+func (v *interfacePartitionTable) CreatePartition(flags dbus.Flags, offset uint64, size uint64, type0 string, name string, options map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreatePartition(
 		<-v.GoCreatePartition(flags, make(chan *dbus.Call, 1), offset, size, type0, name, options).Done)
 }
 
 // property Type s
 
-func (v *partitionTable) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePartitionTable) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
 }
 
-func (obj *Block) Partition() *partition {
-	return &obj.partition
+func (obj *objectBlock) Partition() partition {
+	return &obj.interfacePartition
 }
 
-type partition struct{}
-
-func (v *partition) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type partition interface {
+	GoSetType(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call
+	SetType(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error
+	GoSetName(flags dbus.Flags, ch chan *dbus.Call, name string, options map[string]dbus.Variant) *dbus.Call
+	SetName(flags dbus.Flags, name string, options map[string]dbus.Variant) error
+	GoSetFlags(flags dbus.Flags, ch chan *dbus.Call, flags0 uint64, options map[string]dbus.Variant) *dbus.Call
+	SetFlags(flags dbus.Flags, flags0 uint64, options map[string]dbus.Variant) error
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	Delete(flags dbus.Flags, options map[string]dbus.Variant) error
+	Number() proxy.PropUint32
+	Type() proxy.PropString
+	Flags() proxy.PropUint64
+	Offset() proxy.PropUint64
+	Size() proxy.PropUint64
+	Name() proxy.PropString
+	UUID() proxy.PropString
+	Table() proxy.PropObjectPath
+	IsContainer() proxy.PropBool
+	IsContained() proxy.PropBool
 }
 
-func (*partition) GetInterfaceName_() string {
+type interfacePartition struct{}
+
+func (v *interfacePartition) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePartition) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Partition"
 }
 
 // method SetType
 
-func (v *partition) GoSetType(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePartition) GoSetType(flags dbus.Flags, ch chan *dbus.Call, type0 string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetType", flags, ch, type0, options)
 }
 
-func (v *partition) SetType(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
+func (v *interfacePartition) SetType(flags dbus.Flags, type0 string, options map[string]dbus.Variant) error {
 	return (<-v.GoSetType(flags, make(chan *dbus.Call, 1), type0, options).Done).Err
 }
 
 // method SetName
 
-func (v *partition) GoSetName(flags dbus.Flags, ch chan *dbus.Call, name string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePartition) GoSetName(flags dbus.Flags, ch chan *dbus.Call, name string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetName", flags, ch, name, options)
 }
 
-func (v *partition) SetName(flags dbus.Flags, name string, options map[string]dbus.Variant) error {
+func (v *interfacePartition) SetName(flags dbus.Flags, name string, options map[string]dbus.Variant) error {
 	return (<-v.GoSetName(flags, make(chan *dbus.Call, 1), name, options).Done).Err
 }
 
 // method SetFlags
 
-func (v *partition) GoSetFlags(flags dbus.Flags, ch chan *dbus.Call, flags0 uint64, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePartition) GoSetFlags(flags dbus.Flags, ch chan *dbus.Call, flags0 uint64, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFlags", flags, ch, flags0, options)
 }
 
-func (v *partition) SetFlags(flags dbus.Flags, flags0 uint64, options map[string]dbus.Variant) error {
+func (v *interfacePartition) SetFlags(flags dbus.Flags, flags0 uint64, options map[string]dbus.Variant) error {
 	return (<-v.GoSetFlags(flags, make(chan *dbus.Call, 1), flags0, options).Done).Err
 }
 
 // method Delete
 
-func (v *partition) GoDelete(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePartition) GoDelete(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, options)
 }
 
-func (v *partition) Delete(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfacePartition) Delete(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // property Number u
 
-func (v *partition) Number() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfacePartition) Number() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Number",
 	}
@@ -1268,8 +1480,8 @@ func (v *partition) Number() proxy.PropUint32 {
 
 // property Type s
 
-func (v *partition) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePartition) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -1277,8 +1489,8 @@ func (v *partition) Type() proxy.PropString {
 
 // property Flags t
 
-func (v *partition) Flags() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfacePartition) Flags() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Flags",
 	}
@@ -1286,8 +1498,8 @@ func (v *partition) Flags() proxy.PropUint64 {
 
 // property Offset t
 
-func (v *partition) Offset() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfacePartition) Offset() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Offset",
 	}
@@ -1295,8 +1507,8 @@ func (v *partition) Offset() proxy.PropUint64 {
 
 // property Size t
 
-func (v *partition) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfacePartition) Size() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Size",
 	}
@@ -1304,8 +1516,8 @@ func (v *partition) Size() proxy.PropUint64 {
 
 // property Name s
 
-func (v *partition) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePartition) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1313,8 +1525,8 @@ func (v *partition) Name() proxy.PropString {
 
 // property UUID s
 
-func (v *partition) UUID() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePartition) UUID() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UUID",
 	}
@@ -1322,8 +1534,8 @@ func (v *partition) UUID() proxy.PropString {
 
 // property Table o
 
-func (v *partition) Table() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfacePartition) Table() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Table",
 	}
@@ -1331,8 +1543,8 @@ func (v *partition) Table() proxy.PropObjectPath {
 
 // property IsContainer b
 
-func (v *partition) IsContainer() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePartition) IsContainer() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsContainer",
 	}
@@ -1340,88 +1552,104 @@ func (v *partition) IsContainer() proxy.PropBool {
 
 // property IsContained b
 
-func (v *partition) IsContained() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePartition) IsContained() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsContained",
 	}
 }
 
-func (obj *Block) Filesystem() *filesystem {
-	return &obj.filesystem
+func (obj *objectBlock) Filesystem() filesystem {
+	return &obj.interfaceFilesystem
 }
 
-type filesystem struct{}
-
-func (v *filesystem) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type filesystem interface {
+	GoSetLabel(flags dbus.Flags, ch chan *dbus.Call, label string, options map[string]dbus.Variant) *dbus.Call
+	SetLabel(flags dbus.Flags, label string, options map[string]dbus.Variant) error
+	GoMount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	Mount(flags dbus.Flags, options map[string]dbus.Variant) (string, error)
+	GoUnmount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	Unmount(flags dbus.Flags, options map[string]dbus.Variant) error
+	MountPoints() PropByteSliceSlice
 }
 
-func (*filesystem) GetInterfaceName_() string {
+type interfaceFilesystem struct{}
+
+func (v *interfaceFilesystem) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceFilesystem) GetInterfaceName_() string {
 	return "org.freedesktop.UDisks2.Filesystem"
 }
 
 // method SetLabel
 
-func (v *filesystem) GoSetLabel(flags dbus.Flags, ch chan *dbus.Call, label string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceFilesystem) GoSetLabel(flags dbus.Flags, ch chan *dbus.Call, label string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLabel", flags, ch, label, options)
 }
 
-func (v *filesystem) SetLabel(flags dbus.Flags, label string, options map[string]dbus.Variant) error {
+func (v *interfaceFilesystem) SetLabel(flags dbus.Flags, label string, options map[string]dbus.Variant) error {
 	return (<-v.GoSetLabel(flags, make(chan *dbus.Call, 1), label, options).Done).Err
 }
 
 // method Mount
 
-func (v *filesystem) GoMount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceFilesystem) GoMount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Mount", flags, ch, options)
 }
 
-func (*filesystem) StoreMount(call *dbus.Call) (mount_path string, err error) {
+func (*interfaceFilesystem) StoreMount(call *dbus.Call) (mount_path string, err error) {
 	err = call.Store(&mount_path)
 	return
 }
 
-func (v *filesystem) Mount(flags dbus.Flags, options map[string]dbus.Variant) (mount_path string, err error) {
+func (v *interfaceFilesystem) Mount(flags dbus.Flags, options map[string]dbus.Variant) (string, error) {
 	return v.StoreMount(
 		<-v.GoMount(flags, make(chan *dbus.Call, 1), options).Done)
 }
 
 // method Unmount
 
-func (v *filesystem) GoUnmount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceFilesystem) GoUnmount(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unmount", flags, ch, options)
 }
 
-func (v *filesystem) Unmount(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceFilesystem) Unmount(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoUnmount(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // property MountPoints aay
 
-func (v *filesystem) MountPoints() PropByteSliceSlice {
-	return PropByteSliceSlice{
+func (v *interfaceFilesystem) MountPoints() PropByteSliceSlice {
+	return &implPropByteSliceSlice{
 		Impl: v,
 		Name: "MountPoints",
 	}
 }
 
-type PropByteSliceSlice struct {
+type PropByteSliceSlice interface {
+	Get(flags dbus.Flags) (value [][]byte, err error)
+	Set(flags dbus.Flags, value [][]byte) error
+	ConnectChanged(cb func(hasValue bool, value [][]byte)) error
+}
+
+type implPropByteSliceSlice struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropByteSliceSlice) Get(flags dbus.Flags) (value [][]byte, err error) {
+func (p implPropByteSliceSlice) Get(flags dbus.Flags) (value [][]byte, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropByteSliceSlice) Set(flags dbus.Flags, value [][]byte) error {
+func (p implPropByteSliceSlice) Set(flags dbus.Flags, value [][]byte) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropByteSliceSlice) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
+func (p implPropByteSliceSlice) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

@@ -12,303 +12,361 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Control struct {
+type Control interface {
 	control // interface org.ayatana.bamf.control
 	proxy.Object
 }
 
-func NewControl(conn *dbus.Conn) *Control {
-	obj := new(Control)
-	obj.Object.Init_(conn, "org.ayatana.bamf", "/org/ayatana/bamf/control")
+type objectControl struct {
+	interfaceControl // interface org.ayatana.bamf.control
+	proxy.ImplObject
+}
+
+func NewControl(conn *dbus.Conn) Control {
+	obj := new(objectControl)
+	obj.ImplObject.Init_(conn, "org.ayatana.bamf", "/org/ayatana/bamf/control")
 	return obj
 }
 
-type control struct{}
-
-func (v *control) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type control interface {
+	GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Quit(flags dbus.Flags) error
+	GoInsertDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call
+	InsertDesktopFile(flags dbus.Flags, desktop_path string) error
+	GoRegisterApplicationForPid(flags dbus.Flags, ch chan *dbus.Call, application string, pid int32) *dbus.Call
+	RegisterApplicationForPid(flags dbus.Flags, application string, pid int32) error
+	GoCreateLocalDesktopFile(flags dbus.Flags, ch chan *dbus.Call, application string) *dbus.Call
+	CreateLocalDesktopFile(flags dbus.Flags, application string) error
+	GoOmNomNomDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call
+	OmNomNomDesktopFile(flags dbus.Flags, desktop_path string) error
 }
 
-func (*control) GetInterfaceName_() string {
+type interfaceControl struct{}
+
+func (v *interfaceControl) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceControl) GetInterfaceName_() string {
 	return "org.ayatana.bamf.control"
 }
 
 // method Quit
 
-func (v *control) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceControl) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Quit", flags, ch)
 }
 
-func (v *control) Quit(flags dbus.Flags) error {
+func (v *interfaceControl) Quit(flags dbus.Flags) error {
 	return (<-v.GoQuit(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method InsertDesktopFile
 
-func (v *control) GoInsertDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call {
+func (v *interfaceControl) GoInsertDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".InsertDesktopFile", flags, ch, desktop_path)
 }
 
-func (v *control) InsertDesktopFile(flags dbus.Flags, desktop_path string) error {
+func (v *interfaceControl) InsertDesktopFile(flags dbus.Flags, desktop_path string) error {
 	return (<-v.GoInsertDesktopFile(flags, make(chan *dbus.Call, 1), desktop_path).Done).Err
 }
 
 // method RegisterApplicationForPid
 
-func (v *control) GoRegisterApplicationForPid(flags dbus.Flags, ch chan *dbus.Call, application string, pid int32) *dbus.Call {
+func (v *interfaceControl) GoRegisterApplicationForPid(flags dbus.Flags, ch chan *dbus.Call, application string, pid int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterApplicationForPid", flags, ch, application, pid)
 }
 
-func (v *control) RegisterApplicationForPid(flags dbus.Flags, application string, pid int32) error {
+func (v *interfaceControl) RegisterApplicationForPid(flags dbus.Flags, application string, pid int32) error {
 	return (<-v.GoRegisterApplicationForPid(flags, make(chan *dbus.Call, 1), application, pid).Done).Err
 }
 
 // method CreateLocalDesktopFile
 
-func (v *control) GoCreateLocalDesktopFile(flags dbus.Flags, ch chan *dbus.Call, application string) *dbus.Call {
+func (v *interfaceControl) GoCreateLocalDesktopFile(flags dbus.Flags, ch chan *dbus.Call, application string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateLocalDesktopFile", flags, ch, application)
 }
 
-func (v *control) CreateLocalDesktopFile(flags dbus.Flags, application string) error {
+func (v *interfaceControl) CreateLocalDesktopFile(flags dbus.Flags, application string) error {
 	return (<-v.GoCreateLocalDesktopFile(flags, make(chan *dbus.Call, 1), application).Done).Err
 }
 
 // method OmNomNomDesktopFile
 
-func (v *control) GoOmNomNomDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call {
+func (v *interfaceControl) GoOmNomNomDesktopFile(flags dbus.Flags, ch chan *dbus.Call, desktop_path string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OmNomNomDesktopFile", flags, ch, desktop_path)
 }
 
-func (v *control) OmNomNomDesktopFile(flags dbus.Flags, desktop_path string) error {
+func (v *interfaceControl) OmNomNomDesktopFile(flags dbus.Flags, desktop_path string) error {
 	return (<-v.GoOmNomNomDesktopFile(flags, make(chan *dbus.Call, 1), desktop_path).Done).Err
 }
 
-type Matcher struct {
+type Matcher interface {
 	matcher // interface org.ayatana.bamf.matcher
 	proxy.Object
 }
 
-func NewMatcher(conn *dbus.Conn) *Matcher {
-	obj := new(Matcher)
-	obj.Object.Init_(conn, "org.ayatana.bamf", "/org/ayatana/bamf/matcher")
+type objectMatcher struct {
+	interfaceMatcher // interface org.ayatana.bamf.matcher
+	proxy.ImplObject
+}
+
+func NewMatcher(conn *dbus.Conn) Matcher {
+	obj := new(objectMatcher)
+	obj.ImplObject.Init_(conn, "org.ayatana.bamf", "/org/ayatana/bamf/matcher")
 	return obj
 }
 
-type matcher struct{}
-
-func (v *matcher) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type matcher interface {
+	GoXidsForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call
+	XidsForApplication(flags dbus.Flags, desktop_file string) ([]uint32, error)
+	GoTabPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	TabPaths(flags dbus.Flags) ([]string, error)
+	GoRunningApplications(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RunningApplications(flags dbus.Flags) ([]string, error)
+	GoRunningApplicationsDesktopFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RunningApplicationsDesktopFiles(flags dbus.Flags) ([]string, error)
+	GoRegisterFavorites(flags dbus.Flags, ch chan *dbus.Call, favorites []string) *dbus.Call
+	RegisterFavorites(flags dbus.Flags, favorites []string) error
+	GoPathForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call
+	PathForApplication(flags dbus.Flags, desktop_file string) (string, error)
+	GoWindowPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	WindowPaths(flags dbus.Flags) ([]string, error)
+	GoApplicationPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ApplicationPaths(flags dbus.Flags) ([]string, error)
+	GoApplicationIsRunning(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call
+	ApplicationIsRunning(flags dbus.Flags, desktop_file string) (bool, error)
+	GoApplicationForXid(flags dbus.Flags, ch chan *dbus.Call, xid uint32) *dbus.Call
+	ApplicationForXid(flags dbus.Flags, xid uint32) (string, error)
+	GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ActiveWindow(flags dbus.Flags) (string, error)
+	GoActiveApplication(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ActiveApplication(flags dbus.Flags) (string, error)
+	GoWindowStackForMonitor(flags dbus.Flags, ch chan *dbus.Call, monitor_id int32) *dbus.Call
+	WindowStackForMonitor(flags dbus.Flags, monitor_id int32) ([]string, error)
+	ConnectActiveApplicationChanged(cb func(old_app string, new_app string)) (dbusutil.SignalHandlerId, error)
+	ConnectActiveWindowChanged(cb func(old_win string, new_win string)) (dbusutil.SignalHandlerId, error)
+	ConnectViewClosed(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error)
+	ConnectViewOpened(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error)
+	ConnectStackingOrderChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectRunningApplicationsChanged(cb func(opened_desktop_files []string, closed_desktop_files []string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*matcher) GetInterfaceName_() string {
+type interfaceMatcher struct{}
+
+func (v *interfaceMatcher) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceMatcher) GetInterfaceName_() string {
 	return "org.ayatana.bamf.matcher"
 }
 
 // method XidsForApplication
 
-func (v *matcher) GoXidsForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
+func (v *interfaceMatcher) GoXidsForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".XidsForApplication", flags, ch, desktop_file)
 }
 
-func (*matcher) StoreXidsForApplication(call *dbus.Call) (xids []uint32, err error) {
+func (*interfaceMatcher) StoreXidsForApplication(call *dbus.Call) (xids []uint32, err error) {
 	err = call.Store(&xids)
 	return
 }
 
-func (v *matcher) XidsForApplication(flags dbus.Flags, desktop_file string) (xids []uint32, err error) {
+func (v *interfaceMatcher) XidsForApplication(flags dbus.Flags, desktop_file string) ([]uint32, error) {
 	return v.StoreXidsForApplication(
 		<-v.GoXidsForApplication(flags, make(chan *dbus.Call, 1), desktop_file).Done)
 }
 
 // method TabPaths
 
-func (v *matcher) GoTabPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoTabPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TabPaths", flags, ch)
 }
 
-func (*matcher) StoreTabPaths(call *dbus.Call) (paths []string, err error) {
+func (*interfaceMatcher) StoreTabPaths(call *dbus.Call) (paths []string, err error) {
 	err = call.Store(&paths)
 	return
 }
 
-func (v *matcher) TabPaths(flags dbus.Flags) (paths []string, err error) {
+func (v *interfaceMatcher) TabPaths(flags dbus.Flags) ([]string, error) {
 	return v.StoreTabPaths(
 		<-v.GoTabPaths(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RunningApplications
 
-func (v *matcher) GoRunningApplications(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoRunningApplications(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RunningApplications", flags, ch)
 }
 
-func (*matcher) StoreRunningApplications(call *dbus.Call) (paths []string, err error) {
+func (*interfaceMatcher) StoreRunningApplications(call *dbus.Call) (paths []string, err error) {
 	err = call.Store(&paths)
 	return
 }
 
-func (v *matcher) RunningApplications(flags dbus.Flags) (paths []string, err error) {
+func (v *interfaceMatcher) RunningApplications(flags dbus.Flags) ([]string, error) {
 	return v.StoreRunningApplications(
 		<-v.GoRunningApplications(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RunningApplicationsDesktopFiles
 
-func (v *matcher) GoRunningApplicationsDesktopFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoRunningApplicationsDesktopFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RunningApplicationsDesktopFiles", flags, ch)
 }
 
-func (*matcher) StoreRunningApplicationsDesktopFiles(call *dbus.Call) (paths []string, err error) {
+func (*interfaceMatcher) StoreRunningApplicationsDesktopFiles(call *dbus.Call) (paths []string, err error) {
 	err = call.Store(&paths)
 	return
 }
 
-func (v *matcher) RunningApplicationsDesktopFiles(flags dbus.Flags) (paths []string, err error) {
+func (v *interfaceMatcher) RunningApplicationsDesktopFiles(flags dbus.Flags) ([]string, error) {
 	return v.StoreRunningApplicationsDesktopFiles(
 		<-v.GoRunningApplicationsDesktopFiles(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RegisterFavorites
 
-func (v *matcher) GoRegisterFavorites(flags dbus.Flags, ch chan *dbus.Call, favorites []string) *dbus.Call {
+func (v *interfaceMatcher) GoRegisterFavorites(flags dbus.Flags, ch chan *dbus.Call, favorites []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterFavorites", flags, ch, favorites)
 }
 
-func (v *matcher) RegisterFavorites(flags dbus.Flags, favorites []string) error {
+func (v *interfaceMatcher) RegisterFavorites(flags dbus.Flags, favorites []string) error {
 	return (<-v.GoRegisterFavorites(flags, make(chan *dbus.Call, 1), favorites).Done).Err
 }
 
 // method PathForApplication
 
-func (v *matcher) GoPathForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
+func (v *interfaceMatcher) GoPathForApplication(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PathForApplication", flags, ch, desktop_file)
 }
 
-func (*matcher) StorePathForApplication(call *dbus.Call) (path string, err error) {
+func (*interfaceMatcher) StorePathForApplication(call *dbus.Call) (path string, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *matcher) PathForApplication(flags dbus.Flags, desktop_file string) (path string, err error) {
+func (v *interfaceMatcher) PathForApplication(flags dbus.Flags, desktop_file string) (string, error) {
 	return v.StorePathForApplication(
 		<-v.GoPathForApplication(flags, make(chan *dbus.Call, 1), desktop_file).Done)
 }
 
 // method WindowPaths
 
-func (v *matcher) GoWindowPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoWindowPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".WindowPaths", flags, ch)
 }
 
-func (*matcher) StoreWindowPaths(call *dbus.Call) (paths []string, err error) {
+func (*interfaceMatcher) StoreWindowPaths(call *dbus.Call) (paths []string, err error) {
 	err = call.Store(&paths)
 	return
 }
 
-func (v *matcher) WindowPaths(flags dbus.Flags) (paths []string, err error) {
+func (v *interfaceMatcher) WindowPaths(flags dbus.Flags) ([]string, error) {
 	return v.StoreWindowPaths(
 		<-v.GoWindowPaths(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ApplicationPaths
 
-func (v *matcher) GoApplicationPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoApplicationPaths(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationPaths", flags, ch)
 }
 
-func (*matcher) StoreApplicationPaths(call *dbus.Call) (paths []string, err error) {
+func (*interfaceMatcher) StoreApplicationPaths(call *dbus.Call) (paths []string, err error) {
 	err = call.Store(&paths)
 	return
 }
 
-func (v *matcher) ApplicationPaths(flags dbus.Flags) (paths []string, err error) {
+func (v *interfaceMatcher) ApplicationPaths(flags dbus.Flags) ([]string, error) {
 	return v.StoreApplicationPaths(
 		<-v.GoApplicationPaths(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ApplicationIsRunning
 
-func (v *matcher) GoApplicationIsRunning(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
+func (v *interfaceMatcher) GoApplicationIsRunning(flags dbus.Flags, ch chan *dbus.Call, desktop_file string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationIsRunning", flags, ch, desktop_file)
 }
 
-func (*matcher) StoreApplicationIsRunning(call *dbus.Call) (running bool, err error) {
+func (*interfaceMatcher) StoreApplicationIsRunning(call *dbus.Call) (running bool, err error) {
 	err = call.Store(&running)
 	return
 }
 
-func (v *matcher) ApplicationIsRunning(flags dbus.Flags, desktop_file string) (running bool, err error) {
+func (v *interfaceMatcher) ApplicationIsRunning(flags dbus.Flags, desktop_file string) (bool, error) {
 	return v.StoreApplicationIsRunning(
 		<-v.GoApplicationIsRunning(flags, make(chan *dbus.Call, 1), desktop_file).Done)
 }
 
 // method ApplicationForXid
 
-func (v *matcher) GoApplicationForXid(flags dbus.Flags, ch chan *dbus.Call, xid uint32) *dbus.Call {
+func (v *interfaceMatcher) GoApplicationForXid(flags dbus.Flags, ch chan *dbus.Call, xid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationForXid", flags, ch, xid)
 }
 
-func (*matcher) StoreApplicationForXid(call *dbus.Call) (application string, err error) {
+func (*interfaceMatcher) StoreApplicationForXid(call *dbus.Call) (application string, err error) {
 	err = call.Store(&application)
 	return
 }
 
-func (v *matcher) ApplicationForXid(flags dbus.Flags, xid uint32) (application string, err error) {
+func (v *interfaceMatcher) ApplicationForXid(flags dbus.Flags, xid uint32) (string, error) {
 	return v.StoreApplicationForXid(
 		<-v.GoApplicationForXid(flags, make(chan *dbus.Call, 1), xid).Done)
 }
 
 // method ActiveWindow
 
-func (v *matcher) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActiveWindow", flags, ch)
 }
 
-func (*matcher) StoreActiveWindow(call *dbus.Call) (window string, err error) {
+func (*interfaceMatcher) StoreActiveWindow(call *dbus.Call) (window string, err error) {
 	err = call.Store(&window)
 	return
 }
 
-func (v *matcher) ActiveWindow(flags dbus.Flags) (window string, err error) {
+func (v *interfaceMatcher) ActiveWindow(flags dbus.Flags) (string, error) {
 	return v.StoreActiveWindow(
 		<-v.GoActiveWindow(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ActiveApplication
 
-func (v *matcher) GoActiveApplication(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceMatcher) GoActiveApplication(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActiveApplication", flags, ch)
 }
 
-func (*matcher) StoreActiveApplication(call *dbus.Call) (application string, err error) {
+func (*interfaceMatcher) StoreActiveApplication(call *dbus.Call) (application string, err error) {
 	err = call.Store(&application)
 	return
 }
 
-func (v *matcher) ActiveApplication(flags dbus.Flags) (application string, err error) {
+func (v *interfaceMatcher) ActiveApplication(flags dbus.Flags) (string, error) {
 	return v.StoreActiveApplication(
 		<-v.GoActiveApplication(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method WindowStackForMonitor
 
-func (v *matcher) GoWindowStackForMonitor(flags dbus.Flags, ch chan *dbus.Call, monitor_id int32) *dbus.Call {
+func (v *interfaceMatcher) GoWindowStackForMonitor(flags dbus.Flags, ch chan *dbus.Call, monitor_id int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".WindowStackForMonitor", flags, ch, monitor_id)
 }
 
-func (*matcher) StoreWindowStackForMonitor(call *dbus.Call) (window_list []string, err error) {
+func (*interfaceMatcher) StoreWindowStackForMonitor(call *dbus.Call) (window_list []string, err error) {
 	err = call.Store(&window_list)
 	return
 }
 
-func (v *matcher) WindowStackForMonitor(flags dbus.Flags, monitor_id int32) (window_list []string, err error) {
+func (v *interfaceMatcher) WindowStackForMonitor(flags dbus.Flags, monitor_id int32) ([]string, error) {
 	return v.StoreWindowStackForMonitor(
 		<-v.GoWindowStackForMonitor(flags, make(chan *dbus.Call, 1), monitor_id).Done)
 }
 
 // signal ActiveApplicationChanged
 
-func (v *matcher) ConnectActiveApplicationChanged(cb func(old_app string, new_app string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectActiveApplicationChanged(cb func(old_app string, new_app string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -335,7 +393,7 @@ func (v *matcher) ConnectActiveApplicationChanged(cb func(old_app string, new_ap
 
 // signal ActiveWindowChanged
 
-func (v *matcher) ConnectActiveWindowChanged(cb func(old_win string, new_win string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectActiveWindowChanged(cb func(old_win string, new_win string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -362,7 +420,7 @@ func (v *matcher) ConnectActiveWindowChanged(cb func(old_win string, new_win str
 
 // signal ViewClosed
 
-func (v *matcher) ConnectViewClosed(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectViewClosed(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -389,7 +447,7 @@ func (v *matcher) ConnectViewClosed(cb func(path string, type0 string)) (dbusuti
 
 // signal ViewOpened
 
-func (v *matcher) ConnectViewOpened(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectViewOpened(cb func(path string, type0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -416,7 +474,7 @@ func (v *matcher) ConnectViewOpened(cb func(path string, type0 string)) (dbusuti
 
 // signal StackingOrderChanged
 
-func (v *matcher) ConnectStackingOrderChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectStackingOrderChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -438,7 +496,7 @@ func (v *matcher) ConnectStackingOrderChanged(cb func()) (dbusutil.SignalHandler
 
 // signal RunningApplicationsChanged
 
-func (v *matcher) ConnectRunningApplicationsChanged(cb func(opened_desktop_files []string, closed_desktop_files []string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceMatcher) ConnectRunningApplicationsChanged(cb func(opened_desktop_files []string, closed_desktop_files []string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -463,150 +521,177 @@ func (v *matcher) ConnectRunningApplicationsChanged(cb func(opened_desktop_files
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-type Application struct {
-	application // interface org.ayatana.bamf.application
-	view        // interface org.ayatana.bamf.view
+type Application interface {
+	Application() application // interface org.ayatana.bamf.application
+	View() view               // interface org.ayatana.bamf.view
 	proxy.Object
 }
 
-func NewApplication(conn *dbus.Conn, path dbus.ObjectPath) (*Application, error) {
+type objectApplication struct {
+	interfaceApplication // interface org.ayatana.bamf.application
+	interfaceView        // interface org.ayatana.bamf.view
+	proxy.ImplObject
+}
+
+func NewApplication(conn *dbus.Conn, path dbus.ObjectPath) (Application, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Application)
-	obj.Object.Init_(conn, "org.ayatana.bamf", path)
+	obj := new(objectApplication)
+	obj.ImplObject.Init_(conn, "org.ayatana.bamf", path)
 	return obj, nil
 }
 
-func (obj *Application) Application() *application {
-	return &obj.application
+func (obj *objectApplication) Application() application {
+	return &obj.interfaceApplication
 }
 
-type application struct{}
-
-func (v *application) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type application interface {
+	GoShowStubs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ShowStubs(flags dbus.Flags) (bool, error)
+	GoXids(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Xids(flags dbus.Flags) ([]uint32, error)
+	GoDesktopFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DesktopFile(flags dbus.Flags) (string, error)
+	GoSupportedMimeTypes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SupportedMimeTypes(flags dbus.Flags) ([]string, error)
+	GoApplicationType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ApplicationType(flags dbus.Flags) (string, error)
+	GoApplicationMenu(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ApplicationMenu(flags dbus.Flags) (string, string, error)
+	GoFocusableChild(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	FocusableChild(flags dbus.Flags) (string, error)
+	ConnectWindowRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error)
+	ConnectWindowAdded(cb func(path string)) (dbusutil.SignalHandlerId, error)
+	ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []string)) (dbusutil.SignalHandlerId, error)
+	ConnectDesktopFileUpdated(cb func(desktop_file string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*application) GetInterfaceName_() string {
+type interfaceApplication struct{}
+
+func (v *interfaceApplication) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceApplication) GetInterfaceName_() string {
 	return "org.ayatana.bamf.application"
 }
 
 // method ShowStubs
 
-func (v *application) GoShowStubs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoShowStubs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowStubs", flags, ch)
 }
 
-func (*application) StoreShowStubs(call *dbus.Call) (show_stubs bool, err error) {
+func (*interfaceApplication) StoreShowStubs(call *dbus.Call) (show_stubs bool, err error) {
 	err = call.Store(&show_stubs)
 	return
 }
 
-func (v *application) ShowStubs(flags dbus.Flags) (show_stubs bool, err error) {
+func (v *interfaceApplication) ShowStubs(flags dbus.Flags) (bool, error) {
 	return v.StoreShowStubs(
 		<-v.GoShowStubs(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Xids
 
-func (v *application) GoXids(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoXids(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Xids", flags, ch)
 }
 
-func (*application) StoreXids(call *dbus.Call) (xids []uint32, err error) {
+func (*interfaceApplication) StoreXids(call *dbus.Call) (xids []uint32, err error) {
 	err = call.Store(&xids)
 	return
 }
 
-func (v *application) Xids(flags dbus.Flags) (xids []uint32, err error) {
+func (v *interfaceApplication) Xids(flags dbus.Flags) ([]uint32, error) {
 	return v.StoreXids(
 		<-v.GoXids(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method DesktopFile
 
-func (v *application) GoDesktopFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoDesktopFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DesktopFile", flags, ch)
 }
 
-func (*application) StoreDesktopFile(call *dbus.Call) (desktop_file string, err error) {
+func (*interfaceApplication) StoreDesktopFile(call *dbus.Call) (desktop_file string, err error) {
 	err = call.Store(&desktop_file)
 	return
 }
 
-func (v *application) DesktopFile(flags dbus.Flags) (desktop_file string, err error) {
+func (v *interfaceApplication) DesktopFile(flags dbus.Flags) (string, error) {
 	return v.StoreDesktopFile(
 		<-v.GoDesktopFile(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SupportedMimeTypes
 
-func (v *application) GoSupportedMimeTypes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoSupportedMimeTypes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SupportedMimeTypes", flags, ch)
 }
 
-func (*application) StoreSupportedMimeTypes(call *dbus.Call) (mime_types []string, err error) {
+func (*interfaceApplication) StoreSupportedMimeTypes(call *dbus.Call) (mime_types []string, err error) {
 	err = call.Store(&mime_types)
 	return
 }
 
-func (v *application) SupportedMimeTypes(flags dbus.Flags) (mime_types []string, err error) {
+func (v *interfaceApplication) SupportedMimeTypes(flags dbus.Flags) ([]string, error) {
 	return v.StoreSupportedMimeTypes(
 		<-v.GoSupportedMimeTypes(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ApplicationType
 
-func (v *application) GoApplicationType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoApplicationType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationType", flags, ch)
 }
 
-func (*application) StoreApplicationType(call *dbus.Call) (type0 string, err error) {
+func (*interfaceApplication) StoreApplicationType(call *dbus.Call) (type0 string, err error) {
 	err = call.Store(&type0)
 	return
 }
 
-func (v *application) ApplicationType(flags dbus.Flags) (type0 string, err error) {
+func (v *interfaceApplication) ApplicationType(flags dbus.Flags) (string, error) {
 	return v.StoreApplicationType(
 		<-v.GoApplicationType(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ApplicationMenu
 
-func (v *application) GoApplicationMenu(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoApplicationMenu(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplicationMenu", flags, ch)
 }
 
-func (*application) StoreApplicationMenu(call *dbus.Call) (busname string, objectpath string, err error) {
+func (*interfaceApplication) StoreApplicationMenu(call *dbus.Call) (busname string, objectpath string, err error) {
 	err = call.Store(&busname, &objectpath)
 	return
 }
 
-func (v *application) ApplicationMenu(flags dbus.Flags) (busname string, objectpath string, err error) {
+func (v *interfaceApplication) ApplicationMenu(flags dbus.Flags) (string, string, error) {
 	return v.StoreApplicationMenu(
 		<-v.GoApplicationMenu(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method FocusableChild
 
-func (v *application) GoFocusableChild(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApplication) GoFocusableChild(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FocusableChild", flags, ch)
 }
 
-func (*application) StoreFocusableChild(call *dbus.Call) (path string, err error) {
+func (*interfaceApplication) StoreFocusableChild(call *dbus.Call) (path string, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *application) FocusableChild(flags dbus.Flags) (path string, err error) {
+func (v *interfaceApplication) FocusableChild(flags dbus.Flags) (string, error) {
 	return v.StoreFocusableChild(
 		<-v.GoFocusableChild(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal WindowRemoved
 
-func (v *application) ConnectWindowRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceApplication) ConnectWindowRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -632,7 +717,7 @@ func (v *application) ConnectWindowRemoved(cb func(path string)) (dbusutil.Signa
 
 // signal WindowAdded
 
-func (v *application) ConnectWindowAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceApplication) ConnectWindowAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -658,7 +743,7 @@ func (v *application) ConnectWindowAdded(cb func(path string)) (dbusutil.SignalH
 
 // signal SupportedMimeTypesChanged
 
-func (v *application) ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceApplication) ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -684,7 +769,7 @@ func (v *application) ConnectSupportedMimeTypesChanged(cb func(dnd_mimes []strin
 
 // signal DesktopFileUpdated
 
-func (v *application) ConnectDesktopFileUpdated(cb func(desktop_file string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceApplication) ConnectDesktopFileUpdated(cb func(desktop_file string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -708,167 +793,203 @@ func (v *application) ConnectDesktopFileUpdated(cb func(desktop_file string)) (d
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-func (obj *Application) View() *view {
-	return &obj.view
+func (obj *objectApplication) View() view {
+	return &obj.interfaceView
 }
 
-type view struct{}
-
-func (v *view) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type view interface {
+	GoViewType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ViewType(flags dbus.Flags) (string, error)
+	GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Icon(flags dbus.Flags) (string, error)
+	GoName(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Name(flags dbus.Flags) (string, error)
+	GoUserVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	UserVisible(flags dbus.Flags) (bool, error)
+	GoIsUrgent(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsUrgent(flags dbus.Flags) (bool, error)
+	GoIsRunning(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsRunning(flags dbus.Flags) (bool, error)
+	GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsActive(flags dbus.Flags) (bool, error)
+	GoParents(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Parents(flags dbus.Flags) ([]string, error)
+	GoChildren(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Children(flags dbus.Flags) ([]string, error)
+	ConnectNameChanged(cb func(old_name string, new_name string)) (dbusutil.SignalHandlerId, error)
+	ConnectUserVisibleChanged(cb func(user_visible bool)) (dbusutil.SignalHandlerId, error)
+	ConnectUrgentChanged(cb func(is_urgent bool)) (dbusutil.SignalHandlerId, error)
+	ConnectRunningChanged(cb func(is_running bool)) (dbusutil.SignalHandlerId, error)
+	ConnectActiveChanged(cb func(is_active bool)) (dbusutil.SignalHandlerId, error)
+	ConnectChildRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error)
+	ConnectChildAdded(cb func(path string)) (dbusutil.SignalHandlerId, error)
+	ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error)
+	PropName() proxy.PropString
+	PropIcon() proxy.PropString
+	PropUserVisible() proxy.PropBool
+	Running() proxy.PropBool
+	Starting() proxy.PropBool
+	Urgent() proxy.PropBool
+	Active() proxy.PropBool
 }
 
-func (*view) GetInterfaceName_() string {
+type interfaceView struct{}
+
+func (v *interfaceView) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceView) GetInterfaceName_() string {
 	return "org.ayatana.bamf.view"
 }
 
 // method ViewType
 
-func (v *view) GoViewType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoViewType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ViewType", flags, ch)
 }
 
-func (*view) StoreViewType(call *dbus.Call) (view_type string, err error) {
+func (*interfaceView) StoreViewType(call *dbus.Call) (view_type string, err error) {
 	err = call.Store(&view_type)
 	return
 }
 
-func (v *view) ViewType(flags dbus.Flags) (view_type string, err error) {
+func (v *interfaceView) ViewType(flags dbus.Flags) (string, error) {
 	return v.StoreViewType(
 		<-v.GoViewType(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Icon
 
-func (v *view) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Icon", flags, ch)
 }
 
-func (*view) StoreIcon(call *dbus.Call) (name string, err error) {
+func (*interfaceView) StoreIcon(call *dbus.Call) (name string, err error) {
 	err = call.Store(&name)
 	return
 }
 
-func (v *view) Icon(flags dbus.Flags) (name string, err error) {
+func (v *interfaceView) Icon(flags dbus.Flags) (string, error) {
 	return v.StoreIcon(
 		<-v.GoIcon(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Name
 
-func (v *view) GoName(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoName(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Name", flags, ch)
 }
 
-func (*view) StoreName(call *dbus.Call) (name string, err error) {
+func (*interfaceView) StoreName(call *dbus.Call) (name string, err error) {
 	err = call.Store(&name)
 	return
 }
 
-func (v *view) Name(flags dbus.Flags) (name string, err error) {
+func (v *interfaceView) Name(flags dbus.Flags) (string, error) {
 	return v.StoreName(
 		<-v.GoName(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method UserVisible
 
-func (v *view) GoUserVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoUserVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UserVisible", flags, ch)
 }
 
-func (*view) StoreUserVisible(call *dbus.Call) (visible bool, err error) {
+func (*interfaceView) StoreUserVisible(call *dbus.Call) (visible bool, err error) {
 	err = call.Store(&visible)
 	return
 }
 
-func (v *view) UserVisible(flags dbus.Flags) (visible bool, err error) {
+func (v *interfaceView) UserVisible(flags dbus.Flags) (bool, error) {
 	return v.StoreUserVisible(
 		<-v.GoUserVisible(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsUrgent
 
-func (v *view) GoIsUrgent(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoIsUrgent(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsUrgent", flags, ch)
 }
 
-func (*view) StoreIsUrgent(call *dbus.Call) (urgent bool, err error) {
+func (*interfaceView) StoreIsUrgent(call *dbus.Call) (urgent bool, err error) {
 	err = call.Store(&urgent)
 	return
 }
 
-func (v *view) IsUrgent(flags dbus.Flags) (urgent bool, err error) {
+func (v *interfaceView) IsUrgent(flags dbus.Flags) (bool, error) {
 	return v.StoreIsUrgent(
 		<-v.GoIsUrgent(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsRunning
 
-func (v *view) GoIsRunning(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoIsRunning(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsRunning", flags, ch)
 }
 
-func (*view) StoreIsRunning(call *dbus.Call) (running bool, err error) {
+func (*interfaceView) StoreIsRunning(call *dbus.Call) (running bool, err error) {
 	err = call.Store(&running)
 	return
 }
 
-func (v *view) IsRunning(flags dbus.Flags) (running bool, err error) {
+func (v *interfaceView) IsRunning(flags dbus.Flags) (bool, error) {
 	return v.StoreIsRunning(
 		<-v.GoIsRunning(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsActive
 
-func (v *view) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsActive", flags, ch)
 }
 
-func (*view) StoreIsActive(call *dbus.Call) (active bool, err error) {
+func (*interfaceView) StoreIsActive(call *dbus.Call) (active bool, err error) {
 	err = call.Store(&active)
 	return
 }
 
-func (v *view) IsActive(flags dbus.Flags) (active bool, err error) {
+func (v *interfaceView) IsActive(flags dbus.Flags) (bool, error) {
 	return v.StoreIsActive(
 		<-v.GoIsActive(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Parents
 
-func (v *view) GoParents(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoParents(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Parents", flags, ch)
 }
 
-func (*view) StoreParents(call *dbus.Call) (parents_paths []string, err error) {
+func (*interfaceView) StoreParents(call *dbus.Call) (parents_paths []string, err error) {
 	err = call.Store(&parents_paths)
 	return
 }
 
-func (v *view) Parents(flags dbus.Flags) (parents_paths []string, err error) {
+func (v *interfaceView) Parents(flags dbus.Flags) ([]string, error) {
 	return v.StoreParents(
 		<-v.GoParents(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Children
 
-func (v *view) GoChildren(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceView) GoChildren(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Children", flags, ch)
 }
 
-func (*view) StoreChildren(call *dbus.Call) (children_paths []string, err error) {
+func (*interfaceView) StoreChildren(call *dbus.Call) (children_paths []string, err error) {
 	err = call.Store(&children_paths)
 	return
 }
 
-func (v *view) Children(flags dbus.Flags) (children_paths []string, err error) {
+func (v *interfaceView) Children(flags dbus.Flags) ([]string, error) {
 	return v.StoreChildren(
 		<-v.GoChildren(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal NameChanged
 
-func (v *view) ConnectNameChanged(cb func(old_name string, new_name string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectNameChanged(cb func(old_name string, new_name string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -895,7 +1016,7 @@ func (v *view) ConnectNameChanged(cb func(old_name string, new_name string)) (db
 
 // signal UserVisibleChanged
 
-func (v *view) ConnectUserVisibleChanged(cb func(user_visible bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectUserVisibleChanged(cb func(user_visible bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -921,7 +1042,7 @@ func (v *view) ConnectUserVisibleChanged(cb func(user_visible bool)) (dbusutil.S
 
 // signal UrgentChanged
 
-func (v *view) ConnectUrgentChanged(cb func(is_urgent bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectUrgentChanged(cb func(is_urgent bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -947,7 +1068,7 @@ func (v *view) ConnectUrgentChanged(cb func(is_urgent bool)) (dbusutil.SignalHan
 
 // signal RunningChanged
 
-func (v *view) ConnectRunningChanged(cb func(is_running bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectRunningChanged(cb func(is_running bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -973,7 +1094,7 @@ func (v *view) ConnectRunningChanged(cb func(is_running bool)) (dbusutil.SignalH
 
 // signal ActiveChanged
 
-func (v *view) ConnectActiveChanged(cb func(is_active bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectActiveChanged(cb func(is_active bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -999,7 +1120,7 @@ func (v *view) ConnectActiveChanged(cb func(is_active bool)) (dbusutil.SignalHan
 
 // signal ChildRemoved
 
-func (v *view) ConnectChildRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectChildRemoved(cb func(path string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1025,7 +1146,7 @@ func (v *view) ConnectChildRemoved(cb func(path string)) (dbusutil.SignalHandler
 
 // signal ChildAdded
 
-func (v *view) ConnectChildAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectChildAdded(cb func(path string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1051,7 +1172,7 @@ func (v *view) ConnectChildAdded(cb func(path string)) (dbusutil.SignalHandlerId
 
 // signal Closed
 
-func (v *view) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceView) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1073,8 +1194,8 @@ func (v *view) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // property Name s
 
-func (v *view) PropName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceView) PropName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1082,8 +1203,8 @@ func (v *view) PropName() proxy.PropString {
 
 // property Icon s
 
-func (v *view) PropIcon() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceView) PropIcon() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Icon",
 	}
@@ -1091,8 +1212,8 @@ func (v *view) PropIcon() proxy.PropString {
 
 // property UserVisible b
 
-func (v *view) PropUserVisible() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceView) PropUserVisible() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "UserVisible",
 	}
@@ -1100,8 +1221,8 @@ func (v *view) PropUserVisible() proxy.PropBool {
 
 // property Running b
 
-func (v *view) Running() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceView) Running() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Running",
 	}
@@ -1109,8 +1230,8 @@ func (v *view) Running() proxy.PropBool {
 
 // property Starting b
 
-func (v *view) Starting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceView) Starting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Starting",
 	}
@@ -1118,8 +1239,8 @@ func (v *view) Starting() proxy.PropBool {
 
 // property Urgent b
 
-func (v *view) Urgent() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceView) Urgent() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Urgent",
 	}
@@ -1127,157 +1248,182 @@ func (v *view) Urgent() proxy.PropBool {
 
 // property Active b
 
-func (v *view) Active() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceView) Active() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Active",
 	}
 }
 
-type Window struct {
-	window // interface org.ayatana.bamf.window
-	view   // interface org.ayatana.bamf.view
+type Window interface {
+	Window() window // interface org.ayatana.bamf.window
+	View() view     // interface org.ayatana.bamf.view
 	proxy.Object
 }
 
-func NewWindow(conn *dbus.Conn, path dbus.ObjectPath) (*Window, error) {
+type objectWindow struct {
+	interfaceWindow // interface org.ayatana.bamf.window
+	interfaceView   // interface org.ayatana.bamf.view
+	proxy.ImplObject
+}
+
+func NewWindow(conn *dbus.Conn, path dbus.ObjectPath) (Window, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Window)
-	obj.Object.Init_(conn, "org.ayatana.bamf", path)
+	obj := new(objectWindow)
+	obj.ImplObject.Init_(conn, "org.ayatana.bamf", path)
 	return obj, nil
 }
 
-func (obj *Window) Window() *window {
-	return &obj.window
+func (obj *objectWindow) Window() window {
+	return &obj.interfaceWindow
 }
 
-type window struct{}
-
-func (v *window) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type window interface {
+	GoGetXid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetXid(flags dbus.Flags) (uint32, error)
+	GoGetPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetPid(flags dbus.Flags) (uint32, error)
+	GoTransient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Transient(flags dbus.Flags) (string, error)
+	GoWindowType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	WindowType(flags dbus.Flags) (uint32, error)
+	GoXprop(flags dbus.Flags, ch chan *dbus.Call, xprop string) *dbus.Call
+	Xprop(flags dbus.Flags, xprop string) (string, error)
+	GoMonitor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Monitor(flags dbus.Flags) (int32, error)
+	GoMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Maximized(flags dbus.Flags) (int32, error)
+	ConnectMonitorChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error)
+	ConnectMaximizedChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*window) GetInterfaceName_() string {
+type interfaceWindow struct{}
+
+func (v *interfaceWindow) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWindow) GetInterfaceName_() string {
 	return "org.ayatana.bamf.window"
 }
 
 // method GetXid
 
-func (v *window) GoGetXid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoGetXid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetXid", flags, ch)
 }
 
-func (*window) StoreGetXid(call *dbus.Call) (xid uint32, err error) {
+func (*interfaceWindow) StoreGetXid(call *dbus.Call) (xid uint32, err error) {
 	err = call.Store(&xid)
 	return
 }
 
-func (v *window) GetXid(flags dbus.Flags) (xid uint32, err error) {
+func (v *interfaceWindow) GetXid(flags dbus.Flags) (uint32, error) {
 	return v.StoreGetXid(
 		<-v.GoGetXid(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetPid
 
-func (v *window) GoGetPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoGetPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetPid", flags, ch)
 }
 
-func (*window) StoreGetPid(call *dbus.Call) (pid uint32, err error) {
+func (*interfaceWindow) StoreGetPid(call *dbus.Call) (pid uint32, err error) {
 	err = call.Store(&pid)
 	return
 }
 
-func (v *window) GetPid(flags dbus.Flags) (pid uint32, err error) {
+func (v *interfaceWindow) GetPid(flags dbus.Flags) (uint32, error) {
 	return v.StoreGetPid(
 		<-v.GoGetPid(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Transient
 
-func (v *window) GoTransient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoTransient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Transient", flags, ch)
 }
 
-func (*window) StoreTransient(call *dbus.Call) (path string, err error) {
+func (*interfaceWindow) StoreTransient(call *dbus.Call) (path string, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *window) Transient(flags dbus.Flags) (path string, err error) {
+func (v *interfaceWindow) Transient(flags dbus.Flags) (string, error) {
 	return v.StoreTransient(
 		<-v.GoTransient(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method WindowType
 
-func (v *window) GoWindowType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoWindowType(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".WindowType", flags, ch)
 }
 
-func (*window) StoreWindowType(call *dbus.Call) (type0 uint32, err error) {
+func (*interfaceWindow) StoreWindowType(call *dbus.Call) (type0 uint32, err error) {
 	err = call.Store(&type0)
 	return
 }
 
-func (v *window) WindowType(flags dbus.Flags) (type0 uint32, err error) {
+func (v *interfaceWindow) WindowType(flags dbus.Flags) (uint32, error) {
 	return v.StoreWindowType(
 		<-v.GoWindowType(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Xprop
 
-func (v *window) GoXprop(flags dbus.Flags, ch chan *dbus.Call, xprop string) *dbus.Call {
+func (v *interfaceWindow) GoXprop(flags dbus.Flags, ch chan *dbus.Call, xprop string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Xprop", flags, ch, xprop)
 }
 
-func (*window) StoreXprop(call *dbus.Call) (name string, err error) {
+func (*interfaceWindow) StoreXprop(call *dbus.Call) (name string, err error) {
 	err = call.Store(&name)
 	return
 }
 
-func (v *window) Xprop(flags dbus.Flags, xprop string) (name string, err error) {
+func (v *interfaceWindow) Xprop(flags dbus.Flags, xprop string) (string, error) {
 	return v.StoreXprop(
 		<-v.GoXprop(flags, make(chan *dbus.Call, 1), xprop).Done)
 }
 
 // method Monitor
 
-func (v *window) GoMonitor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoMonitor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Monitor", flags, ch)
 }
 
-func (*window) StoreMonitor(call *dbus.Call) (monitor_number int32, err error) {
+func (*interfaceWindow) StoreMonitor(call *dbus.Call) (monitor_number int32, err error) {
 	err = call.Store(&monitor_number)
 	return
 }
 
-func (v *window) Monitor(flags dbus.Flags) (monitor_number int32, err error) {
+func (v *interfaceWindow) Monitor(flags dbus.Flags) (int32, error) {
 	return v.StoreMonitor(
 		<-v.GoMonitor(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Maximized
 
-func (v *window) GoMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Maximized", flags, ch)
 }
 
-func (*window) StoreMaximized(call *dbus.Call) (maximized int32, err error) {
+func (*interfaceWindow) StoreMaximized(call *dbus.Call) (maximized int32, err error) {
 	err = call.Store(&maximized)
 	return
 }
 
-func (v *window) Maximized(flags dbus.Flags) (maximized int32, err error) {
+func (v *interfaceWindow) Maximized(flags dbus.Flags) (int32, error) {
 	return v.StoreMaximized(
 		<-v.GoMaximized(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal MonitorChanged
 
-func (v *window) ConnectMonitorChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMonitorChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1304,7 +1450,7 @@ func (v *window) ConnectMonitorChanged(cb func(old int32, new int32)) (dbusutil.
 
 // signal MaximizedChanged
 
-func (v *window) ConnectMaximizedChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMaximizedChanged(cb func(old int32, new int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1327,4 +1473,8 @@ func (v *window) ConnectMaximizedChanged(cb func(old int32, new int32)) (dbusuti
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+func (obj *objectWindow) View() view {
+	return &obj.interfaceView
 }

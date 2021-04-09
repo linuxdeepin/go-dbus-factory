@@ -12,50 +12,63 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type LocaleHelper struct {
+type LocaleHelper interface {
 	localeHelper // interface com.deepin.api.LocaleHelper
 	proxy.Object
 }
 
-func NewLocaleHelper(conn *dbus.Conn) *LocaleHelper {
-	obj := new(LocaleHelper)
-	obj.Object.Init_(conn, "com.deepin.api.LocaleHelper", "/com/deepin/api/LocaleHelper")
+type objectLocaleHelper struct {
+	interfaceLocaleHelper // interface com.deepin.api.LocaleHelper
+	proxy.ImplObject
+}
+
+func NewLocaleHelper(conn *dbus.Conn) LocaleHelper {
+	obj := new(objectLocaleHelper)
+	obj.ImplObject.Init_(conn, "com.deepin.api.LocaleHelper", "/com/deepin/api/LocaleHelper")
 	return obj
 }
 
-type localeHelper struct{}
-
-func (v *localeHelper) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type localeHelper interface {
+	GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call
+	GenerateLocale(flags dbus.Flags, locale string) error
+	GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call
+	SetLocale(flags dbus.Flags, locale string) error
+	ConnectSuccess(cb func(ok bool, reason string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*localeHelper) GetInterfaceName_() string {
+type interfaceLocaleHelper struct{}
+
+func (v *interfaceLocaleHelper) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLocaleHelper) GetInterfaceName_() string {
 	return "com.deepin.api.LocaleHelper"
 }
 
 // method GenerateLocale
 
-func (v *localeHelper) GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *interfaceLocaleHelper) GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GenerateLocale", flags, ch, locale)
 }
 
-func (v *localeHelper) GenerateLocale(flags dbus.Flags, locale string) error {
+func (v *interfaceLocaleHelper) GenerateLocale(flags dbus.Flags, locale string) error {
 	return (<-v.GoGenerateLocale(flags, make(chan *dbus.Call, 1), locale).Done).Err
 }
 
 // method SetLocale
 
-func (v *localeHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *interfaceLocaleHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocale", flags, ch, locale)
 }
 
-func (v *localeHelper) SetLocale(flags dbus.Flags, locale string) error {
+func (v *interfaceLocaleHelper) SetLocale(flags dbus.Flags, locale string) error {
 	return (<-v.GoSetLocale(flags, make(chan *dbus.Call, 1), locale).Done).Err
 }
 
 // signal Success
 
-func (v *localeHelper) ConnectSuccess(cb func(ok bool, reason string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLocaleHelper) ConnectSuccess(cb func(ok bool, reason string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

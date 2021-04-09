@@ -9,53 +9,67 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Clipboard struct {
+type Clipboard interface {
 	clipboard // interface com.deepin.dde.Clipboard
 	proxy.Object
 }
 
-func NewClipboard(conn *dbus.Conn) *Clipboard {
-	obj := new(Clipboard)
-	obj.Object.Init_(conn, "com.deepin.dde.Clipboard", "/com/deepin/dde/Clipboard")
+type objectClipboard struct {
+	interfaceClipboard // interface com.deepin.dde.Clipboard
+	proxy.ImplObject
+}
+
+func NewClipboard(conn *dbus.Conn) Clipboard {
+	obj := new(objectClipboard)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.Clipboard", "/com/deepin/dde/Clipboard")
 	return obj
 }
 
-type clipboard struct{}
-
-func (v *clipboard) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type clipboard interface {
+	GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Toggle(flags dbus.Flags) error
+	GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Show(flags dbus.Flags) error
+	GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Hide(flags dbus.Flags) error
 }
 
-func (*clipboard) GetInterfaceName_() string {
+type interfaceClipboard struct{}
+
+func (v *interfaceClipboard) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceClipboard) GetInterfaceName_() string {
 	return "com.deepin.dde.Clipboard"
 }
 
 // method Toggle
 
-func (v *clipboard) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceClipboard) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Toggle", flags, ch)
 }
 
-func (v *clipboard) Toggle(flags dbus.Flags) error {
+func (v *interfaceClipboard) Toggle(flags dbus.Flags) error {
 	return (<-v.GoToggle(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Show
 
-func (v *clipboard) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceClipboard) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
 }
 
-func (v *clipboard) Show(flags dbus.Flags) error {
+func (v *interfaceClipboard) Show(flags dbus.Flags) error {
 	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Hide
 
-func (v *clipboard) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceClipboard) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hide", flags, ch)
 }
 
-func (v *clipboard) Hide(flags dbus.Flags) error {
+func (v *interfaceClipboard) Hide(flags dbus.Flags) error {
 	return (<-v.GoHide(flags, make(chan *dbus.Call, 1)).Done).Err
 }

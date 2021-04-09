@@ -9,33 +9,43 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type OSD struct {
+type OSD interface {
 	osd // interface com.deepin.dde.osd
 	proxy.Object
 }
 
-func NewOSD(conn *dbus.Conn) *OSD {
-	obj := new(OSD)
-	obj.Object.Init_(conn, "com.deepin.dde.osd", "/")
+type objectOSD struct {
+	interfaceOsd // interface com.deepin.dde.osd
+	proxy.ImplObject
+}
+
+func NewOSD(conn *dbus.Conn) OSD {
+	obj := new(objectOSD)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.osd", "/")
 	return obj
 }
 
-type osd struct{}
-
-func (v *osd) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type osd interface {
+	GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call
+	ShowOSD(flags dbus.Flags, osd string) error
 }
 
-func (*osd) GetInterfaceName_() string {
+type interfaceOsd struct{}
+
+func (v *interfaceOsd) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceOsd) GetInterfaceName_() string {
 	return "com.deepin.dde.osd"
 }
 
 // method ShowOSD
 
-func (v *osd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call {
+func (v *interfaceOsd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowOSD", flags, ch, osd)
 }
 
-func (v *osd) ShowOSD(flags dbus.Flags, osd string) error {
+func (v *interfaceOsd) ShowOSD(flags dbus.Flags, osd string) error {
 	return (<-v.GoShowOSD(flags, make(chan *dbus.Call, 1), osd).Done).Err
 }

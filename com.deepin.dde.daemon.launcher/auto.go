@@ -12,208 +12,249 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Launcher struct {
+type Launcher interface {
 	launcher // interface com.deepin.dde.daemon.Launcher
 	proxy.Object
 }
 
-func NewLauncher(conn *dbus.Conn) *Launcher {
-	obj := new(Launcher)
-	obj.Object.Init_(conn, "com.deepin.dde.daemon.Launcher", "/com/deepin/dde/daemon/Launcher")
+type objectLauncher struct {
+	interfaceLauncher // interface com.deepin.dde.daemon.Launcher
+	proxy.ImplObject
+}
+
+func NewLauncher(conn *dbus.Conn) Launcher {
+	obj := new(objectLauncher)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.daemon.Launcher", "/com/deepin/dde/daemon/Launcher")
 	return obj
 }
 
-type launcher struct{}
-
-func (v *launcher) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type launcher interface {
+	GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetAllItemInfos(flags dbus.Flags) ([]ItemInfo, error)
+	GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetAllNewInstalledApps(flags dbus.Flags) ([]string, error)
+	GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	GetDisableScaling(flags dbus.Flags, id string) (bool, error)
+	GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	GetItemInfo(flags dbus.Flags, id string) (ItemInfo, error)
+	GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	GetUseProxy(flags dbus.Flags, id string) (bool, error)
+	GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	IsItemOnDesktop(flags dbus.Flags, id string) (bool, error)
+	GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	MarkLaunched(flags dbus.Flags, id string) error
+	GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	RequestRemoveFromDesktop(flags dbus.Flags, id string) (bool, error)
+	GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	RequestSendToDesktop(flags dbus.Flags, id string) (bool, error)
+	GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call
+	RequestUninstall(flags dbus.Flags, id string, purge bool) error
+	GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call
+	Search(flags dbus.Flags, key string) error
+	GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call
+	SetDisableScaling(flags dbus.Flags, id string, value bool) error
+	GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call
+	SetUseProxy(flags dbus.Flags, id string, value bool) error
+	ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error)
+	ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error)
+	ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error)
+	ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error)
+	ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error)
+	Fullscreen() proxy.PropBool
+	DisplayMode() proxy.PropInt32
 }
 
-func (*launcher) GetInterfaceName_() string {
+type interfaceLauncher struct{}
+
+func (v *interfaceLauncher) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLauncher) GetInterfaceName_() string {
 	return "com.deepin.dde.daemon.Launcher"
 }
 
 // method GetAllItemInfos
 
-func (v *launcher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllItemInfos", flags, ch)
 }
 
-func (*launcher) StoreGetAllItemInfos(call *dbus.Call) (itemInfoList []ItemInfo, err error) {
+func (*interfaceLauncher) StoreGetAllItemInfos(call *dbus.Call) (itemInfoList []ItemInfo, err error) {
 	err = call.Store(&itemInfoList)
 	return
 }
 
-func (v *launcher) GetAllItemInfos(flags dbus.Flags) (itemInfoList []ItemInfo, err error) {
+func (v *interfaceLauncher) GetAllItemInfos(flags dbus.Flags) ([]ItemInfo, error) {
 	return v.StoreGetAllItemInfos(
 		<-v.GoGetAllItemInfos(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetAllNewInstalledApps
 
-func (v *launcher) GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllNewInstalledApps", flags, ch)
 }
 
-func (*launcher) StoreGetAllNewInstalledApps(call *dbus.Call) (apps []string, err error) {
+func (*interfaceLauncher) StoreGetAllNewInstalledApps(call *dbus.Call) (apps []string, err error) {
 	err = call.Store(&apps)
 	return
 }
 
-func (v *launcher) GetAllNewInstalledApps(flags dbus.Flags) (apps []string, err error) {
+func (v *interfaceLauncher) GetAllNewInstalledApps(flags dbus.Flags) ([]string, error) {
 	return v.StoreGetAllNewInstalledApps(
 		<-v.GoGetAllNewInstalledApps(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetDisableScaling
 
-func (v *launcher) GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDisableScaling", flags, ch, id)
 }
 
-func (*launcher) StoreGetDisableScaling(call *dbus.Call) (value bool, err error) {
+func (*interfaceLauncher) StoreGetDisableScaling(call *dbus.Call) (value bool, err error) {
 	err = call.Store(&value)
 	return
 }
 
-func (v *launcher) GetDisableScaling(flags dbus.Flags, id string) (value bool, err error) {
+func (v *interfaceLauncher) GetDisableScaling(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreGetDisableScaling(
 		<-v.GoGetDisableScaling(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method GetItemInfo
 
-func (v *launcher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetItemInfo", flags, ch, id)
 }
 
-func (*launcher) StoreGetItemInfo(call *dbus.Call) (itemInfo ItemInfo, err error) {
+func (*interfaceLauncher) StoreGetItemInfo(call *dbus.Call) (itemInfo ItemInfo, err error) {
 	err = call.Store(&itemInfo)
 	return
 }
 
-func (v *launcher) GetItemInfo(flags dbus.Flags, id string) (itemInfo ItemInfo, err error) {
+func (v *interfaceLauncher) GetItemInfo(flags dbus.Flags, id string) (ItemInfo, error) {
 	return v.StoreGetItemInfo(
 		<-v.GoGetItemInfo(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method GetUseProxy
 
-func (v *launcher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUseProxy", flags, ch, id)
 }
 
-func (*launcher) StoreGetUseProxy(call *dbus.Call) (value bool, err error) {
+func (*interfaceLauncher) StoreGetUseProxy(call *dbus.Call) (value bool, err error) {
 	err = call.Store(&value)
 	return
 }
 
-func (v *launcher) GetUseProxy(flags dbus.Flags, id string) (value bool, err error) {
+func (v *interfaceLauncher) GetUseProxy(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreGetUseProxy(
 		<-v.GoGetUseProxy(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method IsItemOnDesktop
 
-func (v *launcher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsItemOnDesktop", flags, ch, id)
 }
 
-func (*launcher) StoreIsItemOnDesktop(call *dbus.Call) (result bool, err error) {
+func (*interfaceLauncher) StoreIsItemOnDesktop(call *dbus.Call) (result bool, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *launcher) IsItemOnDesktop(flags dbus.Flags, id string) (result bool, err error) {
+func (v *interfaceLauncher) IsItemOnDesktop(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreIsItemOnDesktop(
 		<-v.GoIsItemOnDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method MarkLaunched
 
-func (v *launcher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MarkLaunched", flags, ch, id)
 }
 
-func (v *launcher) MarkLaunched(flags dbus.Flags, id string) error {
+func (v *interfaceLauncher) MarkLaunched(flags dbus.Flags, id string) error {
 	return (<-v.GoMarkLaunched(flags, make(chan *dbus.Call, 1), id).Done).Err
 }
 
 // method RequestRemoveFromDesktop
 
-func (v *launcher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestRemoveFromDesktop", flags, ch, id)
 }
 
-func (*launcher) StoreRequestRemoveFromDesktop(call *dbus.Call) (ok bool, err error) {
+func (*interfaceLauncher) StoreRequestRemoveFromDesktop(call *dbus.Call) (ok bool, err error) {
 	err = call.Store(&ok)
 	return
 }
 
-func (v *launcher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (ok bool, err error) {
+func (v *interfaceLauncher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreRequestRemoveFromDesktop(
 		<-v.GoRequestRemoveFromDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method RequestSendToDesktop
 
-func (v *launcher) GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceLauncher) GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestSendToDesktop", flags, ch, id)
 }
 
-func (*launcher) StoreRequestSendToDesktop(call *dbus.Call) (ok bool, err error) {
+func (*interfaceLauncher) StoreRequestSendToDesktop(call *dbus.Call) (ok bool, err error) {
 	err = call.Store(&ok)
 	return
 }
 
-func (v *launcher) RequestSendToDesktop(flags dbus.Flags, id string) (ok bool, err error) {
+func (v *interfaceLauncher) RequestSendToDesktop(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreRequestSendToDesktop(
 		<-v.GoRequestSendToDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method RequestUninstall
 
-func (v *launcher) GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
+func (v *interfaceLauncher) GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUninstall", flags, ch, id, purge)
 }
 
-func (v *launcher) RequestUninstall(flags dbus.Flags, id string, purge bool) error {
+func (v *interfaceLauncher) RequestUninstall(flags dbus.Flags, id string, purge bool) error {
 	return (<-v.GoRequestUninstall(flags, make(chan *dbus.Call, 1), id, purge).Done).Err
 }
 
 // method Search
 
-func (v *launcher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
+func (v *interfaceLauncher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Search", flags, ch, key)
 }
 
-func (v *launcher) Search(flags dbus.Flags, key string) error {
+func (v *interfaceLauncher) Search(flags dbus.Flags, key string) error {
 	return (<-v.GoSearch(flags, make(chan *dbus.Call, 1), key).Done).Err
 }
 
 // method SetDisableScaling
 
-func (v *launcher) GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+func (v *interfaceLauncher) GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDisableScaling", flags, ch, id, value)
 }
 
-func (v *launcher) SetDisableScaling(flags dbus.Flags, id string, value bool) error {
+func (v *interfaceLauncher) SetDisableScaling(flags dbus.Flags, id string, value bool) error {
 	return (<-v.GoSetDisableScaling(flags, make(chan *dbus.Call, 1), id, value).Done).Err
 }
 
 // method SetUseProxy
 
-func (v *launcher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+func (v *interfaceLauncher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUseProxy", flags, ch, id, value)
 }
 
-func (v *launcher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
+func (v *interfaceLauncher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
 	return (<-v.GoSetUseProxy(flags, make(chan *dbus.Call, 1), id, value).Done).Err
 }
 
 // signal SearchDone
 
-func (v *launcher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -239,7 +280,7 @@ func (v *launcher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHan
 
 // signal ItemChanged
 
-func (v *launcher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -267,7 +308,7 @@ func (v *launcher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, 
 
 // signal NewAppLaunched
 
-func (v *launcher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -293,7 +334,7 @@ func (v *launcher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.Signal
 
 // signal UninstallSuccess
 
-func (v *launcher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -319,7 +360,7 @@ func (v *launcher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.Sign
 
 // signal UninstallFailed
 
-func (v *launcher) ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -346,8 +387,8 @@ func (v *launcher) ConnectUninstallFailed(cb func(appId string, errMsg string)) 
 
 // property Fullscreen b
 
-func (v *launcher) Fullscreen() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceLauncher) Fullscreen() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Fullscreen",
 	}
@@ -355,8 +396,8 @@ func (v *launcher) Fullscreen() proxy.PropBool {
 
 // property DisplayMode i
 
-func (v *launcher) DisplayMode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceLauncher) DisplayMode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DisplayMode",
 	}

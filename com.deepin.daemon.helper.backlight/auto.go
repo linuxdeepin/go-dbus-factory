@@ -9,106 +9,132 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Backlight struct {
+type Backlight interface {
 	backlight // interface com.deepin.daemon.helper.Backlight
 	proxy.Object
 }
 
-func NewBacklight(conn *dbus.Conn) *Backlight {
-	obj := new(Backlight)
-	obj.Object.Init_(conn, "com.deepin.daemon.helper.Backlight", "/com/deepin/daemon/helper/Backlight")
+type objectBacklight struct {
+	interfaceBacklight // interface com.deepin.daemon.helper.Backlight
+	proxy.ImplObject
+}
+
+func NewBacklight(conn *dbus.Conn) Backlight {
+	obj := new(objectBacklight)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.helper.Backlight", "/com/deepin/daemon/helper/Backlight")
 	return obj
 }
 
-type backlight struct{}
-
-func (v *backlight) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type backlight interface {
+	GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, type0 uint8, name string, value int32) *dbus.Call
+	SetBrightness(flags dbus.Flags, type0 uint8, name string, value int32) error
 }
 
-func (*backlight) GetInterfaceName_() string {
+type interfaceBacklight struct{}
+
+func (v *interfaceBacklight) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBacklight) GetInterfaceName_() string {
 	return "com.deepin.daemon.helper.Backlight"
 }
 
 // method SetBrightness
 
-func (v *backlight) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, type0 uint8, name string, value int32) *dbus.Call {
+func (v *interfaceBacklight) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, type0 uint8, name string, value int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBrightness", flags, ch, type0, name, value)
 }
 
-func (v *backlight) SetBrightness(flags dbus.Flags, type0 uint8, name string, value int32) error {
+func (v *interfaceBacklight) SetBrightness(flags dbus.Flags, type0 uint8, name string, value int32) error {
 	return (<-v.GoSetBrightness(flags, make(chan *dbus.Call, 1), type0, name, value).Done).Err
 }
 
-type DDCCI struct {
+type DDCCI interface {
 	ddcci // interface com.deepin.daemon.helper.Backlight.DDCCI
 	proxy.Object
 }
 
-func NewDDCCI(conn *dbus.Conn) *DDCCI {
-	obj := new(DDCCI)
-	obj.Object.Init_(conn, "com.deepin.daemon.helper.Backlight", "/com/deepin/daemon/helper/Backlight/DDCCI")
+type objectDDCCI struct {
+	interfaceDdcci // interface com.deepin.daemon.helper.Backlight.DDCCI
+	proxy.ImplObject
+}
+
+func NewDDCCI(conn *dbus.Conn) DDCCI {
+	obj := new(objectDDCCI)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.helper.Backlight", "/com/deepin/daemon/helper/Backlight/DDCCI")
 	return obj
 }
 
-type ddcci struct{}
-
-func (v *ddcci) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ddcci interface {
+	GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call
+	CheckSupport(flags dbus.Flags, edidChecksum string) (bool, error)
+	GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call
+	GetBrightness(flags dbus.Flags, edidChecksum string) (int32, error)
+	GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string, value int32) *dbus.Call
+	SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error
+	GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RefreshDisplays(flags dbus.Flags) error
 }
 
-func (*ddcci) GetInterfaceName_() string {
+type interfaceDdcci struct{}
+
+func (v *interfaceDdcci) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDdcci) GetInterfaceName_() string {
 	return "com.deepin.daemon.helper.Backlight.DDCCI"
 }
 
 // method CheckSupport
 
-func (v *ddcci) GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
+func (v *interfaceDdcci) GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CheckSupport", flags, ch, edidChecksum)
 }
 
-func (*ddcci) StoreCheckSupport(call *dbus.Call) (support bool, err error) {
+func (*interfaceDdcci) StoreCheckSupport(call *dbus.Call) (support bool, err error) {
 	err = call.Store(&support)
 	return
 }
 
-func (v *ddcci) CheckSupport(flags dbus.Flags, edidChecksum string) (support bool, err error) {
+func (v *interfaceDdcci) CheckSupport(flags dbus.Flags, edidChecksum string) (bool, error) {
 	return v.StoreCheckSupport(
 		<-v.GoCheckSupport(flags, make(chan *dbus.Call, 1), edidChecksum).Done)
 }
 
 // method GetBrightness
 
-func (v *ddcci) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
+func (v *interfaceDdcci) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetBrightness", flags, ch, edidChecksum)
 }
 
-func (*ddcci) StoreGetBrightness(call *dbus.Call) (value int32, err error) {
+func (*interfaceDdcci) StoreGetBrightness(call *dbus.Call) (value int32, err error) {
 	err = call.Store(&value)
 	return
 }
 
-func (v *ddcci) GetBrightness(flags dbus.Flags, edidChecksum string) (value int32, err error) {
+func (v *interfaceDdcci) GetBrightness(flags dbus.Flags, edidChecksum string) (int32, error) {
 	return v.StoreGetBrightness(
 		<-v.GoGetBrightness(flags, make(chan *dbus.Call, 1), edidChecksum).Done)
 }
 
 // method SetBrightness
 
-func (v *ddcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string, value int32) *dbus.Call {
+func (v *interfaceDdcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string, value int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBrightness", flags, ch, edidChecksum, value)
 }
 
-func (v *ddcci) SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error {
+func (v *interfaceDdcci) SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error {
 	return (<-v.GoSetBrightness(flags, make(chan *dbus.Call, 1), edidChecksum, value).Done).Err
 }
 
 // method RefreshDisplays
 
-func (v *ddcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDdcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshDisplays", flags, ch)
 }
 
-func (v *ddcci) RefreshDisplays(flags dbus.Flags) error {
+func (v *interfaceDdcci) RefreshDisplays(flags dbus.Flags) error {
 	return (<-v.GoRefreshDisplays(flags, make(chan *dbus.Call, 1)).Done).Err
 }

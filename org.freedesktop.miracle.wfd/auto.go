@@ -11,86 +11,113 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Wfd struct {
-	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
-	wfd                          // interface org.freedesktop.miracle.wfd
+type Wfd interface {
+	ObjectManager() object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
+	Wfd() wfd                                    // interface org.freedesktop.miracle.wfd
 	proxy.Object
 }
 
-func NewWfd(conn *dbus.Conn) *Wfd {
-	obj := new(Wfd)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wfd", "/org/freedesktop/miracle/wfd")
+type objectWfd struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	interfaceWfd                          // interface org.freedesktop.miracle.wfd
+	proxy.ImplObject
+}
+
+func NewWfd(conn *dbus.Conn) Wfd {
+	obj := new(objectWfd)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wfd", "/org/freedesktop/miracle/wfd")
 	return obj
 }
 
-func (obj *Wfd) Wfd() *wfd {
-	return &obj.wfd
+func (obj *objectWfd) ObjectManager() object_manager.ObjectManager {
+	return &obj.InterfaceObjectManager
 }
 
-type wfd struct{}
-
-func (v *wfd) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+func (obj *objectWfd) Wfd() wfd {
+	return &obj.interfaceWfd
 }
 
-func (*wfd) GetInterfaceName_() string {
+type wfd interface {
+	GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Shutdown(flags dbus.Flags) error
+}
+
+type interfaceWfd struct{}
+
+func (v *interfaceWfd) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWfd) GetInterfaceName_() string {
 	return "org.freedesktop.miracle.wfd"
 }
 
 // method Shutdown
 
-func (v *wfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Shutdown", flags, ch)
 }
 
-func (v *wfd) Shutdown(flags dbus.Flags) error {
+func (v *interfaceWfd) Shutdown(flags dbus.Flags) error {
 	return (<-v.GoShutdown(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
-type Sink struct {
+type Sink interface {
 	sink // interface org.freedesktop.miracle.wfd.Sink
 	proxy.Object
 }
 
-func NewSink(conn *dbus.Conn, path dbus.ObjectPath) (*Sink, error) {
+type objectSink struct {
+	interfaceSink // interface org.freedesktop.miracle.wfd.Sink
+	proxy.ImplObject
+}
+
+func NewSink(conn *dbus.Conn, path dbus.ObjectPath) (Sink, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Sink)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wfd", path)
+	obj := new(objectSink)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wfd", path)
 	return obj, nil
 }
 
-type sink struct{}
-
-func (v *sink) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type sink interface {
+	GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call
+	StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (dbus.ObjectPath, error)
+	Session() proxy.PropObjectPath
+	Peer() proxy.PropObjectPath
 }
 
-func (*sink) GetInterfaceName_() string {
+type interfaceSink struct{}
+
+func (v *interfaceSink) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSink) GetInterfaceName_() string {
 	return "org.freedesktop.miracle.wfd.Sink"
 }
 
 // method StartSession
 
-func (v *sink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call {
+func (v *interfaceSink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartSession", flags, ch, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 }
 
-func (*sink) StoreStartSession(call *dbus.Call) (arg7 dbus.ObjectPath, err error) {
+func (*interfaceSink) StoreStartSession(call *dbus.Call) (arg7 dbus.ObjectPath, err error) {
 	err = call.Store(&arg7)
 	return
 }
 
-func (v *sink) StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (arg7 dbus.ObjectPath, err error) {
+func (v *interfaceSink) StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (dbus.ObjectPath, error) {
 	return v.StoreStartSession(
 		<-v.GoStartSession(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2, arg3, arg4, arg5, arg6).Done)
 }
 
 // property Session o
 
-func (v *sink) Session() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceSink) Session() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Session",
 	}
@@ -98,71 +125,88 @@ func (v *sink) Session() proxy.PropObjectPath {
 
 // property Peer o
 
-func (v *sink) Peer() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceSink) Peer() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Peer",
 	}
 }
 
-type Session struct {
+type Session interface {
 	session // interface org.freedesktop.miracle.wfd.Session
 	proxy.Object
 }
 
-func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
+type objectSession struct {
+	interfaceSession // interface org.freedesktop.miracle.wfd.Session
+	proxy.ImplObject
+}
+
+func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (Session, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Session)
-	obj.Object.Init_(conn, "org.freedesktop.miracle.wfd", path)
+	obj := new(objectSession)
+	obj.ImplObject.Init_(conn, "org.freedesktop.miracle.wfd", path)
 	return obj, nil
 }
 
-type session struct{}
-
-func (v *session) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type session interface {
+	GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Resume(flags dbus.Flags) error
+	GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Pause(flags dbus.Flags) error
+	GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Teardown(flags dbus.Flags) error
+	Sink() proxy.PropObjectPath
+	Url() proxy.PropString
+	State() proxy.PropInt32
 }
 
-func (*session) GetInterfaceName_() string {
+type interfaceSession struct{}
+
+func (v *interfaceSession) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSession) GetInterfaceName_() string {
 	return "org.freedesktop.miracle.wfd.Session"
 }
 
 // method Resume
 
-func (v *session) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Resume", flags, ch)
 }
 
-func (v *session) Resume(flags dbus.Flags) error {
+func (v *interfaceSession) Resume(flags dbus.Flags) error {
 	return (<-v.GoResume(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Pause
 
-func (v *session) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pause", flags, ch)
 }
 
-func (v *session) Pause(flags dbus.Flags) error {
+func (v *interfaceSession) Pause(flags dbus.Flags) error {
 	return (<-v.GoPause(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Teardown
 
-func (v *session) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Teardown", flags, ch)
 }
 
-func (v *session) Teardown(flags dbus.Flags) error {
+func (v *interfaceSession) Teardown(flags dbus.Flags) error {
 	return (<-v.GoTeardown(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Sink o
 
-func (v *session) Sink() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceSession) Sink() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Sink",
 	}
@@ -170,8 +214,8 @@ func (v *session) Sink() proxy.PropObjectPath {
 
 // property Url s
 
-func (v *session) Url() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Url() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Url",
 	}
@@ -179,8 +223,8 @@ func (v *session) Url() proxy.PropString {
 
 // property State i
 
-func (v *session) State() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceSession) State() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "State",
 	}

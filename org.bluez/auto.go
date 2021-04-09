@@ -11,223 +11,289 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ObjectManager struct {
+type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
 	proxy.Object
 }
 
-func NewObjectManager(conn *dbus.Conn) *ObjectManager {
-	obj := new(ObjectManager)
-	obj.Object.Init_(conn, "org.bluez", "/")
+type objectObjectManager struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewObjectManager(conn *dbus.Conn) ObjectManager {
+	obj := new(objectObjectManager)
+	obj.ImplObject.Init_(conn, "org.bluez", "/")
 	return obj
 }
 
-type Manager struct {
-	agentManager   // interface org.bluez.AgentManager1
-	healthManager  // interface org.bluez.HealthManager1
-	profileManager // interface org.bluez.ProfileManager1
+type Manager interface {
+	AgentManager() agentManager     // interface org.bluez.AgentManager1
+	HealthManager() healthManager   // interface org.bluez.HealthManager1
+	ProfileManager() profileManager // interface org.bluez.ProfileManager1
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.bluez", "/org/bluez")
+type objectManager struct {
+	interfaceAgentManager   // interface org.bluez.AgentManager1
+	interfaceHealthManager  // interface org.bluez.HealthManager1
+	interfaceProfileManager // interface org.bluez.ProfileManager1
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.bluez", "/org/bluez")
 	return obj
 }
 
-func (obj *Manager) AgentManager() *agentManager {
-	return &obj.agentManager
+func (obj *objectManager) AgentManager() agentManager {
+	return &obj.interfaceAgentManager
 }
 
-type agentManager struct{}
-
-func (v *agentManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type agentManager interface {
+	GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call
+	RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error
+	GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call
+	UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error
+	GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call
+	RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error
 }
 
-func (*agentManager) GetInterfaceName_() string {
+type interfaceAgentManager struct{}
+
+func (v *interfaceAgentManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAgentManager) GetInterfaceName_() string {
 	return "org.bluez.AgentManager1"
 }
 
 // method RegisterAgent
 
-func (v *agentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call {
+func (v *interfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterAgent", flags, ch, agent, capability)
 }
 
-func (v *agentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error {
+func (v *interfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error {
 	return (<-v.GoRegisterAgent(flags, make(chan *dbus.Call, 1), agent, capability).Done).Err
 }
 
 // method UnregisterAgent
 
-func (v *agentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *interfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterAgent", flags, ch, agent)
 }
 
-func (v *agentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *interfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	return (<-v.GoUnregisterAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
 }
 
 // method RequestDefaultAgent
 
-func (v *agentManager) GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *interfaceAgentManager) GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDefaultAgent", flags, ch, agent)
 }
 
-func (v *agentManager) RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *interfaceAgentManager) RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	return (<-v.GoRequestDefaultAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
 }
 
-func (obj *Manager) HealthManager() *healthManager {
-	return &obj.healthManager
+func (obj *objectManager) HealthManager() healthManager {
+	return &obj.interfaceHealthManager
 }
 
-type healthManager struct{}
-
-func (v *healthManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type healthManager interface {
+	GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call
+	DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error
 }
 
-func (*healthManager) GetInterfaceName_() string {
+type interfaceHealthManager struct{}
+
+func (v *interfaceHealthManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceHealthManager) GetInterfaceName_() string {
 	return "org.bluez.HealthManager1"
 }
 
 // method CreateApplication
 
-func (v *healthManager) GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceHealthManager) GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateApplication", flags, ch, config)
 }
 
-func (*healthManager) StoreCreateApplication(call *dbus.Call) (application dbus.ObjectPath, err error) {
+func (*interfaceHealthManager) StoreCreateApplication(call *dbus.Call) (application dbus.ObjectPath, err error) {
 	err = call.Store(&application)
 	return
 }
 
-func (v *healthManager) CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (application dbus.ObjectPath, err error) {
+func (v *interfaceHealthManager) CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreateApplication(
 		<-v.GoCreateApplication(flags, make(chan *dbus.Call, 1), config).Done)
 }
 
 // method DestroyApplication
 
-func (v *healthManager) GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
+func (v *interfaceHealthManager) GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DestroyApplication", flags, ch, application)
 }
 
-func (v *healthManager) DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error {
+func (v *interfaceHealthManager) DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error {
 	return (<-v.GoDestroyApplication(flags, make(chan *dbus.Call, 1), application).Done).Err
 }
 
-func (obj *Manager) ProfileManager() *profileManager {
-	return &obj.profileManager
+func (obj *objectManager) ProfileManager() profileManager {
+	return &obj.interfaceProfileManager
 }
 
-type profileManager struct{}
-
-func (v *profileManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type profileManager interface {
+	GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call
+	RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error
+	GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call
+	UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error
 }
 
-func (*profileManager) GetInterfaceName_() string {
+type interfaceProfileManager struct{}
+
+func (v *interfaceProfileManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceProfileManager) GetInterfaceName_() string {
 	return "org.bluez.ProfileManager1"
 }
 
 // method RegisterProfile
 
-func (v *profileManager) GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceProfileManager) GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterProfile", flags, ch, profile, UUID, options)
 }
 
-func (v *profileManager) RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error {
+func (v *interfaceProfileManager) RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error {
 	return (<-v.GoRegisterProfile(flags, make(chan *dbus.Call, 1), profile, UUID, options).Done).Err
 }
 
 // method UnregisterProfile
 
-func (v *profileManager) GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call {
+func (v *interfaceProfileManager) GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterProfile", flags, ch, profile)
 }
 
-func (v *profileManager) UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error {
+func (v *interfaceProfileManager) UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error {
 	return (<-v.GoUnregisterProfile(flags, make(chan *dbus.Call, 1), profile).Done).Err
 }
 
-type HCI struct {
-	adapter       // interface org.bluez.Adapter1
-	gattManager   // interface org.bluez.GattManager1
-	media         // interface org.bluez.Media1
-	networkServer // interface org.bluez.NetworkServer1
+type HCI interface {
+	Adapter() adapter             // interface org.bluez.Adapter1
+	GattManager() gattManager     // interface org.bluez.GattManager1
+	Media() media                 // interface org.bluez.Media1
+	NetworkServer() networkServer // interface org.bluez.NetworkServer1
 	proxy.Object
 }
 
-func NewHCI(conn *dbus.Conn, path dbus.ObjectPath) (*HCI, error) {
+type objectHCI struct {
+	interfaceAdapter       // interface org.bluez.Adapter1
+	interfaceGattManager   // interface org.bluez.GattManager1
+	interfaceMedia         // interface org.bluez.Media1
+	interfaceNetworkServer // interface org.bluez.NetworkServer1
+	proxy.ImplObject
+}
+
+func NewHCI(conn *dbus.Conn, path dbus.ObjectPath) (HCI, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(HCI)
-	obj.Object.Init_(conn, "org.bluez", path)
+	obj := new(objectHCI)
+	obj.ImplObject.Init_(conn, "org.bluez", path)
 	return obj, nil
 }
 
-func (obj *HCI) Adapter() *adapter {
-	return &obj.adapter
+func (obj *objectHCI) Adapter() adapter {
+	return &obj.interfaceAdapter
 }
 
-type adapter struct{}
-
-func (v *adapter) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type adapter interface {
+	GoStartDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StartDiscovery(flags dbus.Flags) error
+	GoSetDiscoveryFilter(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	SetDiscoveryFilter(flags dbus.Flags, properties map[string]dbus.Variant) error
+	GoStopDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopDiscovery(flags dbus.Flags) error
+	GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Call, device dbus.ObjectPath) *dbus.Call
+	RemoveDevice(flags dbus.Flags, device dbus.ObjectPath) error
+	Address() proxy.PropString
+	Name() proxy.PropString
+	Alias() proxy.PropString
+	Class() proxy.PropUint32
+	Powered() proxy.PropBool
+	Discoverable() proxy.PropBool
+	DiscoverableTimeout() proxy.PropUint32
+	Pairable() proxy.PropBool
+	PairableTimeout() proxy.PropUint32
+	Discovering() proxy.PropBool
+	UUIDs() proxy.PropStringArray
+	Modalias() proxy.PropString
 }
 
-func (*adapter) GetInterfaceName_() string {
+type interfaceAdapter struct{}
+
+func (v *interfaceAdapter) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAdapter) GetInterfaceName_() string {
 	return "org.bluez.Adapter1"
 }
 
 // method StartDiscovery
 
-func (v *adapter) GoStartDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAdapter) GoStartDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartDiscovery", flags, ch)
 }
 
-func (v *adapter) StartDiscovery(flags dbus.Flags) error {
+func (v *interfaceAdapter) StartDiscovery(flags dbus.Flags) error {
 	return (<-v.GoStartDiscovery(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetDiscoveryFilter
 
-func (v *adapter) GoSetDiscoveryFilter(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceAdapter) GoSetDiscoveryFilter(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDiscoveryFilter", flags, ch, properties)
 }
 
-func (v *adapter) SetDiscoveryFilter(flags dbus.Flags, properties map[string]dbus.Variant) error {
+func (v *interfaceAdapter) SetDiscoveryFilter(flags dbus.Flags, properties map[string]dbus.Variant) error {
 	return (<-v.GoSetDiscoveryFilter(flags, make(chan *dbus.Call, 1), properties).Done).Err
 }
 
 // method StopDiscovery
 
-func (v *adapter) GoStopDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAdapter) GoStopDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopDiscovery", flags, ch)
 }
 
-func (v *adapter) StopDiscovery(flags dbus.Flags) error {
+func (v *interfaceAdapter) StopDiscovery(flags dbus.Flags) error {
 	return (<-v.GoStopDiscovery(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RemoveDevice
 
-func (v *adapter) GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Call, device dbus.ObjectPath) *dbus.Call {
+func (v *interfaceAdapter) GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Call, device dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveDevice", flags, ch, device)
 }
 
-func (v *adapter) RemoveDevice(flags dbus.Flags, device dbus.ObjectPath) error {
+func (v *interfaceAdapter) RemoveDevice(flags dbus.Flags, device dbus.ObjectPath) error {
 	return (<-v.GoRemoveDevice(flags, make(chan *dbus.Call, 1), device).Done).Err
 }
 
 // property Address s
 
-func (v *adapter) Address() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAdapter) Address() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Address",
 	}
@@ -235,8 +301,8 @@ func (v *adapter) Address() proxy.PropString {
 
 // property Name s
 
-func (v *adapter) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAdapter) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -244,8 +310,8 @@ func (v *adapter) Name() proxy.PropString {
 
 // property Alias s
 
-func (v *adapter) Alias() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAdapter) Alias() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Alias",
 	}
@@ -253,8 +319,8 @@ func (v *adapter) Alias() proxy.PropString {
 
 // property Class u
 
-func (v *adapter) Class() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAdapter) Class() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Class",
 	}
@@ -262,8 +328,8 @@ func (v *adapter) Class() proxy.PropUint32 {
 
 // property Powered b
 
-func (v *adapter) Powered() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAdapter) Powered() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Powered",
 	}
@@ -271,8 +337,8 @@ func (v *adapter) Powered() proxy.PropBool {
 
 // property Discoverable b
 
-func (v *adapter) Discoverable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAdapter) Discoverable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Discoverable",
 	}
@@ -280,8 +346,8 @@ func (v *adapter) Discoverable() proxy.PropBool {
 
 // property DiscoverableTimeout u
 
-func (v *adapter) DiscoverableTimeout() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAdapter) DiscoverableTimeout() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "DiscoverableTimeout",
 	}
@@ -289,8 +355,8 @@ func (v *adapter) DiscoverableTimeout() proxy.PropUint32 {
 
 // property Pairable b
 
-func (v *adapter) Pairable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAdapter) Pairable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Pairable",
 	}
@@ -298,8 +364,8 @@ func (v *adapter) Pairable() proxy.PropBool {
 
 // property PairableTimeout u
 
-func (v *adapter) PairableTimeout() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAdapter) PairableTimeout() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "PairableTimeout",
 	}
@@ -307,8 +373,8 @@ func (v *adapter) PairableTimeout() proxy.PropUint32 {
 
 // property Discovering b
 
-func (v *adapter) Discovering() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAdapter) Discovering() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Discovering",
 	}
@@ -316,8 +382,8 @@ func (v *adapter) Discovering() proxy.PropBool {
 
 // property UUIDs as
 
-func (v *adapter) UUIDs() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceAdapter) UUIDs() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UUIDs",
 	}
@@ -325,223 +391,287 @@ func (v *adapter) UUIDs() proxy.PropStringArray {
 
 // property Modalias s
 
-func (v *adapter) Modalias() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAdapter) Modalias() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Modalias",
 	}
 }
 
-func (obj *HCI) GattManager() *gattManager {
-	return &obj.gattManager
+func (obj *objectHCI) GattManager() gattManager {
+	return &obj.interfaceGattManager
 }
 
-type gattManager struct{}
-
-func (v *gattManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type gattManager interface {
+	GoRegisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath, options map[string]dbus.Variant) *dbus.Call
+	RegisterApplication(flags dbus.Flags, application dbus.ObjectPath, options map[string]dbus.Variant) error
+	GoUnregisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call
+	UnregisterApplication(flags dbus.Flags, application dbus.ObjectPath) error
 }
 
-func (*gattManager) GetInterfaceName_() string {
+type interfaceGattManager struct{}
+
+func (v *interfaceGattManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceGattManager) GetInterfaceName_() string {
 	return "org.bluez.GattManager1"
 }
 
 // method RegisterApplication
 
-func (v *gattManager) GoRegisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceGattManager) GoRegisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterApplication", flags, ch, application, options)
 }
 
-func (v *gattManager) RegisterApplication(flags dbus.Flags, application dbus.ObjectPath, options map[string]dbus.Variant) error {
+func (v *interfaceGattManager) RegisterApplication(flags dbus.Flags, application dbus.ObjectPath, options map[string]dbus.Variant) error {
 	return (<-v.GoRegisterApplication(flags, make(chan *dbus.Call, 1), application, options).Done).Err
 }
 
 // method UnregisterApplication
 
-func (v *gattManager) GoUnregisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
+func (v *interfaceGattManager) GoUnregisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterApplication", flags, ch, application)
 }
 
-func (v *gattManager) UnregisterApplication(flags dbus.Flags, application dbus.ObjectPath) error {
+func (v *interfaceGattManager) UnregisterApplication(flags dbus.Flags, application dbus.ObjectPath) error {
 	return (<-v.GoUnregisterApplication(flags, make(chan *dbus.Call, 1), application).Done).Err
 }
 
-func (obj *HCI) Media() *media {
-	return &obj.media
+func (obj *objectHCI) Media() media {
+	return &obj.interfaceMedia
 }
 
-type media struct{}
-
-func (v *media) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type media interface {
+	GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call
+	RegisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) error
+	GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath) *dbus.Call
+	UnregisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath) error
+	GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call
+	RegisterPlayer(flags dbus.Flags, player dbus.ObjectPath, properties map[string]dbus.Variant) error
+	GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath) *dbus.Call
+	UnregisterPlayer(flags dbus.Flags, player dbus.ObjectPath) error
 }
 
-func (*media) GetInterfaceName_() string {
+type interfaceMedia struct{}
+
+func (v *interfaceMedia) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceMedia) GetInterfaceName_() string {
 	return "org.bluez.Media1"
 }
 
 // method RegisterEndpoint
 
-func (v *media) GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceMedia) GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterEndpoint", flags, ch, endpoint, properties)
 }
 
-func (v *media) RegisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) error {
+func (v *interfaceMedia) RegisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) error {
 	return (<-v.GoRegisterEndpoint(flags, make(chan *dbus.Call, 1), endpoint, properties).Done).Err
 }
 
 // method UnregisterEndpoint
 
-func (v *media) GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath) *dbus.Call {
+func (v *interfaceMedia) GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterEndpoint", flags, ch, endpoint)
 }
 
-func (v *media) UnregisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath) error {
+func (v *interfaceMedia) UnregisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath) error {
 	return (<-v.GoUnregisterEndpoint(flags, make(chan *dbus.Call, 1), endpoint).Done).Err
 }
 
 // method RegisterPlayer
 
-func (v *media) GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceMedia) GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterPlayer", flags, ch, player, properties)
 }
 
-func (v *media) RegisterPlayer(flags dbus.Flags, player dbus.ObjectPath, properties map[string]dbus.Variant) error {
+func (v *interfaceMedia) RegisterPlayer(flags dbus.Flags, player dbus.ObjectPath, properties map[string]dbus.Variant) error {
 	return (<-v.GoRegisterPlayer(flags, make(chan *dbus.Call, 1), player, properties).Done).Err
 }
 
 // method UnregisterPlayer
 
-func (v *media) GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath) *dbus.Call {
+func (v *interfaceMedia) GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterPlayer", flags, ch, player)
 }
 
-func (v *media) UnregisterPlayer(flags dbus.Flags, player dbus.ObjectPath) error {
+func (v *interfaceMedia) UnregisterPlayer(flags dbus.Flags, player dbus.ObjectPath) error {
 	return (<-v.GoUnregisterPlayer(flags, make(chan *dbus.Call, 1), player).Done).Err
 }
 
-func (obj *HCI) NetworkServer() *networkServer {
-	return &obj.networkServer
+func (obj *objectHCI) NetworkServer() networkServer {
+	return &obj.interfaceNetworkServer
 }
 
-type networkServer struct{}
-
-func (v *networkServer) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type networkServer interface {
+	GoRegister(flags dbus.Flags, ch chan *dbus.Call, uuid string, bridge string) *dbus.Call
+	Register(flags dbus.Flags, uuid string, bridge string) error
+	GoUnregister(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call
+	Unregister(flags dbus.Flags, uuid string) error
 }
 
-func (*networkServer) GetInterfaceName_() string {
+type interfaceNetworkServer struct{}
+
+func (v *interfaceNetworkServer) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceNetworkServer) GetInterfaceName_() string {
 	return "org.bluez.NetworkServer1"
 }
 
 // method Register
 
-func (v *networkServer) GoRegister(flags dbus.Flags, ch chan *dbus.Call, uuid string, bridge string) *dbus.Call {
+func (v *interfaceNetworkServer) GoRegister(flags dbus.Flags, ch chan *dbus.Call, uuid string, bridge string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Register", flags, ch, uuid, bridge)
 }
 
-func (v *networkServer) Register(flags dbus.Flags, uuid string, bridge string) error {
+func (v *interfaceNetworkServer) Register(flags dbus.Flags, uuid string, bridge string) error {
 	return (<-v.GoRegister(flags, make(chan *dbus.Call, 1), uuid, bridge).Done).Err
 }
 
 // method Unregister
 
-func (v *networkServer) GoUnregister(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+func (v *interfaceNetworkServer) GoUnregister(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unregister", flags, ch, uuid)
 }
 
-func (v *networkServer) Unregister(flags dbus.Flags, uuid string) error {
+func (v *interfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) error {
 	return (<-v.GoUnregister(flags, make(chan *dbus.Call, 1), uuid).Done).Err
 }
 
-type Device struct {
+type Device interface {
 	device // interface org.bluez.Device1
 	proxy.Object
 }
 
-func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (*Device, error) {
+type objectDevice struct {
+	interfaceDevice // interface org.bluez.Device1
+	proxy.ImplObject
+}
+
+func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (Device, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Device)
-	obj.Object.Init_(conn, "org.bluez", path)
+	obj := new(objectDevice)
+	obj.ImplObject.Init_(conn, "org.bluez", path)
 	return obj, nil
 }
 
-type device struct{}
-
-func (v *device) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type device interface {
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	GoConnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Connect(flags dbus.Flags) error
+	GoConnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call
+	ConnectProfile(flags dbus.Flags, UUID string) error
+	GoDisconnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call
+	DisconnectProfile(flags dbus.Flags, UUID string) error
+	GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Pair(flags dbus.Flags) error
+	GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CancelPairing(flags dbus.Flags) error
+	Address() proxy.PropString
+	Name() proxy.PropString
+	Alias() proxy.PropString
+	Class() proxy.PropUint32
+	Appearance() proxy.PropUint16
+	Icon() proxy.PropString
+	Paired() proxy.PropBool
+	Trusted() proxy.PropBool
+	Blocked() proxy.PropBool
+	LegacyPairing() proxy.PropBool
+	RSSI() proxy.PropInt16
+	Connected() proxy.PropBool
+	UUIDs() proxy.PropStringArray
+	Modalias() proxy.PropString
+	Adapter() proxy.PropObjectPath
+	ManufacturerData() PropDeviceManufacturerData
+	ServiceData() PropDeviceServiceData
+	TxPower() proxy.PropInt16
+	ServicesResolved() proxy.PropBool
 }
 
-func (*device) GetInterfaceName_() string {
+type interfaceDevice struct{}
+
+func (v *interfaceDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDevice) GetInterfaceName_() string {
 	return "org.bluez.Device1"
 }
 
 // method Disconnect
 
-func (v *device) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *device) Disconnect(flags dbus.Flags) error {
+func (v *interfaceDevice) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Connect
 
-func (v *device) GoConnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch)
 }
 
-func (v *device) Connect(flags dbus.Flags) error {
+func (v *interfaceDevice) Connect(flags dbus.Flags) error {
 	return (<-v.GoConnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ConnectProfile
 
-func (v *device) GoConnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
+func (v *interfaceDevice) GoConnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ConnectProfile", flags, ch, UUID)
 }
 
-func (v *device) ConnectProfile(flags dbus.Flags, UUID string) error {
+func (v *interfaceDevice) ConnectProfile(flags dbus.Flags, UUID string) error {
 	return (<-v.GoConnectProfile(flags, make(chan *dbus.Call, 1), UUID).Done).Err
 }
 
 // method DisconnectProfile
 
-func (v *device) GoDisconnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
+func (v *interfaceDevice) GoDisconnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisconnectProfile", flags, ch, UUID)
 }
 
-func (v *device) DisconnectProfile(flags dbus.Flags, UUID string) error {
+func (v *interfaceDevice) DisconnectProfile(flags dbus.Flags, UUID string) error {
 	return (<-v.GoDisconnectProfile(flags, make(chan *dbus.Call, 1), UUID).Done).Err
 }
 
 // method Pair
 
-func (v *device) GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pair", flags, ch)
 }
 
-func (v *device) Pair(flags dbus.Flags) error {
+func (v *interfaceDevice) Pair(flags dbus.Flags) error {
 	return (<-v.GoPair(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method CancelPairing
 
-func (v *device) GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelPairing", flags, ch)
 }
 
-func (v *device) CancelPairing(flags dbus.Flags) error {
+func (v *interfaceDevice) CancelPairing(flags dbus.Flags) error {
 	return (<-v.GoCancelPairing(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Address s
 
-func (v *device) Address() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Address() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Address",
 	}
@@ -549,8 +679,8 @@ func (v *device) Address() proxy.PropString {
 
 // property Name s
 
-func (v *device) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -558,8 +688,8 @@ func (v *device) Name() proxy.PropString {
 
 // property Alias s
 
-func (v *device) Alias() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Alias() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Alias",
 	}
@@ -567,8 +697,8 @@ func (v *device) Alias() proxy.PropString {
 
 // property Class u
 
-func (v *device) Class() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) Class() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Class",
 	}
@@ -576,8 +706,8 @@ func (v *device) Class() proxy.PropUint32 {
 
 // property Appearance q
 
-func (v *device) Appearance() proxy.PropUint16 {
-	return proxy.PropUint16{
+func (v *interfaceDevice) Appearance() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
 		Impl: v,
 		Name: "Appearance",
 	}
@@ -585,8 +715,8 @@ func (v *device) Appearance() proxy.PropUint16 {
 
 // property Icon s
 
-func (v *device) Icon() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Icon() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Icon",
 	}
@@ -594,8 +724,8 @@ func (v *device) Icon() proxy.PropString {
 
 // property Paired b
 
-func (v *device) Paired() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Paired() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Paired",
 	}
@@ -603,8 +733,8 @@ func (v *device) Paired() proxy.PropBool {
 
 // property Trusted b
 
-func (v *device) Trusted() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Trusted() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Trusted",
 	}
@@ -612,8 +742,8 @@ func (v *device) Trusted() proxy.PropBool {
 
 // property Blocked b
 
-func (v *device) Blocked() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Blocked() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Blocked",
 	}
@@ -621,8 +751,8 @@ func (v *device) Blocked() proxy.PropBool {
 
 // property LegacyPairing b
 
-func (v *device) LegacyPairing() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) LegacyPairing() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "LegacyPairing",
 	}
@@ -630,8 +760,8 @@ func (v *device) LegacyPairing() proxy.PropBool {
 
 // property RSSI n
 
-func (v *device) RSSI() proxy.PropInt16 {
-	return proxy.PropInt16{
+func (v *interfaceDevice) RSSI() proxy.PropInt16 {
+	return &proxy.ImplPropInt16{
 		Impl: v,
 		Name: "RSSI",
 	}
@@ -639,8 +769,8 @@ func (v *device) RSSI() proxy.PropInt16 {
 
 // property Connected b
 
-func (v *device) Connected() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Connected() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Connected",
 	}
@@ -648,8 +778,8 @@ func (v *device) Connected() proxy.PropBool {
 
 // property UUIDs as
 
-func (v *device) UUIDs() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceDevice) UUIDs() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UUIDs",
 	}
@@ -657,8 +787,8 @@ func (v *device) UUIDs() proxy.PropStringArray {
 
 // property Modalias s
 
-func (v *device) Modalias() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Modalias() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Modalias",
 	}
@@ -666,32 +796,35 @@ func (v *device) Modalias() proxy.PropString {
 
 // property Adapter o
 
-func (v *device) Adapter() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) Adapter() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Adapter",
 	}
 }
 
-// property ManufacturerData a{qv}
-
-func (v *device) ManufacturerData() PropDeviceManufacturerData {
-	return PropDeviceManufacturerData{
-		Impl: v,
-	}
+type PropDeviceManufacturerData interface {
+	Get(flags dbus.Flags) (value map[uint16]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[uint16]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[uint16]dbus.Variant)) error
 }
 
-type PropDeviceManufacturerData struct {
+type implPropDeviceManufacturerData struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropDeviceManufacturerData) Get(flags dbus.Flags) (value map[uint16]dbus.Variant, err error) {
+func (p implPropDeviceManufacturerData) Get(flags dbus.Flags) (value map[uint16]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ManufacturerData", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropDeviceManufacturerData) ConnectChanged(cb func(hasValue bool, value map[uint16]dbus.Variant)) error {
+func (p implPropDeviceManufacturerData) Set(flags dbus.Flags, value map[uint16]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDeviceManufacturerData) ConnectChanged(cb func(hasValue bool, value map[uint16]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -708,28 +841,40 @@ func (p PropDeviceManufacturerData) ConnectChanged(cb func(hasValue bool, value 
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ManufacturerData", cb0)
+		p.Name, cb0)
 }
 
-// property ServiceData a{sv}
+// property ManufacturerData a{qv}
 
-func (v *device) ServiceData() PropDeviceServiceData {
-	return PropDeviceServiceData{
+func (v *interfaceDevice) ManufacturerData() PropDeviceManufacturerData {
+	return &implPropDeviceManufacturerData{
 		Impl: v,
+		Name: "ManufacturerData",
 	}
 }
 
-type PropDeviceServiceData struct {
-	Impl proxy.Implementer
+type PropDeviceServiceData interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
 }
 
-func (p PropDeviceServiceData) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+type implPropDeviceServiceData struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropDeviceServiceData) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ServiceData", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropDeviceServiceData) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implPropDeviceServiceData) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDeviceServiceData) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -746,13 +891,22 @@ func (p PropDeviceServiceData) ConnectChanged(cb func(hasValue bool, value map[s
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ServiceData", cb0)
+		p.Name, cb0)
+}
+
+// property ServiceData a{sv}
+
+func (v *interfaceDevice) ServiceData() PropDeviceServiceData {
+	return &implPropDeviceServiceData{
+		Impl: v,
+		Name: "ServiceData",
+	}
 }
 
 // property TxPower n
 
-func (v *device) TxPower() proxy.PropInt16 {
-	return proxy.PropInt16{
+func (v *interfaceDevice) TxPower() proxy.PropInt16 {
+	return &proxy.ImplPropInt16{
 		Impl: v,
 		Name: "TxPower",
 	}
@@ -760,8 +914,8 @@ func (v *device) TxPower() proxy.PropInt16 {
 
 // property ServicesResolved b
 
-func (v *device) ServicesResolved() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) ServicesResolved() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ServicesResolved",
 	}

@@ -10,35 +10,41 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ObjectManager struct{}
-
-func (v *ObjectManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ObjectManager interface {
+	GetManagedObjects(flags dbus.Flags) (object_paths_interfaces_and_properties map[dbus.ObjectPath]map[string]map[string]dbus.Variant, err error)
+	ConnectInterfacesAdded(cb func(object_path dbus.ObjectPath, interfaces_and_properties map[string]map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectInterfacesRemoved(cb func(object_path dbus.ObjectPath, interfaces []string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*ObjectManager) GetInterfaceName_() string {
+type InterfaceObjectManager struct{}
+
+func (v *InterfaceObjectManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*InterfaceObjectManager) GetInterfaceName_() string {
 	return "org.freedesktop.DBus.ObjectManager"
 }
 
 // method GetManagedObjects
 
-func (v *ObjectManager) GoGetManagedObjects(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *InterfaceObjectManager) GoGetManagedObjects(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetManagedObjects", flags, ch)
 }
 
-func (*ObjectManager) StoreGetManagedObjects(call *dbus.Call) (object_paths_interfaces_and_properties map[dbus.ObjectPath]map[string]map[string]dbus.Variant, err error) {
+func (*InterfaceObjectManager) StoreGetManagedObjects(call *dbus.Call) (object_paths_interfaces_and_properties map[dbus.ObjectPath]map[string]map[string]dbus.Variant, err error) {
 	err = call.Store(&object_paths_interfaces_and_properties)
 	return
 }
 
-func (v *ObjectManager) GetManagedObjects(flags dbus.Flags) (object_paths_interfaces_and_properties map[dbus.ObjectPath]map[string]map[string]dbus.Variant, err error) {
+func (v *InterfaceObjectManager) GetManagedObjects(flags dbus.Flags) (object_paths_interfaces_and_properties map[dbus.ObjectPath]map[string]map[string]dbus.Variant, err error) {
 	return v.StoreGetManagedObjects(
 		<-v.GoGetManagedObjects(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal InterfacesAdded
 
-func (v *ObjectManager) ConnectInterfacesAdded(cb func(object_path dbus.ObjectPath, interfaces_and_properties map[string]map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *InterfaceObjectManager) ConnectInterfacesAdded(cb func(object_path dbus.ObjectPath, interfaces_and_properties map[string]map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -65,7 +71,7 @@ func (v *ObjectManager) ConnectInterfacesAdded(cb func(object_path dbus.ObjectPa
 
 // signal InterfacesRemoved
 
-func (v *ObjectManager) ConnectInterfacesRemoved(cb func(object_path dbus.ObjectPath, interfaces []string)) (dbusutil.SignalHandlerId, error) {
+func (v *InterfaceObjectManager) ConnectInterfacesRemoved(cb func(object_path dbus.ObjectPath, interfaces []string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

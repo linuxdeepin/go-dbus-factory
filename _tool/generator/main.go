@@ -39,6 +39,7 @@ func main() {
 	pkg := dirName[lastDotIdx+1:]
 
 	sf := NewSourceFile(pkg)
+	msf := NewSourceFile(pkg)
 
 	sf.AddGoImport("errors")
 	sf.AddGoImport("fmt")
@@ -47,6 +48,12 @@ func main() {
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
 	sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
+
+	msf.AddGoImport("fmt")
+	msf.AddGoImport("github.com/godbus/dbus")
+	msf.AddGoImport("pkg.deepin.io/lib/dbusutil")
+	msf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
+	msf.AddGoImport("github.com/stretchr/testify/mock")
 
 	srvCfg.autoFill()
 
@@ -57,24 +64,64 @@ func main() {
 			log.Fatal(err)
 		}
 
-		sf.GoBody.Pn("type %s struct {", objCfg.Type)
+		sf.GoBody.Pn("type %s interface {", objCfg.Type)
 
 		for _, ifcCfg := range objCfg.Interfaces {
-			if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
-				ifcCfg.TypeDefined = true
-				sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifcCfg.Name)
+			if len(objCfg.Interfaces) > 1 {
+				if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
+					sf.GoBody.Pn("%s() object_manager.ObjectManager // interface %s", ifcCfg.Accessor, ifcCfg.Name)
+				} else {
+					sf.GoBody.Pn("%s() %s // interface %s", ifcCfg.Accessor, ifcCfg.Type, ifcCfg.Name)
+				}
 			} else {
-				sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifcCfg.Name)
+				if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
+					ifcCfg.TypeDefined = true
+					sf.GoBody.Pn("object_manager.ObjectManager // interface %s", ifcCfg.Name)
+				} else {
+					sf.GoBody.Pn("%s // interface %s", ifcCfg.Type, ifcCfg.Name)
+				}
 			}
 		}
 
 		sf.GoBody.Pn("proxy.Object")
 		sf.GoBody.Pn("}\n")
 
+		sf.GoBody.Pn("type %s struct {", toObjectImplName(objCfg.Type))
+
+		for _, ifcCfg := range objCfg.Interfaces {
+			if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
+				ifcCfg.TypeDefined = true
+				sf.GoBody.Pn("object_manager.InterfaceObjectManager // interface %s", ifcCfg.Name)
+			} else {
+				sf.GoBody.Pn("%s // interface %s", toInterfaceImplName(ifcCfg.Type), ifcCfg.Name)
+			}
+		}
+
+		sf.GoBody.Pn("proxy.ImplObject")
+		sf.GoBody.Pn("}\n")
+
+		msf.GoBody.Pn("type %s struct {", toObjectMockName(objCfg.Type))
+
+		for _, ifcCfg := range objCfg.Interfaces {
+			if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
+				ifcCfg.TypeDefined = true
+				msf.GoBody.Pn("object_manager.MockInterfaceObjectManager // interface %s", ifcCfg.Name)
+			} else {
+				msf.GoBody.Pn("%s // interface %s", toInterfaceMockName(ifcCfg.Type), ifcCfg.Name)
+			}
+		}
+
+		msf.GoBody.Pn("}\n")
+
 		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
 
 		for _, ifcCfg := range objCfg.Interfaces {
 			ifc := getInterfaceByName(interfaces, ifcCfg.Name)
+
+			if len(objCfg.Interfaces) > 1 {
+				writeImplementerAccessorMethod(sf.GoBody, ifcCfg, objCfg)
+			}
+
 			if ifcCfg.TypeDefined {
 				continue
 			}
@@ -84,17 +131,18 @@ func main() {
 					ifcCfg.Name, objCfg.Type)
 			}
 
-			if len(objCfg.Interfaces) > 1 {
-				writeImplementerAccessorMethod(sf.GoBody, ifc, objCfg)
-			}
-			writeImplementerMethods(sf.GoBody, ifc, ifcCfg)
+			writeInterfaceInterface(sf.GoBody, ifc, ifcCfg)
+			writeInterfaceImpl(sf.GoBody, ifc, ifcCfg)
+			writeInterfaceMock(msf.GoBody, ifc, ifcCfg)
 
 			for _, method := range ifc.Methods {
-				writeMethod(sf.GoBody, method, ifcCfg)
+				writeMethodImpl(sf.GoBody, method, ifcCfg)
+				writeMethodMock(msf.GoBody, method, ifcCfg)
 			}
 
 			for _, signal := range ifc.Signals {
-				writeSignal(sf.GoBody, signal, ifcCfg)
+				writeSignalImpl(sf.GoBody, signal, ifcCfg)
+				writeSignalMock(msf.GoBody, signal, ifcCfg)
 			}
 
 			for _, prop := range ifc.Properties {
@@ -105,31 +153,41 @@ func main() {
 						break
 					}
 				}
-				writeProperty(sf.GoBody, prop, ifcCfg, methodSameName)
+				writeProperty(sf.GoBody, msf.GoBody, prop, ifcCfg, methodSameName)
 			}
 		}
 	}
 
 	for _, propTypeCfg := range srvCfg.PropertyTypes {
-		writePropType(sf.GoBody, propTypeCfg)
+		writePropTypeInterface(sf.GoBody, propTypeCfg)
+		writePropTypeImpl(sf.GoBody, propTypeCfg)
+		writePropTypeMock(msf.GoBody, propTypeCfg)
 	}
 
 	autoGoFile := filepath.Join(dir, "auto.go")
 	md5sum, ok := utils.SumFileMd5(autoGoFile)
-
 	sf.Save(autoGoFile)
-
 	if ok {
 		md5sum1, ok1 := utils.SumFileMd5(autoGoFile)
 		if ok1 && md5sum == md5sum1 {
 			log.Println("auto.go not changed")
 		}
 	}
+
+	autoMockGoFile := filepath.Join(dir, "auto_mock.go")
+	md5sum, ok = utils.SumFileMd5(autoMockGoFile)
+	msf.Save(autoMockGoFile)
+	if ok {
+		md5sum1, ok1 := utils.SumFileMd5(autoMockGoFile)
+		if ok1 && md5sum == md5sum1 {
+			log.Println("auto_mock.go not changed")
+		}
+	}
 }
 
 func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 	var inArgs []string
-	outTypes := []string{"*" + cfg.Type}
+	outTypes := []string{cfg.Type}
 	if serviceName == "" {
 		inArgs = append(inArgs, "serviceName string")
 	}
@@ -154,7 +212,7 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 		sb.Pn("}")
 	}
 
-	sb.Pn("obj := new(%s)", cfg.Type)
+	sb.Pn("obj := new(%s)", toObjectImplName(cfg.Type))
 	var inArgServiceName string
 	var inArgPath string
 
@@ -170,7 +228,7 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 		inArgPath = "path"
 	}
 
-	sb.Pn("obj.Object.Init_(conn, %s, %s)", inArgServiceName, inArgPath)
+	sb.Pn("obj.ImplObject.Init_(conn, %s, %s)", inArgServiceName, inArgPath)
 
 	// return
 	var returnExpr string
@@ -183,44 +241,148 @@ func writeNewObject(sb *SourceBody, serviceName string, cfg *ObjectConfig) {
 	sb.Pn("}\n")
 }
 
-func writeImplementerAccessorMethod(sb *SourceBody, ifc *introspect.Interface, objCfg *ObjectConfig) {
-	ifcCfg := objCfg.getInterface(ifc.Name)
+func writeImplementerAccessorMethod(sb *SourceBody, ifcCfg *InterfaceConfig, objCfg *ObjectConfig) {
+	if ifcCfg.Name == "org.freedesktop.DBus.ObjectManager" {
+		sb.Pn("func (obj *%s) ObjectManager() object_manager.ObjectManager {", toObjectImplName(objCfg.Type))
+		sb.Pn("    return &obj.InterfaceObjectManager")
+		sb.Pn("}\n")
+	} else {
+		sb.Pn("func (obj *%s) %s() %s {", toObjectImplName(objCfg.Type), ifcCfg.Accessor,
+			ifcCfg.Type)
+		sb.Pn("    return &obj.%s", toInterfaceImplName(ifcCfg.Type))
+		sb.Pn("}\n")
+	}
+}
 
-	sb.Pn("func (obj *%s) %s() *%s {", objCfg.Type, ifcCfg.Accessor,
-		ifcCfg.Type)
-	sb.Pn("    return &obj.%s", ifcCfg.Type)
+func writeInterfaceInterface(sb *SourceBody, ifc *introspect.Interface, ifcCfg *InterfaceConfig) {
+	sb.Pn("type %s interface{", ifcCfg.Type)
+
+	if ifcCfg.CustomInterfaceName {
+		sb.Pn("SetInterfaceName_(name string)")
+	}
+
+	for _, method := range ifc.Methods {
+		methodName := strings.Title(method.Name)
+		args := getArgs(method.Args)
+		inArgs := getInArgs(args)
+		outArgs := getOutArgs(args)
+		argFixes := ifcCfg.getMethodFix(method.Name)
+
+		sb.Pn("Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call",
+			methodName, getArgsProto(inArgs, false, argFixes))
+
+		if len(outArgs) == 0 {
+			sb.Pn("%s(flags dbus.Flags %s) error",
+				methodName, getArgsProto(inArgs, false, argFixes))
+		} else {
+			sb.Pn("%s(flags dbus.Flags %s) (%s, error)",
+				methodName, getArgsProto(inArgs, false, argFixes),
+				getArgsType(outArgs, true, argFixes))
+		}
+	}
+
+	for _, signal := range ifc.Signals {
+		args := getArgs(signal.Args)
+		argFixes := ifcCfg.getSignalFix(signal.Name)
+		methodName := strings.Title(signal.Name)
+
+		if reservedSignals.Contains(methodName) {
+			methodName = "Signal" + methodName
+		}
+
+		sb.Pn("Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error)",
+			methodName, getArgsProto(args, true, argFixes))
+	}
+
+	for _, prop := range ifc.Properties {
+		var methodSameName bool
+		for _, method := range ifc.Methods {
+			if strings.Title(method.Name) == strings.Title(prop.Name) {
+				methodSameName = true
+				break
+			}
+		}
+
+		propFix := ifcCfg.getPropertyFix(prop.Name)
+
+		var renameTo string
+		if propFix != nil {
+			renameTo = propFix.RenameTo
+		}
+
+		// get funcName
+		funcName := strings.Title(prop.Name)
+		if renameTo != "" {
+			funcName = renameTo
+		} else if methodSameName {
+			funcName = "Prop" + funcName
+		}
+
+		propIface, _, _ := getPropType(prop.Type)
+		if propIface == "" {
+			if propFix == nil {
+				panic(fmt.Errorf("failed to get property fix for %s.%s",
+					ifcCfg.Name, prop.Name))
+			}
+
+			if propFix.RefType != "" {
+				propIface = propFix.RefType
+			} else {
+				propIface = propFix.Type
+			}
+		}
+
+		sb.Pn("%s() %s", funcName, propIface)
+	}
 	sb.Pn("}\n")
 }
 
-func writeImplementerMethods(sb *SourceBody, ifc *introspect.Interface, ifcCfg *InterfaceConfig) {
-	sb.Pn("type %s struct{}", ifcCfg.Type)
-
-	sb.Pn("func (v *%s) GetObject_() *proxy.Object {", ifcCfg.Type)
-	sb.Pn("    return (*proxy.Object)(unsafe.Pointer(v))")
+func writeInterfaceMock(sb *SourceBody, ifc *introspect.Interface, ifcCfg *InterfaceConfig) {
+	t := toInterfaceMockName(ifcCfg.Type)
+	sb.Pn("type %s struct{", t)
+	sb.Pn("    mock.Mock")
 	sb.Pn("}\n")
 
 	if ifcCfg.CustomInterfaceName {
-		sb.Pn("func (v *%s) SetInterfaceName_(name string) {", ifcCfg.Type)
+		sb.Pn("func (v *%s) SetInterfaceName_(string) {", t)
+		sb.Pn("}\n")
+	}
+
+}
+
+func writeInterfaceImpl(sb *SourceBody, ifc *introspect.Interface, ifcCfg *InterfaceConfig) {
+	t := toInterfaceImplName(ifcCfg.Type)
+
+	sb.Pn("type %s struct{}", t)
+
+	sb.Pn("func (v *%s) GetObject_() *proxy.ImplObject {", t)
+	sb.Pn("    return (*proxy.ImplObject)(unsafe.Pointer(v))")
+	sb.Pn("}\n")
+
+	if ifcCfg.CustomInterfaceName {
+		sb.Pn("func (v *%s) SetInterfaceName_(name string) {", t)
 		sb.Pn(`    v.GetObject_().SetExtra("customIfc", name)`)
 		sb.Pn("}\n")
 	}
 
 	if !ifcCfg.NoGetInterfaceName {
 		if ifcCfg.CustomInterfaceName {
-			sb.Pn("func (v *%s) GetInterfaceName_() string {", ifcCfg.Type)
+			sb.Pn("func (v *%s) GetInterfaceName_() string {", t)
 			sb.Pn(`    ifcName, _ := v.GetObject_().GetExtra("customIfc")`)
 			sb.Pn("    ifcNameStr, _ := ifcName.(string)")
 			sb.Pn("    return ifcNameStr")
 			sb.Pn("}\n")
 		} else {
-			sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
+			sb.Pn("func (*%s) GetInterfaceName_() string {", t)
 			sb.Pn("    return %q", ifc.Name)
 			sb.Pn("}\n")
 		}
 	}
 }
 
-func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
+func writeMethodImpl(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
+	t := toInterfaceImplName(ifcCfg.Type)
+
 	sb.Pn("// method %s\n", method.Name)
 	methodName := strings.Title(method.Name)
 	args := getArgs(method.Args)
@@ -240,16 +402,15 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	}
 
 	// GoXXX
-
 	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
-		ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes))
+		t, methodName, getArgsProto(inArgs, false, argFixes))
 	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
 		method.Name, getArgsName(inArgs, false))
 	sb.Pn("}\n")
 
 	// StoreXXX
 	if len(outArgs) > 0 {
-		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", ifcCfg.Type,
+		sb.Pn("func (*%s) Store%s(call *dbus.Call) (%s,err error) {", t,
 			methodName, getArgsProto(outArgs, true, argFixes))
 		sb.Pn("    err = call.Store(%s)", getArgsRefName(outArgs, true))
 		sb.Pn("    return")
@@ -259,14 +420,14 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// Call
 	if len(outArgs) == 0 {
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
-			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes))
+			t, methodName, getArgsProto(inArgs, false, argFixes))
 		sb.Pn("return (<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done).Err",
 			methodName, getArgsName(inArgs, false))
 		sb.Pn("}\n")
 	} else {
-		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
-			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes),
-			getArgsProto(outArgs, true, argFixes))
+		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, error) {",
+			t, methodName, getArgsProto(inArgs, false, argFixes),
+			getArgsType(outArgs, true, argFixes))
 		sb.Pn("return v.Store%s(", methodName)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
 			methodName, getArgsName(inArgs, false))
@@ -274,7 +435,63 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	}
 }
 
-func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConfig) {
+func writeMethodMock(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConfig) {
+	t := toInterfaceMockName(ifcCfg.Type)
+
+	sb.Pn("// method %s\n", method.Name)
+
+	argFixes := ifcCfg.getMethodFix(method.Name)
+
+	methodName := strings.Title(method.Name)
+	args := getArgs(method.Args)
+	inArgs := getInArgs(args)
+	outArgs := getOutArgs(args)
+
+	// GoXXX
+	sb.Pn("func (v *%s) Go%s(flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
+		t, methodName, getArgsProto(inArgs, false, argFixes))
+	sb.Pn(" mockArgs := v.Called(flags, ch %s)\n", getArgsName(inArgs, false))
+	sb.Pn(` ret, ok := mockArgs.Get(0).(*dbus.Call)
+			if !ok {
+				panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %%v", mockArgs.Get(0)))
+			}
+			`)
+	sb.Pn("return ret")
+	sb.Pn("}\n")
+
+	// Call
+	if len(outArgs) == 0 {
+		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) error {",
+			t, methodName, getArgsProto(inArgs, false, argFixes))
+	} else {
+		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, error) {",
+			t, methodName, getArgsProto(inArgs, false, argFixes),
+			getArgsType(outArgs, true, argFixes))
+	}
+
+	sb.Pn("mockArgs := v.Called(flags %s)\n", getArgsName(inArgs, false))
+
+	var rets []string
+	for i, a := range outArgs {
+		retName := fmt.Sprintf("ret%d", i)
+		sb.Pn("%s, ok := mockArgs.Get(%d).(%s)", retName, i, getArgType(a, argFixes))
+		sb.Pn(`if !ok {
+				panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", %[1]d, mockArgs.Get(%[1]d)))
+			}
+			`, i)
+
+		rets = append(rets, retName)
+	}
+
+	rets = append(rets, fmt.Sprintf("mockArgs.Error(%d)", len(outArgs)))
+
+	sb.Pn("return %s", strings.Join(rets, ","))
+	sb.Pn("}\n")
+}
+
+func writeSignalImpl(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConfig) {
+	t := toInterfaceImplName(ifcCfg.Type)
+
 	sb.Pn("// signal %s\n", signal.Name)
 
 	args := getArgs(signal.Args)
@@ -286,7 +503,7 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	}
 
 	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
-		ifcCfg.Type, methodName, getArgsProto(args, true, argFixes))
+		t, methodName, getArgsProto(args, true, argFixes))
 	sb.Pn("if cb == nil {")
 	sb.Pn("   return 0, errors.New(\"nil callback\")")
 	sb.Pn("}")
@@ -321,6 +538,39 @@ func writeSignal(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConf
 	sb.Pn("}\n")
 }
 
+func writeSignalMock(sb *SourceBody, signal introspect.Signal, ifcCfg *InterfaceConfig) {
+	t := toInterfaceMockName(ifcCfg.Type)
+
+	args := getArgs(signal.Args)
+	argFixes := ifcCfg.getSignalFix(signal.Name)
+	methodName := strings.Title(signal.Name)
+
+	if reservedSignals.Contains(methodName) {
+		methodName = "Signal" + methodName
+	}
+
+	sb.Pn("// signal %s\n", signal.Name)
+
+	sb.Pn("func (v *%s) Connect%s(cb func(%s)) (dbusutil.SignalHandlerId, error) {",
+		t, methodName, getArgsProto(args, true, argFixes))
+
+	sb.Pn("mockArgs := v.Called(cb)\n")
+
+	var rets []string
+	retName := "ret0"
+	sb.Pn("%s, ok := mockArgs.Get(%d).(%s)", retName, 0, "dbusutil.SignalHandlerId")
+	sb.Pn(`if !ok {
+			panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", %[1]d, mockArgs.Get(%[1]d)))
+		}
+		`, 0)
+
+	rets = append(rets, retName)
+	rets = append(rets, "mockArgs.Error(1)")
+
+	sb.Pn("return %s", strings.Join(rets, ","))
+	sb.Pn("}\n")
+}
+
 var propBaseTypeMap = map[string]string{
 	"y": "Byte",
 	"b": "Bool",
@@ -335,38 +585,52 @@ var propBaseTypeMap = map[string]string{
 	"o": "ObjectPath",
 }
 
-func getPropType(ty string) string {
+func getPropType(ty string) (iface string, stct string, mock string) {
 	if len(ty) == 1 {
 		val := propBaseTypeMap[ty]
 		if val == "" {
-			return ""
+			return
 		}
-		return "proxy.Prop" + val
+		iface = "proxy.Prop" + val
+		stct = "proxy.ImplProp" + val
+		mock = "proxy.MockProp" + val
 	} else if len(ty) == 2 && ty[0] == 'a' {
 		val := propBaseTypeMap[ty[1:]]
 		if val == "" {
-			return ""
+			return
 		}
-		return "proxy.Prop" + val + "Array"
+		iface = "proxy.Prop" + val + "Array"
+		stct = "proxy.ImplProp" + val + "Array"
+		mock = "proxy.MockProp" + val + "Array"
 	}
-	return ""
+	return
 }
 
-func writePropType(sb *SourceBody, propTypeCfg *PropertyTypeConfig) {
+func writePropTypeInterface(sb *SourceBody, propTypeCfg *PropertyTypeConfig) {
 	const propName = "p.Name"
 
-	sb.Pn("type %s struct {", propTypeCfg.Type)
+	sb.Pn("type %s interface {", propTypeCfg.Type)
+	sb.Pn("    Get(flags dbus.Flags) (value %s, err error)", propTypeCfg.ValueType)
+	sb.Pn("    Set(flags dbus.Flags, value %s) error", propTypeCfg.ValueType)
+	sb.Pn("    ConnectChanged(cb func(hasValue bool, value %s)) error", propTypeCfg.ValueType)
+	sb.Pn("}\n")
+}
+
+func writePropTypeImpl(sb *SourceBody, propTypeCfg *PropertyTypeConfig) {
+	const propName = "p.Name"
+
+	sb.Pn("type impl%s struct {", propTypeCfg.Type)
 	sb.Pn("    Impl proxy.Implementer")
 	sb.Pn("    Name string")
 	sb.Pn("}\n")
 
-	writePropGet(sb, propTypeCfg, propName)
-	writePropSet(sb, propTypeCfg, propName)
-	writePropConnectChanged(sb, propTypeCfg, propName)
+	writePropGetImpl(sb, propTypeCfg, propName)
+	writePropSetImpl(sb, propTypeCfg, propName)
+	writePropConnectChangedImpl(sb, propTypeCfg, propName)
 }
 
-func writePropGet(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
-	sb.Pn("func (p %s) Get(flags dbus.Flags) (value %s, err error) {",
+func writePropGetImpl(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p impl%s) Get(flags dbus.Flags) (value %s, err error) {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),")
 	sb.Pn("%s, &value)", propName)
@@ -374,16 +638,16 @@ func writePropGet(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName stri
 	sb.Pn("}\n")
 }
 
-func writePropSet(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
-	sb.Pn("func (p %s) Set(flags dbus.Flags, value %s) error {",
+func writePropSetImpl(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p impl%s) Set(flags dbus.Flags, value %s) error {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("return p.Impl.GetObject_().SetProperty_(flags,"+
 		" p.Impl.GetInterfaceName_(), %s, value)", propName)
 	sb.Pn("}\n")
 }
 
-func writePropConnectChanged(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
-	sb.Pn("func (p %s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
+func writePropConnectChangedImpl(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p impl%s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
 		propTypeCfg.Type, propTypeCfg.ValueType)
 	sb.Pn("if cb == nil {")
 	sb.Pn("    return errors.New(\"nil callback\")")
@@ -408,9 +672,57 @@ func writePropConnectChanged(sb *SourceBody, propTypeCfg *PropertyTypeConfig, pr
 	sb.Pn("}\n")
 }
 
-func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig,
+func writePropTypeMock(sb *SourceBody, propTypeCfg *PropertyTypeConfig) {
+	const propName = "p.Name"
+
+	sb.Pn("type Mock%s struct {", propTypeCfg.Type)
+	sb.Pn("    mock.Mock")
+	sb.Pn("}\n")
+
+	writePropGetMock(sb, propTypeCfg, propName)
+	writePropSetMock(sb, propTypeCfg, propName)
+	writePropConnectChangedMock(sb, propTypeCfg, propName)
+}
+
+func writePropGetMock(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p Mock%s) Get(flags dbus.Flags) (value %s, err error) {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn(`	args := p.Called(flags)
+
+			var ok bool
+			value, ok = args.Get(0).(%s)
+			if !ok {
+				panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", 0, args.Get(0)))
+			}
+
+			err = args.Error(1)
+
+			return`, propTypeCfg.ValueType)
+	sb.Pn("}\n")
+}
+
+func writePropSetMock(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p Mock%s) Set(flags dbus.Flags, value %s) error {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn(`	args := p.Called(flags, value)
+
+			return args.Error(0)`)
+	sb.Pn("}\n")
+}
+
+func writePropConnectChangedMock(sb *SourceBody, propTypeCfg *PropertyTypeConfig, propName string) {
+	sb.Pn("func (p Mock%s) ConnectChanged(cb func(hasValue bool, value %s)) error {",
+		propTypeCfg.Type, propTypeCfg.ValueType)
+	sb.Pn(`	args := p.Called(cb)
+
+			return args.Error(0)`)
+	sb.Pn("}\n")
+}
+
+func writeProperty(sb *SourceBody, msb *SourceBody, prop introspect.Property, ifcCfg *InterfaceConfig,
 	methodSameName bool) {
-	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
+	t := toInterfaceImplName(ifcCfg.Type)
+	mt := toInterfaceMockName(ifcCfg.Type)
 
 	propFix := ifcCfg.getPropertyFix(prop.Name)
 
@@ -427,44 +739,47 @@ func writeProperty(sb *SourceBody, prop introspect.Property, ifcCfg *InterfaceCo
 		funcName = "Prop" + funcName
 	}
 
-	propType := getPropType(prop.Type)
-	if propType == "" && propFix != nil && propFix.RefType != "" {
-		propType = propFix.RefType
-	}
-
-	if propType != "" {
-		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, funcName, propType)
-		sb.Pn("    return %s{", propType)
-		sb.Pn("        Impl: v,")
-		sb.Pn("        Name: %q,", prop.Name)
-		sb.Pn("    }")
-
-		sb.Pn("}\n")
-	} else {
+	propIface, propType, propMockType := getPropType(prop.Type)
+	if propIface == "" {
 		if propFix == nil {
 			panic(fmt.Errorf("failed to get property fix for %s.%s",
 				ifcCfg.Name, prop.Name))
 		}
 
-		sb.Pn("func (v *%s) %s() %s {", ifcCfg.Type, prop.Name, propFix.Type)
-		sb.Pn("    return %s{", propFix.Type)
-		sb.Pn("        Impl: v,")
-		sb.Pn("    }")
-		sb.Pn("}\n")
+		if propFix.RefType != "" {
+			propIface = propFix.RefType
+			propType = "impl" + propFix.RefType
+			propMockType = "Mock" + propFix.RefType
+		} else {
+			propIface = propFix.Type
+			propType = "impl" + propFix.Type
+			propMockType = "Mock" + propFix.Type
 
-		sb.Pn("type %s struct {", propFix.Type)
-		sb.Pn("Impl proxy.Implementer")
-		sb.Pn("}\n")
-
-		quotedPropName := strconv.Quote(prop.Name)
-		if strings.Contains(prop.Access, "read") {
-			writePropGet(sb, &propFix.PropertyTypeConfig, quotedPropName)
+			writePropTypeInterface(sb, &propFix.PropertyTypeConfig)
+			writePropTypeImpl(sb, &propFix.PropertyTypeConfig)
+			writePropTypeMock(msb, &propFix.PropertyTypeConfig)
 		}
-		if strings.Contains(prop.Access, "write") {
-			writePropSet(sb, &propFix.PropertyTypeConfig, quotedPropName)
-		}
-		writePropConnectChanged(sb, &propFix.PropertyTypeConfig, quotedPropName)
 	}
+
+	sb.Pn("// property %s %s\n", prop.Name, prop.Type)
+
+	sb.Pn("func (v *%s) %s() %s {", t, funcName, propIface)
+	sb.Pn("    return &%s{", propType)
+	sb.Pn("        Impl: v,")
+	sb.Pn("        Name: %q,", prop.Name)
+	sb.Pn("    }")
+	sb.Pn("}\n")
+
+	msb.Pn("// property %s %s\n", prop.Name, prop.Type)
+
+	msb.Pn("func (v *%s) %s() %s {", mt, funcName, propIface)
+	msb.Pn("    mockArgs := v.Called()\n")
+	msb.Pn(`    ret0, ok := mockArgs.Get(0).(*%s)`, propMockType)
+	msb.Pn(`    if !ok {`)
+	msb.Pn(`        panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", 0, mockArgs.Get(0)))`)
+	msb.Pn("    }\n")
+	msb.Pn("    return ret0")
+	msb.Pn("}\n")
 }
 
 func initNameMap() map[string]int {
@@ -560,6 +875,17 @@ func getArgsProto(args []introspect.Arg, begin bool, argFixes ArgFixes) string {
 	return fixList(buf.String(), begin)
 }
 
+func getArgsType(args []introspect.Arg, begin bool, argFixes ArgFixes) string {
+	var buf bytes.Buffer
+
+	for _, arg := range args {
+		argType := getArgType(arg, argFixes)
+		buf.WriteString(fmt.Sprintf(",%s", argType))
+	}
+
+	return fixList(buf.String(), begin)
+}
+
 func getArgsName(args []introspect.Arg, begin bool) string {
 	var buf bytes.Buffer
 	for _, arg := range args {
@@ -574,6 +900,22 @@ func getArgsRefName(args []introspect.Arg, begin bool) string {
 		buf.WriteString(fmt.Sprintf(",&%s", arg.Name))
 	}
 	return fixList(buf.String(), begin)
+}
+
+func toObjectImplName(t string) string {
+	return "object" + strings.Title(t)
+}
+
+func toObjectMockName(t string) string {
+	return "Mock" + strings.Title(t)
+}
+
+func toInterfaceImplName(t string) string {
+	return "interface" + strings.Title(t)
+}
+
+func toInterfaceMockName(t string) string {
+	return "mockInterface" + strings.Title(t)
 }
 
 func fixList(str string, begin bool) string {

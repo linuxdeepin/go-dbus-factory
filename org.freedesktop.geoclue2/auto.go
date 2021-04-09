@@ -12,57 +12,71 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.GeoClue2.Manager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.GeoClue2", "/org/freedesktop/GeoClue2/Manager")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.GeoClue2.Manager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.GeoClue2", "/org/freedesktop/GeoClue2/Manager")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetClient(flags dbus.Flags) (dbus.ObjectPath, error)
+	GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	AddAgent(flags dbus.Flags, id string) error
+	InUse() proxy.PropBool
+	AvailableAccuracyLevel() proxy.PropUint32
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.GeoClue2.Manager"
 }
 
 // method GetClient
 
-func (v *manager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetClient", flags, ch)
 }
 
-func (*manager) StoreGetClient(call *dbus.Call) (client dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetClient(call *dbus.Call) (client dbus.ObjectPath, err error) {
 	err = call.Store(&client)
 	return
 }
 
-func (v *manager) GetClient(flags dbus.Flags) (client dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetClient(flags dbus.Flags) (dbus.ObjectPath, error) {
 	return v.StoreGetClient(
 		<-v.GoGetClient(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method AddAgent
 
-func (v *manager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceManager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddAgent", flags, ch, id)
 }
 
-func (v *manager) AddAgent(flags dbus.Flags, id string) error {
+func (v *interfaceManager) AddAgent(flags dbus.Flags, id string) error {
 	return (<-v.GoAddAgent(flags, make(chan *dbus.Call, 1), id).Done).Err
 }
 
 // property InUse b
 
-func (v *manager) InUse() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) InUse() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "InUse",
 	}
@@ -70,60 +84,79 @@ func (v *manager) InUse() proxy.PropBool {
 
 // property AvailableAccuracyLevel u
 
-func (v *manager) AvailableAccuracyLevel() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) AvailableAccuracyLevel() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "AvailableAccuracyLevel",
 	}
 }
 
-type Client struct {
+type Client interface {
 	client // interface org.freedesktop.GeoClue2.Client
 	proxy.Object
 }
 
-func NewClient(conn *dbus.Conn, path dbus.ObjectPath) (*Client, error) {
+type objectClient struct {
+	interfaceClient // interface org.freedesktop.GeoClue2.Client
+	proxy.ImplObject
+}
+
+func NewClient(conn *dbus.Conn, path dbus.ObjectPath) (Client, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Client)
-	obj.Object.Init_(conn, "org.freedesktop.GeoClue2", path)
+	obj := new(objectClient)
+	obj.ImplObject.Init_(conn, "org.freedesktop.GeoClue2", path)
 	return obj, nil
 }
 
-type client struct{}
-
-func (v *client) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type client interface {
+	GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Start(flags dbus.Flags) error
+	GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Stop(flags dbus.Flags) error
+	ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Location() proxy.PropObjectPath
+	DistanceThreshold() proxy.PropUint32
+	TimeThreshold() proxy.PropUint32
+	DesktopId() proxy.PropString
+	RequestedAccuracyLevel() proxy.PropUint32
+	Active() proxy.PropBool
 }
 
-func (*client) GetInterfaceName_() string {
+type interfaceClient struct{}
+
+func (v *interfaceClient) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceClient) GetInterfaceName_() string {
 	return "org.freedesktop.GeoClue2.Client"
 }
 
 // method Start
 
-func (v *client) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceClient) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Start", flags, ch)
 }
 
-func (v *client) Start(flags dbus.Flags) error {
+func (v *interfaceClient) Start(flags dbus.Flags) error {
 	return (<-v.GoStart(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Stop
 
-func (v *client) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceClient) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch)
 }
 
-func (v *client) Stop(flags dbus.Flags) error {
+func (v *interfaceClient) Stop(flags dbus.Flags) error {
 	return (<-v.GoStop(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal LocationUpdated
 
-func (v *client) ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceClient) ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -150,8 +183,8 @@ func (v *client) ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.Ob
 
 // property Location o
 
-func (v *client) Location() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceClient) Location() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Location",
 	}
@@ -159,8 +192,8 @@ func (v *client) Location() proxy.PropObjectPath {
 
 // property DistanceThreshold u
 
-func (v *client) DistanceThreshold() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceClient) DistanceThreshold() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "DistanceThreshold",
 	}
@@ -168,8 +201,8 @@ func (v *client) DistanceThreshold() proxy.PropUint32 {
 
 // property TimeThreshold u
 
-func (v *client) TimeThreshold() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceClient) TimeThreshold() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "TimeThreshold",
 	}
@@ -177,8 +210,8 @@ func (v *client) TimeThreshold() proxy.PropUint32 {
 
 // property DesktopId s
 
-func (v *client) DesktopId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceClient) DesktopId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DesktopId",
 	}
@@ -186,8 +219,8 @@ func (v *client) DesktopId() proxy.PropString {
 
 // property RequestedAccuracyLevel u
 
-func (v *client) RequestedAccuracyLevel() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceClient) RequestedAccuracyLevel() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RequestedAccuracyLevel",
 	}
@@ -195,41 +228,57 @@ func (v *client) RequestedAccuracyLevel() proxy.PropUint32 {
 
 // property Active b
 
-func (v *client) Active() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceClient) Active() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Active",
 	}
 }
 
-type Location struct {
+type Location interface {
 	location // interface org.freedesktop.GeoClue2.Location
 	proxy.Object
 }
 
-func NewLocation(conn *dbus.Conn, path dbus.ObjectPath) (*Location, error) {
+type objectLocation struct {
+	interfaceLocation // interface org.freedesktop.GeoClue2.Location
+	proxy.ImplObject
+}
+
+func NewLocation(conn *dbus.Conn, path dbus.ObjectPath) (Location, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Location)
-	obj.Object.Init_(conn, "org.freedesktop.GeoClue2", path)
+	obj := new(objectLocation)
+	obj.ImplObject.Init_(conn, "org.freedesktop.GeoClue2", path)
 	return obj, nil
 }
 
-type location struct{}
-
-func (v *location) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type location interface {
+	Latitude() proxy.PropDouble
+	Longitude() proxy.PropDouble
+	Accuracy() proxy.PropDouble
+	Altitude() proxy.PropDouble
+	Speed() proxy.PropDouble
+	Heading() proxy.PropDouble
+	Description() proxy.PropString
+	Timestamp() PropTimestamp
 }
 
-func (*location) GetInterfaceName_() string {
+type interfaceLocation struct{}
+
+func (v *interfaceLocation) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLocation) GetInterfaceName_() string {
 	return "org.freedesktop.GeoClue2.Location"
 }
 
 // property Latitude d
 
-func (v *location) Latitude() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Latitude() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Latitude",
 	}
@@ -237,8 +286,8 @@ func (v *location) Latitude() proxy.PropDouble {
 
 // property Longitude d
 
-func (v *location) Longitude() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Longitude() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Longitude",
 	}
@@ -246,8 +295,8 @@ func (v *location) Longitude() proxy.PropDouble {
 
 // property Accuracy d
 
-func (v *location) Accuracy() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Accuracy() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Accuracy",
 	}
@@ -255,8 +304,8 @@ func (v *location) Accuracy() proxy.PropDouble {
 
 // property Altitude d
 
-func (v *location) Altitude() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Altitude() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Altitude",
 	}
@@ -264,8 +313,8 @@ func (v *location) Altitude() proxy.PropDouble {
 
 // property Speed d
 
-func (v *location) Speed() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Speed() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Speed",
 	}
@@ -273,8 +322,8 @@ func (v *location) Speed() proxy.PropDouble {
 
 // property Heading d
 
-func (v *location) Heading() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceLocation) Heading() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Heading",
 	}
@@ -282,32 +331,35 @@ func (v *location) Heading() proxy.PropDouble {
 
 // property Description s
 
-func (v *location) Description() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceLocation) Description() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Description",
 	}
 }
 
-// property Timestamp (tt)
-
-func (v *location) Timestamp() PropTimestamp {
-	return PropTimestamp{
-		Impl: v,
-	}
+type PropTimestamp interface {
+	Get(flags dbus.Flags) (value Timestamp, err error)
+	Set(flags dbus.Flags, value Timestamp) error
+	ConnectChanged(cb func(hasValue bool, value Timestamp)) error
 }
 
-type PropTimestamp struct {
+type implPropTimestamp struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropTimestamp) Get(flags dbus.Flags) (value Timestamp, err error) {
+func (p implPropTimestamp) Get(flags dbus.Flags) (value Timestamp, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Timestamp", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropTimestamp) ConnectChanged(cb func(hasValue bool, value Timestamp)) error {
+func (p implPropTimestamp) Set(flags dbus.Flags, value Timestamp) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropTimestamp) ConnectChanged(cb func(hasValue bool, value Timestamp)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -324,5 +376,14 @@ func (p PropTimestamp) ConnectChanged(cb func(hasValue bool, value Timestamp)) e
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Timestamp", cb0)
+		p.Name, cb0)
+}
+
+// property Timestamp (tt)
+
+func (v *interfaceLocation) Timestamp() PropTimestamp {
+	return &implPropTimestamp{
+		Impl: v,
+		Name: "Timestamp",
+	}
 }

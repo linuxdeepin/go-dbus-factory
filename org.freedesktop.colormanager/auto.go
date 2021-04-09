@@ -12,290 +12,344 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.ColorManager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.ColorManager", "/org/freedesktop/ColorManager")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.ColorManager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.ColorManager", "/org/freedesktop/ColorManager")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetDevicesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call
+	GetDevicesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error)
+	GoFindDeviceById(flags dbus.Flags, ch chan *dbus.Call, device_id string) *dbus.Call
+	FindDeviceById(flags dbus.Flags, device_id string) (dbus.ObjectPath, error)
+	GoFindSensorById(flags dbus.Flags, ch chan *dbus.Call, sensor_id string) *dbus.Call
+	FindSensorById(flags dbus.Flags, sensor_id string) (dbus.ObjectPath, error)
+	GoFindDeviceByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call
+	FindDeviceByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error)
+	GoFindProfileById(flags dbus.Flags, ch chan *dbus.Call, profile_id string) *dbus.Call
+	FindProfileById(flags dbus.Flags, profile_id string) (dbus.ObjectPath, error)
+	GoFindProfileByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call
+	FindProfileByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error)
+	GoFindProfileByFilename(flags dbus.Flags, ch chan *dbus.Call, filename string) *dbus.Call
+	FindProfileByFilename(flags dbus.Flags, filename string) (dbus.ObjectPath, error)
+	GoGetStandardSpace(flags dbus.Flags, ch chan *dbus.Call, standard_space string) *dbus.Call
+	GetStandardSpace(flags dbus.Flags, standard_space string) (dbus.ObjectPath, error)
+	GoGetProfiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetProfiles(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetSensors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetSensors(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetProfilesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call
+	GetProfilesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error)
+	GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call
+	CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (dbus.ObjectPath, error)
+	GoCreateProfile(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, properties map[string]string) *dbus.Call
+	CreateProfile(flags dbus.Flags, profile_id string, scope string, properties map[string]string) (dbus.ObjectPath, error)
+	GoCreateDevice(flags dbus.Flags, ch chan *dbus.Call, device_id string, scope string, properties map[string]string) *dbus.Call
+	CreateDevice(flags dbus.Flags, device_id string, scope string, properties map[string]string) (dbus.ObjectPath, error)
+	GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call
+	DeleteDevice(flags dbus.Flags, object_path dbus.ObjectPath) error
+	GoDeleteProfile(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call
+	DeleteProfile(flags dbus.Flags, object_path dbus.ObjectPath) error
+	ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	DaemonVersion() proxy.PropString
+	SystemVendor() proxy.PropString
+	SystemModel() proxy.PropString
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.ColorManager"
 }
 
 // method GetDevices
 
-func (v *manager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDevices", flags, ch)
 }
 
-func (*manager) StoreGetDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetDevices(flags dbus.Flags) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetDevices(
 		<-v.GoGetDevices(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetDevicesByKind
 
-func (v *manager) GoGetDevicesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
+func (v *interfaceManager) GoGetDevicesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDevicesByKind", flags, ch, kind)
 }
 
-func (*manager) StoreGetDevicesByKind(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetDevicesByKind(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetDevicesByKind(flags dbus.Flags, kind string) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetDevicesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
 	return v.StoreGetDevicesByKind(
 		<-v.GoGetDevicesByKind(flags, make(chan *dbus.Call, 1), kind).Done)
 }
 
 // method FindDeviceById
 
-func (v *manager) GoFindDeviceById(flags dbus.Flags, ch chan *dbus.Call, device_id string) *dbus.Call {
+func (v *interfaceManager) GoFindDeviceById(flags dbus.Flags, ch chan *dbus.Call, device_id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindDeviceById", flags, ch, device_id)
 }
 
-func (*manager) StoreFindDeviceById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindDeviceById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindDeviceById(flags dbus.Flags, device_id string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindDeviceById(flags dbus.Flags, device_id string) (dbus.ObjectPath, error) {
 	return v.StoreFindDeviceById(
 		<-v.GoFindDeviceById(flags, make(chan *dbus.Call, 1), device_id).Done)
 }
 
 // method FindSensorById
 
-func (v *manager) GoFindSensorById(flags dbus.Flags, ch chan *dbus.Call, sensor_id string) *dbus.Call {
+func (v *interfaceManager) GoFindSensorById(flags dbus.Flags, ch chan *dbus.Call, sensor_id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindSensorById", flags, ch, sensor_id)
 }
 
-func (*manager) StoreFindSensorById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindSensorById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindSensorById(flags dbus.Flags, sensor_id string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindSensorById(flags dbus.Flags, sensor_id string) (dbus.ObjectPath, error) {
 	return v.StoreFindSensorById(
 		<-v.GoFindSensorById(flags, make(chan *dbus.Call, 1), sensor_id).Done)
 }
 
 // method FindDeviceByProperty
 
-func (v *manager) GoFindDeviceByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
+func (v *interfaceManager) GoFindDeviceByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindDeviceByProperty", flags, ch, key, value)
 }
 
-func (*manager) StoreFindDeviceByProperty(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindDeviceByProperty(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindDeviceByProperty(flags dbus.Flags, key string, value string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindDeviceByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
 	return v.StoreFindDeviceByProperty(
 		<-v.GoFindDeviceByProperty(flags, make(chan *dbus.Call, 1), key, value).Done)
 }
 
 // method FindProfileById
 
-func (v *manager) GoFindProfileById(flags dbus.Flags, ch chan *dbus.Call, profile_id string) *dbus.Call {
+func (v *interfaceManager) GoFindProfileById(flags dbus.Flags, ch chan *dbus.Call, profile_id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindProfileById", flags, ch, profile_id)
 }
 
-func (*manager) StoreFindProfileById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindProfileById(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindProfileById(flags dbus.Flags, profile_id string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindProfileById(flags dbus.Flags, profile_id string) (dbus.ObjectPath, error) {
 	return v.StoreFindProfileById(
 		<-v.GoFindProfileById(flags, make(chan *dbus.Call, 1), profile_id).Done)
 }
 
 // method FindProfileByProperty
 
-func (v *manager) GoFindProfileByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
+func (v *interfaceManager) GoFindProfileByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindProfileByProperty", flags, ch, key, value)
 }
 
-func (*manager) StoreFindProfileByProperty(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindProfileByProperty(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindProfileByProperty(flags dbus.Flags, key string, value string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindProfileByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
 	return v.StoreFindProfileByProperty(
 		<-v.GoFindProfileByProperty(flags, make(chan *dbus.Call, 1), key, value).Done)
 }
 
 // method FindProfileByFilename
 
-func (v *manager) GoFindProfileByFilename(flags dbus.Flags, ch chan *dbus.Call, filename string) *dbus.Call {
+func (v *interfaceManager) GoFindProfileByFilename(flags dbus.Flags, ch chan *dbus.Call, filename string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FindProfileByFilename", flags, ch, filename)
 }
 
-func (*manager) StoreFindProfileByFilename(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreFindProfileByFilename(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) FindProfileByFilename(flags dbus.Flags, filename string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) FindProfileByFilename(flags dbus.Flags, filename string) (dbus.ObjectPath, error) {
 	return v.StoreFindProfileByFilename(
 		<-v.GoFindProfileByFilename(flags, make(chan *dbus.Call, 1), filename).Done)
 }
 
 // method GetStandardSpace
 
-func (v *manager) GoGetStandardSpace(flags dbus.Flags, ch chan *dbus.Call, standard_space string) *dbus.Call {
+func (v *interfaceManager) GoGetStandardSpace(flags dbus.Flags, ch chan *dbus.Call, standard_space string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetStandardSpace", flags, ch, standard_space)
 }
 
-func (*manager) StoreGetStandardSpace(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetStandardSpace(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) GetStandardSpace(flags dbus.Flags, standard_space string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetStandardSpace(flags dbus.Flags, standard_space string) (dbus.ObjectPath, error) {
 	return v.StoreGetStandardSpace(
 		<-v.GoGetStandardSpace(flags, make(chan *dbus.Call, 1), standard_space).Done)
 }
 
 // method GetProfiles
 
-func (v *manager) GoGetProfiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetProfiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProfiles", flags, ch)
 }
 
-func (*manager) StoreGetProfiles(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetProfiles(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetProfiles(flags dbus.Flags) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetProfiles(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetProfiles(
 		<-v.GoGetProfiles(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetSensors
 
-func (v *manager) GoGetSensors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetSensors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSensors", flags, ch)
 }
 
-func (*manager) StoreGetSensors(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetSensors(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetSensors(flags dbus.Flags) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetSensors(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetSensors(
 		<-v.GoGetSensors(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetProfilesByKind
 
-func (v *manager) GoGetProfilesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
+func (v *interfaceManager) GoGetProfilesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProfilesByKind", flags, ch, kind)
 }
 
-func (*manager) StoreGetProfilesByKind(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetProfilesByKind(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetProfilesByKind(flags dbus.Flags, kind string) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetProfilesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
 	return v.StoreGetProfilesByKind(
 		<-v.GoGetProfilesByKind(flags, make(chan *dbus.Call, 1), kind).Done)
 }
 
 // method CreateProfileWithFd
 
-func (v *manager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call {
+func (v *interfaceManager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateProfileWithFd", flags, ch, profile_id, scope, handle, properties)
 }
 
-func (*manager) StoreCreateProfileWithFd(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreCreateProfileWithFd(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (dbus.ObjectPath, error) {
 	return v.StoreCreateProfileWithFd(
 		<-v.GoCreateProfileWithFd(flags, make(chan *dbus.Call, 1), profile_id, scope, handle, properties).Done)
 }
 
 // method CreateProfile
 
-func (v *manager) GoCreateProfile(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, properties map[string]string) *dbus.Call {
+func (v *interfaceManager) GoCreateProfile(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, properties map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateProfile", flags, ch, profile_id, scope, properties)
 }
 
-func (*manager) StoreCreateProfile(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreCreateProfile(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) CreateProfile(flags dbus.Flags, profile_id string, scope string, properties map[string]string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) CreateProfile(flags dbus.Flags, profile_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
 	return v.StoreCreateProfile(
 		<-v.GoCreateProfile(flags, make(chan *dbus.Call, 1), profile_id, scope, properties).Done)
 }
 
 // method CreateDevice
 
-func (v *manager) GoCreateDevice(flags dbus.Flags, ch chan *dbus.Call, device_id string, scope string, properties map[string]string) *dbus.Call {
+func (v *interfaceManager) GoCreateDevice(flags dbus.Flags, ch chan *dbus.Call, device_id string, scope string, properties map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateDevice", flags, ch, device_id, scope, properties)
 }
 
-func (*manager) StoreCreateDevice(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreCreateDevice(call *dbus.Call) (object_path dbus.ObjectPath, err error) {
 	err = call.Store(&object_path)
 	return
 }
 
-func (v *manager) CreateDevice(flags dbus.Flags, device_id string, scope string, properties map[string]string) (object_path dbus.ObjectPath, err error) {
+func (v *interfaceManager) CreateDevice(flags dbus.Flags, device_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
 	return v.StoreCreateDevice(
 		<-v.GoCreateDevice(flags, make(chan *dbus.Call, 1), device_id, scope, properties).Done)
 }
 
 // method DeleteDevice
 
-func (v *manager) GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteDevice", flags, ch, object_path)
 }
 
-func (v *manager) DeleteDevice(flags dbus.Flags, object_path dbus.ObjectPath) error {
+func (v *interfaceManager) DeleteDevice(flags dbus.Flags, object_path dbus.ObjectPath) error {
 	return (<-v.GoDeleteDevice(flags, make(chan *dbus.Call, 1), object_path).Done).Err
 }
 
 // method DeleteProfile
 
-func (v *manager) GoDeleteProfile(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoDeleteProfile(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteProfile", flags, ch, object_path)
 }
 
-func (v *manager) DeleteProfile(flags dbus.Flags, object_path dbus.ObjectPath) error {
+func (v *interfaceManager) DeleteProfile(flags dbus.Flags, object_path dbus.ObjectPath) error {
 	return (<-v.GoDeleteProfile(flags, make(chan *dbus.Call, 1), object_path).Done).Err
 }
 
 // signal Changed
 
-func (v *manager) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -317,7 +371,7 @@ func (v *manager) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal DeviceAdded
 
-func (v *manager) ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -343,7 +397,7 @@ func (v *manager) ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbus
 
 // signal DeviceRemoved
 
-func (v *manager) ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -369,7 +423,7 @@ func (v *manager) ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (db
 
 // signal DeviceChanged
 
-func (v *manager) ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -395,7 +449,7 @@ func (v *manager) ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (db
 
 // signal ProfileAdded
 
-func (v *manager) ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -421,7 +475,7 @@ func (v *manager) ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbu
 
 // signal ProfileRemoved
 
-func (v *manager) ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -447,7 +501,7 @@ func (v *manager) ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (d
 
 // signal SensorAdded
 
-func (v *manager) ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -473,7 +527,7 @@ func (v *manager) ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbus
 
 // signal SensorRemoved
 
-func (v *manager) ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -499,7 +553,7 @@ func (v *manager) ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (db
 
 // signal ProfileChanged
 
-func (v *manager) ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -525,8 +579,8 @@ func (v *manager) ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (d
 
 // property DaemonVersion s
 
-func (v *manager) DaemonVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) DaemonVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DaemonVersion",
 	}
@@ -534,8 +588,8 @@ func (v *manager) DaemonVersion() proxy.PropString {
 
 // property SystemVendor s
 
-func (v *manager) SystemVendor() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) SystemVendor() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SystemVendor",
 	}
@@ -543,60 +597,87 @@ func (v *manager) SystemVendor() proxy.PropString {
 
 // property SystemModel s
 
-func (v *manager) SystemModel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) SystemModel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SystemModel",
 	}
 }
 
-type Profile struct {
+type Profile interface {
 	profile // interface org.freedesktop.ColorManager.Profile
 	proxy.Object
 }
 
-func NewProfile(conn *dbus.Conn, path dbus.ObjectPath) (*Profile, error) {
+type objectProfile struct {
+	interfaceProfile // interface org.freedesktop.ColorManager.Profile
+	proxy.ImplObject
+}
+
+func NewProfile(conn *dbus.Conn, path dbus.ObjectPath) (Profile, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Profile)
-	obj.Object.Init_(conn, "org.freedesktop.ColorManager", path)
+	obj := new(objectProfile)
+	obj.ImplObject.Init_(conn, "org.freedesktop.ColorManager", path)
 	return obj, nil
 }
 
-type profile struct{}
-
-func (v *profile) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type profile interface {
+	GoSetProperty(flags dbus.Flags, ch chan *dbus.Call, property_name string, property_value string) *dbus.Call
+	SetProperty(flags dbus.Flags, property_name string, property_value string) error
+	GoInstallSystemWide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	InstallSystemWide(flags dbus.Flags) error
+	ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ProfileId() proxy.PropString
+	Title() proxy.PropString
+	Metadata() PropProfileMetadata
+	Qualifier() proxy.PropString
+	Format() proxy.PropString
+	Kind() proxy.PropString
+	Colorspace() proxy.PropString
+	HasVcgt() proxy.PropBool
+	IsSystemWide() proxy.PropBool
+	Filename() proxy.PropString
+	Created() proxy.PropInt64
+	Scope() proxy.PropString
+	Owner() proxy.PropUint32
+	Warnings() proxy.PropStringArray
 }
 
-func (*profile) GetInterfaceName_() string {
+type interfaceProfile struct{}
+
+func (v *interfaceProfile) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceProfile) GetInterfaceName_() string {
 	return "org.freedesktop.ColorManager.Profile"
 }
 
 // method SetProperty
 
-func (v *profile) GoSetProperty(flags dbus.Flags, ch chan *dbus.Call, property_name string, property_value string) *dbus.Call {
+func (v *interfaceProfile) GoSetProperty(flags dbus.Flags, ch chan *dbus.Call, property_name string, property_value string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProperty", flags, ch, property_name, property_value)
 }
 
-func (v *profile) SetProperty(flags dbus.Flags, property_name string, property_value string) error {
+func (v *interfaceProfile) SetProperty(flags dbus.Flags, property_name string, property_value string) error {
 	return (<-v.GoSetProperty(flags, make(chan *dbus.Call, 1), property_name, property_value).Done).Err
 }
 
 // method InstallSystemWide
 
-func (v *profile) GoInstallSystemWide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceProfile) GoInstallSystemWide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".InstallSystemWide", flags, ch)
 }
 
-func (v *profile) InstallSystemWide(flags dbus.Flags) error {
+func (v *interfaceProfile) InstallSystemWide(flags dbus.Flags) error {
 	return (<-v.GoInstallSystemWide(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal Changed
 
-func (v *profile) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceProfile) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -618,8 +699,8 @@ func (v *profile) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // property ProfileId s
 
-func (v *profile) ProfileId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) ProfileId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ProfileId",
 	}
@@ -627,32 +708,35 @@ func (v *profile) ProfileId() proxy.PropString {
 
 // property Title s
 
-func (v *profile) Title() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Title() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Title",
 	}
 }
 
-// property Metadata a{ss}
-
-func (v *profile) Metadata() PropProfileMetadata {
-	return PropProfileMetadata{
-		Impl: v,
-	}
+type PropProfileMetadata interface {
+	Get(flags dbus.Flags) (value map[string]string, err error)
+	Set(flags dbus.Flags, value map[string]string) error
+	ConnectChanged(cb func(hasValue bool, value map[string]string)) error
 }
 
-type PropProfileMetadata struct {
+type implPropProfileMetadata struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropProfileMetadata) Get(flags dbus.Flags) (value map[string]string, err error) {
+func (p implPropProfileMetadata) Get(flags dbus.Flags) (value map[string]string, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Metadata", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropProfileMetadata) ConnectChanged(cb func(hasValue bool, value map[string]string)) error {
+func (p implPropProfileMetadata) Set(flags dbus.Flags, value map[string]string) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropProfileMetadata) ConnectChanged(cb func(hasValue bool, value map[string]string)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -669,13 +753,22 @@ func (p PropProfileMetadata) ConnectChanged(cb func(hasValue bool, value map[str
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Metadata", cb0)
+		p.Name, cb0)
+}
+
+// property Metadata a{ss}
+
+func (v *interfaceProfile) Metadata() PropProfileMetadata {
+	return &implPropProfileMetadata{
+		Impl: v,
+		Name: "Metadata",
+	}
 }
 
 // property Qualifier s
 
-func (v *profile) Qualifier() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Qualifier() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Qualifier",
 	}
@@ -683,8 +776,8 @@ func (v *profile) Qualifier() proxy.PropString {
 
 // property Format s
 
-func (v *profile) Format() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Format() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Format",
 	}
@@ -692,8 +785,8 @@ func (v *profile) Format() proxy.PropString {
 
 // property Kind s
 
-func (v *profile) Kind() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Kind() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Kind",
 	}
@@ -701,8 +794,8 @@ func (v *profile) Kind() proxy.PropString {
 
 // property Colorspace s
 
-func (v *profile) Colorspace() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Colorspace() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Colorspace",
 	}
@@ -710,8 +803,8 @@ func (v *profile) Colorspace() proxy.PropString {
 
 // property HasVcgt b
 
-func (v *profile) HasVcgt() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceProfile) HasVcgt() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasVcgt",
 	}
@@ -719,8 +812,8 @@ func (v *profile) HasVcgt() proxy.PropBool {
 
 // property IsSystemWide b
 
-func (v *profile) IsSystemWide() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceProfile) IsSystemWide() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsSystemWide",
 	}
@@ -728,8 +821,8 @@ func (v *profile) IsSystemWide() proxy.PropBool {
 
 // property Filename s
 
-func (v *profile) Filename() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Filename() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Filename",
 	}
@@ -737,8 +830,8 @@ func (v *profile) Filename() proxy.PropString {
 
 // property Created x
 
-func (v *profile) Created() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceProfile) Created() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "Created",
 	}
@@ -746,8 +839,8 @@ func (v *profile) Created() proxy.PropInt64 {
 
 // property Scope s
 
-func (v *profile) Scope() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceProfile) Scope() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Scope",
 	}
@@ -755,8 +848,8 @@ func (v *profile) Scope() proxy.PropString {
 
 // property Owner u
 
-func (v *profile) Owner() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceProfile) Owner() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Owner",
 	}
@@ -764,8 +857,8 @@ func (v *profile) Owner() proxy.PropUint32 {
 
 // property Warnings as
 
-func (v *profile) Warnings() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceProfile) Warnings() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Warnings",
 	}

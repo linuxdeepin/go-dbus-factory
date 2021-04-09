@@ -12,50 +12,70 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Compositor struct {
+type Compositor interface {
 	compositing // interface org.kde.kwin.Compositing
 	proxy.Object
 }
 
-func NewCompositor(conn *dbus.Conn) *Compositor {
-	obj := new(Compositor)
-	obj.Object.Init_(conn, "org.kde.KWin", "/Compositor")
+type objectCompositor struct {
+	interfaceCompositing // interface org.kde.kwin.Compositing
+	proxy.ImplObject
+}
+
+func NewCompositor(conn *dbus.Conn) Compositor {
+	obj := new(objectCompositor)
+	obj.ImplObject.Init_(conn, "org.kde.KWin", "/Compositor")
 	return obj
 }
 
-type compositing struct{}
-
-func (v *compositing) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type compositing interface {
+	GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Suspend(flags dbus.Flags) error
+	GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Resume(flags dbus.Flags) error
+	ConnectCompositingToggled(cb func(active bool)) (dbusutil.SignalHandlerId, error)
+	Active() proxy.PropBool
+	CompositingPossible() proxy.PropBool
+	CompositingNotPossibleReason() proxy.PropString
+	OpenGLIsBroken() proxy.PropBool
+	CompositingType() proxy.PropString
+	SupportedOpenGLPlatformInterfaces() proxy.PropStringArray
+	PlatformRequiresCompositing() proxy.PropBool
 }
 
-func (*compositing) GetInterfaceName_() string {
+type interfaceCompositing struct{}
+
+func (v *interfaceCompositing) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceCompositing) GetInterfaceName_() string {
 	return "org.kde.kwin.Compositing"
 }
 
 // method suspend
 
-func (v *compositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceCompositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".suspend", flags, ch)
 }
 
-func (v *compositing) Suspend(flags dbus.Flags) error {
+func (v *interfaceCompositing) Suspend(flags dbus.Flags) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method resume
 
-func (v *compositing) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceCompositing) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".resume", flags, ch)
 }
 
-func (v *compositing) Resume(flags dbus.Flags) error {
+func (v *interfaceCompositing) Resume(flags dbus.Flags) error {
 	return (<-v.GoResume(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal compositingToggled
 
-func (v *compositing) ConnectCompositingToggled(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceCompositing) ConnectCompositingToggled(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -81,8 +101,8 @@ func (v *compositing) ConnectCompositingToggled(cb func(active bool)) (dbusutil.
 
 // property active b
 
-func (v *compositing) Active() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceCompositing) Active() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "active",
 	}
@@ -90,8 +110,8 @@ func (v *compositing) Active() proxy.PropBool {
 
 // property compositingPossible b
 
-func (v *compositing) CompositingPossible() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceCompositing) CompositingPossible() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "compositingPossible",
 	}
@@ -99,8 +119,8 @@ func (v *compositing) CompositingPossible() proxy.PropBool {
 
 // property compositingNotPossibleReason s
 
-func (v *compositing) CompositingNotPossibleReason() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceCompositing) CompositingNotPossibleReason() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "compositingNotPossibleReason",
 	}
@@ -108,8 +128,8 @@ func (v *compositing) CompositingNotPossibleReason() proxy.PropString {
 
 // property openGLIsBroken b
 
-func (v *compositing) OpenGLIsBroken() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceCompositing) OpenGLIsBroken() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "openGLIsBroken",
 	}
@@ -117,8 +137,8 @@ func (v *compositing) OpenGLIsBroken() proxy.PropBool {
 
 // property compositingType s
 
-func (v *compositing) CompositingType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceCompositing) CompositingType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "compositingType",
 	}
@@ -126,8 +146,8 @@ func (v *compositing) CompositingType() proxy.PropString {
 
 // property supportedOpenGLPlatformInterfaces as
 
-func (v *compositing) SupportedOpenGLPlatformInterfaces() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceCompositing) SupportedOpenGLPlatformInterfaces() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "supportedOpenGLPlatformInterfaces",
 	}
@@ -135,37 +155,48 @@ func (v *compositing) SupportedOpenGLPlatformInterfaces() proxy.PropStringArray 
 
 // property platformRequiresCompositing b
 
-func (v *compositing) PlatformRequiresCompositing() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceCompositing) PlatformRequiresCompositing() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "platformRequiresCompositing",
 	}
 }
 
-type InputDeviceManager struct {
+type InputDeviceManager interface {
 	inputDeviceManager // interface org.kde.KWin.InputDeviceManager
 	proxy.Object
 }
 
-func NewInputDeviceManager(conn *dbus.Conn) *InputDeviceManager {
-	obj := new(InputDeviceManager)
-	obj.Object.Init_(conn, "org.kde.KWin", "/org/kde/KWin/InputDevice")
+type objectInputDeviceManager struct {
+	interfaceInputDeviceManager // interface org.kde.KWin.InputDeviceManager
+	proxy.ImplObject
+}
+
+func NewInputDeviceManager(conn *dbus.Conn) InputDeviceManager {
+	obj := new(objectInputDeviceManager)
+	obj.ImplObject.Init_(conn, "org.kde.KWin", "/org/kde/KWin/InputDevice")
 	return obj
 }
 
-type inputDeviceManager struct{}
-
-func (v *inputDeviceManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type inputDeviceManager interface {
+	ConnectDeviceAdded(cb func(sysName string)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceRemoved(cb func(sysName string)) (dbusutil.SignalHandlerId, error)
+	DevicesSysNames() proxy.PropStringArray
 }
 
-func (*inputDeviceManager) GetInterfaceName_() string {
+type interfaceInputDeviceManager struct{}
+
+func (v *interfaceInputDeviceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInputDeviceManager) GetInterfaceName_() string {
 	return "org.kde.KWin.InputDeviceManager"
 }
 
 // signal deviceAdded
 
-func (v *inputDeviceManager) ConnectDeviceAdded(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInputDeviceManager) ConnectDeviceAdded(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -191,7 +222,7 @@ func (v *inputDeviceManager) ConnectDeviceAdded(cb func(sysName string)) (dbusut
 
 // signal deviceRemoved
 
-func (v *inputDeviceManager) ConnectDeviceRemoved(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInputDeviceManager) ConnectDeviceRemoved(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -217,41 +248,118 @@ func (v *inputDeviceManager) ConnectDeviceRemoved(cb func(sysName string)) (dbus
 
 // property devicesSysNames as
 
-func (v *inputDeviceManager) DevicesSysNames() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceInputDeviceManager) DevicesSysNames() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "devicesSysNames",
 	}
 }
 
-type InputDevice struct {
+type InputDevice interface {
 	inputDevice // interface org.kde.KWin.InputDevice
 	proxy.Object
 }
 
-func NewInputDevice(conn *dbus.Conn, path dbus.ObjectPath) (*InputDevice, error) {
+type objectInputDevice struct {
+	interfaceInputDevice // interface org.kde.KWin.InputDevice
+	proxy.ImplObject
+}
+
+func NewInputDevice(conn *dbus.Conn, path dbus.ObjectPath) (InputDevice, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(InputDevice)
-	obj.Object.Init_(conn, "org.kde.KWin", path)
+	obj := new(objectInputDevice)
+	obj.ImplObject.Init_(conn, "org.kde.KWin", path)
 	return obj, nil
 }
 
-type inputDevice struct{}
-
-func (v *inputDevice) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type inputDevice interface {
+	Keyboard() proxy.PropBool
+	AlphaNumericKeyboard() proxy.PropBool
+	Pointer() proxy.PropBool
+	Touchpad() proxy.PropBool
+	Touch() proxy.PropBool
+	TabletTool() proxy.PropBool
+	TabletPad() proxy.PropBool
+	GestureSupport() proxy.PropBool
+	Name() proxy.PropString
+	SysName() proxy.PropString
+	OutputName() proxy.PropString
+	Product() proxy.PropUint32
+	Vendor() proxy.PropUint32
+	SupportsDisableEvents() proxy.PropBool
+	Enabled() proxy.PropBool
+	SupportedButtons() proxy.PropInt32
+	SupportsCalibrationMatrix() proxy.PropBool
+	SupportsLeftHanded() proxy.PropBool
+	LeftHandedEnabledByDefault() proxy.PropBool
+	LeftHanded() proxy.PropBool
+	SupportsDisableEventsOnExternalMouse() proxy.PropBool
+	SupportsDisableWhileTyping() proxy.PropBool
+	DisableWhileTypingEnabledByDefault() proxy.PropBool
+	DisableWhileTyping() proxy.PropBool
+	SupportsPointerAcceleration() proxy.PropBool
+	DefaultPointerAcceleration() proxy.PropDouble
+	PointerAcceleration() proxy.PropDouble
+	SupportsPointerAccelerationProfileFlat() proxy.PropBool
+	DefaultPointerAccelerationProfileFlat() proxy.PropBool
+	PointerAccelerationProfileFlat() proxy.PropBool
+	SupportsPointerAccelerationProfileAdaptive() proxy.PropBool
+	DefaultPointerAccelerationProfileAdaptive() proxy.PropBool
+	PointerAccelerationProfileAdaptive() proxy.PropBool
+	TapFingerCount() proxy.PropInt32
+	TapToClickEnabledByDefault() proxy.PropBool
+	TapToClick() proxy.PropBool
+	SupportsLmrTapButtonMap() proxy.PropBool
+	LmrTapButtonMapEnabledByDefault() proxy.PropBool
+	LmrTapButtonMap() proxy.PropBool
+	TapAndDragEnabledByDefault() proxy.PropBool
+	TapAndDrag() proxy.PropBool
+	TapDragLockEnabledByDefault() proxy.PropBool
+	TapDragLock() proxy.PropBool
+	SupportsMiddleEmulation() proxy.PropBool
+	MiddleEmulationEnabledByDefault() proxy.PropBool
+	MiddleEmulation() proxy.PropBool
+	SupportsNaturalScroll() proxy.PropBool
+	NaturalScrollEnabledByDefault() proxy.PropBool
+	NaturalScroll() proxy.PropBool
+	SupportsScrollTwoFinger() proxy.PropBool
+	ScrollTwoFingerEnabledByDefault() proxy.PropBool
+	ScrollTwoFinger() proxy.PropBool
+	SupportsScrollEdge() proxy.PropBool
+	ScrollEdgeEnabledByDefault() proxy.PropBool
+	ScrollEdge() proxy.PropBool
+	SupportsScrollOnButtonDown() proxy.PropBool
+	ScrollOnButtonDownEnabledByDefault() proxy.PropBool
+	DefaultScrollButton() proxy.PropUint32
+	ScrollOnButtonDown() proxy.PropBool
+	ScrollButton() proxy.PropUint32
+	SwitchDevice() proxy.PropBool
+	LidSwitch() proxy.PropBool
+	TabletModeSwitch() proxy.PropBool
+	SupportsClickMethodAreas() proxy.PropBool
+	DefaultClickMethodAreas() proxy.PropBool
+	ClickMethodAreas() proxy.PropBool
+	SupportsClickMethodClickfinger() proxy.PropBool
+	DefaultClickMethodClickfinger() proxy.PropBool
+	ClickMethodClickfinger() proxy.PropBool
 }
 
-func (*inputDevice) GetInterfaceName_() string {
+type interfaceInputDevice struct{}
+
+func (v *interfaceInputDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInputDevice) GetInterfaceName_() string {
 	return "org.kde.KWin.InputDevice"
 }
 
 // property keyboard b
 
-func (v *inputDevice) Keyboard() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) Keyboard() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "keyboard",
 	}
@@ -259,8 +367,8 @@ func (v *inputDevice) Keyboard() proxy.PropBool {
 
 // property alphaNumericKeyboard b
 
-func (v *inputDevice) AlphaNumericKeyboard() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) AlphaNumericKeyboard() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "alphaNumericKeyboard",
 	}
@@ -268,8 +376,8 @@ func (v *inputDevice) AlphaNumericKeyboard() proxy.PropBool {
 
 // property pointer b
 
-func (v *inputDevice) Pointer() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) Pointer() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "pointer",
 	}
@@ -277,8 +385,8 @@ func (v *inputDevice) Pointer() proxy.PropBool {
 
 // property touchpad b
 
-func (v *inputDevice) Touchpad() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) Touchpad() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "touchpad",
 	}
@@ -286,8 +394,8 @@ func (v *inputDevice) Touchpad() proxy.PropBool {
 
 // property touch b
 
-func (v *inputDevice) Touch() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) Touch() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "touch",
 	}
@@ -295,8 +403,8 @@ func (v *inputDevice) Touch() proxy.PropBool {
 
 // property tabletTool b
 
-func (v *inputDevice) TabletTool() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TabletTool() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tabletTool",
 	}
@@ -304,8 +412,8 @@ func (v *inputDevice) TabletTool() proxy.PropBool {
 
 // property tabletPad b
 
-func (v *inputDevice) TabletPad() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TabletPad() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tabletPad",
 	}
@@ -313,8 +421,8 @@ func (v *inputDevice) TabletPad() proxy.PropBool {
 
 // property gestureSupport b
 
-func (v *inputDevice) GestureSupport() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) GestureSupport() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "gestureSupport",
 	}
@@ -322,8 +430,8 @@ func (v *inputDevice) GestureSupport() proxy.PropBool {
 
 // property name s
 
-func (v *inputDevice) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInputDevice) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "name",
 	}
@@ -331,8 +439,8 @@ func (v *inputDevice) Name() proxy.PropString {
 
 // property sysName s
 
-func (v *inputDevice) SysName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInputDevice) SysName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "sysName",
 	}
@@ -340,8 +448,8 @@ func (v *inputDevice) SysName() proxy.PropString {
 
 // property outputName s
 
-func (v *inputDevice) OutputName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInputDevice) OutputName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "outputName",
 	}
@@ -349,8 +457,8 @@ func (v *inputDevice) OutputName() proxy.PropString {
 
 // property product u
 
-func (v *inputDevice) Product() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInputDevice) Product() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "product",
 	}
@@ -358,8 +466,8 @@ func (v *inputDevice) Product() proxy.PropUint32 {
 
 // property vendor u
 
-func (v *inputDevice) Vendor() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInputDevice) Vendor() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "vendor",
 	}
@@ -367,8 +475,8 @@ func (v *inputDevice) Vendor() proxy.PropUint32 {
 
 // property supportsDisableEvents b
 
-func (v *inputDevice) SupportsDisableEvents() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsDisableEvents() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsDisableEvents",
 	}
@@ -376,8 +484,8 @@ func (v *inputDevice) SupportsDisableEvents() proxy.PropBool {
 
 // property enabled b
 
-func (v *inputDevice) Enabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) Enabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "enabled",
 	}
@@ -385,8 +493,8 @@ func (v *inputDevice) Enabled() proxy.PropBool {
 
 // property supportedButtons i
 
-func (v *inputDevice) SupportedButtons() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInputDevice) SupportedButtons() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "supportedButtons",
 	}
@@ -394,8 +502,8 @@ func (v *inputDevice) SupportedButtons() proxy.PropInt32 {
 
 // property supportsCalibrationMatrix b
 
-func (v *inputDevice) SupportsCalibrationMatrix() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsCalibrationMatrix() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsCalibrationMatrix",
 	}
@@ -403,8 +511,8 @@ func (v *inputDevice) SupportsCalibrationMatrix() proxy.PropBool {
 
 // property supportsLeftHanded b
 
-func (v *inputDevice) SupportsLeftHanded() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsLeftHanded() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsLeftHanded",
 	}
@@ -412,8 +520,8 @@ func (v *inputDevice) SupportsLeftHanded() proxy.PropBool {
 
 // property leftHandedEnabledByDefault b
 
-func (v *inputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "leftHandedEnabledByDefault",
 	}
@@ -421,8 +529,8 @@ func (v *inputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
 
 // property leftHanded b
 
-func (v *inputDevice) LeftHanded() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) LeftHanded() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "leftHanded",
 	}
@@ -430,8 +538,8 @@ func (v *inputDevice) LeftHanded() proxy.PropBool {
 
 // property supportsDisableEventsOnExternalMouse b
 
-func (v *inputDevice) SupportsDisableEventsOnExternalMouse() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsDisableEventsOnExternalMouse() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsDisableEventsOnExternalMouse",
 	}
@@ -439,8 +547,8 @@ func (v *inputDevice) SupportsDisableEventsOnExternalMouse() proxy.PropBool {
 
 // property supportsDisableWhileTyping b
 
-func (v *inputDevice) SupportsDisableWhileTyping() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsDisableWhileTyping() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsDisableWhileTyping",
 	}
@@ -448,8 +556,8 @@ func (v *inputDevice) SupportsDisableWhileTyping() proxy.PropBool {
 
 // property disableWhileTypingEnabledByDefault b
 
-func (v *inputDevice) DisableWhileTypingEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DisableWhileTypingEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "disableWhileTypingEnabledByDefault",
 	}
@@ -457,8 +565,8 @@ func (v *inputDevice) DisableWhileTypingEnabledByDefault() proxy.PropBool {
 
 // property disableWhileTyping b
 
-func (v *inputDevice) DisableWhileTyping() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DisableWhileTyping() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "disableWhileTyping",
 	}
@@ -466,8 +574,8 @@ func (v *inputDevice) DisableWhileTyping() proxy.PropBool {
 
 // property supportsPointerAcceleration b
 
-func (v *inputDevice) SupportsPointerAcceleration() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsPointerAcceleration() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsPointerAcceleration",
 	}
@@ -475,8 +583,8 @@ func (v *inputDevice) SupportsPointerAcceleration() proxy.PropBool {
 
 // property defaultPointerAcceleration d
 
-func (v *inputDevice) DefaultPointerAcceleration() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceInputDevice) DefaultPointerAcceleration() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "defaultPointerAcceleration",
 	}
@@ -484,8 +592,8 @@ func (v *inputDevice) DefaultPointerAcceleration() proxy.PropDouble {
 
 // property pointerAcceleration d
 
-func (v *inputDevice) PointerAcceleration() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceInputDevice) PointerAcceleration() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "pointerAcceleration",
 	}
@@ -493,8 +601,8 @@ func (v *inputDevice) PointerAcceleration() proxy.PropDouble {
 
 // property supportsPointerAccelerationProfileFlat b
 
-func (v *inputDevice) SupportsPointerAccelerationProfileFlat() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsPointerAccelerationProfileFlat() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsPointerAccelerationProfileFlat",
 	}
@@ -502,8 +610,8 @@ func (v *inputDevice) SupportsPointerAccelerationProfileFlat() proxy.PropBool {
 
 // property defaultPointerAccelerationProfileFlat b
 
-func (v *inputDevice) DefaultPointerAccelerationProfileFlat() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DefaultPointerAccelerationProfileFlat() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "defaultPointerAccelerationProfileFlat",
 	}
@@ -511,8 +619,8 @@ func (v *inputDevice) DefaultPointerAccelerationProfileFlat() proxy.PropBool {
 
 // property pointerAccelerationProfileFlat b
 
-func (v *inputDevice) PointerAccelerationProfileFlat() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) PointerAccelerationProfileFlat() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "pointerAccelerationProfileFlat",
 	}
@@ -520,8 +628,8 @@ func (v *inputDevice) PointerAccelerationProfileFlat() proxy.PropBool {
 
 // property supportsPointerAccelerationProfileAdaptive b
 
-func (v *inputDevice) SupportsPointerAccelerationProfileAdaptive() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsPointerAccelerationProfileAdaptive() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsPointerAccelerationProfileAdaptive",
 	}
@@ -529,8 +637,8 @@ func (v *inputDevice) SupportsPointerAccelerationProfileAdaptive() proxy.PropBoo
 
 // property defaultPointerAccelerationProfileAdaptive b
 
-func (v *inputDevice) DefaultPointerAccelerationProfileAdaptive() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DefaultPointerAccelerationProfileAdaptive() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "defaultPointerAccelerationProfileAdaptive",
 	}
@@ -538,8 +646,8 @@ func (v *inputDevice) DefaultPointerAccelerationProfileAdaptive() proxy.PropBool
 
 // property pointerAccelerationProfileAdaptive b
 
-func (v *inputDevice) PointerAccelerationProfileAdaptive() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) PointerAccelerationProfileAdaptive() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "pointerAccelerationProfileAdaptive",
 	}
@@ -547,8 +655,8 @@ func (v *inputDevice) PointerAccelerationProfileAdaptive() proxy.PropBool {
 
 // property tapFingerCount i
 
-func (v *inputDevice) TapFingerCount() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInputDevice) TapFingerCount() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "tapFingerCount",
 	}
@@ -556,8 +664,8 @@ func (v *inputDevice) TapFingerCount() proxy.PropInt32 {
 
 // property tapToClickEnabledByDefault b
 
-func (v *inputDevice) TapToClickEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapToClickEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapToClickEnabledByDefault",
 	}
@@ -565,8 +673,8 @@ func (v *inputDevice) TapToClickEnabledByDefault() proxy.PropBool {
 
 // property tapToClick b
 
-func (v *inputDevice) TapToClick() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapToClick() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapToClick",
 	}
@@ -574,8 +682,8 @@ func (v *inputDevice) TapToClick() proxy.PropBool {
 
 // property supportsLmrTapButtonMap b
 
-func (v *inputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsLmrTapButtonMap",
 	}
@@ -583,8 +691,8 @@ func (v *inputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
 
 // property lmrTapButtonMapEnabledByDefault b
 
-func (v *inputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "lmrTapButtonMapEnabledByDefault",
 	}
@@ -592,8 +700,8 @@ func (v *inputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropBool {
 
 // property lmrTapButtonMap b
 
-func (v *inputDevice) LmrTapButtonMap() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) LmrTapButtonMap() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "lmrTapButtonMap",
 	}
@@ -601,8 +709,8 @@ func (v *inputDevice) LmrTapButtonMap() proxy.PropBool {
 
 // property tapAndDragEnabledByDefault b
 
-func (v *inputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapAndDragEnabledByDefault",
 	}
@@ -610,8 +718,8 @@ func (v *inputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
 
 // property tapAndDrag b
 
-func (v *inputDevice) TapAndDrag() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapAndDrag() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapAndDrag",
 	}
@@ -619,8 +727,8 @@ func (v *inputDevice) TapAndDrag() proxy.PropBool {
 
 // property tapDragLockEnabledByDefault b
 
-func (v *inputDevice) TapDragLockEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapDragLockEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapDragLockEnabledByDefault",
 	}
@@ -628,8 +736,8 @@ func (v *inputDevice) TapDragLockEnabledByDefault() proxy.PropBool {
 
 // property tapDragLock b
 
-func (v *inputDevice) TapDragLock() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TapDragLock() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tapDragLock",
 	}
@@ -637,8 +745,8 @@ func (v *inputDevice) TapDragLock() proxy.PropBool {
 
 // property supportsMiddleEmulation b
 
-func (v *inputDevice) SupportsMiddleEmulation() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsMiddleEmulation() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsMiddleEmulation",
 	}
@@ -646,8 +754,8 @@ func (v *inputDevice) SupportsMiddleEmulation() proxy.PropBool {
 
 // property middleEmulationEnabledByDefault b
 
-func (v *inputDevice) MiddleEmulationEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) MiddleEmulationEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "middleEmulationEnabledByDefault",
 	}
@@ -655,8 +763,8 @@ func (v *inputDevice) MiddleEmulationEnabledByDefault() proxy.PropBool {
 
 // property middleEmulation b
 
-func (v *inputDevice) MiddleEmulation() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) MiddleEmulation() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "middleEmulation",
 	}
@@ -664,8 +772,8 @@ func (v *inputDevice) MiddleEmulation() proxy.PropBool {
 
 // property supportsNaturalScroll b
 
-func (v *inputDevice) SupportsNaturalScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsNaturalScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsNaturalScroll",
 	}
@@ -673,8 +781,8 @@ func (v *inputDevice) SupportsNaturalScroll() proxy.PropBool {
 
 // property naturalScrollEnabledByDefault b
 
-func (v *inputDevice) NaturalScrollEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) NaturalScrollEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "naturalScrollEnabledByDefault",
 	}
@@ -682,8 +790,8 @@ func (v *inputDevice) NaturalScrollEnabledByDefault() proxy.PropBool {
 
 // property naturalScroll b
 
-func (v *inputDevice) NaturalScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) NaturalScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "naturalScroll",
 	}
@@ -691,8 +799,8 @@ func (v *inputDevice) NaturalScroll() proxy.PropBool {
 
 // property supportsScrollTwoFinger b
 
-func (v *inputDevice) SupportsScrollTwoFinger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsScrollTwoFinger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsScrollTwoFinger",
 	}
@@ -700,8 +808,8 @@ func (v *inputDevice) SupportsScrollTwoFinger() proxy.PropBool {
 
 // property scrollTwoFingerEnabledByDefault b
 
-func (v *inputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollTwoFingerEnabledByDefault",
 	}
@@ -709,8 +817,8 @@ func (v *inputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropBool {
 
 // property scrollTwoFinger b
 
-func (v *inputDevice) ScrollTwoFinger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollTwoFinger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollTwoFinger",
 	}
@@ -718,8 +826,8 @@ func (v *inputDevice) ScrollTwoFinger() proxy.PropBool {
 
 // property supportsScrollEdge b
 
-func (v *inputDevice) SupportsScrollEdge() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsScrollEdge() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsScrollEdge",
 	}
@@ -727,8 +835,8 @@ func (v *inputDevice) SupportsScrollEdge() proxy.PropBool {
 
 // property scrollEdgeEnabledByDefault b
 
-func (v *inputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollEdgeEnabledByDefault",
 	}
@@ -736,8 +844,8 @@ func (v *inputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
 
 // property scrollEdge b
 
-func (v *inputDevice) ScrollEdge() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollEdge() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollEdge",
 	}
@@ -745,8 +853,8 @@ func (v *inputDevice) ScrollEdge() proxy.PropBool {
 
 // property supportsScrollOnButtonDown b
 
-func (v *inputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsScrollOnButtonDown",
 	}
@@ -754,8 +862,8 @@ func (v *inputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
 
 // property scrollOnButtonDownEnabledByDefault b
 
-func (v *inputDevice) ScrollOnButtonDownEnabledByDefault() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollOnButtonDownEnabledByDefault() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollOnButtonDownEnabledByDefault",
 	}
@@ -763,8 +871,8 @@ func (v *inputDevice) ScrollOnButtonDownEnabledByDefault() proxy.PropBool {
 
 // property defaultScrollButton u
 
-func (v *inputDevice) DefaultScrollButton() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInputDevice) DefaultScrollButton() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "defaultScrollButton",
 	}
@@ -772,8 +880,8 @@ func (v *inputDevice) DefaultScrollButton() proxy.PropUint32 {
 
 // property scrollOnButtonDown b
 
-func (v *inputDevice) ScrollOnButtonDown() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ScrollOnButtonDown() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "scrollOnButtonDown",
 	}
@@ -781,8 +889,8 @@ func (v *inputDevice) ScrollOnButtonDown() proxy.PropBool {
 
 // property scrollButton u
 
-func (v *inputDevice) ScrollButton() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInputDevice) ScrollButton() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "scrollButton",
 	}
@@ -790,8 +898,8 @@ func (v *inputDevice) ScrollButton() proxy.PropUint32 {
 
 // property switchDevice b
 
-func (v *inputDevice) SwitchDevice() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SwitchDevice() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "switchDevice",
 	}
@@ -799,8 +907,8 @@ func (v *inputDevice) SwitchDevice() proxy.PropBool {
 
 // property lidSwitch b
 
-func (v *inputDevice) LidSwitch() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) LidSwitch() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "lidSwitch",
 	}
@@ -808,8 +916,8 @@ func (v *inputDevice) LidSwitch() proxy.PropBool {
 
 // property tabletModeSwitch b
 
-func (v *inputDevice) TabletModeSwitch() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) TabletModeSwitch() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "tabletModeSwitch",
 	}
@@ -817,8 +925,8 @@ func (v *inputDevice) TabletModeSwitch() proxy.PropBool {
 
 // property supportsClickMethodAreas b
 
-func (v *inputDevice) SupportsClickMethodAreas() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsClickMethodAreas() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsClickMethodAreas",
 	}
@@ -826,8 +934,8 @@ func (v *inputDevice) SupportsClickMethodAreas() proxy.PropBool {
 
 // property defaultClickMethodAreas b
 
-func (v *inputDevice) DefaultClickMethodAreas() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DefaultClickMethodAreas() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "defaultClickMethodAreas",
 	}
@@ -835,8 +943,8 @@ func (v *inputDevice) DefaultClickMethodAreas() proxy.PropBool {
 
 // property clickMethodAreas b
 
-func (v *inputDevice) ClickMethodAreas() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ClickMethodAreas() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "clickMethodAreas",
 	}
@@ -844,8 +952,8 @@ func (v *inputDevice) ClickMethodAreas() proxy.PropBool {
 
 // property supportsClickMethodClickfinger b
 
-func (v *inputDevice) SupportsClickMethodClickfinger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) SupportsClickMethodClickfinger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "supportsClickMethodClickfinger",
 	}
@@ -853,8 +961,8 @@ func (v *inputDevice) SupportsClickMethodClickfinger() proxy.PropBool {
 
 // property defaultClickMethodClickfinger b
 
-func (v *inputDevice) DefaultClickMethodClickfinger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) DefaultClickMethodClickfinger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "defaultClickMethodClickfinger",
 	}
@@ -862,8 +970,8 @@ func (v *inputDevice) DefaultClickMethodClickfinger() proxy.PropBool {
 
 // property clickMethodClickfinger b
 
-func (v *inputDevice) ClickMethodClickfinger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInputDevice) ClickMethodClickfinger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "clickMethodClickfinger",
 	}

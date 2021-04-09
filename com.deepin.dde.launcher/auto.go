@@ -12,106 +12,132 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Launcher struct {
+type Launcher interface {
 	launcher // interface com.deepin.dde.Launcher
 	proxy.Object
 }
 
-func NewLauncher(conn *dbus.Conn) *Launcher {
-	obj := new(Launcher)
-	obj.Object.Init_(conn, "com.deepin.dde.Launcher", "/com/deepin/dde/Launcher")
+type objectLauncher struct {
+	interfaceLauncher // interface com.deepin.dde.Launcher
+	proxy.ImplObject
+}
+
+func NewLauncher(conn *dbus.Conn) Launcher {
+	obj := new(objectLauncher)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.Launcher", "/com/deepin/dde/Launcher")
 	return obj
 }
 
-type launcher struct{}
-
-func (v *launcher) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type launcher interface {
+	GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Exit(flags dbus.Flags) error
+	GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Hide(flags dbus.Flags) error
+	GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Show(flags dbus.Flags) error
+	GoShowByMode(flags dbus.Flags, ch chan *dbus.Call, in0 int64) *dbus.Call
+	ShowByMode(flags dbus.Flags, in0 int64) error
+	GoUninstallApp(flags dbus.Flags, ch chan *dbus.Call, appKey string) *dbus.Call
+	UninstallApp(flags dbus.Flags, appKey string) error
+	GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Toggle(flags dbus.Flags) error
+	GoIsVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsVisible(flags dbus.Flags) (bool, error)
+	ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectShown(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectVisibleChanged(cb func(visible bool)) (dbusutil.SignalHandlerId, error)
+	Visible() proxy.PropBool
 }
 
-func (*launcher) GetInterfaceName_() string {
+type interfaceLauncher struct{}
+
+func (v *interfaceLauncher) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLauncher) GetInterfaceName_() string {
 	return "com.deepin.dde.Launcher"
 }
 
 // method Exit
 
-func (v *launcher) GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Exit", flags, ch)
 }
 
-func (v *launcher) Exit(flags dbus.Flags) error {
+func (v *interfaceLauncher) Exit(flags dbus.Flags) error {
 	return (<-v.GoExit(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Hide
 
-func (v *launcher) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hide", flags, ch)
 }
 
-func (v *launcher) Hide(flags dbus.Flags) error {
+func (v *interfaceLauncher) Hide(flags dbus.Flags) error {
 	return (<-v.GoHide(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Show
 
-func (v *launcher) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
 }
 
-func (v *launcher) Show(flags dbus.Flags) error {
+func (v *interfaceLauncher) Show(flags dbus.Flags) error {
 	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ShowByMode
 
-func (v *launcher) GoShowByMode(flags dbus.Flags, ch chan *dbus.Call, in0 int64) *dbus.Call {
+func (v *interfaceLauncher) GoShowByMode(flags dbus.Flags, ch chan *dbus.Call, in0 int64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowByMode", flags, ch, in0)
 }
 
-func (v *launcher) ShowByMode(flags dbus.Flags, in0 int64) error {
+func (v *interfaceLauncher) ShowByMode(flags dbus.Flags, in0 int64) error {
 	return (<-v.GoShowByMode(flags, make(chan *dbus.Call, 1), in0).Done).Err
 }
 
 // method UninstallApp
 
-func (v *launcher) GoUninstallApp(flags dbus.Flags, ch chan *dbus.Call, appKey string) *dbus.Call {
+func (v *interfaceLauncher) GoUninstallApp(flags dbus.Flags, ch chan *dbus.Call, appKey string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UninstallApp", flags, ch, appKey)
 }
 
-func (v *launcher) UninstallApp(flags dbus.Flags, appKey string) error {
+func (v *interfaceLauncher) UninstallApp(flags dbus.Flags, appKey string) error {
 	return (<-v.GoUninstallApp(flags, make(chan *dbus.Call, 1), appKey).Done).Err
 }
 
 // method Toggle
 
-func (v *launcher) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Toggle", flags, ch)
 }
 
-func (v *launcher) Toggle(flags dbus.Flags) error {
+func (v *interfaceLauncher) Toggle(flags dbus.Flags) error {
 	return (<-v.GoToggle(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method IsVisible
 
-func (v *launcher) GoIsVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLauncher) GoIsVisible(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsVisible", flags, ch)
 }
 
-func (*launcher) StoreIsVisible(call *dbus.Call) (arg0 bool, err error) {
+func (*interfaceLauncher) StoreIsVisible(call *dbus.Call) (arg0 bool, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *launcher) IsVisible(flags dbus.Flags) (arg0 bool, err error) {
+func (v *interfaceLauncher) IsVisible(flags dbus.Flags) (bool, error) {
 	return v.StoreIsVisible(
 		<-v.GoIsVisible(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal Closed
 
-func (v *launcher) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -133,7 +159,7 @@ func (v *launcher) ConnectClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal Shown
 
-func (v *launcher) ConnectShown(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectShown(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -155,7 +181,7 @@ func (v *launcher) ConnectShown(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal VisibleChanged
 
-func (v *launcher) ConnectVisibleChanged(cb func(visible bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLauncher) ConnectVisibleChanged(cb func(visible bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -181,8 +207,8 @@ func (v *launcher) ConnectVisibleChanged(cb func(visible bool)) (dbusutil.Signal
 
 // property Visible b
 
-func (v *launcher) Visible() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceLauncher) Visible() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Visible",
 	}

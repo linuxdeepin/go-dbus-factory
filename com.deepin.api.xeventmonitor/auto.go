@@ -12,94 +12,118 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type XEventMonitor struct {
+type XEventMonitor interface {
 	xEventMonitor // interface com.deepin.api.XEventMonitor
 	proxy.Object
 }
 
-func NewXEventMonitor(conn *dbus.Conn) *XEventMonitor {
-	obj := new(XEventMonitor)
-	obj.Object.Init_(conn, "com.deepin.api.XEventMonitor", "/com/deepin/api/XEventMonitor")
+type objectXEventMonitor struct {
+	interfaceXEventMonitor // interface com.deepin.api.XEventMonitor
+	proxy.ImplObject
+}
+
+func NewXEventMonitor(conn *dbus.Conn) XEventMonitor {
+	obj := new(objectXEventMonitor)
+	obj.ImplObject.Init_(conn, "com.deepin.api.XEventMonitor", "/com/deepin/api/XEventMonitor")
 	return obj
 }
 
-type xEventMonitor struct{}
-
-func (v *xEventMonitor) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type xEventMonitor interface {
+	GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call
+	RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (string, error)
+	GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call
+	RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (string, error)
+	GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RegisterFullScreen(flags dbus.Flags) (string, error)
+	GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	UnregisterArea(flags dbus.Flags, id string) (bool, error)
+	ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
+	ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*xEventMonitor) GetInterfaceName_() string {
+type interfaceXEventMonitor struct{}
+
+func (v *interfaceXEventMonitor) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceXEventMonitor) GetInterfaceName_() string {
 	return "com.deepin.api.XEventMonitor"
 }
 
 // method RegisterArea
 
-func (v *xEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call {
+func (v *interfaceXEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterArea", flags, ch, x1, y1, x2, y2, flag)
 }
 
-func (*xEventMonitor) StoreRegisterArea(call *dbus.Call) (id string, err error) {
+func (*interfaceXEventMonitor) StoreRegisterArea(call *dbus.Call) (id string, err error) {
 	err = call.Store(&id)
 	return
 }
 
-func (v *xEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (id string, err error) {
+func (v *interfaceXEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (string, error) {
 	return v.StoreRegisterArea(
 		<-v.GoRegisterArea(flags, make(chan *dbus.Call, 1), x1, y1, x2, y2, flag).Done)
 }
 
 // method RegisterAreas
 
-func (v *xEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
+func (v *interfaceXEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterAreas", flags, ch, areas, flag)
 }
 
-func (*xEventMonitor) StoreRegisterAreas(call *dbus.Call) (id string, err error) {
+func (*interfaceXEventMonitor) StoreRegisterAreas(call *dbus.Call) (id string, err error) {
 	err = call.Store(&id)
 	return
 }
 
-func (v *xEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (id string, err error) {
+func (v *interfaceXEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (string, error) {
 	return v.StoreRegisterAreas(
 		<-v.GoRegisterAreas(flags, make(chan *dbus.Call, 1), areas, flag).Done)
 }
 
 // method RegisterFullScreen
 
-func (v *xEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceXEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterFullScreen", flags, ch)
 }
 
-func (*xEventMonitor) StoreRegisterFullScreen(call *dbus.Call) (id string, err error) {
+func (*interfaceXEventMonitor) StoreRegisterFullScreen(call *dbus.Call) (id string, err error) {
 	err = call.Store(&id)
 	return
 }
 
-func (v *xEventMonitor) RegisterFullScreen(flags dbus.Flags) (id string, err error) {
+func (v *interfaceXEventMonitor) RegisterFullScreen(flags dbus.Flags) (string, error) {
 	return v.StoreRegisterFullScreen(
 		<-v.GoRegisterFullScreen(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method UnregisterArea
 
-func (v *xEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *interfaceXEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterArea", flags, ch, id)
 }
 
-func (*xEventMonitor) StoreUnregisterArea(call *dbus.Call) (ok bool, err error) {
+func (*interfaceXEventMonitor) StoreUnregisterArea(call *dbus.Call) (ok bool, err error) {
 	err = call.Store(&ok)
 	return
 }
 
-func (v *xEventMonitor) UnregisterArea(flags dbus.Flags, id string) (ok bool, err error) {
+func (v *interfaceXEventMonitor) UnregisterArea(flags dbus.Flags, id string) (bool, error) {
 	return v.StoreUnregisterArea(
 		<-v.GoUnregisterArea(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // signal CancelAllArea
 
-func (v *xEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -121,7 +145,7 @@ func (v *xEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerI
 
 // signal CursorInto
 
-func (v *xEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -149,7 +173,7 @@ func (v *xEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) 
 
 // signal CursorOut
 
-func (v *xEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -177,7 +201,7 @@ func (v *xEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (
 
 // signal CursorMove
 
-func (v *xEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -205,7 +229,7 @@ func (v *xEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) 
 
 // signal ButtonPress
 
-func (v *xEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -234,7 +258,7 @@ func (v *xEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int3
 
 // signal ButtonRelease
 
-func (v *xEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -263,7 +287,7 @@ func (v *xEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y in
 
 // signal KeyPress
 
-func (v *xEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -292,7 +316,7 @@ func (v *xEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id
 
 // signal KeyRelease
 
-func (v *xEventMonitor) ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceXEventMonitor) ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

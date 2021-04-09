@@ -9,49 +9,61 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Device struct {
+type Device interface {
 	device // interface com.deepin.api.Device
 	proxy.Object
 }
 
-func NewDevice(conn *dbus.Conn) *Device {
-	obj := new(Device)
-	obj.Object.Init_(conn, "com.deepin.api.Device", "/com/deepin/api/Device")
+type objectDevice struct {
+	interfaceDevice // interface com.deepin.api.Device
+	proxy.ImplObject
+}
+
+func NewDevice(conn *dbus.Conn) Device {
+	obj := new(objectDevice)
+	obj.ImplObject.Init_(conn, "com.deepin.api.Device", "/com/deepin/api/Device")
 	return obj
 }
 
-type device struct{}
-
-func (v *device) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type device interface {
+	GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	HasBluetoothDeviceBlocked(flags dbus.Flags) (bool, error)
+	GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	UnblockBluetoothDevices(flags dbus.Flags) error
 }
 
-func (*device) GetInterfaceName_() string {
+type interfaceDevice struct{}
+
+func (v *interfaceDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDevice) GetInterfaceName_() string {
 	return "com.deepin.api.Device"
 }
 
 // method HasBluetoothDeviceBlocked
 
-func (v *device) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HasBluetoothDeviceBlocked", flags, ch)
 }
 
-func (*device) StoreHasBluetoothDeviceBlocked(call *dbus.Call) (has bool, err error) {
+func (*interfaceDevice) StoreHasBluetoothDeviceBlocked(call *dbus.Call) (has bool, err error) {
 	err = call.Store(&has)
 	return
 }
 
-func (v *device) HasBluetoothDeviceBlocked(flags dbus.Flags) (has bool, err error) {
+func (v *interfaceDevice) HasBluetoothDeviceBlocked(flags dbus.Flags) (bool, error) {
 	return v.StoreHasBluetoothDeviceBlocked(
 		<-v.GoHasBluetoothDeviceBlocked(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method UnblockBluetoothDevices
 
-func (v *device) GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnblockBluetoothDevices", flags, ch)
 }
 
-func (v *device) UnblockBluetoothDevices(flags dbus.Flags) error {
+func (v *interfaceDevice) UnblockBluetoothDevices(flags dbus.Flags) error {
 	return (<-v.GoUnblockBluetoothDevices(flags, make(chan *dbus.Call, 1)).Done).Err
 }

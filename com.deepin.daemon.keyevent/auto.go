@@ -12,30 +12,39 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type KeyEvent struct {
+type KeyEvent interface {
 	keyEvent // interface com.deepin.daemon.KeyEvent
 	proxy.Object
 }
 
-func NewKeyEvent(conn *dbus.Conn) *KeyEvent {
-	obj := new(KeyEvent)
-	obj.Object.Init_(conn, "com.deepin.daemon.KeyEvent", "/com/deepin/daemon/KeyEvent")
+type objectKeyEvent struct {
+	interfaceKeyEvent // interface com.deepin.daemon.KeyEvent
+	proxy.ImplObject
+}
+
+func NewKeyEvent(conn *dbus.Conn) KeyEvent {
+	obj := new(objectKeyEvent)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.KeyEvent", "/com/deepin/daemon/KeyEvent")
 	return obj
 }
 
-type keyEvent struct{}
-
-func (v *keyEvent) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type keyEvent interface {
+	ConnectKeyEvent(cb func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*keyEvent) GetInterfaceName_() string {
+type interfaceKeyEvent struct{}
+
+func (v *interfaceKeyEvent) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceKeyEvent) GetInterfaceName_() string {
 	return "com.deepin.daemon.KeyEvent"
 }
 
 // signal KeyEvent
 
-func (v *keyEvent) ConnectKeyEvent(cb func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceKeyEvent) ConnectKeyEvent(cb func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

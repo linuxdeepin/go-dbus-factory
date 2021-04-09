@@ -10,87 +10,111 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Audio struct {
+type Audio interface {
 	audio // interface com.deepin.daemon.Audio
 	proxy.Object
 }
 
-func NewAudio(conn *dbus.Conn) *Audio {
-	obj := new(Audio)
-	obj.Object.Init_(conn, "com.deepin.daemon.Audio", "/com/deepin/daemon/Audio")
+type objectAudio struct {
+	interfaceAudio // interface com.deepin.daemon.Audio
+	proxy.ImplObject
+}
+
+func NewAudio(conn *dbus.Conn) Audio {
+	obj := new(objectAudio)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Audio", "/com/deepin/daemon/Audio")
 	return obj
 }
 
-type audio struct{}
-
-func (v *audio) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type audio interface {
+	GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	SetDefaultSink(flags dbus.Flags, name string) error
+	GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	SetDefaultSource(flags dbus.Flags, name string) error
+	GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call
+	SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error
+	GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call
+	SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error
+	GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call
+	IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (bool, error)
+	MaxUIVolume() proxy.PropDouble
+	SinkInputs() proxy.PropObjectPathArray
+	DefaultSink() proxy.PropObjectPath
+	DefaultSource() proxy.PropObjectPath
+	Cards() proxy.PropString
+	CardsWithoutUnavailable() proxy.PropString
 }
 
-func (*audio) GetInterfaceName_() string {
+type interfaceAudio struct{}
+
+func (v *interfaceAudio) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAudio) GetInterfaceName_() string {
 	return "com.deepin.daemon.Audio"
 }
 
 // method SetDefaultSink
 
-func (v *audio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceAudio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultSink", flags, ch, name)
 }
 
-func (v *audio) SetDefaultSink(flags dbus.Flags, name string) error {
+func (v *interfaceAudio) SetDefaultSink(flags dbus.Flags, name string) error {
 	return (<-v.GoSetDefaultSink(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetDefaultSource
 
-func (v *audio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceAudio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultSource", flags, ch, name)
 }
 
-func (v *audio) SetDefaultSource(flags dbus.Flags, name string) error {
+func (v *interfaceAudio) SetDefaultSource(flags dbus.Flags, name string) error {
 	return (<-v.GoSetDefaultSource(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetPort
 
-func (v *audio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call {
+func (v *interfaceAudio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, cardId, portName, direction)
 }
 
-func (v *audio) SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error {
+func (v *interfaceAudio) SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), cardId, portName, direction).Done).Err
 }
 
 // method SetPortEnabled
 
-func (v *audio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call {
+func (v *interfaceAudio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPortEnabled", flags, ch, cardId, portName, enabled)
 }
 
-func (v *audio) SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error {
+func (v *interfaceAudio) SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error {
 	return (<-v.GoSetPortEnabled(flags, make(chan *dbus.Call, 1), cardId, portName, enabled).Done).Err
 }
 
 // method IsPortEnabled
 
-func (v *audio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call {
+func (v *interfaceAudio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsPortEnabled", flags, ch, cardId, portName)
 }
 
-func (*audio) StoreIsPortEnabled(call *dbus.Call) (enabled bool, err error) {
+func (*interfaceAudio) StoreIsPortEnabled(call *dbus.Call) (enabled bool, err error) {
 	err = call.Store(&enabled)
 	return
 }
 
-func (v *audio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (enabled bool, err error) {
+func (v *interfaceAudio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (bool, error) {
 	return v.StoreIsPortEnabled(
 		<-v.GoIsPortEnabled(flags, make(chan *dbus.Call, 1), cardId, portName).Done)
 }
 
 // property MaxUIVolume d
 
-func (v *audio) MaxUIVolume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceAudio) MaxUIVolume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "MaxUIVolume",
 	}
@@ -98,8 +122,8 @@ func (v *audio) MaxUIVolume() proxy.PropDouble {
 
 // property SinkInputs ao
 
-func (v *audio) SinkInputs() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceAudio) SinkInputs() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "SinkInputs",
 	}
@@ -107,8 +131,8 @@ func (v *audio) SinkInputs() proxy.PropObjectPathArray {
 
 // property DefaultSink o
 
-func (v *audio) DefaultSink() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceAudio) DefaultSink() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "DefaultSink",
 	}
@@ -116,8 +140,8 @@ func (v *audio) DefaultSink() proxy.PropObjectPath {
 
 // property DefaultSource o
 
-func (v *audio) DefaultSource() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceAudio) DefaultSource() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "DefaultSource",
 	}
@@ -125,8 +149,8 @@ func (v *audio) DefaultSource() proxy.PropObjectPath {
 
 // property Cards s
 
-func (v *audio) Cards() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAudio) Cards() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Cards",
 	}
@@ -134,107 +158,139 @@ func (v *audio) Cards() proxy.PropString {
 
 // property CardsWithoutUnavailable s
 
-func (v *audio) CardsWithoutUnavailable() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAudio) CardsWithoutUnavailable() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CardsWithoutUnavailable",
 	}
 }
 
-type Sink struct {
+type Sink interface {
 	sink // interface com.deepin.daemon.Audio.Sink
 	proxy.Object
 }
 
-func NewSink(conn *dbus.Conn, path dbus.ObjectPath) (*Sink, error) {
+type objectSink struct {
+	interfaceSink // interface com.deepin.daemon.Audio.Sink
+	proxy.ImplObject
+}
+
+func NewSink(conn *dbus.Conn, path dbus.ObjectPath) (Sink, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Sink)
-	obj.Object.Init_(conn, "com.deepin.daemon.Audio", path)
+	obj := new(objectSink)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Audio", path)
 	return obj, nil
 }
 
-type sink struct{}
-
-func (v *sink) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type sink interface {
+	GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetMeter(flags dbus.Flags) (dbus.ObjectPath, error)
+	GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetBalance(flags dbus.Flags, value float64, isPlay bool) error
+	GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call
+	SetFade(flags dbus.Flags, value float64) error
+	GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call
+	SetMute(flags dbus.Flags, value bool) error
+	GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	SetPort(flags dbus.Flags, name string) error
+	GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetVolume(flags dbus.Flags, value float64, isPlay bool) error
+	SupportBalance() proxy.PropBool
+	Ports() PropPortInfoSlice
+	Name() proxy.PropString
+	Mute() proxy.PropBool
+	Volume() proxy.PropDouble
+	Balance() proxy.PropDouble
+	ActivePort() PropPortInfo
+	Card() proxy.PropUint32
+	Description() proxy.PropString
+	BaseVolume() proxy.PropDouble
+	Fade() proxy.PropDouble
+	SupportFade() proxy.PropBool
 }
 
-func (*sink) GetInterfaceName_() string {
+type interfaceSink struct{}
+
+func (v *interfaceSink) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSink) GetInterfaceName_() string {
 	return "com.deepin.daemon.Audio.Sink"
 }
 
 // method GetMeter
 
-func (v *sink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetMeter", flags, ch)
 }
 
-func (*sink) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
+func (*interfaceSink) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
 	err = call.Store(&meter)
 	return
 }
 
-func (v *sink) GetMeter(flags dbus.Flags) (meter dbus.ObjectPath, err error) {
+func (v *interfaceSink) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
 	return v.StoreGetMeter(
 		<-v.GoGetMeter(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetBalance
 
-func (v *sink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
-func (v *sink) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSink) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // method SetFade
 
-func (v *sink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *interfaceSink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
-func (v *sink) SetFade(flags dbus.Flags, value float64) error {
+func (v *interfaceSink) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetMute
 
-func (v *sink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *interfaceSink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
-func (v *sink) SetMute(flags dbus.Flags, value bool) error {
+func (v *interfaceSink) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetPort
 
-func (v *sink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceSink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, name)
 }
 
-func (v *sink) SetPort(flags dbus.Flags, name string) error {
+func (v *interfaceSink) SetPort(flags dbus.Flags, name string) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetVolume
 
-func (v *sink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
-func (v *sink) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSink) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // property SupportBalance b
 
-func (v *sink) SupportBalance() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSink) SupportBalance() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportBalance",
 	}
@@ -242,8 +298,8 @@ func (v *sink) SupportBalance() proxy.PropBool {
 
 // property Ports a(ssy)
 
-func (v *sink) Ports() PropPortInfoSlice {
-	return PropPortInfoSlice{
+func (v *interfaceSink) Ports() PropPortInfoSlice {
+	return &implPropPortInfoSlice{
 		Impl: v,
 		Name: "Ports",
 	}
@@ -251,8 +307,8 @@ func (v *sink) Ports() PropPortInfoSlice {
 
 // property Name s
 
-func (v *sink) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSink) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -260,8 +316,8 @@ func (v *sink) Name() proxy.PropString {
 
 // property Mute b
 
-func (v *sink) Mute() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSink) Mute() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Mute",
 	}
@@ -269,8 +325,8 @@ func (v *sink) Mute() proxy.PropBool {
 
 // property Volume d
 
-func (v *sink) Volume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSink) Volume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Volume",
 	}
@@ -278,8 +334,8 @@ func (v *sink) Volume() proxy.PropDouble {
 
 // property Balance d
 
-func (v *sink) Balance() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSink) Balance() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Balance",
 	}
@@ -287,8 +343,8 @@ func (v *sink) Balance() proxy.PropDouble {
 
 // property ActivePort (ssy)
 
-func (v *sink) ActivePort() PropPortInfo {
-	return PropPortInfo{
+func (v *interfaceSink) ActivePort() PropPortInfo {
+	return &implPropPortInfo{
 		Impl: v,
 		Name: "ActivePort",
 	}
@@ -296,8 +352,8 @@ func (v *sink) ActivePort() PropPortInfo {
 
 // property Card u
 
-func (v *sink) Card() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceSink) Card() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Card",
 	}
@@ -305,8 +361,8 @@ func (v *sink) Card() proxy.PropUint32 {
 
 // property Description s
 
-func (v *sink) Description() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSink) Description() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Description",
 	}
@@ -314,8 +370,8 @@ func (v *sink) Description() proxy.PropString {
 
 // property BaseVolume d
 
-func (v *sink) BaseVolume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSink) BaseVolume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "BaseVolume",
 	}
@@ -323,8 +379,8 @@ func (v *sink) BaseVolume() proxy.PropDouble {
 
 // property Fade d
 
-func (v *sink) Fade() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSink) Fade() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Fade",
 	}
@@ -332,107 +388,139 @@ func (v *sink) Fade() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *sink) SupportFade() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSink) SupportFade() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportFade",
 	}
 }
 
-type Source struct {
+type Source interface {
 	source // interface com.deepin.daemon.Audio.Source
 	proxy.Object
 }
 
-func NewSource(conn *dbus.Conn, path dbus.ObjectPath) (*Source, error) {
+type objectSource struct {
+	interfaceSource // interface com.deepin.daemon.Audio.Source
+	proxy.ImplObject
+}
+
+func NewSource(conn *dbus.Conn, path dbus.ObjectPath) (Source, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Source)
-	obj.Object.Init_(conn, "com.deepin.daemon.Audio", path)
+	obj := new(objectSource)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Audio", path)
 	return obj, nil
 }
 
-type source struct{}
-
-func (v *source) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type source interface {
+	GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetMeter(flags dbus.Flags) (dbus.ObjectPath, error)
+	GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetBalance(flags dbus.Flags, value float64, isPlay bool) error
+	GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call
+	SetFade(flags dbus.Flags, value float64) error
+	GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call
+	SetMute(flags dbus.Flags, value bool) error
+	GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	SetPort(flags dbus.Flags, name string) error
+	GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetVolume(flags dbus.Flags, value float64, isPlay bool) error
+	Mute() proxy.PropBool
+	Balance() proxy.PropDouble
+	SupportBalance() proxy.PropBool
+	Fade() proxy.PropDouble
+	Ports() PropPortInfoSlice
+	Card() proxy.PropUint32
+	BaseVolume() proxy.PropDouble
+	Description() proxy.PropString
+	Volume() proxy.PropDouble
+	SupportFade() proxy.PropBool
+	ActivePort() PropPortInfo
+	Name() proxy.PropString
 }
 
-func (*source) GetInterfaceName_() string {
+type interfaceSource struct{}
+
+func (v *interfaceSource) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSource) GetInterfaceName_() string {
 	return "com.deepin.daemon.Audio.Source"
 }
 
 // method GetMeter
 
-func (v *source) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSource) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetMeter", flags, ch)
 }
 
-func (*source) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
+func (*interfaceSource) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
 	err = call.Store(&meter)
 	return
 }
 
-func (v *source) GetMeter(flags dbus.Flags) (meter dbus.ObjectPath, err error) {
+func (v *interfaceSource) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
 	return v.StoreGetMeter(
 		<-v.GoGetMeter(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetBalance
 
-func (v *source) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSource) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
-func (v *source) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSource) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // method SetFade
 
-func (v *source) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *interfaceSource) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
-func (v *source) SetFade(flags dbus.Flags, value float64) error {
+func (v *interfaceSource) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetMute
 
-func (v *source) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *interfaceSource) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
-func (v *source) SetMute(flags dbus.Flags, value bool) error {
+func (v *interfaceSource) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetPort
 
-func (v *source) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceSource) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, name)
 }
 
-func (v *source) SetPort(flags dbus.Flags, name string) error {
+func (v *interfaceSource) SetPort(flags dbus.Flags, name string) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetVolume
 
-func (v *source) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSource) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
-func (v *source) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSource) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // property Mute b
 
-func (v *source) Mute() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSource) Mute() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Mute",
 	}
@@ -440,8 +528,8 @@ func (v *source) Mute() proxy.PropBool {
 
 // property Balance d
 
-func (v *source) Balance() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSource) Balance() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Balance",
 	}
@@ -449,8 +537,8 @@ func (v *source) Balance() proxy.PropDouble {
 
 // property SupportBalance b
 
-func (v *source) SupportBalance() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSource) SupportBalance() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportBalance",
 	}
@@ -458,8 +546,8 @@ func (v *source) SupportBalance() proxy.PropBool {
 
 // property Fade d
 
-func (v *source) Fade() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSource) Fade() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Fade",
 	}
@@ -467,8 +555,8 @@ func (v *source) Fade() proxy.PropDouble {
 
 // property Ports a(ssy)
 
-func (v *source) Ports() PropPortInfoSlice {
-	return PropPortInfoSlice{
+func (v *interfaceSource) Ports() PropPortInfoSlice {
+	return &implPropPortInfoSlice{
 		Impl: v,
 		Name: "Ports",
 	}
@@ -476,8 +564,8 @@ func (v *source) Ports() PropPortInfoSlice {
 
 // property Card u
 
-func (v *source) Card() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceSource) Card() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Card",
 	}
@@ -485,8 +573,8 @@ func (v *source) Card() proxy.PropUint32 {
 
 // property BaseVolume d
 
-func (v *source) BaseVolume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSource) BaseVolume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "BaseVolume",
 	}
@@ -494,8 +582,8 @@ func (v *source) BaseVolume() proxy.PropDouble {
 
 // property Description s
 
-func (v *source) Description() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSource) Description() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Description",
 	}
@@ -503,8 +591,8 @@ func (v *source) Description() proxy.PropString {
 
 // property Volume d
 
-func (v *source) Volume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSource) Volume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Volume",
 	}
@@ -512,8 +600,8 @@ func (v *source) Volume() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *source) SupportFade() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSource) SupportFade() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportFade",
 	}
@@ -521,8 +609,8 @@ func (v *source) SupportFade() proxy.PropBool {
 
 // property ActivePort (ssy)
 
-func (v *source) ActivePort() PropPortInfo {
-	return PropPortInfo{
+func (v *interfaceSource) ActivePort() PropPortInfo {
+	return &implPropPortInfo{
 		Impl: v,
 		Name: "ActivePort",
 	}
@@ -530,81 +618,105 @@ func (v *source) ActivePort() PropPortInfo {
 
 // property Name s
 
-func (v *source) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSource) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
 }
 
-type SinkInput struct {
+type SinkInput interface {
 	sinkInput // interface com.deepin.daemon.Audio.SinkInput
 	proxy.Object
 }
 
-func NewSinkInput(conn *dbus.Conn, path dbus.ObjectPath) (*SinkInput, error) {
+type objectSinkInput struct {
+	interfaceSinkInput // interface com.deepin.daemon.Audio.SinkInput
+	proxy.ImplObject
+}
+
+func NewSinkInput(conn *dbus.Conn, path dbus.ObjectPath) (SinkInput, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(SinkInput)
-	obj.Object.Init_(conn, "com.deepin.daemon.Audio", path)
+	obj := new(objectSinkInput)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Audio", path)
 	return obj, nil
 }
 
-type sinkInput struct{}
-
-func (v *sinkInput) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type sinkInput interface {
+	GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetBalance(flags dbus.Flags, value float64, isPlay bool) error
+	GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call
+	SetFade(flags dbus.Flags, value float64) error
+	GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call
+	SetMute(flags dbus.Flags, value bool) error
+	GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call
+	SetVolume(flags dbus.Flags, value float64, isPlay bool) error
+	Volume() proxy.PropDouble
+	Balance() proxy.PropDouble
+	SupportBalance() proxy.PropBool
+	Fade() proxy.PropDouble
+	SupportFade() proxy.PropBool
+	Name() proxy.PropString
+	Icon() proxy.PropString
+	Mute() proxy.PropBool
 }
 
-func (*sinkInput) GetInterfaceName_() string {
+type interfaceSinkInput struct{}
+
+func (v *interfaceSinkInput) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSinkInput) GetInterfaceName_() string {
 	return "com.deepin.daemon.Audio.SinkInput"
 }
 
 // method SetBalance
 
-func (v *sinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
-func (v *sinkInput) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSinkInput) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // method SetFade
 
-func (v *sinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *interfaceSinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
-func (v *sinkInput) SetFade(flags dbus.Flags, value float64) error {
+func (v *interfaceSinkInput) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetMute
 
-func (v *sinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *interfaceSinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
-func (v *sinkInput) SetMute(flags dbus.Flags, value bool) error {
+func (v *interfaceSinkInput) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
 // method SetVolume
 
-func (v *sinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *interfaceSinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
-func (v *sinkInput) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *interfaceSinkInput) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
 }
 
 // property Volume d
 
-func (v *sinkInput) Volume() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSinkInput) Volume() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Volume",
 	}
@@ -612,8 +724,8 @@ func (v *sinkInput) Volume() proxy.PropDouble {
 
 // property Balance d
 
-func (v *sinkInput) Balance() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSinkInput) Balance() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Balance",
 	}
@@ -621,8 +733,8 @@ func (v *sinkInput) Balance() proxy.PropDouble {
 
 // property SupportBalance b
 
-func (v *sinkInput) SupportBalance() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSinkInput) SupportBalance() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportBalance",
 	}
@@ -630,8 +742,8 @@ func (v *sinkInput) SupportBalance() proxy.PropBool {
 
 // property Fade d
 
-func (v *sinkInput) Fade() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSinkInput) Fade() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Fade",
 	}
@@ -639,8 +751,8 @@ func (v *sinkInput) Fade() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *sinkInput) SupportFade() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSinkInput) SupportFade() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SupportFade",
 	}
@@ -648,8 +760,8 @@ func (v *sinkInput) SupportFade() proxy.PropBool {
 
 // property Name s
 
-func (v *sinkInput) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSinkInput) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -657,8 +769,8 @@ func (v *sinkInput) Name() proxy.PropString {
 
 // property Icon s
 
-func (v *sinkInput) Icon() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSinkInput) Icon() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Icon",
 	}
@@ -666,29 +778,35 @@ func (v *sinkInput) Icon() proxy.PropString {
 
 // property Mute b
 
-func (v *sinkInput) Mute() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSinkInput) Mute() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Mute",
 	}
 }
 
-type PropPortInfoSlice struct {
+type PropPortInfoSlice interface {
+	Get(flags dbus.Flags) (value []PortInfo, err error)
+	Set(flags dbus.Flags, value []PortInfo) error
+	ConnectChanged(cb func(hasValue bool, value []PortInfo)) error
+}
+
+type implPropPortInfoSlice struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropPortInfoSlice) Get(flags dbus.Flags) (value []PortInfo, err error) {
+func (p implPropPortInfoSlice) Get(flags dbus.Flags) (value []PortInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropPortInfoSlice) Set(flags dbus.Flags, value []PortInfo) error {
+func (p implPropPortInfoSlice) Set(flags dbus.Flags, value []PortInfo) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropPortInfoSlice) ConnectChanged(cb func(hasValue bool, value []PortInfo)) error {
+func (p implPropPortInfoSlice) ConnectChanged(cb func(hasValue bool, value []PortInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -708,22 +826,28 @@ func (p PropPortInfoSlice) ConnectChanged(cb func(hasValue bool, value []PortInf
 		p.Name, cb0)
 }
 
-type PropPortInfo struct {
+type PropPortInfo interface {
+	Get(flags dbus.Flags) (value PortInfo, err error)
+	Set(flags dbus.Flags, value PortInfo) error
+	ConnectChanged(cb func(hasValue bool, value PortInfo)) error
+}
+
+type implPropPortInfo struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropPortInfo) Get(flags dbus.Flags) (value PortInfo, err error) {
+func (p implPropPortInfo) Get(flags dbus.Flags) (value PortInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropPortInfo) Set(flags dbus.Flags, value PortInfo) error {
+func (p implPropPortInfo) Set(flags dbus.Flags, value PortInfo) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropPortInfo) ConnectChanged(cb func(hasValue bool, value PortInfo)) error {
+func (p implPropPortInfo) ConnectChanged(cb func(hasValue bool, value PortInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

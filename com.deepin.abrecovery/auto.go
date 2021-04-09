@@ -12,82 +12,102 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ABRecovery struct {
+type ABRecovery interface {
 	abRecovery // interface com.deepin.ABRecovery
 	proxy.Object
 }
 
-func NewABRecovery(conn *dbus.Conn) *ABRecovery {
-	obj := new(ABRecovery)
-	obj.Object.Init_(conn, "com.deepin.ABRecovery", "/com/deepin/ABRecovery")
+type objectABRecovery struct {
+	interfaceAbRecovery // interface com.deepin.ABRecovery
+	proxy.ImplObject
+}
+
+func NewABRecovery(conn *dbus.Conn) ABRecovery {
+	obj := new(objectABRecovery)
+	obj.ImplObject.Init_(conn, "com.deepin.ABRecovery", "/com/deepin/ABRecovery")
 	return obj
 }
 
-type abRecovery struct{}
-
-func (v *abRecovery) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type abRecovery interface {
+	GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanBackup(flags dbus.Flags) (bool, error)
+	GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanRestore(flags dbus.Flags) (bool, error)
+	GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StartBackup(flags dbus.Flags) error
+	GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StartRestore(flags dbus.Flags) error
+	ConnectJobEnd(cb func(kind string, success bool, errMsg string)) (dbusutil.SignalHandlerId, error)
+	BackingUp() proxy.PropBool
+	Restoring() proxy.PropBool
+	ConfigValid() proxy.PropBool
 }
 
-func (*abRecovery) GetInterfaceName_() string {
+type interfaceAbRecovery struct{}
+
+func (v *interfaceAbRecovery) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAbRecovery) GetInterfaceName_() string {
 	return "com.deepin.ABRecovery"
 }
 
 // method CanBackup
 
-func (v *abRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAbRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanBackup", flags, ch)
 }
 
-func (*abRecovery) StoreCanBackup(call *dbus.Call) (can bool, err error) {
+func (*interfaceAbRecovery) StoreCanBackup(call *dbus.Call) (can bool, err error) {
 	err = call.Store(&can)
 	return
 }
 
-func (v *abRecovery) CanBackup(flags dbus.Flags) (can bool, err error) {
+func (v *interfaceAbRecovery) CanBackup(flags dbus.Flags) (bool, error) {
 	return v.StoreCanBackup(
 		<-v.GoCanBackup(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CanRestore
 
-func (v *abRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAbRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanRestore", flags, ch)
 }
 
-func (*abRecovery) StoreCanRestore(call *dbus.Call) (can bool, err error) {
+func (*interfaceAbRecovery) StoreCanRestore(call *dbus.Call) (can bool, err error) {
 	err = call.Store(&can)
 	return
 }
 
-func (v *abRecovery) CanRestore(flags dbus.Flags) (can bool, err error) {
+func (v *interfaceAbRecovery) CanRestore(flags dbus.Flags) (bool, error) {
 	return v.StoreCanRestore(
 		<-v.GoCanRestore(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method StartBackup
 
-func (v *abRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAbRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartBackup", flags, ch)
 }
 
-func (v *abRecovery) StartBackup(flags dbus.Flags) error {
+func (v *interfaceAbRecovery) StartBackup(flags dbus.Flags) error {
 	return (<-v.GoStartBackup(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method StartRestore
 
-func (v *abRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAbRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartRestore", flags, ch)
 }
 
-func (v *abRecovery) StartRestore(flags dbus.Flags) error {
+func (v *interfaceAbRecovery) StartRestore(flags dbus.Flags) error {
 	return (<-v.GoStartRestore(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal JobEnd
 
-func (v *abRecovery) ConnectJobEnd(cb func(kind string, success bool, errMsg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceAbRecovery) ConnectJobEnd(cb func(kind string, success bool, errMsg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -115,8 +135,8 @@ func (v *abRecovery) ConnectJobEnd(cb func(kind string, success bool, errMsg str
 
 // property BackingUp b
 
-func (v *abRecovery) BackingUp() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAbRecovery) BackingUp() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "BackingUp",
 	}
@@ -124,8 +144,8 @@ func (v *abRecovery) BackingUp() proxy.PropBool {
 
 // property Restoring b
 
-func (v *abRecovery) Restoring() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAbRecovery) Restoring() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Restoring",
 	}
@@ -133,8 +153,8 @@ func (v *abRecovery) Restoring() proxy.PropBool {
 
 // property ConfigValid b
 
-func (v *abRecovery) ConfigValid() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceAbRecovery) ConfigValid() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ConfigValid",
 	}

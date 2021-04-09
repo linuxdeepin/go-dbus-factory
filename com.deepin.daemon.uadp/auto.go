@@ -9,49 +9,61 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Uadp struct {
+type Uadp interface {
 	uadp // interface com.deepin.daemon.Uadp
 	proxy.Object
 }
 
-func NewUadp(conn *dbus.Conn) *Uadp {
-	obj := new(Uadp)
-	obj.Object.Init_(conn, "com.deepin.daemon.Uadp", "/com/deepin/daemon/Uadp")
+type objectUadp struct {
+	interfaceUadp // interface com.deepin.daemon.Uadp
+	proxy.ImplObject
+}
+
+func NewUadp(conn *dbus.Conn) Uadp {
+	obj := new(objectUadp)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Uadp", "/com/deepin/daemon/Uadp")
 	return obj
 }
 
-type uadp struct{}
-
-func (v *uadp) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type uadp interface {
+	GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, dataKey string, keyringKey string) *dbus.Call
+	SetDataKey(flags dbus.Flags, exePath string, keyName string, dataKey string, keyringKey string) error
+	GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, keyringKey string) *dbus.Call
+	GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (string, error)
 }
 
-func (*uadp) GetInterfaceName_() string {
+type interfaceUadp struct{}
+
+func (v *interfaceUadp) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceUadp) GetInterfaceName_() string {
 	return "com.deepin.daemon.Uadp"
 }
 
 // method SetDataKey
 
-func (v *uadp) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, dataKey string, keyringKey string) *dbus.Call {
+func (v *interfaceUadp) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, dataKey string, keyringKey string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDataKey", flags, ch, exePath, keyName, dataKey, keyringKey)
 }
 
-func (v *uadp) SetDataKey(flags dbus.Flags, exePath string, keyName string, dataKey string, keyringKey string) error {
+func (v *interfaceUadp) SetDataKey(flags dbus.Flags, exePath string, keyName string, dataKey string, keyringKey string) error {
 	return (<-v.GoSetDataKey(flags, make(chan *dbus.Call, 1), exePath, keyName, dataKey, keyringKey).Done).Err
 }
 
 // method GetDataKey
 
-func (v *uadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, keyringKey string) *dbus.Call {
+func (v *interfaceUadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, keyringKey string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDataKey", flags, ch, exePath, keyName, keyringKey)
 }
 
-func (*uadp) StoreGetDataKey(call *dbus.Call) (dataKey string, err error) {
+func (*interfaceUadp) StoreGetDataKey(call *dbus.Call) (dataKey string, err error) {
 	err = call.Store(&dataKey)
 	return
 }
 
-func (v *uadp) GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (dataKey string, err error) {
+func (v *interfaceUadp) GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (string, error) {
 	return v.StoreGetDataKey(
 		<-v.GoGetDataKey(flags, make(chan *dbus.Call, 1), exePath, keyName, keyringKey).Done)
 }

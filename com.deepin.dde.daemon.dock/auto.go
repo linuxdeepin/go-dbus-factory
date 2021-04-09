@@ -12,226 +12,279 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Dock struct {
+type Dock interface {
 	dock // interface com.deepin.dde.daemon.Dock
 	proxy.Object
 }
 
-func NewDock(conn *dbus.Conn) *Dock {
-	obj := new(Dock)
-	obj.Object.Init_(conn, "com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock")
+type objectDock struct {
+	interfaceDock // interface com.deepin.dde.daemon.Dock
+	proxy.ImplObject
+}
+
+func NewDock(conn *dbus.Conn) Dock {
+	obj := new(objectDock)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock")
 	return obj
 }
 
-type dock struct{}
-
-func (v *dock) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type dock interface {
+	GoActivateWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	ActivateWindow(flags dbus.Flags, win uint32) error
+	GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CancelPreviewWindow(flags dbus.Flags) error
+	GoCloseWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	CloseWindow(flags dbus.Flags, win uint32) error
+	GoGetEntryIDs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetEntryIDs(flags dbus.Flags) ([]string, error)
+	GoIsDocked(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call
+	IsDocked(flags dbus.Flags, desktopFile string) (bool, error)
+	GoIsOnDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call
+	IsOnDock(flags dbus.Flags, desktopFile string) (bool, error)
+	GoMakeWindowAbove(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	MakeWindowAbove(flags dbus.Flags, win uint32) error
+	GoMaximizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	MaximizeWindow(flags dbus.Flags, win uint32) error
+	GoMinimizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	MinimizeWindow(flags dbus.Flags, win uint32) error
+	GoMoveEntry(flags dbus.Flags, ch chan *dbus.Call, index int32, newIndex int32) *dbus.Call
+	MoveEntry(flags dbus.Flags, index int32, newIndex int32) error
+	GoMoveWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	MoveWindow(flags dbus.Flags, win uint32) error
+	GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	PreviewWindow(flags dbus.Flags, win uint32) error
+	GoQueryWindowIdentifyMethod(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call
+	QueryWindowIdentifyMethod(flags dbus.Flags, win uint32) (string, error)
+	GoRequestDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string, index int32) *dbus.Call
+	RequestDock(flags dbus.Flags, desktopFile string, index int32) (bool, error)
+	GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call
+	RequestUndock(flags dbus.Flags, desktopFile string) (bool, error)
+	GoSetFrontendWindowRect(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32, width uint32, height uint32) *dbus.Call
+	SetFrontendWindowRect(flags dbus.Flags, x int32, y int32, width uint32, height uint32) error
+	ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (dbusutil.SignalHandlerId, error)
+	ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHandlerId, error)
+	ShowTimeout() proxy.PropUint32
+	HideTimeout() proxy.PropUint32
+	FrontendWindowRect() PropDockFrontendWindowRect
+	Entries() proxy.PropObjectPathArray
+	HideMode() proxy.PropInt32
+	DisplayMode() proxy.PropInt32
+	HideState() proxy.PropInt32
+	Position() proxy.PropInt32
+	IconSize() proxy.PropUint32
+	DockedApps() proxy.PropStringArray
 }
 
-func (*dock) GetInterfaceName_() string {
+type interfaceDock struct{}
+
+func (v *interfaceDock) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDock) GetInterfaceName_() string {
 	return "com.deepin.dde.daemon.Dock"
 }
 
 // method ActivateWindow
 
-func (v *dock) GoActivateWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoActivateWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateWindow", flags, ch, win)
 }
 
-func (v *dock) ActivateWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) ActivateWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoActivateWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method CancelPreviewWindow
 
-func (v *dock) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDock) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelPreviewWindow", flags, ch)
 }
 
-func (v *dock) CancelPreviewWindow(flags dbus.Flags) error {
+func (v *interfaceDock) CancelPreviewWindow(flags dbus.Flags) error {
 	return (<-v.GoCancelPreviewWindow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method CloseWindow
 
-func (v *dock) GoCloseWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoCloseWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CloseWindow", flags, ch, win)
 }
 
-func (v *dock) CloseWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) CloseWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoCloseWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method GetEntryIDs
 
-func (v *dock) GoGetEntryIDs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDock) GoGetEntryIDs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetEntryIDs", flags, ch)
 }
 
-func (*dock) StoreGetEntryIDs(call *dbus.Call) (list []string, err error) {
+func (*interfaceDock) StoreGetEntryIDs(call *dbus.Call) (list []string, err error) {
 	err = call.Store(&list)
 	return
 }
 
-func (v *dock) GetEntryIDs(flags dbus.Flags) (list []string, err error) {
+func (v *interfaceDock) GetEntryIDs(flags dbus.Flags) ([]string, error) {
 	return v.StoreGetEntryIDs(
 		<-v.GoGetEntryIDs(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsDocked
 
-func (v *dock) GoIsDocked(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+func (v *interfaceDock) GoIsDocked(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsDocked", flags, ch, desktopFile)
 }
 
-func (*dock) StoreIsDocked(call *dbus.Call) (value bool, err error) {
+func (*interfaceDock) StoreIsDocked(call *dbus.Call) (value bool, err error) {
 	err = call.Store(&value)
 	return
 }
 
-func (v *dock) IsDocked(flags dbus.Flags, desktopFile string) (value bool, err error) {
+func (v *interfaceDock) IsDocked(flags dbus.Flags, desktopFile string) (bool, error) {
 	return v.StoreIsDocked(
 		<-v.GoIsDocked(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
 // method IsOnDock
 
-func (v *dock) GoIsOnDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+func (v *interfaceDock) GoIsOnDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsOnDock", flags, ch, desktopFile)
 }
 
-func (*dock) StoreIsOnDock(call *dbus.Call) (value bool, err error) {
+func (*interfaceDock) StoreIsOnDock(call *dbus.Call) (value bool, err error) {
 	err = call.Store(&value)
 	return
 }
 
-func (v *dock) IsOnDock(flags dbus.Flags, desktopFile string) (value bool, err error) {
+func (v *interfaceDock) IsOnDock(flags dbus.Flags, desktopFile string) (bool, error) {
 	return v.StoreIsOnDock(
 		<-v.GoIsOnDock(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
 // method MakeWindowAbove
 
-func (v *dock) GoMakeWindowAbove(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoMakeWindowAbove(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MakeWindowAbove", flags, ch, win)
 }
 
-func (v *dock) MakeWindowAbove(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) MakeWindowAbove(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMakeWindowAbove(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method MaximizeWindow
 
-func (v *dock) GoMaximizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoMaximizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MaximizeWindow", flags, ch, win)
 }
 
-func (v *dock) MaximizeWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) MaximizeWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMaximizeWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method MinimizeWindow
 
-func (v *dock) GoMinimizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoMinimizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MinimizeWindow", flags, ch, win)
 }
 
-func (v *dock) MinimizeWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) MinimizeWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMinimizeWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method MoveEntry
 
-func (v *dock) GoMoveEntry(flags dbus.Flags, ch chan *dbus.Call, index int32, newIndex int32) *dbus.Call {
+func (v *interfaceDock) GoMoveEntry(flags dbus.Flags, ch chan *dbus.Call, index int32, newIndex int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MoveEntry", flags, ch, index, newIndex)
 }
 
-func (v *dock) MoveEntry(flags dbus.Flags, index int32, newIndex int32) error {
+func (v *interfaceDock) MoveEntry(flags dbus.Flags, index int32, newIndex int32) error {
 	return (<-v.GoMoveEntry(flags, make(chan *dbus.Call, 1), index, newIndex).Done).Err
 }
 
 // method MoveWindow
 
-func (v *dock) GoMoveWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoMoveWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MoveWindow", flags, ch, win)
 }
 
-func (v *dock) MoveWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) MoveWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMoveWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method PreviewWindow
 
-func (v *dock) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PreviewWindow", flags, ch, win)
 }
 
-func (v *dock) PreviewWindow(flags dbus.Flags, win uint32) error {
+func (v *interfaceDock) PreviewWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoPreviewWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
 }
 
 // method QueryWindowIdentifyMethod
 
-func (v *dock) GoQueryWindowIdentifyMethod(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+func (v *interfaceDock) GoQueryWindowIdentifyMethod(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".QueryWindowIdentifyMethod", flags, ch, win)
 }
 
-func (*dock) StoreQueryWindowIdentifyMethod(call *dbus.Call) (identifyMethod string, err error) {
+func (*interfaceDock) StoreQueryWindowIdentifyMethod(call *dbus.Call) (identifyMethod string, err error) {
 	err = call.Store(&identifyMethod)
 	return
 }
 
-func (v *dock) QueryWindowIdentifyMethod(flags dbus.Flags, win uint32) (identifyMethod string, err error) {
+func (v *interfaceDock) QueryWindowIdentifyMethod(flags dbus.Flags, win uint32) (string, error) {
 	return v.StoreQueryWindowIdentifyMethod(
 		<-v.GoQueryWindowIdentifyMethod(flags, make(chan *dbus.Call, 1), win).Done)
 }
 
 // method RequestDock
 
-func (v *dock) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string, index int32) *dbus.Call {
+func (v *interfaceDock) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string, index int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDock", flags, ch, desktopFile, index)
 }
 
-func (*dock) StoreRequestDock(call *dbus.Call) (ok bool, err error) {
+func (*interfaceDock) StoreRequestDock(call *dbus.Call) (ok bool, err error) {
 	err = call.Store(&ok)
 	return
 }
 
-func (v *dock) RequestDock(flags dbus.Flags, desktopFile string, index int32) (ok bool, err error) {
+func (v *interfaceDock) RequestDock(flags dbus.Flags, desktopFile string, index int32) (bool, error) {
 	return v.StoreRequestDock(
 		<-v.GoRequestDock(flags, make(chan *dbus.Call, 1), desktopFile, index).Done)
 }
 
 // method RequestUndock
 
-func (v *dock) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+func (v *interfaceDock) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUndock", flags, ch, desktopFile)
 }
 
-func (*dock) StoreRequestUndock(call *dbus.Call) (ok bool, err error) {
+func (*interfaceDock) StoreRequestUndock(call *dbus.Call) (ok bool, err error) {
 	err = call.Store(&ok)
 	return
 }
 
-func (v *dock) RequestUndock(flags dbus.Flags, desktopFile string) (ok bool, err error) {
+func (v *interfaceDock) RequestUndock(flags dbus.Flags, desktopFile string) (bool, error) {
 	return v.StoreRequestUndock(
 		<-v.GoRequestUndock(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
 // method SetFrontendWindowRect
 
-func (v *dock) GoSetFrontendWindowRect(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32, width uint32, height uint32) *dbus.Call {
+func (v *interfaceDock) GoSetFrontendWindowRect(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32, width uint32, height uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFrontendWindowRect", flags, ch, x, y, width, height)
 }
 
-func (v *dock) SetFrontendWindowRect(flags dbus.Flags, x int32, y int32, width uint32, height uint32) error {
+func (v *interfaceDock) SetFrontendWindowRect(flags dbus.Flags, x int32, y int32, width uint32, height uint32) error {
 	return (<-v.GoSetFrontendWindowRect(flags, make(chan *dbus.Call, 1), x, y, width, height).Done).Err
 }
 
 // signal ServiceRestarted
 
-func (v *dock) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDock) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -253,7 +306,7 @@ func (v *dock) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, err
 
 // signal EntryAdded
 
-func (v *dock) ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDock) ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -280,7 +333,7 @@ func (v *dock) ConnectEntryAdded(cb func(path dbus.ObjectPath, index int32)) (db
 
 // signal EntryRemoved
 
-func (v *dock) ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDock) ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -306,8 +359,8 @@ func (v *dock) ConnectEntryRemoved(cb func(entryId string)) (dbusutil.SignalHand
 
 // property ShowTimeout u
 
-func (v *dock) ShowTimeout() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDock) ShowTimeout() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ShowTimeout",
 	}
@@ -315,32 +368,35 @@ func (v *dock) ShowTimeout() proxy.PropUint32 {
 
 // property HideTimeout u
 
-func (v *dock) HideTimeout() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDock) HideTimeout() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "HideTimeout",
 	}
 }
 
-// property FrontendWindowRect (iiuu)
-
-func (v *dock) FrontendWindowRect() PropDockFrontendWindowRect {
-	return PropDockFrontendWindowRect{
-		Impl: v,
-	}
+type PropDockFrontendWindowRect interface {
+	Get(flags dbus.Flags) (value FrontendWindowRect, err error)
+	Set(flags dbus.Flags, value FrontendWindowRect) error
+	ConnectChanged(cb func(hasValue bool, value FrontendWindowRect)) error
 }
 
-type PropDockFrontendWindowRect struct {
+type implPropDockFrontendWindowRect struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropDockFrontendWindowRect) Get(flags dbus.Flags) (value FrontendWindowRect, err error) {
+func (p implPropDockFrontendWindowRect) Get(flags dbus.Flags) (value FrontendWindowRect, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"FrontendWindowRect", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropDockFrontendWindowRect) ConnectChanged(cb func(hasValue bool, value FrontendWindowRect)) error {
+func (p implPropDockFrontendWindowRect) Set(flags dbus.Flags, value FrontendWindowRect) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDockFrontendWindowRect) ConnectChanged(cb func(hasValue bool, value FrontendWindowRect)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -357,13 +413,22 @@ func (p PropDockFrontendWindowRect) ConnectChanged(cb func(hasValue bool, value 
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"FrontendWindowRect", cb0)
+		p.Name, cb0)
+}
+
+// property FrontendWindowRect (iiuu)
+
+func (v *interfaceDock) FrontendWindowRect() PropDockFrontendWindowRect {
+	return &implPropDockFrontendWindowRect{
+		Impl: v,
+		Name: "FrontendWindowRect",
+	}
 }
 
 // property Entries ao
 
-func (v *dock) Entries() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDock) Entries() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Entries",
 	}
@@ -371,8 +436,8 @@ func (v *dock) Entries() proxy.PropObjectPathArray {
 
 // property HideMode i
 
-func (v *dock) HideMode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDock) HideMode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "HideMode",
 	}
@@ -380,8 +445,8 @@ func (v *dock) HideMode() proxy.PropInt32 {
 
 // property DisplayMode i
 
-func (v *dock) DisplayMode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDock) DisplayMode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DisplayMode",
 	}
@@ -389,8 +454,8 @@ func (v *dock) DisplayMode() proxy.PropInt32 {
 
 // property HideState i
 
-func (v *dock) HideState() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDock) HideState() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "HideState",
 	}
@@ -398,8 +463,8 @@ func (v *dock) HideState() proxy.PropInt32 {
 
 // property Position i
 
-func (v *dock) Position() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDock) Position() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Position",
 	}
@@ -407,8 +472,8 @@ func (v *dock) Position() proxy.PropInt32 {
 
 // property IconSize u
 
-func (v *dock) IconSize() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDock) IconSize() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "IconSize",
 	}
@@ -416,131 +481,166 @@ func (v *dock) IconSize() proxy.PropUint32 {
 
 // property DockedApps as
 
-func (v *dock) DockedApps() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceDock) DockedApps() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DockedApps",
 	}
 }
 
-type Entry struct {
+type Entry interface {
 	entry // interface com.deepin.dde.daemon.Dock.Entry
 	proxy.Object
 }
 
-func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) (*Entry, error) {
+type objectEntry struct {
+	interfaceEntry // interface com.deepin.dde.daemon.Dock.Entry
+	proxy.ImplObject
+}
+
+func NewEntry(conn *dbus.Conn, path dbus.ObjectPath) (Entry, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Entry)
-	obj.Object.Init_(conn, "com.deepin.dde.daemon.Dock", path)
+	obj := new(objectEntry)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.daemon.Dock", path)
 	return obj, nil
 }
 
-type entry struct{}
-
-func (v *entry) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type entry interface {
+	GoActivate(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call
+	Activate(flags dbus.Flags, timestamp uint32) error
+	GoCheck(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Check(flags dbus.Flags) error
+	GoForceQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ForceQuit(flags dbus.Flags) error
+	GoHandleDragDrop(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, files []string) *dbus.Call
+	HandleDragDrop(flags dbus.Flags, timestamp uint32, files []string) error
+	GoHandleMenuItem(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, id string) *dbus.Call
+	HandleMenuItem(flags dbus.Flags, timestamp uint32, id string) error
+	GoNewInstance(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call
+	NewInstance(flags dbus.Flags, timestamp uint32) error
+	GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	PresentWindows(flags dbus.Flags) error
+	GoRequestDock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestDock(flags dbus.Flags) error
+	GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestUndock(flags dbus.Flags) error
+	Name() proxy.PropString
+	Icon() proxy.PropString
+	Id() proxy.PropString
+	IsActive() proxy.PropBool
+	CurrentWindow() proxy.PropUint32
+	IsDocked() proxy.PropBool
+	WindowInfos() PropEntryWindowInfos
+	Menu() proxy.PropString
+	DesktopFile() proxy.PropString
 }
 
-func (*entry) GetInterfaceName_() string {
+type interfaceEntry struct{}
+
+func (v *interfaceEntry) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceEntry) GetInterfaceName_() string {
 	return "com.deepin.dde.daemon.Dock.Entry"
 }
 
 // method Activate
 
-func (v *entry) GoActivate(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
+func (v *interfaceEntry) GoActivate(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Activate", flags, ch, timestamp)
 }
 
-func (v *entry) Activate(flags dbus.Flags, timestamp uint32) error {
+func (v *interfaceEntry) Activate(flags dbus.Flags, timestamp uint32) error {
 	return (<-v.GoActivate(flags, make(chan *dbus.Call, 1), timestamp).Done).Err
 }
 
 // method Check
 
-func (v *entry) GoCheck(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceEntry) GoCheck(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Check", flags, ch)
 }
 
-func (v *entry) Check(flags dbus.Flags) error {
+func (v *interfaceEntry) Check(flags dbus.Flags) error {
 	return (<-v.GoCheck(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ForceQuit
 
-func (v *entry) GoForceQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceEntry) GoForceQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ForceQuit", flags, ch)
 }
 
-func (v *entry) ForceQuit(flags dbus.Flags) error {
+func (v *interfaceEntry) ForceQuit(flags dbus.Flags) error {
 	return (<-v.GoForceQuit(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method HandleDragDrop
 
-func (v *entry) GoHandleDragDrop(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, files []string) *dbus.Call {
+func (v *interfaceEntry) GoHandleDragDrop(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, files []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HandleDragDrop", flags, ch, timestamp, files)
 }
 
-func (v *entry) HandleDragDrop(flags dbus.Flags, timestamp uint32, files []string) error {
+func (v *interfaceEntry) HandleDragDrop(flags dbus.Flags, timestamp uint32, files []string) error {
 	return (<-v.GoHandleDragDrop(flags, make(chan *dbus.Call, 1), timestamp, files).Done).Err
 }
 
 // method HandleMenuItem
 
-func (v *entry) GoHandleMenuItem(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, id string) *dbus.Call {
+func (v *interfaceEntry) GoHandleMenuItem(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HandleMenuItem", flags, ch, timestamp, id)
 }
 
-func (v *entry) HandleMenuItem(flags dbus.Flags, timestamp uint32, id string) error {
+func (v *interfaceEntry) HandleMenuItem(flags dbus.Flags, timestamp uint32, id string) error {
 	return (<-v.GoHandleMenuItem(flags, make(chan *dbus.Call, 1), timestamp, id).Done).Err
 }
 
 // method NewInstance
 
-func (v *entry) GoNewInstance(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
+func (v *interfaceEntry) GoNewInstance(flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NewInstance", flags, ch, timestamp)
 }
 
-func (v *entry) NewInstance(flags dbus.Flags, timestamp uint32) error {
+func (v *interfaceEntry) NewInstance(flags dbus.Flags, timestamp uint32) error {
 	return (<-v.GoNewInstance(flags, make(chan *dbus.Call, 1), timestamp).Done).Err
 }
 
 // method PresentWindows
 
-func (v *entry) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceEntry) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresentWindows", flags, ch)
 }
 
-func (v *entry) PresentWindows(flags dbus.Flags) error {
+func (v *interfaceEntry) PresentWindows(flags dbus.Flags) error {
 	return (<-v.GoPresentWindows(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestDock
 
-func (v *entry) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceEntry) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDock", flags, ch)
 }
 
-func (v *entry) RequestDock(flags dbus.Flags) error {
+func (v *interfaceEntry) RequestDock(flags dbus.Flags) error {
 	return (<-v.GoRequestDock(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestUndock
 
-func (v *entry) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceEntry) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUndock", flags, ch)
 }
 
-func (v *entry) RequestUndock(flags dbus.Flags) error {
+func (v *interfaceEntry) RequestUndock(flags dbus.Flags) error {
 	return (<-v.GoRequestUndock(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Name s
 
-func (v *entry) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceEntry) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -548,8 +648,8 @@ func (v *entry) Name() proxy.PropString {
 
 // property Icon s
 
-func (v *entry) Icon() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceEntry) Icon() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Icon",
 	}
@@ -557,8 +657,8 @@ func (v *entry) Icon() proxy.PropString {
 
 // property Id s
 
-func (v *entry) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceEntry) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -566,8 +666,8 @@ func (v *entry) Id() proxy.PropString {
 
 // property IsActive b
 
-func (v *entry) IsActive() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceEntry) IsActive() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsActive",
 	}
@@ -575,8 +675,8 @@ func (v *entry) IsActive() proxy.PropBool {
 
 // property CurrentWindow u
 
-func (v *entry) CurrentWindow() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceEntry) CurrentWindow() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "CurrentWindow",
 	}
@@ -584,32 +684,35 @@ func (v *entry) CurrentWindow() proxy.PropUint32 {
 
 // property IsDocked b
 
-func (v *entry) IsDocked() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceEntry) IsDocked() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsDocked",
 	}
 }
 
-// property WindowInfos a{u(sb)}
-
-func (v *entry) WindowInfos() PropEntryWindowInfos {
-	return PropEntryWindowInfos{
-		Impl: v,
-	}
+type PropEntryWindowInfos interface {
+	Get(flags dbus.Flags) (value map[uint32]WindowInfo, err error)
+	Set(flags dbus.Flags, value map[uint32]WindowInfo) error
+	ConnectChanged(cb func(hasValue bool, value map[uint32]WindowInfo)) error
 }
 
-type PropEntryWindowInfos struct {
+type implPropEntryWindowInfos struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropEntryWindowInfos) Get(flags dbus.Flags) (value map[uint32]WindowInfo, err error) {
+func (p implPropEntryWindowInfos) Get(flags dbus.Flags) (value map[uint32]WindowInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"WindowInfos", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropEntryWindowInfos) ConnectChanged(cb func(hasValue bool, value map[uint32]WindowInfo)) error {
+func (p implPropEntryWindowInfos) Set(flags dbus.Flags, value map[uint32]WindowInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropEntryWindowInfos) ConnectChanged(cb func(hasValue bool, value map[uint32]WindowInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -626,13 +729,22 @@ func (p PropEntryWindowInfos) ConnectChanged(cb func(hasValue bool, value map[ui
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"WindowInfos", cb0)
+		p.Name, cb0)
+}
+
+// property WindowInfos a{u(sb)}
+
+func (v *interfaceEntry) WindowInfos() PropEntryWindowInfos {
+	return &implPropEntryWindowInfos{
+		Impl: v,
+		Name: "WindowInfos",
+	}
 }
 
 // property Menu s
 
-func (v *entry) Menu() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceEntry) Menu() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Menu",
 	}
@@ -640,8 +752,8 @@ func (v *entry) Menu() proxy.PropString {
 
 // property DesktopFile s
 
-func (v *entry) DesktopFile() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceEntry) DesktopFile() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DesktopFile",
 	}

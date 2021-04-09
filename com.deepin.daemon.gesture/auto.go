@@ -12,50 +12,74 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Gesture struct {
+type Gesture interface {
 	gesture // interface com.deepin.daemon.Gesture
 	proxy.Object
 }
 
-func NewGesture(conn *dbus.Conn) *Gesture {
-	obj := new(Gesture)
-	obj.Object.Init_(conn, "com.deepin.daemon.Gesture", "/com/deepin/daemon/Gesture")
+type objectGesture struct {
+	interfaceGesture // interface com.deepin.daemon.Gesture
+	proxy.ImplObject
+}
+
+func NewGesture(conn *dbus.Conn) Gesture {
+	obj := new(objectGesture)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Gesture", "/com/deepin/daemon/Gesture")
 	return obj
 }
 
-type gesture struct{}
-
-func (v *gesture) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type gesture interface {
+	GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call
+	SetShortPressDuration(flags dbus.Flags, duration uint32) error
+	GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call
+	SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error
+	ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error)
+	ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error)
+	ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error)
+	ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*gesture) GetInterfaceName_() string {
+type interfaceGesture struct{}
+
+func (v *interfaceGesture) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceGesture) GetInterfaceName_() string {
 	return "com.deepin.daemon.Gesture"
 }
 
 // method SetShortPressDuration
 
-func (v *gesture) GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+func (v *interfaceGesture) GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetShortPressDuration", flags, ch, duration)
 }
 
-func (v *gesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error {
+func (v *interfaceGesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error {
 	return (<-v.GoSetShortPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
 }
 
 // method SetEdgeMoveStopDuration
 
-func (v *gesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+func (v *interfaceGesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetEdgeMoveStopDuration", flags, ch, duration)
 }
 
-func (v *gesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
+func (v *interfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
 	return (<-v.GoSetEdgeMoveStopDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
 }
 
 // signal Event
 
-func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -83,7 +107,7 @@ func (v *gesture) ConnectEvent(cb func(name string, direction string, fingers in
 
 // signal DbclickDown
 
-func (v *gesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -109,7 +133,7 @@ func (v *gesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHan
 
 // signal SwipeMoving
 
-func (v *gesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -137,7 +161,7 @@ func (v *gesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, acce
 
 // signal SwipeStop
 
-func (v *gesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -163,7 +187,7 @@ func (v *gesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandl
 
 // signal TouchEdgeEvent
 
-func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -191,7 +215,7 @@ func (v *gesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64
 
 // signal TouchSinglePressTimeout
 
-func (v *gesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -219,7 +243,7 @@ func (v *gesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex floa
 
 // signal TouchPressTimeout
 
-func (v *gesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -248,7 +272,7 @@ func (v *gesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, sc
 
 // signal TouchUpOrCancel
 
-func (v *gesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -275,7 +299,7 @@ func (v *gesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)
 
 // signal TouchEdgeMoveStop
 
-func (v *gesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -304,7 +328,7 @@ func (v *gesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex floa
 
 // signal TouchEdgeMoveStopLeave
 
-func (v *gesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -333,7 +357,7 @@ func (v *gesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex
 
 // signal TouchMoving
 
-func (v *gesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -360,7 +384,7 @@ func (v *gesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (d
 
 // signal TouchMovementEvent
 
-func (v *gesture) ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGesture) ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

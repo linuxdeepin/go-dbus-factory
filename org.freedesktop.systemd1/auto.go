@@ -12,990 +12,1248 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.systemd1.Manager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.systemd1", "/org/freedesktop/systemd1")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.systemd1.Manager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.systemd1", "/org/freedesktop/systemd1")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoGetUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	GetUnit(flags dbus.Flags, name string) (dbus.ObjectPath, error)
+	GoGetUnitByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
+	GetUnitByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error)
+	GoGetUnitByInvocationID(flags dbus.Flags, ch chan *dbus.Call, invocationID []uint8) *dbus.Call
+	GetUnitByInvocationID(flags dbus.Flags, invocationID []uint8) (dbus.ObjectPath, error)
+	GoGetUnitByControlGroup(flags dbus.Flags, ch chan *dbus.Call, ctrlGroup string) *dbus.Call
+	GetUnitByControlGroup(flags dbus.Flags, ctrlGroup string) (dbus.ObjectPath, error)
+	GoLoadUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	LoadUnit(flags dbus.Flags, name string) (dbus.ObjectPath, error)
+	GoStartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	StartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoStartUnitReplace(flags dbus.Flags, ch chan *dbus.Call, oldUnit string, newUnit string, mode string) *dbus.Call
+	StartUnitReplace(flags dbus.Flags, oldUnit string, newUnit string, mode string) (dbus.ObjectPath, error)
+	GoStopUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	StopUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoReloadUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	ReloadUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	RestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	TryRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoReloadOrRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	ReloadOrRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoReloadOrTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call
+	ReloadOrTryRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error)
+	GoKillUnit(flags dbus.Flags, ch chan *dbus.Call, name string, who string, signal int32) *dbus.Call
+	KillUnit(flags dbus.Flags, name string, who string, signal int32) error
+	GoResetFailedUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	ResetFailedUnit(flags dbus.Flags, name string) error
+	GoSetUnitProperties(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool, properties []Property) *dbus.Call
+	SetUnitProperties(flags dbus.Flags, name string, runtime bool, properties []Property) error
+	GoRefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	RefUnit(flags dbus.Flags, name string) error
+	GoUnrefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	UnrefUnit(flags dbus.Flags, name string) error
+	GoStartTransientUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string, properties []Property, aux []PropertyCollection) *dbus.Call
+	StartTransientUnit(flags dbus.Flags, name string, mode string, properties []Property, aux []PropertyCollection) (dbus.ObjectPath, error)
+	GoGetUnitProcesses(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	GetUnitProcesses(flags dbus.Flags, name string) ([]UnitProcess, error)
+	GoAttachProcessesToUnit(flags dbus.Flags, ch chan *dbus.Call, name string, path string, pids []uint32) *dbus.Call
+	AttachProcessesToUnit(flags dbus.Flags, name string, path string, pids []uint32) error
+	GoAbandonScope(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	AbandonScope(flags dbus.Flags, name string) error
+	GoGetJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call
+	GetJob(flags dbus.Flags, id uint32) (dbus.ObjectPath, error)
+	GoGetJobAfter(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call
+	GetJobAfter(flags dbus.Flags, id uint32) ([]JobInfo, error)
+	GoGetJobBefore(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call
+	GetJobBefore(flags dbus.Flags, id uint32) ([]JobInfo, error)
+	GoCancelJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call
+	CancelJob(flags dbus.Flags, id uint32) error
+	GoClearJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearJobs(flags dbus.Flags) error
+	GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ResetFailed(flags dbus.Flags) error
+	GoListUnits(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListUnits(flags dbus.Flags) ([]UnitInfo, error)
+	GoListUnitsFiltered(flags dbus.Flags, ch chan *dbus.Call, states []string) *dbus.Call
+	ListUnitsFiltered(flags dbus.Flags, states []string) ([]UnitInfo, error)
+	GoListUnitsByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call
+	ListUnitsByPatterns(flags dbus.Flags, states []string, patterns []string) ([]UnitInfo, error)
+	GoListUnitsByNames(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call
+	ListUnitsByNames(flags dbus.Flags, names []string) ([]UnitInfo, error)
+	GoListJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListJobs(flags dbus.Flags) ([]JobInfo, error)
+	GoSubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Subscribe(flags dbus.Flags) error
+	GoUnsubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Unsubscribe(flags dbus.Flags) error
+	GoDump(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Dump(flags dbus.Flags) (string, error)
+	GoDumpByFileDescriptor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DumpByFileDescriptor(flags dbus.Flags) (dbus.UnixFD, error)
+	GoReload(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reload(flags dbus.Flags) error
+	GoReexecute(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reexecute(flags dbus.Flags) error
+	GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Exit(flags dbus.Flags) error
+	GoReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reboot(flags dbus.Flags) error
+	GoPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	PowerOff(flags dbus.Flags) error
+	GoHalt(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Halt(flags dbus.Flags) error
+	GoKExec(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	KExec(flags dbus.Flags) error
+	GoSwitchRoot(flags dbus.Flags, ch chan *dbus.Call, newRoot string, init string) *dbus.Call
+	SwitchRoot(flags dbus.Flags, newRoot string, init string) error
+	GoSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call
+	SetEnvironment(flags dbus.Flags, names []string) error
+	GoUnsetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call
+	UnsetEnvironment(flags dbus.Flags, names []string) error
+	GoUnsetAndSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, unset []string, set []string) *dbus.Call
+	UnsetAndSetEnvironment(flags dbus.Flags, unset []string, set []string) error
+	GoListUnitFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListUnitFiles(flags dbus.Flags) ([]UnitFile, error)
+	GoListUnitFilesByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call
+	ListUnitFilesByPatterns(flags dbus.Flags, states []string, patterns []string) ([]UnitFile, error)
+	GoGetUnitFileState(flags dbus.Flags, ch chan *dbus.Call, unit string) *dbus.Call
+	GetUnitFileState(flags dbus.Flags, unit string) (string, error)
+	GoEnableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call
+	EnableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error)
+	GoDisableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call
+	DisableUnitFiles(flags dbus.Flags, files []string, runtime bool) ([]UnitFileChange, error)
+	GoReenableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call
+	ReenableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error)
+	GoLinkUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call
+	LinkUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) ([]UnitFileChange, error)
+	GoPresetUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call
+	PresetUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error)
+	GoPresetUnitFilesWithMode(flags dbus.Flags, ch chan *dbus.Call, files []string, mode string, runtime bool, force bool) *dbus.Call
+	PresetUnitFilesWithMode(flags dbus.Flags, files []string, mode string, runtime bool, force bool) (bool, []UnitFileChange, error)
+	GoMaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call
+	MaskUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) ([]UnitFileChange, error)
+	GoUnmaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call
+	UnmaskUnitFiles(flags dbus.Flags, files []string, runtime bool) ([]UnitFileChange, error)
+	GoRevertUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string) *dbus.Call
+	RevertUnitFiles(flags dbus.Flags, files []string) ([]UnitFileChange, error)
+	GoSetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call, name string, force bool) *dbus.Call
+	SetDefaultTarget(flags dbus.Flags, name string, force bool) ([]UnitFileChange, error)
+	GoGetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetDefaultTarget(flags dbus.Flags) (string, error)
+	GoPresetAllUnitFiles(flags dbus.Flags, ch chan *dbus.Call, mode string, runtime bool, force bool) *dbus.Call
+	PresetAllUnitFiles(flags dbus.Flags, mode string, runtime bool, force bool) ([]UnitFileChange, error)
+	GoAddDependencyUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, target string, type0 string, runtime bool, force bool) *dbus.Call
+	AddDependencyUnitFiles(flags dbus.Flags, files []string, target string, type0 string, runtime bool, force bool) ([]UnitFileChange, error)
+	GoGetUnitFileLinks(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool) *dbus.Call
+	GetUnitFileLinks(flags dbus.Flags, name string, runtime bool) ([]string, error)
+	GoSetExitCode(flags dbus.Flags, ch chan *dbus.Call, exitCode uint8) *dbus.Call
+	SetExitCode(flags dbus.Flags, exitCode uint8) error
+	GoLookupDynamicUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	LookupDynamicUserByName(flags dbus.Flags, name string) (uint32, error)
+	GoLookupDynamicUserByUID(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call
+	LookupDynamicUserByUID(flags dbus.Flags, uid uint32) (string, error)
+	GoGetDynamicUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetDynamicUsers(flags dbus.Flags) ([]DynamicUser, error)
+	ConnectUnitNew(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectUnitRemoved(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectJobNew(cb func(id uint32, job dbus.ObjectPath, unit string)) (dbusutil.SignalHandlerId, error)
+	ConnectJobRemoved(cb func(id uint32, job dbus.ObjectPath, unit string, result string)) (dbusutil.SignalHandlerId, error)
+	ConnectStartupFinished(cb func(firmware uint64, loader uint64, kernel uint64, initrd uint64, userspace uint64, total uint64)) (dbusutil.SignalHandlerId, error)
+	ConnectUnitFilesChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectReloading(cb func(active bool)) (dbusutil.SignalHandlerId, error)
+	Version() proxy.PropString
+	Features() proxy.PropString
+	Virtualization() proxy.PropString
+	Architecture() proxy.PropString
+	Tainted() proxy.PropString
+	FirmwareTimestamp() proxy.PropUint64
+	FirmwareTimestampMonotonic() proxy.PropUint64
+	LoaderTimestamp() proxy.PropUint64
+	LoaderTimestampMonotonic() proxy.PropUint64
+	KernelTimestamp() proxy.PropUint64
+	KernelTimestampMonotonic() proxy.PropUint64
+	InitRDTimestamp() proxy.PropUint64
+	InitRDTimestampMonotonic() proxy.PropUint64
+	UserspaceTimestamp() proxy.PropUint64
+	UserspaceTimestampMonotonic() proxy.PropUint64
+	FinishTimestamp() proxy.PropUint64
+	FinishTimestampMonotonic() proxy.PropUint64
+	SecurityStartTimestamp() proxy.PropUint64
+	SecurityStartTimestampMonotonic() proxy.PropUint64
+	SecurityFinishTimestamp() proxy.PropUint64
+	SecurityFinishTimestampMonotonic() proxy.PropUint64
+	GeneratorsStartTimestamp() proxy.PropUint64
+	GeneratorsStartTimestampMonotonic() proxy.PropUint64
+	GeneratorsFinishTimestamp() proxy.PropUint64
+	GeneratorsFinishTimestampMonotonic() proxy.PropUint64
+	UnitsLoadStartTimestamp() proxy.PropUint64
+	UnitsLoadStartTimestampMonotonic() proxy.PropUint64
+	UnitsLoadFinishTimestamp() proxy.PropUint64
+	UnitsLoadFinishTimestampMonotonic() proxy.PropUint64
+	InitRDSecurityStartTimestamp() proxy.PropUint64
+	InitRDSecurityStartTimestampMonotonic() proxy.PropUint64
+	InitRDSecurityFinishTimestamp() proxy.PropUint64
+	InitRDSecurityFinishTimestampMonotonic() proxy.PropUint64
+	InitRDGeneratorsStartTimestamp() proxy.PropUint64
+	InitRDGeneratorsStartTimestampMonotonic() proxy.PropUint64
+	InitRDGeneratorsFinishTimestamp() proxy.PropUint64
+	InitRDGeneratorsFinishTimestampMonotonic() proxy.PropUint64
+	InitRDUnitsLoadStartTimestamp() proxy.PropUint64
+	InitRDUnitsLoadStartTimestampMonotonic() proxy.PropUint64
+	InitRDUnitsLoadFinishTimestamp() proxy.PropUint64
+	InitRDUnitsLoadFinishTimestampMonotonic() proxy.PropUint64
+	LogLevel() proxy.PropString
+	LogTarget() proxy.PropString
+	NNames() proxy.PropUint32
+	NFailedUnits() proxy.PropUint32
+	NJobs() proxy.PropUint32
+	NInstalledJobs() proxy.PropUint32
+	NFailedJobs() proxy.PropUint32
+	Progress() proxy.PropDouble
+	Environment() proxy.PropStringArray
+	ConfirmSpawn() proxy.PropBool
+	ShowStatus() proxy.PropBool
+	UnitPath() proxy.PropStringArray
+	DefaultStandardOutput() proxy.PropString
+	DefaultStandardError() proxy.PropString
+	RuntimeWatchdogUSec() proxy.PropUint64
+	ShutdownWatchdogUSec() proxy.PropUint64
+	ServiceWatchdogs() proxy.PropBool
+	ControlGroup() proxy.PropString
+	SystemState() proxy.PropString
+	ExitCode() proxy.PropByte
+	DefaultTimerAccuracyUSec() proxy.PropUint64
+	DefaultTimeoutStartUSec() proxy.PropUint64
+	DefaultTimeoutStopUSec() proxy.PropUint64
+	DefaultRestartUSec() proxy.PropUint64
+	DefaultStartLimitIntervalUSec() proxy.PropUint64
+	DefaultStartLimitBurst() proxy.PropUint32
+	DefaultCPUAccounting() proxy.PropBool
+	DefaultBlockIOAccounting() proxy.PropBool
+	DefaultMemoryAccounting() proxy.PropBool
+	DefaultTasksAccounting() proxy.PropBool
+	DefaultLimitCPU() proxy.PropUint64
+	DefaultLimitCPUSoft() proxy.PropUint64
+	DefaultLimitFSIZE() proxy.PropUint64
+	DefaultLimitFSIZESoft() proxy.PropUint64
+	DefaultLimitDATA() proxy.PropUint64
+	DefaultLimitDATASoft() proxy.PropUint64
+	DefaultLimitSTACK() proxy.PropUint64
+	DefaultLimitSTACKSoft() proxy.PropUint64
+	DefaultLimitCORE() proxy.PropUint64
+	DefaultLimitCORESoft() proxy.PropUint64
+	DefaultLimitRSS() proxy.PropUint64
+	DefaultLimitRSSSoft() proxy.PropUint64
+	DefaultLimitNOFILE() proxy.PropUint64
+	DefaultLimitNOFILESoft() proxy.PropUint64
+	DefaultLimitAS() proxy.PropUint64
+	DefaultLimitASSoft() proxy.PropUint64
+	DefaultLimitNPROC() proxy.PropUint64
+	DefaultLimitNPROCSoft() proxy.PropUint64
+	DefaultLimitMEMLOCK() proxy.PropUint64
+	DefaultLimitMEMLOCKSoft() proxy.PropUint64
+	DefaultLimitLOCKS() proxy.PropUint64
+	DefaultLimitLOCKSSoft() proxy.PropUint64
+	DefaultLimitSIGPENDING() proxy.PropUint64
+	DefaultLimitSIGPENDINGSoft() proxy.PropUint64
+	DefaultLimitMSGQUEUE() proxy.PropUint64
+	DefaultLimitMSGQUEUESoft() proxy.PropUint64
+	DefaultLimitNICE() proxy.PropUint64
+	DefaultLimitNICESoft() proxy.PropUint64
+	DefaultLimitRTPRIO() proxy.PropUint64
+	DefaultLimitRTPRIOSoft() proxy.PropUint64
+	DefaultLimitRTTIME() proxy.PropUint64
+	DefaultLimitRTTIMESoft() proxy.PropUint64
+	DefaultTasksMax() proxy.PropUint64
+	TimerSlackNSec() proxy.PropUint64
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.systemd1.Manager"
 }
 
 // method GetUnit
 
-func (v *manager) GoGetUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoGetUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnit", flags, ch, name)
 }
 
-func (*manager) StoreGetUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) GetUnit(flags dbus.Flags, name string) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUnit(flags dbus.Flags, name string) (dbus.ObjectPath, error) {
 	return v.StoreGetUnit(
 		<-v.GoGetUnit(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
 // method GetUnitByPID
 
-func (v *manager) GoGetUnitByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *interfaceManager) GoGetUnitByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByPID", flags, ch, pid)
 }
 
-func (*manager) StoreGetUnitByPID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUnitByPID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) GetUnitByPID(flags dbus.Flags, pid uint32) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUnitByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
 	return v.StoreGetUnitByPID(
 		<-v.GoGetUnitByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
 // method GetUnitByInvocationID
 
-func (v *manager) GoGetUnitByInvocationID(flags dbus.Flags, ch chan *dbus.Call, invocationID []uint8) *dbus.Call {
+func (v *interfaceManager) GoGetUnitByInvocationID(flags dbus.Flags, ch chan *dbus.Call, invocationID []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByInvocationID", flags, ch, invocationID)
 }
 
-func (*manager) StoreGetUnitByInvocationID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUnitByInvocationID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) GetUnitByInvocationID(flags dbus.Flags, invocationID []uint8) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUnitByInvocationID(flags dbus.Flags, invocationID []uint8) (dbus.ObjectPath, error) {
 	return v.StoreGetUnitByInvocationID(
 		<-v.GoGetUnitByInvocationID(flags, make(chan *dbus.Call, 1), invocationID).Done)
 }
 
 // method GetUnitByControlGroup
 
-func (v *manager) GoGetUnitByControlGroup(flags dbus.Flags, ch chan *dbus.Call, ctrlGroup string) *dbus.Call {
+func (v *interfaceManager) GoGetUnitByControlGroup(flags dbus.Flags, ch chan *dbus.Call, ctrlGroup string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByControlGroup", flags, ch, ctrlGroup)
 }
 
-func (*manager) StoreGetUnitByControlGroup(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUnitByControlGroup(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) GetUnitByControlGroup(flags dbus.Flags, ctrlGroup string) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUnitByControlGroup(flags dbus.Flags, ctrlGroup string) (dbus.ObjectPath, error) {
 	return v.StoreGetUnitByControlGroup(
 		<-v.GoGetUnitByControlGroup(flags, make(chan *dbus.Call, 1), ctrlGroup).Done)
 }
 
 // method LoadUnit
 
-func (v *manager) GoLoadUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoLoadUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LoadUnit", flags, ch, name)
 }
 
-func (*manager) StoreLoadUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreLoadUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) LoadUnit(flags dbus.Flags, name string) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) LoadUnit(flags dbus.Flags, name string) (dbus.ObjectPath, error) {
 	return v.StoreLoadUnit(
 		<-v.GoLoadUnit(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
 // method StartUnit
 
-func (v *manager) GoStartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoStartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreStartUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreStartUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
 }
 
-func (v *manager) StartUnit(flags dbus.Flags, name string, mode string) (unit dbus.ObjectPath, err error) {
+func (v *interfaceManager) StartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreStartUnit(
 		<-v.GoStartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method StartUnitReplace
 
-func (v *manager) GoStartUnitReplace(flags dbus.Flags, ch chan *dbus.Call, oldUnit string, newUnit string, mode string) *dbus.Call {
+func (v *interfaceManager) GoStartUnitReplace(flags dbus.Flags, ch chan *dbus.Call, oldUnit string, newUnit string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartUnitReplace", flags, ch, oldUnit, newUnit, mode)
 }
 
-func (*manager) StoreStartUnitReplace(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreStartUnitReplace(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) StartUnitReplace(flags dbus.Flags, oldUnit string, newUnit string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) StartUnitReplace(flags dbus.Flags, oldUnit string, newUnit string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreStartUnitReplace(
 		<-v.GoStartUnitReplace(flags, make(chan *dbus.Call, 1), oldUnit, newUnit, mode).Done)
 }
 
 // method StopUnit
 
-func (v *manager) GoStopUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoStopUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreStopUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreStopUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) StopUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) StopUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreStopUnit(
 		<-v.GoStopUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method ReloadUnit
 
-func (v *manager) GoReloadUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoReloadUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreReloadUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreReloadUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) ReloadUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) ReloadUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReloadUnit(
 		<-v.GoReloadUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method RestartUnit
 
-func (v *manager) GoRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RestartUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) RestartUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) RestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreRestartUnit(
 		<-v.GoRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method TryRestartUnit
 
-func (v *manager) GoTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TryRestartUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) TryRestartUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) TryRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreTryRestartUnit(
 		<-v.GoTryRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method ReloadOrRestartUnit
 
-func (v *manager) GoReloadOrRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoReloadOrRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrRestartUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreReloadOrRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreReloadOrRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) ReloadOrRestartUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) ReloadOrRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReloadOrRestartUnit(
 		<-v.GoReloadOrRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method ReloadOrTryRestartUnit
 
-func (v *manager) GoReloadOrTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+func (v *interfaceManager) GoReloadOrTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrTryRestartUnit", flags, ch, name, mode)
 }
 
-func (*manager) StoreReloadOrTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreReloadOrTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) ReloadOrTryRestartUnit(flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) ReloadOrTryRestartUnit(flags dbus.Flags, name string, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReloadOrTryRestartUnit(
 		<-v.GoReloadOrTryRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
 // method KillUnit
 
-func (v *manager) GoKillUnit(flags dbus.Flags, ch chan *dbus.Call, name string, who string, signal int32) *dbus.Call {
+func (v *interfaceManager) GoKillUnit(flags dbus.Flags, ch chan *dbus.Call, name string, who string, signal int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillUnit", flags, ch, name, who, signal)
 }
 
-func (v *manager) KillUnit(flags dbus.Flags, name string, who string, signal int32) error {
+func (v *interfaceManager) KillUnit(flags dbus.Flags, name string, who string, signal int32) error {
 	return (<-v.GoKillUnit(flags, make(chan *dbus.Call, 1), name, who, signal).Done).Err
 }
 
 // method ResetFailedUnit
 
-func (v *manager) GoResetFailedUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoResetFailedUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailedUnit", flags, ch, name)
 }
 
-func (v *manager) ResetFailedUnit(flags dbus.Flags, name string) error {
+func (v *interfaceManager) ResetFailedUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoResetFailedUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetUnitProperties
 
-func (v *manager) GoSetUnitProperties(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool, properties []Property) *dbus.Call {
+func (v *interfaceManager) GoSetUnitProperties(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool, properties []Property) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUnitProperties", flags, ch, name, runtime, properties)
 }
 
-func (v *manager) SetUnitProperties(flags dbus.Flags, name string, runtime bool, properties []Property) error {
+func (v *interfaceManager) SetUnitProperties(flags dbus.Flags, name string, runtime bool, properties []Property) error {
 	return (<-v.GoSetUnitProperties(flags, make(chan *dbus.Call, 1), name, runtime, properties).Done).Err
 }
 
 // method RefUnit
 
-func (v *manager) GoRefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoRefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefUnit", flags, ch, name)
 }
 
-func (v *manager) RefUnit(flags dbus.Flags, name string) error {
+func (v *interfaceManager) RefUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoRefUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method UnrefUnit
 
-func (v *manager) GoUnrefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoUnrefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnrefUnit", flags, ch, name)
 }
 
-func (v *manager) UnrefUnit(flags dbus.Flags, name string) error {
+func (v *interfaceManager) UnrefUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoUnrefUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method StartTransientUnit
 
-func (v *manager) GoStartTransientUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string, properties []Property, aux []PropertyCollection) *dbus.Call {
+func (v *interfaceManager) GoStartTransientUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string, properties []Property, aux []PropertyCollection) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartTransientUnit", flags, ch, name, mode, properties, aux)
 }
 
-func (*manager) StoreStartTransientUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreStartTransientUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) StartTransientUnit(flags dbus.Flags, name string, mode string, properties []Property, aux []PropertyCollection) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) StartTransientUnit(flags dbus.Flags, name string, mode string, properties []Property, aux []PropertyCollection) (dbus.ObjectPath, error) {
 	return v.StoreStartTransientUnit(
 		<-v.GoStartTransientUnit(flags, make(chan *dbus.Call, 1), name, mode, properties, aux).Done)
 }
 
 // method GetUnitProcesses
 
-func (v *manager) GoGetUnitProcesses(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoGetUnitProcesses(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitProcesses", flags, ch, name)
 }
 
-func (*manager) StoreGetUnitProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
+func (*interfaceManager) StoreGetUnitProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
 	err = call.Store(&processes)
 	return
 }
 
-func (v *manager) GetUnitProcesses(flags dbus.Flags, name string) (processes []UnitProcess, err error) {
+func (v *interfaceManager) GetUnitProcesses(flags dbus.Flags, name string) ([]UnitProcess, error) {
 	return v.StoreGetUnitProcesses(
 		<-v.GoGetUnitProcesses(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
 // method AttachProcessesToUnit
 
-func (v *manager) GoAttachProcessesToUnit(flags dbus.Flags, ch chan *dbus.Call, name string, path string, pids []uint32) *dbus.Call {
+func (v *interfaceManager) GoAttachProcessesToUnit(flags dbus.Flags, ch chan *dbus.Call, name string, path string, pids []uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachProcessesToUnit", flags, ch, name, path, pids)
 }
 
-func (v *manager) AttachProcessesToUnit(flags dbus.Flags, name string, path string, pids []uint32) error {
+func (v *interfaceManager) AttachProcessesToUnit(flags dbus.Flags, name string, path string, pids []uint32) error {
 	return (<-v.GoAttachProcessesToUnit(flags, make(chan *dbus.Call, 1), name, path, pids).Done).Err
 }
 
 // method AbandonScope
 
-func (v *manager) GoAbandonScope(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoAbandonScope(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AbandonScope", flags, ch, name)
 }
 
-func (v *manager) AbandonScope(flags dbus.Flags, name string) error {
+func (v *interfaceManager) AbandonScope(flags dbus.Flags, name string) error {
 	return (<-v.GoAbandonScope(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method GetJob
 
-func (v *manager) GoGetJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+func (v *interfaceManager) GoGetJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJob", flags, ch, id)
 }
 
-func (*manager) StoreGetJob(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetJob(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *manager) GetJob(flags dbus.Flags, id uint32) (job dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetJob(flags dbus.Flags, id uint32) (dbus.ObjectPath, error) {
 	return v.StoreGetJob(
 		<-v.GoGetJob(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method GetJobAfter
 
-func (v *manager) GoGetJobAfter(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+func (v *interfaceManager) GoGetJobAfter(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJobAfter", flags, ch, id)
 }
 
-func (*manager) StoreGetJobAfter(call *dbus.Call) (jobs []JobInfo, err error) {
+func (*interfaceManager) StoreGetJobAfter(call *dbus.Call) (jobs []JobInfo, err error) {
 	err = call.Store(&jobs)
 	return
 }
 
-func (v *manager) GetJobAfter(flags dbus.Flags, id uint32) (jobs []JobInfo, err error) {
+func (v *interfaceManager) GetJobAfter(flags dbus.Flags, id uint32) ([]JobInfo, error) {
 	return v.StoreGetJobAfter(
 		<-v.GoGetJobAfter(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method GetJobBefore
 
-func (v *manager) GoGetJobBefore(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+func (v *interfaceManager) GoGetJobBefore(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJobBefore", flags, ch, id)
 }
 
-func (*manager) StoreGetJobBefore(call *dbus.Call) (jobs []JobInfo, err error) {
+func (*interfaceManager) StoreGetJobBefore(call *dbus.Call) (jobs []JobInfo, err error) {
 	err = call.Store(&jobs)
 	return
 }
 
-func (v *manager) GetJobBefore(flags dbus.Flags, id uint32) (jobs []JobInfo, err error) {
+func (v *interfaceManager) GetJobBefore(flags dbus.Flags, id uint32) ([]JobInfo, error) {
 	return v.StoreGetJobBefore(
 		<-v.GoGetJobBefore(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
 // method CancelJob
 
-func (v *manager) GoCancelJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+func (v *interfaceManager) GoCancelJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelJob", flags, ch, id)
 }
 
-func (v *manager) CancelJob(flags dbus.Flags, id uint32) error {
+func (v *interfaceManager) CancelJob(flags dbus.Flags, id uint32) error {
 	return (<-v.GoCancelJob(flags, make(chan *dbus.Call, 1), id).Done).Err
 }
 
 // method ClearJobs
 
-func (v *manager) GoClearJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoClearJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearJobs", flags, ch)
 }
 
-func (v *manager) ClearJobs(flags dbus.Flags) error {
+func (v *interfaceManager) ClearJobs(flags dbus.Flags) error {
 	return (<-v.GoClearJobs(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ResetFailed
 
-func (v *manager) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailed", flags, ch)
 }
 
-func (v *manager) ResetFailed(flags dbus.Flags) error {
+func (v *interfaceManager) ResetFailed(flags dbus.Flags) error {
 	return (<-v.GoResetFailed(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ListUnits
 
-func (v *manager) GoListUnits(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListUnits(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnits", flags, ch)
 }
 
-func (*manager) StoreListUnits(call *dbus.Call) (units []UnitInfo, err error) {
+func (*interfaceManager) StoreListUnits(call *dbus.Call) (units []UnitInfo, err error) {
 	err = call.Store(&units)
 	return
 }
 
-func (v *manager) ListUnits(flags dbus.Flags) (units []UnitInfo, err error) {
+func (v *interfaceManager) ListUnits(flags dbus.Flags) ([]UnitInfo, error) {
 	return v.StoreListUnits(
 		<-v.GoListUnits(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListUnitsFiltered
 
-func (v *manager) GoListUnitsFiltered(flags dbus.Flags, ch chan *dbus.Call, states []string) *dbus.Call {
+func (v *interfaceManager) GoListUnitsFiltered(flags dbus.Flags, ch chan *dbus.Call, states []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsFiltered", flags, ch, states)
 }
 
-func (*manager) StoreListUnitsFiltered(call *dbus.Call) (units []UnitInfo, err error) {
+func (*interfaceManager) StoreListUnitsFiltered(call *dbus.Call) (units []UnitInfo, err error) {
 	err = call.Store(&units)
 	return
 }
 
-func (v *manager) ListUnitsFiltered(flags dbus.Flags, states []string) (units []UnitInfo, err error) {
+func (v *interfaceManager) ListUnitsFiltered(flags dbus.Flags, states []string) ([]UnitInfo, error) {
 	return v.StoreListUnitsFiltered(
 		<-v.GoListUnitsFiltered(flags, make(chan *dbus.Call, 1), states).Done)
 }
 
 // method ListUnitsByPatterns
 
-func (v *manager) GoListUnitsByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
+func (v *interfaceManager) GoListUnitsByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsByPatterns", flags, ch, states, patterns)
 }
 
-func (*manager) StoreListUnitsByPatterns(call *dbus.Call) (units []UnitInfo, err error) {
+func (*interfaceManager) StoreListUnitsByPatterns(call *dbus.Call) (units []UnitInfo, err error) {
 	err = call.Store(&units)
 	return
 }
 
-func (v *manager) ListUnitsByPatterns(flags dbus.Flags, states []string, patterns []string) (units []UnitInfo, err error) {
+func (v *interfaceManager) ListUnitsByPatterns(flags dbus.Flags, states []string, patterns []string) ([]UnitInfo, error) {
 	return v.StoreListUnitsByPatterns(
 		<-v.GoListUnitsByPatterns(flags, make(chan *dbus.Call, 1), states, patterns).Done)
 }
 
 // method ListUnitsByNames
 
-func (v *manager) GoListUnitsByNames(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+func (v *interfaceManager) GoListUnitsByNames(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsByNames", flags, ch, names)
 }
 
-func (*manager) StoreListUnitsByNames(call *dbus.Call) (units []UnitInfo, err error) {
+func (*interfaceManager) StoreListUnitsByNames(call *dbus.Call) (units []UnitInfo, err error) {
 	err = call.Store(&units)
 	return
 }
 
-func (v *manager) ListUnitsByNames(flags dbus.Flags, names []string) (units []UnitInfo, err error) {
+func (v *interfaceManager) ListUnitsByNames(flags dbus.Flags, names []string) ([]UnitInfo, error) {
 	return v.StoreListUnitsByNames(
 		<-v.GoListUnitsByNames(flags, make(chan *dbus.Call, 1), names).Done)
 }
 
 // method ListJobs
 
-func (v *manager) GoListJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListJobs", flags, ch)
 }
 
-func (*manager) StoreListJobs(call *dbus.Call) (jobs []JobInfo, err error) {
+func (*interfaceManager) StoreListJobs(call *dbus.Call) (jobs []JobInfo, err error) {
 	err = call.Store(&jobs)
 	return
 }
 
-func (v *manager) ListJobs(flags dbus.Flags) (jobs []JobInfo, err error) {
+func (v *interfaceManager) ListJobs(flags dbus.Flags) ([]JobInfo, error) {
 	return v.StoreListJobs(
 		<-v.GoListJobs(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Subscribe
 
-func (v *manager) GoSubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoSubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Subscribe", flags, ch)
 }
 
-func (v *manager) Subscribe(flags dbus.Flags) error {
+func (v *interfaceManager) Subscribe(flags dbus.Flags) error {
 	return (<-v.GoSubscribe(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Unsubscribe
 
-func (v *manager) GoUnsubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoUnsubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unsubscribe", flags, ch)
 }
 
-func (v *manager) Unsubscribe(flags dbus.Flags) error {
+func (v *interfaceManager) Unsubscribe(flags dbus.Flags) error {
 	return (<-v.GoUnsubscribe(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Dump
 
-func (v *manager) GoDump(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoDump(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Dump", flags, ch)
 }
 
-func (*manager) StoreDump(call *dbus.Call) (arg0 string, err error) {
+func (*interfaceManager) StoreDump(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *manager) Dump(flags dbus.Flags) (arg0 string, err error) {
+func (v *interfaceManager) Dump(flags dbus.Flags) (string, error) {
 	return v.StoreDump(
 		<-v.GoDump(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method DumpByFileDescriptor
 
-func (v *manager) GoDumpByFileDescriptor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoDumpByFileDescriptor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DumpByFileDescriptor", flags, ch)
 }
 
-func (*manager) StoreDumpByFileDescriptor(call *dbus.Call) (fd dbus.UnixFD, err error) {
+func (*interfaceManager) StoreDumpByFileDescriptor(call *dbus.Call) (fd dbus.UnixFD, err error) {
 	err = call.Store(&fd)
 	return
 }
 
-func (v *manager) DumpByFileDescriptor(flags dbus.Flags) (fd dbus.UnixFD, err error) {
+func (v *interfaceManager) DumpByFileDescriptor(flags dbus.Flags) (dbus.UnixFD, error) {
 	return v.StoreDumpByFileDescriptor(
 		<-v.GoDumpByFileDescriptor(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Reload
 
-func (v *manager) GoReload(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoReload(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch)
 }
 
-func (v *manager) Reload(flags dbus.Flags) error {
+func (v *interfaceManager) Reload(flags dbus.Flags) error {
 	return (<-v.GoReload(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Reexecute
 
-func (v *manager) GoReexecute(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoReexecute(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reexecute", flags, ch)
 }
 
-func (v *manager) Reexecute(flags dbus.Flags) error {
+func (v *interfaceManager) Reexecute(flags dbus.Flags) error {
 	return (<-v.GoReexecute(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Exit
 
-func (v *manager) GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Exit", flags, ch)
 }
 
-func (v *manager) Exit(flags dbus.Flags) error {
+func (v *interfaceManager) Exit(flags dbus.Flags) error {
 	return (<-v.GoExit(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Reboot
 
-func (v *manager) GoReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reboot", flags, ch)
 }
 
-func (v *manager) Reboot(flags dbus.Flags) error {
+func (v *interfaceManager) Reboot(flags dbus.Flags) error {
 	return (<-v.GoReboot(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method PowerOff
 
-func (v *manager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch)
 }
 
-func (v *manager) PowerOff(flags dbus.Flags) error {
+func (v *interfaceManager) PowerOff(flags dbus.Flags) error {
 	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Halt
 
-func (v *manager) GoHalt(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoHalt(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Halt", flags, ch)
 }
 
-func (v *manager) Halt(flags dbus.Flags) error {
+func (v *interfaceManager) Halt(flags dbus.Flags) error {
 	return (<-v.GoHalt(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method KExec
 
-func (v *manager) GoKExec(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoKExec(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KExec", flags, ch)
 }
 
-func (v *manager) KExec(flags dbus.Flags) error {
+func (v *interfaceManager) KExec(flags dbus.Flags) error {
 	return (<-v.GoKExec(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SwitchRoot
 
-func (v *manager) GoSwitchRoot(flags dbus.Flags, ch chan *dbus.Call, newRoot string, init string) *dbus.Call {
+func (v *interfaceManager) GoSwitchRoot(flags dbus.Flags, ch chan *dbus.Call, newRoot string, init string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchRoot", flags, ch, newRoot, init)
 }
 
-func (v *manager) SwitchRoot(flags dbus.Flags, newRoot string, init string) error {
+func (v *interfaceManager) SwitchRoot(flags dbus.Flags, newRoot string, init string) error {
 	return (<-v.GoSwitchRoot(flags, make(chan *dbus.Call, 1), newRoot, init).Done).Err
 }
 
 // method SetEnvironment
 
-func (v *manager) GoSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+func (v *interfaceManager) GoSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetEnvironment", flags, ch, names)
 }
 
-func (v *manager) SetEnvironment(flags dbus.Flags, names []string) error {
+func (v *interfaceManager) SetEnvironment(flags dbus.Flags, names []string) error {
 	return (<-v.GoSetEnvironment(flags, make(chan *dbus.Call, 1), names).Done).Err
 }
 
 // method UnsetEnvironment
 
-func (v *manager) GoUnsetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+func (v *interfaceManager) GoUnsetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnsetEnvironment", flags, ch, names)
 }
 
-func (v *manager) UnsetEnvironment(flags dbus.Flags, names []string) error {
+func (v *interfaceManager) UnsetEnvironment(flags dbus.Flags, names []string) error {
 	return (<-v.GoUnsetEnvironment(flags, make(chan *dbus.Call, 1), names).Done).Err
 }
 
 // method UnsetAndSetEnvironment
 
-func (v *manager) GoUnsetAndSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, unset []string, set []string) *dbus.Call {
+func (v *interfaceManager) GoUnsetAndSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, unset []string, set []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnsetAndSetEnvironment", flags, ch, unset, set)
 }
 
-func (v *manager) UnsetAndSetEnvironment(flags dbus.Flags, unset []string, set []string) error {
+func (v *interfaceManager) UnsetAndSetEnvironment(flags dbus.Flags, unset []string, set []string) error {
 	return (<-v.GoUnsetAndSetEnvironment(flags, make(chan *dbus.Call, 1), unset, set).Done).Err
 }
 
 // method ListUnitFiles
 
-func (v *manager) GoListUnitFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListUnitFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitFiles", flags, ch)
 }
 
-func (*manager) StoreListUnitFiles(call *dbus.Call) (files []UnitFile, err error) {
+func (*interfaceManager) StoreListUnitFiles(call *dbus.Call) (files []UnitFile, err error) {
 	err = call.Store(&files)
 	return
 }
 
-func (v *manager) ListUnitFiles(flags dbus.Flags) (files []UnitFile, err error) {
+func (v *interfaceManager) ListUnitFiles(flags dbus.Flags) ([]UnitFile, error) {
 	return v.StoreListUnitFiles(
 		<-v.GoListUnitFiles(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListUnitFilesByPatterns
 
-func (v *manager) GoListUnitFilesByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
+func (v *interfaceManager) GoListUnitFilesByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitFilesByPatterns", flags, ch, states, patterns)
 }
 
-func (*manager) StoreListUnitFilesByPatterns(call *dbus.Call) (files []UnitFile, err error) {
+func (*interfaceManager) StoreListUnitFilesByPatterns(call *dbus.Call) (files []UnitFile, err error) {
 	err = call.Store(&files)
 	return
 }
 
-func (v *manager) ListUnitFilesByPatterns(flags dbus.Flags, states []string, patterns []string) (files []UnitFile, err error) {
+func (v *interfaceManager) ListUnitFilesByPatterns(flags dbus.Flags, states []string, patterns []string) ([]UnitFile, error) {
 	return v.StoreListUnitFilesByPatterns(
 		<-v.GoListUnitFilesByPatterns(flags, make(chan *dbus.Call, 1), states, patterns).Done)
 }
 
 // method GetUnitFileState
 
-func (v *manager) GoGetUnitFileState(flags dbus.Flags, ch chan *dbus.Call, unit string) *dbus.Call {
+func (v *interfaceManager) GoGetUnitFileState(flags dbus.Flags, ch chan *dbus.Call, unit string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitFileState", flags, ch, unit)
 }
 
-func (*manager) StoreGetUnitFileState(call *dbus.Call) (state string, err error) {
+func (*interfaceManager) StoreGetUnitFileState(call *dbus.Call) (state string, err error) {
 	err = call.Store(&state)
 	return
 }
 
-func (v *manager) GetUnitFileState(flags dbus.Flags, unit string) (state string, err error) {
+func (v *interfaceManager) GetUnitFileState(flags dbus.Flags, unit string) (string, error) {
 	return v.StoreGetUnitFileState(
 		<-v.GoGetUnitFileState(flags, make(chan *dbus.Call, 1), unit).Done)
 }
 
 // method EnableUnitFiles
 
-func (v *manager) GoEnableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoEnableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableUnitFiles", flags, ch, files, runtime, force)
 }
 
-func (*manager) StoreEnableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreEnableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
 	err = call.Store(&carriesInstallInfo, &changes)
 	return
 }
 
-func (v *manager) EnableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (v *interfaceManager) EnableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	return v.StoreEnableUnitFiles(
 		<-v.GoEnableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
 // method DisableUnitFiles
 
-func (v *manager) GoDisableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
+func (v *interfaceManager) GoDisableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisableUnitFiles", flags, ch, files, runtime)
 }
 
-func (*manager) StoreDisableUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreDisableUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) DisableUnitFiles(flags dbus.Flags, files []string, runtime bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) DisableUnitFiles(flags dbus.Flags, files []string, runtime bool) ([]UnitFileChange, error) {
 	return v.StoreDisableUnitFiles(
 		<-v.GoDisableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime).Done)
 }
 
 // method ReenableUnitFiles
 
-func (v *manager) GoReenableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoReenableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReenableUnitFiles", flags, ch, files, runtime, force)
 }
 
-func (*manager) StoreReenableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreReenableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
 	err = call.Store(&carriesInstallInfo, &changes)
 	return
 }
 
-func (v *manager) ReenableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (v *interfaceManager) ReenableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	return v.StoreReenableUnitFiles(
 		<-v.GoReenableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
 // method LinkUnitFiles
 
-func (v *manager) GoLinkUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoLinkUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LinkUnitFiles", flags, ch, files, runtime, force)
 }
 
-func (*manager) StoreLinkUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreLinkUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) LinkUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) LinkUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) ([]UnitFileChange, error) {
 	return v.StoreLinkUnitFiles(
 		<-v.GoLinkUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
 // method PresetUnitFiles
 
-func (v *manager) GoPresetUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoPresetUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetUnitFiles", flags, ch, files, runtime, force)
 }
 
-func (*manager) StorePresetUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (*interfaceManager) StorePresetUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
 	err = call.Store(&carriesInstallInfo, &changes)
 	return
 }
 
-func (v *manager) PresetUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (v *interfaceManager) PresetUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	return v.StorePresetUnitFiles(
 		<-v.GoPresetUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
 // method PresetUnitFilesWithMode
 
-func (v *manager) GoPresetUnitFilesWithMode(flags dbus.Flags, ch chan *dbus.Call, files []string, mode string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoPresetUnitFilesWithMode(flags dbus.Flags, ch chan *dbus.Call, files []string, mode string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetUnitFilesWithMode", flags, ch, files, mode, runtime, force)
 }
 
-func (*manager) StorePresetUnitFilesWithMode(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (*interfaceManager) StorePresetUnitFilesWithMode(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
 	err = call.Store(&carriesInstallInfo, &changes)
 	return
 }
 
-func (v *manager) PresetUnitFilesWithMode(flags dbus.Flags, files []string, mode string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+func (v *interfaceManager) PresetUnitFilesWithMode(flags dbus.Flags, files []string, mode string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	return v.StorePresetUnitFilesWithMode(
 		<-v.GoPresetUnitFilesWithMode(flags, make(chan *dbus.Call, 1), files, mode, runtime, force).Done)
 }
 
 // method MaskUnitFiles
 
-func (v *manager) GoMaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoMaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MaskUnitFiles", flags, ch, files, runtime, force)
 }
 
-func (*manager) StoreMaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreMaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) MaskUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) MaskUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) ([]UnitFileChange, error) {
 	return v.StoreMaskUnitFiles(
 		<-v.GoMaskUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
 // method UnmaskUnitFiles
 
-func (v *manager) GoUnmaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
+func (v *interfaceManager) GoUnmaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnmaskUnitFiles", flags, ch, files, runtime)
 }
 
-func (*manager) StoreUnmaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreUnmaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) UnmaskUnitFiles(flags dbus.Flags, files []string, runtime bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) UnmaskUnitFiles(flags dbus.Flags, files []string, runtime bool) ([]UnitFileChange, error) {
 	return v.StoreUnmaskUnitFiles(
 		<-v.GoUnmaskUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime).Done)
 }
 
 // method RevertUnitFiles
 
-func (v *manager) GoRevertUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string) *dbus.Call {
+func (v *interfaceManager) GoRevertUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RevertUnitFiles", flags, ch, files)
 }
 
-func (*manager) StoreRevertUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreRevertUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) RevertUnitFiles(flags dbus.Flags, files []string) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) RevertUnitFiles(flags dbus.Flags, files []string) ([]UnitFileChange, error) {
 	return v.StoreRevertUnitFiles(
 		<-v.GoRevertUnitFiles(flags, make(chan *dbus.Call, 1), files).Done)
 }
 
 // method SetDefaultTarget
 
-func (v *manager) GoSetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call, name string, force bool) *dbus.Call {
+func (v *interfaceManager) GoSetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call, name string, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultTarget", flags, ch, name, force)
 }
 
-func (*manager) StoreSetDefaultTarget(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreSetDefaultTarget(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) SetDefaultTarget(flags dbus.Flags, name string, force bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) SetDefaultTarget(flags dbus.Flags, name string, force bool) ([]UnitFileChange, error) {
 	return v.StoreSetDefaultTarget(
 		<-v.GoSetDefaultTarget(flags, make(chan *dbus.Call, 1), name, force).Done)
 }
 
 // method GetDefaultTarget
 
-func (v *manager) GoGetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDefaultTarget", flags, ch)
 }
 
-func (*manager) StoreGetDefaultTarget(call *dbus.Call) (name string, err error) {
+func (*interfaceManager) StoreGetDefaultTarget(call *dbus.Call) (name string, err error) {
 	err = call.Store(&name)
 	return
 }
 
-func (v *manager) GetDefaultTarget(flags dbus.Flags) (name string, err error) {
+func (v *interfaceManager) GetDefaultTarget(flags dbus.Flags) (string, error) {
 	return v.StoreGetDefaultTarget(
 		<-v.GoGetDefaultTarget(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method PresetAllUnitFiles
 
-func (v *manager) GoPresetAllUnitFiles(flags dbus.Flags, ch chan *dbus.Call, mode string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoPresetAllUnitFiles(flags dbus.Flags, ch chan *dbus.Call, mode string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetAllUnitFiles", flags, ch, mode, runtime, force)
 }
 
-func (*manager) StorePresetAllUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StorePresetAllUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) PresetAllUnitFiles(flags dbus.Flags, mode string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) PresetAllUnitFiles(flags dbus.Flags, mode string, runtime bool, force bool) ([]UnitFileChange, error) {
 	return v.StorePresetAllUnitFiles(
 		<-v.GoPresetAllUnitFiles(flags, make(chan *dbus.Call, 1), mode, runtime, force).Done)
 }
 
 // method AddDependencyUnitFiles
 
-func (v *manager) GoAddDependencyUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, target string, type0 string, runtime bool, force bool) *dbus.Call {
+func (v *interfaceManager) GoAddDependencyUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, target string, type0 string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddDependencyUnitFiles", flags, ch, files, target, type0, runtime, force)
 }
 
-func (*manager) StoreAddDependencyUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
+func (*interfaceManager) StoreAddDependencyUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
 	err = call.Store(&changes)
 	return
 }
 
-func (v *manager) AddDependencyUnitFiles(flags dbus.Flags, files []string, target string, type0 string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+func (v *interfaceManager) AddDependencyUnitFiles(flags dbus.Flags, files []string, target string, type0 string, runtime bool, force bool) ([]UnitFileChange, error) {
 	return v.StoreAddDependencyUnitFiles(
 		<-v.GoAddDependencyUnitFiles(flags, make(chan *dbus.Call, 1), files, target, type0, runtime, force).Done)
 }
 
 // method GetUnitFileLinks
 
-func (v *manager) GoGetUnitFileLinks(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool) *dbus.Call {
+func (v *interfaceManager) GoGetUnitFileLinks(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitFileLinks", flags, ch, name, runtime)
 }
 
-func (*manager) StoreGetUnitFileLinks(call *dbus.Call) (links []string, err error) {
+func (*interfaceManager) StoreGetUnitFileLinks(call *dbus.Call) (links []string, err error) {
 	err = call.Store(&links)
 	return
 }
 
-func (v *manager) GetUnitFileLinks(flags dbus.Flags, name string, runtime bool) (links []string, err error) {
+func (v *interfaceManager) GetUnitFileLinks(flags dbus.Flags, name string, runtime bool) ([]string, error) {
 	return v.StoreGetUnitFileLinks(
 		<-v.GoGetUnitFileLinks(flags, make(chan *dbus.Call, 1), name, runtime).Done)
 }
 
 // method SetExitCode
 
-func (v *manager) GoSetExitCode(flags dbus.Flags, ch chan *dbus.Call, exitCode uint8) *dbus.Call {
+func (v *interfaceManager) GoSetExitCode(flags dbus.Flags, ch chan *dbus.Call, exitCode uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetExitCode", flags, ch, exitCode)
 }
 
-func (v *manager) SetExitCode(flags dbus.Flags, exitCode uint8) error {
+func (v *interfaceManager) SetExitCode(flags dbus.Flags, exitCode uint8) error {
 	return (<-v.GoSetExitCode(flags, make(chan *dbus.Call, 1), exitCode).Done).Err
 }
 
 // method LookupDynamicUserByName
 
-func (v *manager) GoLookupDynamicUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceManager) GoLookupDynamicUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LookupDynamicUserByName", flags, ch, name)
 }
 
-func (*manager) StoreLookupDynamicUserByName(call *dbus.Call) (user uint32, err error) {
+func (*interfaceManager) StoreLookupDynamicUserByName(call *dbus.Call) (user uint32, err error) {
 	err = call.Store(&user)
 	return
 }
 
-func (v *manager) LookupDynamicUserByName(flags dbus.Flags, name string) (user uint32, err error) {
+func (v *interfaceManager) LookupDynamicUserByName(flags dbus.Flags, name string) (uint32, error) {
 	return v.StoreLookupDynamicUserByName(
 		<-v.GoLookupDynamicUserByName(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
 // method LookupDynamicUserByUID
 
-func (v *manager) GoLookupDynamicUserByUID(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+func (v *interfaceManager) GoLookupDynamicUserByUID(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LookupDynamicUserByUID", flags, ch, uid)
 }
 
-func (*manager) StoreLookupDynamicUserByUID(call *dbus.Call) (user string, err error) {
+func (*interfaceManager) StoreLookupDynamicUserByUID(call *dbus.Call) (user string, err error) {
 	err = call.Store(&user)
 	return
 }
 
-func (v *manager) LookupDynamicUserByUID(flags dbus.Flags, uid uint32) (user string, err error) {
+func (v *interfaceManager) LookupDynamicUserByUID(flags dbus.Flags, uid uint32) (string, error) {
 	return v.StoreLookupDynamicUserByUID(
 		<-v.GoLookupDynamicUserByUID(flags, make(chan *dbus.Call, 1), uid).Done)
 }
 
 // method GetDynamicUsers
 
-func (v *manager) GoGetDynamicUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetDynamicUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDynamicUsers", flags, ch)
 }
 
-func (*manager) StoreGetDynamicUsers(call *dbus.Call) (users []DynamicUser, err error) {
+func (*interfaceManager) StoreGetDynamicUsers(call *dbus.Call) (users []DynamicUser, err error) {
 	err = call.Store(&users)
 	return
 }
 
-func (v *manager) GetDynamicUsers(flags dbus.Flags) (users []DynamicUser, err error) {
+func (v *interfaceManager) GetDynamicUsers(flags dbus.Flags) ([]DynamicUser, error) {
 	return v.StoreGetDynamicUsers(
 		<-v.GoGetDynamicUsers(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal UnitNew
 
-func (v *manager) ConnectUnitNew(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectUnitNew(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1022,7 +1280,7 @@ func (v *manager) ConnectUnitNew(cb func(id string, unit dbus.ObjectPath)) (dbus
 
 // signal UnitRemoved
 
-func (v *manager) ConnectUnitRemoved(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectUnitRemoved(cb func(id string, unit dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1049,7 +1307,7 @@ func (v *manager) ConnectUnitRemoved(cb func(id string, unit dbus.ObjectPath)) (
 
 // signal JobNew
 
-func (v *manager) ConnectJobNew(cb func(id uint32, job dbus.ObjectPath, unit string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectJobNew(cb func(id uint32, job dbus.ObjectPath, unit string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1077,7 +1335,7 @@ func (v *manager) ConnectJobNew(cb func(id uint32, job dbus.ObjectPath, unit str
 
 // signal JobRemoved
 
-func (v *manager) ConnectJobRemoved(cb func(id uint32, job dbus.ObjectPath, unit string, result string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectJobRemoved(cb func(id uint32, job dbus.ObjectPath, unit string, result string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1106,7 +1364,7 @@ func (v *manager) ConnectJobRemoved(cb func(id uint32, job dbus.ObjectPath, unit
 
 // signal StartupFinished
 
-func (v *manager) ConnectStartupFinished(cb func(firmware uint64, loader uint64, kernel uint64, initrd uint64, userspace uint64, total uint64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectStartupFinished(cb func(firmware uint64, loader uint64, kernel uint64, initrd uint64, userspace uint64, total uint64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1137,7 +1395,7 @@ func (v *manager) ConnectStartupFinished(cb func(firmware uint64, loader uint64,
 
 // signal UnitFilesChanged
 
-func (v *manager) ConnectUnitFilesChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectUnitFilesChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1159,7 +1417,7 @@ func (v *manager) ConnectUnitFilesChanged(cb func()) (dbusutil.SignalHandlerId, 
 
 // signal Reloading
 
-func (v *manager) ConnectReloading(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectReloading(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1185,8 +1443,8 @@ func (v *manager) ConnectReloading(cb func(active bool)) (dbusutil.SignalHandler
 
 // property Version s
 
-func (v *manager) Version() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Version() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Version",
 	}
@@ -1194,8 +1452,8 @@ func (v *manager) Version() proxy.PropString {
 
 // property Features s
 
-func (v *manager) Features() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Features() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Features",
 	}
@@ -1203,8 +1461,8 @@ func (v *manager) Features() proxy.PropString {
 
 // property Virtualization s
 
-func (v *manager) Virtualization() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Virtualization() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Virtualization",
 	}
@@ -1212,8 +1470,8 @@ func (v *manager) Virtualization() proxy.PropString {
 
 // property Architecture s
 
-func (v *manager) Architecture() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Architecture() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Architecture",
 	}
@@ -1221,8 +1479,8 @@ func (v *manager) Architecture() proxy.PropString {
 
 // property Tainted s
 
-func (v *manager) Tainted() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Tainted() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Tainted",
 	}
@@ -1230,8 +1488,8 @@ func (v *manager) Tainted() proxy.PropString {
 
 // property FirmwareTimestamp t
 
-func (v *manager) FirmwareTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) FirmwareTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "FirmwareTimestamp",
 	}
@@ -1239,8 +1497,8 @@ func (v *manager) FirmwareTimestamp() proxy.PropUint64 {
 
 // property FirmwareTimestampMonotonic t
 
-func (v *manager) FirmwareTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) FirmwareTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "FirmwareTimestampMonotonic",
 	}
@@ -1248,8 +1506,8 @@ func (v *manager) FirmwareTimestampMonotonic() proxy.PropUint64 {
 
 // property LoaderTimestamp t
 
-func (v *manager) LoaderTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) LoaderTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LoaderTimestamp",
 	}
@@ -1257,8 +1515,8 @@ func (v *manager) LoaderTimestamp() proxy.PropUint64 {
 
 // property LoaderTimestampMonotonic t
 
-func (v *manager) LoaderTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) LoaderTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LoaderTimestampMonotonic",
 	}
@@ -1266,8 +1524,8 @@ func (v *manager) LoaderTimestampMonotonic() proxy.PropUint64 {
 
 // property KernelTimestamp t
 
-func (v *manager) KernelTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) KernelTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "KernelTimestamp",
 	}
@@ -1275,8 +1533,8 @@ func (v *manager) KernelTimestamp() proxy.PropUint64 {
 
 // property KernelTimestampMonotonic t
 
-func (v *manager) KernelTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) KernelTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "KernelTimestampMonotonic",
 	}
@@ -1284,8 +1542,8 @@ func (v *manager) KernelTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDTimestamp t
 
-func (v *manager) InitRDTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDTimestamp",
 	}
@@ -1293,8 +1551,8 @@ func (v *manager) InitRDTimestamp() proxy.PropUint64 {
 
 // property InitRDTimestampMonotonic t
 
-func (v *manager) InitRDTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDTimestampMonotonic",
 	}
@@ -1302,8 +1560,8 @@ func (v *manager) InitRDTimestampMonotonic() proxy.PropUint64 {
 
 // property UserspaceTimestamp t
 
-func (v *manager) UserspaceTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UserspaceTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UserspaceTimestamp",
 	}
@@ -1311,8 +1569,8 @@ func (v *manager) UserspaceTimestamp() proxy.PropUint64 {
 
 // property UserspaceTimestampMonotonic t
 
-func (v *manager) UserspaceTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UserspaceTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UserspaceTimestampMonotonic",
 	}
@@ -1320,8 +1578,8 @@ func (v *manager) UserspaceTimestampMonotonic() proxy.PropUint64 {
 
 // property FinishTimestamp t
 
-func (v *manager) FinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) FinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "FinishTimestamp",
 	}
@@ -1329,8 +1587,8 @@ func (v *manager) FinishTimestamp() proxy.PropUint64 {
 
 // property FinishTimestampMonotonic t
 
-func (v *manager) FinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) FinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "FinishTimestampMonotonic",
 	}
@@ -1338,8 +1596,8 @@ func (v *manager) FinishTimestampMonotonic() proxy.PropUint64 {
 
 // property SecurityStartTimestamp t
 
-func (v *manager) SecurityStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) SecurityStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SecurityStartTimestamp",
 	}
@@ -1347,8 +1605,8 @@ func (v *manager) SecurityStartTimestamp() proxy.PropUint64 {
 
 // property SecurityStartTimestampMonotonic t
 
-func (v *manager) SecurityStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) SecurityStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SecurityStartTimestampMonotonic",
 	}
@@ -1356,8 +1614,8 @@ func (v *manager) SecurityStartTimestampMonotonic() proxy.PropUint64 {
 
 // property SecurityFinishTimestamp t
 
-func (v *manager) SecurityFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) SecurityFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SecurityFinishTimestamp",
 	}
@@ -1365,8 +1623,8 @@ func (v *manager) SecurityFinishTimestamp() proxy.PropUint64 {
 
 // property SecurityFinishTimestampMonotonic t
 
-func (v *manager) SecurityFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) SecurityFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SecurityFinishTimestampMonotonic",
 	}
@@ -1374,8 +1632,8 @@ func (v *manager) SecurityFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property GeneratorsStartTimestamp t
 
-func (v *manager) GeneratorsStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) GeneratorsStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "GeneratorsStartTimestamp",
 	}
@@ -1383,8 +1641,8 @@ func (v *manager) GeneratorsStartTimestamp() proxy.PropUint64 {
 
 // property GeneratorsStartTimestampMonotonic t
 
-func (v *manager) GeneratorsStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) GeneratorsStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "GeneratorsStartTimestampMonotonic",
 	}
@@ -1392,8 +1650,8 @@ func (v *manager) GeneratorsStartTimestampMonotonic() proxy.PropUint64 {
 
 // property GeneratorsFinishTimestamp t
 
-func (v *manager) GeneratorsFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) GeneratorsFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "GeneratorsFinishTimestamp",
 	}
@@ -1401,8 +1659,8 @@ func (v *manager) GeneratorsFinishTimestamp() proxy.PropUint64 {
 
 // property GeneratorsFinishTimestampMonotonic t
 
-func (v *manager) GeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) GeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "GeneratorsFinishTimestampMonotonic",
 	}
@@ -1410,8 +1668,8 @@ func (v *manager) GeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property UnitsLoadStartTimestamp t
 
-func (v *manager) UnitsLoadStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UnitsLoadStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UnitsLoadStartTimestamp",
 	}
@@ -1419,8 +1677,8 @@ func (v *manager) UnitsLoadStartTimestamp() proxy.PropUint64 {
 
 // property UnitsLoadStartTimestampMonotonic t
 
-func (v *manager) UnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UnitsLoadStartTimestampMonotonic",
 	}
@@ -1428,8 +1686,8 @@ func (v *manager) UnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
 
 // property UnitsLoadFinishTimestamp t
 
-func (v *manager) UnitsLoadFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UnitsLoadFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UnitsLoadFinishTimestamp",
 	}
@@ -1437,8 +1695,8 @@ func (v *manager) UnitsLoadFinishTimestamp() proxy.PropUint64 {
 
 // property UnitsLoadFinishTimestampMonotonic t
 
-func (v *manager) UnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UnitsLoadFinishTimestampMonotonic",
 	}
@@ -1446,8 +1704,8 @@ func (v *manager) UnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDSecurityStartTimestamp t
 
-func (v *manager) InitRDSecurityStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDSecurityStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDSecurityStartTimestamp",
 	}
@@ -1455,8 +1713,8 @@ func (v *manager) InitRDSecurityStartTimestamp() proxy.PropUint64 {
 
 // property InitRDSecurityStartTimestampMonotonic t
 
-func (v *manager) InitRDSecurityStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDSecurityStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDSecurityStartTimestampMonotonic",
 	}
@@ -1464,8 +1722,8 @@ func (v *manager) InitRDSecurityStartTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDSecurityFinishTimestamp t
 
-func (v *manager) InitRDSecurityFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDSecurityFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDSecurityFinishTimestamp",
 	}
@@ -1473,8 +1731,8 @@ func (v *manager) InitRDSecurityFinishTimestamp() proxy.PropUint64 {
 
 // property InitRDSecurityFinishTimestampMonotonic t
 
-func (v *manager) InitRDSecurityFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDSecurityFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDSecurityFinishTimestampMonotonic",
 	}
@@ -1482,8 +1740,8 @@ func (v *manager) InitRDSecurityFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDGeneratorsStartTimestamp t
 
-func (v *manager) InitRDGeneratorsStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDGeneratorsStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDGeneratorsStartTimestamp",
 	}
@@ -1491,8 +1749,8 @@ func (v *manager) InitRDGeneratorsStartTimestamp() proxy.PropUint64 {
 
 // property InitRDGeneratorsStartTimestampMonotonic t
 
-func (v *manager) InitRDGeneratorsStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDGeneratorsStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDGeneratorsStartTimestampMonotonic",
 	}
@@ -1500,8 +1758,8 @@ func (v *manager) InitRDGeneratorsStartTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDGeneratorsFinishTimestamp t
 
-func (v *manager) InitRDGeneratorsFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDGeneratorsFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDGeneratorsFinishTimestamp",
 	}
@@ -1509,8 +1767,8 @@ func (v *manager) InitRDGeneratorsFinishTimestamp() proxy.PropUint64 {
 
 // property InitRDGeneratorsFinishTimestampMonotonic t
 
-func (v *manager) InitRDGeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDGeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDGeneratorsFinishTimestampMonotonic",
 	}
@@ -1518,8 +1776,8 @@ func (v *manager) InitRDGeneratorsFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDUnitsLoadStartTimestamp t
 
-func (v *manager) InitRDUnitsLoadStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDUnitsLoadStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDUnitsLoadStartTimestamp",
 	}
@@ -1527,8 +1785,8 @@ func (v *manager) InitRDUnitsLoadStartTimestamp() proxy.PropUint64 {
 
 // property InitRDUnitsLoadStartTimestampMonotonic t
 
-func (v *manager) InitRDUnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDUnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDUnitsLoadStartTimestampMonotonic",
 	}
@@ -1536,8 +1794,8 @@ func (v *manager) InitRDUnitsLoadStartTimestampMonotonic() proxy.PropUint64 {
 
 // property InitRDUnitsLoadFinishTimestamp t
 
-func (v *manager) InitRDUnitsLoadFinishTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDUnitsLoadFinishTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDUnitsLoadFinishTimestamp",
 	}
@@ -1545,8 +1803,8 @@ func (v *manager) InitRDUnitsLoadFinishTimestamp() proxy.PropUint64 {
 
 // property InitRDUnitsLoadFinishTimestampMonotonic t
 
-func (v *manager) InitRDUnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InitRDUnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InitRDUnitsLoadFinishTimestampMonotonic",
 	}
@@ -1554,8 +1812,8 @@ func (v *manager) InitRDUnitsLoadFinishTimestampMonotonic() proxy.PropUint64 {
 
 // property LogLevel s
 
-func (v *manager) LogLevel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) LogLevel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "LogLevel",
 	}
@@ -1563,8 +1821,8 @@ func (v *manager) LogLevel() proxy.PropString {
 
 // property LogTarget s
 
-func (v *manager) LogTarget() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) LogTarget() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "LogTarget",
 	}
@@ -1572,8 +1830,8 @@ func (v *manager) LogTarget() proxy.PropString {
 
 // property NNames u
 
-func (v *manager) NNames() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NNames() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NNames",
 	}
@@ -1581,8 +1839,8 @@ func (v *manager) NNames() proxy.PropUint32 {
 
 // property NFailedUnits u
 
-func (v *manager) NFailedUnits() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NFailedUnits() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NFailedUnits",
 	}
@@ -1590,8 +1848,8 @@ func (v *manager) NFailedUnits() proxy.PropUint32 {
 
 // property NJobs u
 
-func (v *manager) NJobs() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NJobs() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NJobs",
 	}
@@ -1599,8 +1857,8 @@ func (v *manager) NJobs() proxy.PropUint32 {
 
 // property NInstalledJobs u
 
-func (v *manager) NInstalledJobs() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NInstalledJobs() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NInstalledJobs",
 	}
@@ -1608,8 +1866,8 @@ func (v *manager) NInstalledJobs() proxy.PropUint32 {
 
 // property NFailedJobs u
 
-func (v *manager) NFailedJobs() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NFailedJobs() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NFailedJobs",
 	}
@@ -1617,8 +1875,8 @@ func (v *manager) NFailedJobs() proxy.PropUint32 {
 
 // property Progress d
 
-func (v *manager) Progress() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceManager) Progress() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Progress",
 	}
@@ -1626,8 +1884,8 @@ func (v *manager) Progress() proxy.PropDouble {
 
 // property Environment as
 
-func (v *manager) Environment() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceManager) Environment() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Environment",
 	}
@@ -1635,8 +1893,8 @@ func (v *manager) Environment() proxy.PropStringArray {
 
 // property ConfirmSpawn b
 
-func (v *manager) ConfirmSpawn() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) ConfirmSpawn() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ConfirmSpawn",
 	}
@@ -1644,8 +1902,8 @@ func (v *manager) ConfirmSpawn() proxy.PropBool {
 
 // property ShowStatus b
 
-func (v *manager) ShowStatus() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) ShowStatus() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ShowStatus",
 	}
@@ -1653,8 +1911,8 @@ func (v *manager) ShowStatus() proxy.PropBool {
 
 // property UnitPath as
 
-func (v *manager) UnitPath() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceManager) UnitPath() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UnitPath",
 	}
@@ -1662,8 +1920,8 @@ func (v *manager) UnitPath() proxy.PropStringArray {
 
 // property DefaultStandardOutput s
 
-func (v *manager) DefaultStandardOutput() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) DefaultStandardOutput() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DefaultStandardOutput",
 	}
@@ -1671,8 +1929,8 @@ func (v *manager) DefaultStandardOutput() proxy.PropString {
 
 // property DefaultStandardError s
 
-func (v *manager) DefaultStandardError() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) DefaultStandardError() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DefaultStandardError",
 	}
@@ -1680,8 +1938,8 @@ func (v *manager) DefaultStandardError() proxy.PropString {
 
 // property RuntimeWatchdogUSec t
 
-func (v *manager) RuntimeWatchdogUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) RuntimeWatchdogUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RuntimeWatchdogUSec",
 	}
@@ -1689,8 +1947,8 @@ func (v *manager) RuntimeWatchdogUSec() proxy.PropUint64 {
 
 // property ShutdownWatchdogUSec t
 
-func (v *manager) ShutdownWatchdogUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) ShutdownWatchdogUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ShutdownWatchdogUSec",
 	}
@@ -1698,8 +1956,8 @@ func (v *manager) ShutdownWatchdogUSec() proxy.PropUint64 {
 
 // property ServiceWatchdogs b
 
-func (v *manager) ServiceWatchdogs() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) ServiceWatchdogs() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ServiceWatchdogs",
 	}
@@ -1707,8 +1965,8 @@ func (v *manager) ServiceWatchdogs() proxy.PropBool {
 
 // property ControlGroup s
 
-func (v *manager) ControlGroup() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) ControlGroup() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ControlGroup",
 	}
@@ -1716,8 +1974,8 @@ func (v *manager) ControlGroup() proxy.PropString {
 
 // property SystemState s
 
-func (v *manager) SystemState() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) SystemState() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SystemState",
 	}
@@ -1725,8 +1983,8 @@ func (v *manager) SystemState() proxy.PropString {
 
 // property ExitCode y
 
-func (v *manager) ExitCode() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceManager) ExitCode() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "ExitCode",
 	}
@@ -1734,8 +1992,8 @@ func (v *manager) ExitCode() proxy.PropByte {
 
 // property DefaultTimerAccuracyUSec t
 
-func (v *manager) DefaultTimerAccuracyUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultTimerAccuracyUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultTimerAccuracyUSec",
 	}
@@ -1743,8 +2001,8 @@ func (v *manager) DefaultTimerAccuracyUSec() proxy.PropUint64 {
 
 // property DefaultTimeoutStartUSec t
 
-func (v *manager) DefaultTimeoutStartUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultTimeoutStartUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultTimeoutStartUSec",
 	}
@@ -1752,8 +2010,8 @@ func (v *manager) DefaultTimeoutStartUSec() proxy.PropUint64 {
 
 // property DefaultTimeoutStopUSec t
 
-func (v *manager) DefaultTimeoutStopUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultTimeoutStopUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultTimeoutStopUSec",
 	}
@@ -1761,8 +2019,8 @@ func (v *manager) DefaultTimeoutStopUSec() proxy.PropUint64 {
 
 // property DefaultRestartUSec t
 
-func (v *manager) DefaultRestartUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultRestartUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultRestartUSec",
 	}
@@ -1770,8 +2028,8 @@ func (v *manager) DefaultRestartUSec() proxy.PropUint64 {
 
 // property DefaultStartLimitIntervalUSec t
 
-func (v *manager) DefaultStartLimitIntervalUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultStartLimitIntervalUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultStartLimitIntervalUSec",
 	}
@@ -1779,8 +2037,8 @@ func (v *manager) DefaultStartLimitIntervalUSec() proxy.PropUint64 {
 
 // property DefaultStartLimitBurst u
 
-func (v *manager) DefaultStartLimitBurst() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) DefaultStartLimitBurst() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "DefaultStartLimitBurst",
 	}
@@ -1788,8 +2046,8 @@ func (v *manager) DefaultStartLimitBurst() proxy.PropUint32 {
 
 // property DefaultCPUAccounting b
 
-func (v *manager) DefaultCPUAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) DefaultCPUAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DefaultCPUAccounting",
 	}
@@ -1797,8 +2055,8 @@ func (v *manager) DefaultCPUAccounting() proxy.PropBool {
 
 // property DefaultBlockIOAccounting b
 
-func (v *manager) DefaultBlockIOAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) DefaultBlockIOAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DefaultBlockIOAccounting",
 	}
@@ -1806,8 +2064,8 @@ func (v *manager) DefaultBlockIOAccounting() proxy.PropBool {
 
 // property DefaultMemoryAccounting b
 
-func (v *manager) DefaultMemoryAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) DefaultMemoryAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DefaultMemoryAccounting",
 	}
@@ -1815,8 +2073,8 @@ func (v *manager) DefaultMemoryAccounting() proxy.PropBool {
 
 // property DefaultTasksAccounting b
 
-func (v *manager) DefaultTasksAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) DefaultTasksAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DefaultTasksAccounting",
 	}
@@ -1824,8 +2082,8 @@ func (v *manager) DefaultTasksAccounting() proxy.PropBool {
 
 // property DefaultLimitCPU t
 
-func (v *manager) DefaultLimitCPU() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitCPU() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitCPU",
 	}
@@ -1833,8 +2091,8 @@ func (v *manager) DefaultLimitCPU() proxy.PropUint64 {
 
 // property DefaultLimitCPUSoft t
 
-func (v *manager) DefaultLimitCPUSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitCPUSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitCPUSoft",
 	}
@@ -1842,8 +2100,8 @@ func (v *manager) DefaultLimitCPUSoft() proxy.PropUint64 {
 
 // property DefaultLimitFSIZE t
 
-func (v *manager) DefaultLimitFSIZE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitFSIZE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitFSIZE",
 	}
@@ -1851,8 +2109,8 @@ func (v *manager) DefaultLimitFSIZE() proxy.PropUint64 {
 
 // property DefaultLimitFSIZESoft t
 
-func (v *manager) DefaultLimitFSIZESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitFSIZESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitFSIZESoft",
 	}
@@ -1860,8 +2118,8 @@ func (v *manager) DefaultLimitFSIZESoft() proxy.PropUint64 {
 
 // property DefaultLimitDATA t
 
-func (v *manager) DefaultLimitDATA() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitDATA() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitDATA",
 	}
@@ -1869,8 +2127,8 @@ func (v *manager) DefaultLimitDATA() proxy.PropUint64 {
 
 // property DefaultLimitDATASoft t
 
-func (v *manager) DefaultLimitDATASoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitDATASoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitDATASoft",
 	}
@@ -1878,8 +2136,8 @@ func (v *manager) DefaultLimitDATASoft() proxy.PropUint64 {
 
 // property DefaultLimitSTACK t
 
-func (v *manager) DefaultLimitSTACK() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitSTACK() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitSTACK",
 	}
@@ -1887,8 +2145,8 @@ func (v *manager) DefaultLimitSTACK() proxy.PropUint64 {
 
 // property DefaultLimitSTACKSoft t
 
-func (v *manager) DefaultLimitSTACKSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitSTACKSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitSTACKSoft",
 	}
@@ -1896,8 +2154,8 @@ func (v *manager) DefaultLimitSTACKSoft() proxy.PropUint64 {
 
 // property DefaultLimitCORE t
 
-func (v *manager) DefaultLimitCORE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitCORE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitCORE",
 	}
@@ -1905,8 +2163,8 @@ func (v *manager) DefaultLimitCORE() proxy.PropUint64 {
 
 // property DefaultLimitCORESoft t
 
-func (v *manager) DefaultLimitCORESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitCORESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitCORESoft",
 	}
@@ -1914,8 +2172,8 @@ func (v *manager) DefaultLimitCORESoft() proxy.PropUint64 {
 
 // property DefaultLimitRSS t
 
-func (v *manager) DefaultLimitRSS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRSS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRSS",
 	}
@@ -1923,8 +2181,8 @@ func (v *manager) DefaultLimitRSS() proxy.PropUint64 {
 
 // property DefaultLimitRSSSoft t
 
-func (v *manager) DefaultLimitRSSSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRSSSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRSSSoft",
 	}
@@ -1932,8 +2190,8 @@ func (v *manager) DefaultLimitRSSSoft() proxy.PropUint64 {
 
 // property DefaultLimitNOFILE t
 
-func (v *manager) DefaultLimitNOFILE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNOFILE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNOFILE",
 	}
@@ -1941,8 +2199,8 @@ func (v *manager) DefaultLimitNOFILE() proxy.PropUint64 {
 
 // property DefaultLimitNOFILESoft t
 
-func (v *manager) DefaultLimitNOFILESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNOFILESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNOFILESoft",
 	}
@@ -1950,8 +2208,8 @@ func (v *manager) DefaultLimitNOFILESoft() proxy.PropUint64 {
 
 // property DefaultLimitAS t
 
-func (v *manager) DefaultLimitAS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitAS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitAS",
 	}
@@ -1959,8 +2217,8 @@ func (v *manager) DefaultLimitAS() proxy.PropUint64 {
 
 // property DefaultLimitASSoft t
 
-func (v *manager) DefaultLimitASSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitASSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitASSoft",
 	}
@@ -1968,8 +2226,8 @@ func (v *manager) DefaultLimitASSoft() proxy.PropUint64 {
 
 // property DefaultLimitNPROC t
 
-func (v *manager) DefaultLimitNPROC() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNPROC() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNPROC",
 	}
@@ -1977,8 +2235,8 @@ func (v *manager) DefaultLimitNPROC() proxy.PropUint64 {
 
 // property DefaultLimitNPROCSoft t
 
-func (v *manager) DefaultLimitNPROCSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNPROCSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNPROCSoft",
 	}
@@ -1986,8 +2244,8 @@ func (v *manager) DefaultLimitNPROCSoft() proxy.PropUint64 {
 
 // property DefaultLimitMEMLOCK t
 
-func (v *manager) DefaultLimitMEMLOCK() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitMEMLOCK() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitMEMLOCK",
 	}
@@ -1995,8 +2253,8 @@ func (v *manager) DefaultLimitMEMLOCK() proxy.PropUint64 {
 
 // property DefaultLimitMEMLOCKSoft t
 
-func (v *manager) DefaultLimitMEMLOCKSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitMEMLOCKSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitMEMLOCKSoft",
 	}
@@ -2004,8 +2262,8 @@ func (v *manager) DefaultLimitMEMLOCKSoft() proxy.PropUint64 {
 
 // property DefaultLimitLOCKS t
 
-func (v *manager) DefaultLimitLOCKS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitLOCKS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitLOCKS",
 	}
@@ -2013,8 +2271,8 @@ func (v *manager) DefaultLimitLOCKS() proxy.PropUint64 {
 
 // property DefaultLimitLOCKSSoft t
 
-func (v *manager) DefaultLimitLOCKSSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitLOCKSSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitLOCKSSoft",
 	}
@@ -2022,8 +2280,8 @@ func (v *manager) DefaultLimitLOCKSSoft() proxy.PropUint64 {
 
 // property DefaultLimitSIGPENDING t
 
-func (v *manager) DefaultLimitSIGPENDING() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitSIGPENDING() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitSIGPENDING",
 	}
@@ -2031,8 +2289,8 @@ func (v *manager) DefaultLimitSIGPENDING() proxy.PropUint64 {
 
 // property DefaultLimitSIGPENDINGSoft t
 
-func (v *manager) DefaultLimitSIGPENDINGSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitSIGPENDINGSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitSIGPENDINGSoft",
 	}
@@ -2040,8 +2298,8 @@ func (v *manager) DefaultLimitSIGPENDINGSoft() proxy.PropUint64 {
 
 // property DefaultLimitMSGQUEUE t
 
-func (v *manager) DefaultLimitMSGQUEUE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitMSGQUEUE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitMSGQUEUE",
 	}
@@ -2049,8 +2307,8 @@ func (v *manager) DefaultLimitMSGQUEUE() proxy.PropUint64 {
 
 // property DefaultLimitMSGQUEUESoft t
 
-func (v *manager) DefaultLimitMSGQUEUESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitMSGQUEUESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitMSGQUEUESoft",
 	}
@@ -2058,8 +2316,8 @@ func (v *manager) DefaultLimitMSGQUEUESoft() proxy.PropUint64 {
 
 // property DefaultLimitNICE t
 
-func (v *manager) DefaultLimitNICE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNICE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNICE",
 	}
@@ -2067,8 +2325,8 @@ func (v *manager) DefaultLimitNICE() proxy.PropUint64 {
 
 // property DefaultLimitNICESoft t
 
-func (v *manager) DefaultLimitNICESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitNICESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitNICESoft",
 	}
@@ -2076,8 +2334,8 @@ func (v *manager) DefaultLimitNICESoft() proxy.PropUint64 {
 
 // property DefaultLimitRTPRIO t
 
-func (v *manager) DefaultLimitRTPRIO() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRTPRIO() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRTPRIO",
 	}
@@ -2085,8 +2343,8 @@ func (v *manager) DefaultLimitRTPRIO() proxy.PropUint64 {
 
 // property DefaultLimitRTPRIOSoft t
 
-func (v *manager) DefaultLimitRTPRIOSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRTPRIOSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRTPRIOSoft",
 	}
@@ -2094,8 +2352,8 @@ func (v *manager) DefaultLimitRTPRIOSoft() proxy.PropUint64 {
 
 // property DefaultLimitRTTIME t
 
-func (v *manager) DefaultLimitRTTIME() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRTTIME() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRTTIME",
 	}
@@ -2103,8 +2361,8 @@ func (v *manager) DefaultLimitRTTIME() proxy.PropUint64 {
 
 // property DefaultLimitRTTIMESoft t
 
-func (v *manager) DefaultLimitRTTIMESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultLimitRTTIMESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultLimitRTTIMESoft",
 	}
@@ -2112,8 +2370,8 @@ func (v *manager) DefaultLimitRTTIMESoft() proxy.PropUint64 {
 
 // property DefaultTasksMax t
 
-func (v *manager) DefaultTasksMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) DefaultTasksMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "DefaultTasksMax",
 	}
@@ -2121,208 +2379,324 @@ func (v *manager) DefaultTasksMax() proxy.PropUint64 {
 
 // property TimerSlackNSec t
 
-func (v *manager) TimerSlackNSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) TimerSlackNSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimerSlackNSec",
 	}
 }
 
-type Unit struct {
-	unit    // interface org.freedesktop.systemd1.Unit
-	service // interface org.freedesktop.systemd1.Service
+type Unit interface {
+	Unit() unit       // interface org.freedesktop.systemd1.Unit
+	Service() service // interface org.freedesktop.systemd1.Service
 	proxy.Object
 }
 
-func NewUnit(conn *dbus.Conn, path dbus.ObjectPath) (*Unit, error) {
+type objectUnit struct {
+	interfaceUnit    // interface org.freedesktop.systemd1.Unit
+	interfaceService // interface org.freedesktop.systemd1.Service
+	proxy.ImplObject
+}
+
+func NewUnit(conn *dbus.Conn, path dbus.ObjectPath) (Unit, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Unit)
-	obj.Object.Init_(conn, "org.freedesktop.systemd1", path)
+	obj := new(objectUnit)
+	obj.ImplObject.Init_(conn, "org.freedesktop.systemd1", path)
 	return obj, nil
 }
 
-func (obj *Unit) Unit() *unit {
-	return &obj.unit
+func (obj *objectUnit) Unit() unit {
+	return &obj.interfaceUnit
 }
 
-type unit struct{}
-
-func (v *unit) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type unit interface {
+	GoStart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	Start(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoStop(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	Stop(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoReload(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	Reload(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	Restart(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	TryRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoReloadOrRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	ReloadOrRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoReloadOrTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	ReloadOrTryRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error)
+	GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signal int32) *dbus.Call
+	Kill(flags dbus.Flags, who string, signal int32) error
+	GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ResetFailed(flags dbus.Flags) error
+	GoSetProperties(flags dbus.Flags, ch chan *dbus.Call, runtime bool, properties []Property) *dbus.Call
+	SetProperties(flags dbus.Flags, runtime bool, properties []Property) error
+	GoRef(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Ref(flags dbus.Flags) error
+	GoUnref(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Unref(flags dbus.Flags) error
+	Id() proxy.PropString
+	Names() proxy.PropStringArray
+	Following() proxy.PropString
+	Requires() proxy.PropStringArray
+	Requisite() proxy.PropStringArray
+	Wants() proxy.PropStringArray
+	BindsTo() proxy.PropStringArray
+	PartOf() proxy.PropStringArray
+	RequiredBy() proxy.PropStringArray
+	RequisiteOf() proxy.PropStringArray
+	WantedBy() proxy.PropStringArray
+	BoundBy() proxy.PropStringArray
+	ConsistsOf() proxy.PropStringArray
+	Conflicts() proxy.PropStringArray
+	ConflictedBy() proxy.PropStringArray
+	Before() proxy.PropStringArray
+	After() proxy.PropStringArray
+	OnFailure() proxy.PropStringArray
+	Triggers() proxy.PropStringArray
+	TriggeredBy() proxy.PropStringArray
+	PropagatesReloadTo() proxy.PropStringArray
+	ReloadPropagatedFrom() proxy.PropStringArray
+	JoinsNamespaceOf() proxy.PropStringArray
+	RequiresMountsFor() proxy.PropStringArray
+	Documentation() proxy.PropStringArray
+	Description() proxy.PropString
+	LoadState() proxy.PropString
+	ActiveState() proxy.PropString
+	SubState() proxy.PropString
+	FragmentPath() proxy.PropString
+	SourcePath() proxy.PropString
+	DropInPaths() proxy.PropStringArray
+	UnitFileState() proxy.PropString
+	UnitFilePreset() proxy.PropString
+	StateChangeTimestamp() proxy.PropUint64
+	StateChangeTimestampMonotonic() proxy.PropUint64
+	InactiveExitTimestamp() proxy.PropUint64
+	InactiveExitTimestampMonotonic() proxy.PropUint64
+	ActiveEnterTimestamp() proxy.PropUint64
+	ActiveEnterTimestampMonotonic() proxy.PropUint64
+	ActiveExitTimestamp() proxy.PropUint64
+	ActiveExitTimestampMonotonic() proxy.PropUint64
+	InactiveEnterTimestamp() proxy.PropUint64
+	InactiveEnterTimestampMonotonic() proxy.PropUint64
+	CanStart() proxy.PropBool
+	CanStop() proxy.PropBool
+	CanReload() proxy.PropBool
+	CanIsolate() proxy.PropBool
+	Job() PropUnitJob
+	StopWhenUnneeded() proxy.PropBool
+	RefuseManualStart() proxy.PropBool
+	RefuseManualStop() proxy.PropBool
+	AllowIsolate() proxy.PropBool
+	DefaultDependencies() proxy.PropBool
+	OnFailureJobMode() proxy.PropString
+	IgnoreOnIsolate() proxy.PropBool
+	NeedDaemonReload() proxy.PropBool
+	JobTimeoutUSec() proxy.PropUint64
+	JobRunningTimeoutUSec() proxy.PropUint64
+	JobTimeoutAction() proxy.PropString
+	JobTimeoutRebootArgument() proxy.PropString
+	ConditionResult() proxy.PropBool
+	AssertResult() proxy.PropBool
+	ConditionTimestamp() proxy.PropUint64
+	ConditionTimestampMonotonic() proxy.PropUint64
+	AssertTimestamp() proxy.PropUint64
+	AssertTimestampMonotonic() proxy.PropUint64
+	Conditions() PropUnitConditions
+	Asserts() PropUnitAsserts
+	LoadError() PropUnitLoadError
+	Transient() proxy.PropBool
+	Perpetual() proxy.PropBool
+	StartLimitIntervalUSec() proxy.PropUint64
+	StartLimitBurst() proxy.PropUint32
+	StartLimitAction() proxy.PropString
+	FailureAction() proxy.PropString
+	FailureActionExitStatus() proxy.PropInt32
+	SuccessAction() proxy.PropString
+	SuccessActionExitStatus() proxy.PropInt32
+	RebootArgument() proxy.PropString
+	InvocationID() proxy.PropByteArray
+	CollectMode() proxy.PropString
+	Refs() proxy.PropStringArray
 }
 
-func (*unit) GetInterfaceName_() string {
+type interfaceUnit struct{}
+
+func (v *interfaceUnit) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceUnit) GetInterfaceName_() string {
 	return "org.freedesktop.systemd1.Unit"
 }
 
 // method Start
 
-func (v *unit) GoStart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoStart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Start", flags, ch, mode)
 }
 
-func (*unit) StoreStart(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreStart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) Start(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) Start(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreStart(
 		<-v.GoStart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method Stop
 
-func (v *unit) GoStop(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoStop(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch, mode)
 }
 
-func (*unit) StoreStop(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreStop(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) Stop(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) Stop(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreStop(
 		<-v.GoStop(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method Reload
 
-func (v *unit) GoReload(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoReload(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch, mode)
 }
 
-func (*unit) StoreReload(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreReload(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) Reload(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) Reload(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReload(
 		<-v.GoReload(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method Restart
 
-func (v *unit) GoRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Restart", flags, ch, mode)
 }
 
-func (*unit) StoreRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) Restart(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) Restart(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreRestart(
 		<-v.GoRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method TryRestart
 
-func (v *unit) GoTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TryRestart", flags, ch, mode)
 }
 
-func (*unit) StoreTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) TryRestart(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) TryRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreTryRestart(
 		<-v.GoTryRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method ReloadOrRestart
 
-func (v *unit) GoReloadOrRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoReloadOrRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrRestart", flags, ch, mode)
 }
 
-func (*unit) StoreReloadOrRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreReloadOrRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) ReloadOrRestart(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) ReloadOrRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReloadOrRestart(
 		<-v.GoReloadOrRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method ReloadOrTryRestart
 
-func (v *unit) GoReloadOrTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+func (v *interfaceUnit) GoReloadOrTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrTryRestart", flags, ch, mode)
 }
 
-func (*unit) StoreReloadOrTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
+func (*interfaceUnit) StoreReloadOrTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
 }
 
-func (v *unit) ReloadOrTryRestart(flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+func (v *interfaceUnit) ReloadOrTryRestart(flags dbus.Flags, mode string) (dbus.ObjectPath, error) {
 	return v.StoreReloadOrTryRestart(
 		<-v.GoReloadOrTryRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
 // method Kill
 
-func (v *unit) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signal int32) *dbus.Call {
+func (v *interfaceUnit) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signal int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, who, signal)
 }
 
-func (v *unit) Kill(flags dbus.Flags, who string, signal int32) error {
+func (v *interfaceUnit) Kill(flags dbus.Flags, who string, signal int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), who, signal).Done).Err
 }
 
 // method ResetFailed
 
-func (v *unit) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceUnit) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailed", flags, ch)
 }
 
-func (v *unit) ResetFailed(flags dbus.Flags) error {
+func (v *interfaceUnit) ResetFailed(flags dbus.Flags) error {
 	return (<-v.GoResetFailed(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetProperties
 
-func (v *unit) GoSetProperties(flags dbus.Flags, ch chan *dbus.Call, runtime bool, properties []Property) *dbus.Call {
+func (v *interfaceUnit) GoSetProperties(flags dbus.Flags, ch chan *dbus.Call, runtime bool, properties []Property) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProperties", flags, ch, runtime, properties)
 }
 
-func (v *unit) SetProperties(flags dbus.Flags, runtime bool, properties []Property) error {
+func (v *interfaceUnit) SetProperties(flags dbus.Flags, runtime bool, properties []Property) error {
 	return (<-v.GoSetProperties(flags, make(chan *dbus.Call, 1), runtime, properties).Done).Err
 }
 
 // method Ref
 
-func (v *unit) GoRef(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceUnit) GoRef(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Ref", flags, ch)
 }
 
-func (v *unit) Ref(flags dbus.Flags) error {
+func (v *interfaceUnit) Ref(flags dbus.Flags) error {
 	return (<-v.GoRef(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Unref
 
-func (v *unit) GoUnref(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceUnit) GoUnref(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unref", flags, ch)
 }
 
-func (v *unit) Unref(flags dbus.Flags) error {
+func (v *interfaceUnit) Unref(flags dbus.Flags) error {
 	return (<-v.GoUnref(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Id s
 
-func (v *unit) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -2330,8 +2704,8 @@ func (v *unit) Id() proxy.PropString {
 
 // property Names as
 
-func (v *unit) Names() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Names() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Names",
 	}
@@ -2339,8 +2713,8 @@ func (v *unit) Names() proxy.PropStringArray {
 
 // property Following s
 
-func (v *unit) Following() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) Following() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Following",
 	}
@@ -2348,8 +2722,8 @@ func (v *unit) Following() proxy.PropString {
 
 // property Requires as
 
-func (v *unit) Requires() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Requires() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Requires",
 	}
@@ -2357,8 +2731,8 @@ func (v *unit) Requires() proxy.PropStringArray {
 
 // property Requisite as
 
-func (v *unit) Requisite() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Requisite() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Requisite",
 	}
@@ -2366,8 +2740,8 @@ func (v *unit) Requisite() proxy.PropStringArray {
 
 // property Wants as
 
-func (v *unit) Wants() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Wants() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Wants",
 	}
@@ -2375,8 +2749,8 @@ func (v *unit) Wants() proxy.PropStringArray {
 
 // property BindsTo as
 
-func (v *unit) BindsTo() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) BindsTo() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "BindsTo",
 	}
@@ -2384,8 +2758,8 @@ func (v *unit) BindsTo() proxy.PropStringArray {
 
 // property PartOf as
 
-func (v *unit) PartOf() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) PartOf() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "PartOf",
 	}
@@ -2393,8 +2767,8 @@ func (v *unit) PartOf() proxy.PropStringArray {
 
 // property RequiredBy as
 
-func (v *unit) RequiredBy() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) RequiredBy() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "RequiredBy",
 	}
@@ -2402,8 +2776,8 @@ func (v *unit) RequiredBy() proxy.PropStringArray {
 
 // property RequisiteOf as
 
-func (v *unit) RequisiteOf() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) RequisiteOf() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "RequisiteOf",
 	}
@@ -2411,8 +2785,8 @@ func (v *unit) RequisiteOf() proxy.PropStringArray {
 
 // property WantedBy as
 
-func (v *unit) WantedBy() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) WantedBy() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "WantedBy",
 	}
@@ -2420,8 +2794,8 @@ func (v *unit) WantedBy() proxy.PropStringArray {
 
 // property BoundBy as
 
-func (v *unit) BoundBy() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) BoundBy() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "BoundBy",
 	}
@@ -2429,8 +2803,8 @@ func (v *unit) BoundBy() proxy.PropStringArray {
 
 // property ConsistsOf as
 
-func (v *unit) ConsistsOf() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) ConsistsOf() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ConsistsOf",
 	}
@@ -2438,8 +2812,8 @@ func (v *unit) ConsistsOf() proxy.PropStringArray {
 
 // property Conflicts as
 
-func (v *unit) Conflicts() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Conflicts() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Conflicts",
 	}
@@ -2447,8 +2821,8 @@ func (v *unit) Conflicts() proxy.PropStringArray {
 
 // property ConflictedBy as
 
-func (v *unit) ConflictedBy() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) ConflictedBy() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ConflictedBy",
 	}
@@ -2456,8 +2830,8 @@ func (v *unit) ConflictedBy() proxy.PropStringArray {
 
 // property Before as
 
-func (v *unit) Before() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Before() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Before",
 	}
@@ -2465,8 +2839,8 @@ func (v *unit) Before() proxy.PropStringArray {
 
 // property After as
 
-func (v *unit) After() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) After() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "After",
 	}
@@ -2474,8 +2848,8 @@ func (v *unit) After() proxy.PropStringArray {
 
 // property OnFailure as
 
-func (v *unit) OnFailure() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) OnFailure() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "OnFailure",
 	}
@@ -2483,8 +2857,8 @@ func (v *unit) OnFailure() proxy.PropStringArray {
 
 // property Triggers as
 
-func (v *unit) Triggers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Triggers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Triggers",
 	}
@@ -2492,8 +2866,8 @@ func (v *unit) Triggers() proxy.PropStringArray {
 
 // property TriggeredBy as
 
-func (v *unit) TriggeredBy() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) TriggeredBy() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "TriggeredBy",
 	}
@@ -2501,8 +2875,8 @@ func (v *unit) TriggeredBy() proxy.PropStringArray {
 
 // property PropagatesReloadTo as
 
-func (v *unit) PropagatesReloadTo() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) PropagatesReloadTo() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "PropagatesReloadTo",
 	}
@@ -2510,8 +2884,8 @@ func (v *unit) PropagatesReloadTo() proxy.PropStringArray {
 
 // property ReloadPropagatedFrom as
 
-func (v *unit) ReloadPropagatedFrom() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) ReloadPropagatedFrom() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ReloadPropagatedFrom",
 	}
@@ -2519,8 +2893,8 @@ func (v *unit) ReloadPropagatedFrom() proxy.PropStringArray {
 
 // property JoinsNamespaceOf as
 
-func (v *unit) JoinsNamespaceOf() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) JoinsNamespaceOf() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "JoinsNamespaceOf",
 	}
@@ -2528,8 +2902,8 @@ func (v *unit) JoinsNamespaceOf() proxy.PropStringArray {
 
 // property RequiresMountsFor as
 
-func (v *unit) RequiresMountsFor() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) RequiresMountsFor() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "RequiresMountsFor",
 	}
@@ -2537,8 +2911,8 @@ func (v *unit) RequiresMountsFor() proxy.PropStringArray {
 
 // property Documentation as
 
-func (v *unit) Documentation() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Documentation() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Documentation",
 	}
@@ -2546,8 +2920,8 @@ func (v *unit) Documentation() proxy.PropStringArray {
 
 // property Description s
 
-func (v *unit) Description() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) Description() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Description",
 	}
@@ -2555,8 +2929,8 @@ func (v *unit) Description() proxy.PropString {
 
 // property LoadState s
 
-func (v *unit) LoadState() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) LoadState() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "LoadState",
 	}
@@ -2564,8 +2938,8 @@ func (v *unit) LoadState() proxy.PropString {
 
 // property ActiveState s
 
-func (v *unit) ActiveState() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) ActiveState() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ActiveState",
 	}
@@ -2573,8 +2947,8 @@ func (v *unit) ActiveState() proxy.PropString {
 
 // property SubState s
 
-func (v *unit) SubState() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) SubState() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SubState",
 	}
@@ -2582,8 +2956,8 @@ func (v *unit) SubState() proxy.PropString {
 
 // property FragmentPath s
 
-func (v *unit) FragmentPath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) FragmentPath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FragmentPath",
 	}
@@ -2591,8 +2965,8 @@ func (v *unit) FragmentPath() proxy.PropString {
 
 // property SourcePath s
 
-func (v *unit) SourcePath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) SourcePath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SourcePath",
 	}
@@ -2600,8 +2974,8 @@ func (v *unit) SourcePath() proxy.PropString {
 
 // property DropInPaths as
 
-func (v *unit) DropInPaths() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) DropInPaths() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DropInPaths",
 	}
@@ -2609,8 +2983,8 @@ func (v *unit) DropInPaths() proxy.PropStringArray {
 
 // property UnitFileState s
 
-func (v *unit) UnitFileState() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) UnitFileState() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UnitFileState",
 	}
@@ -2618,8 +2992,8 @@ func (v *unit) UnitFileState() proxy.PropString {
 
 // property UnitFilePreset s
 
-func (v *unit) UnitFilePreset() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) UnitFilePreset() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UnitFilePreset",
 	}
@@ -2627,8 +3001,8 @@ func (v *unit) UnitFilePreset() proxy.PropString {
 
 // property StateChangeTimestamp t
 
-func (v *unit) StateChangeTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) StateChangeTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StateChangeTimestamp",
 	}
@@ -2636,8 +3010,8 @@ func (v *unit) StateChangeTimestamp() proxy.PropUint64 {
 
 // property StateChangeTimestampMonotonic t
 
-func (v *unit) StateChangeTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) StateChangeTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StateChangeTimestampMonotonic",
 	}
@@ -2645,8 +3019,8 @@ func (v *unit) StateChangeTimestampMonotonic() proxy.PropUint64 {
 
 // property InactiveExitTimestamp t
 
-func (v *unit) InactiveExitTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) InactiveExitTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InactiveExitTimestamp",
 	}
@@ -2654,8 +3028,8 @@ func (v *unit) InactiveExitTimestamp() proxy.PropUint64 {
 
 // property InactiveExitTimestampMonotonic t
 
-func (v *unit) InactiveExitTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) InactiveExitTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InactiveExitTimestampMonotonic",
 	}
@@ -2663,8 +3037,8 @@ func (v *unit) InactiveExitTimestampMonotonic() proxy.PropUint64 {
 
 // property ActiveEnterTimestamp t
 
-func (v *unit) ActiveEnterTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ActiveEnterTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ActiveEnterTimestamp",
 	}
@@ -2672,8 +3046,8 @@ func (v *unit) ActiveEnterTimestamp() proxy.PropUint64 {
 
 // property ActiveEnterTimestampMonotonic t
 
-func (v *unit) ActiveEnterTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ActiveEnterTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ActiveEnterTimestampMonotonic",
 	}
@@ -2681,8 +3055,8 @@ func (v *unit) ActiveEnterTimestampMonotonic() proxy.PropUint64 {
 
 // property ActiveExitTimestamp t
 
-func (v *unit) ActiveExitTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ActiveExitTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ActiveExitTimestamp",
 	}
@@ -2690,8 +3064,8 @@ func (v *unit) ActiveExitTimestamp() proxy.PropUint64 {
 
 // property ActiveExitTimestampMonotonic t
 
-func (v *unit) ActiveExitTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ActiveExitTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ActiveExitTimestampMonotonic",
 	}
@@ -2699,8 +3073,8 @@ func (v *unit) ActiveExitTimestampMonotonic() proxy.PropUint64 {
 
 // property InactiveEnterTimestamp t
 
-func (v *unit) InactiveEnterTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) InactiveEnterTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InactiveEnterTimestamp",
 	}
@@ -2708,8 +3082,8 @@ func (v *unit) InactiveEnterTimestamp() proxy.PropUint64 {
 
 // property InactiveEnterTimestampMonotonic t
 
-func (v *unit) InactiveEnterTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) InactiveEnterTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InactiveEnterTimestampMonotonic",
 	}
@@ -2717,8 +3091,8 @@ func (v *unit) InactiveEnterTimestampMonotonic() proxy.PropUint64 {
 
 // property CanStart b
 
-func (v *unit) CanStart() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) CanStart() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanStart",
 	}
@@ -2726,8 +3100,8 @@ func (v *unit) CanStart() proxy.PropBool {
 
 // property CanStop b
 
-func (v *unit) CanStop() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) CanStop() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanStop",
 	}
@@ -2735,8 +3109,8 @@ func (v *unit) CanStop() proxy.PropBool {
 
 // property CanReload b
 
-func (v *unit) CanReload() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) CanReload() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanReload",
 	}
@@ -2744,32 +3118,35 @@ func (v *unit) CanReload() proxy.PropBool {
 
 // property CanIsolate b
 
-func (v *unit) CanIsolate() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) CanIsolate() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanIsolate",
 	}
 }
 
-// property Job (uo)
-
-func (v *unit) Job() PropUnitJob {
-	return PropUnitJob{
-		Impl: v,
-	}
+type PropUnitJob interface {
+	Get(flags dbus.Flags) (value JobIdPath, err error)
+	Set(flags dbus.Flags, value JobIdPath) error
+	ConnectChanged(cb func(hasValue bool, value JobIdPath)) error
 }
 
-type PropUnitJob struct {
+type implPropUnitJob struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropUnitJob) Get(flags dbus.Flags) (value JobIdPath, err error) {
+func (p implPropUnitJob) Get(flags dbus.Flags) (value JobIdPath, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Job", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropUnitJob) ConnectChanged(cb func(hasValue bool, value JobIdPath)) error {
+func (p implPropUnitJob) Set(flags dbus.Flags, value JobIdPath) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropUnitJob) ConnectChanged(cb func(hasValue bool, value JobIdPath)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -2786,13 +3163,22 @@ func (p PropUnitJob) ConnectChanged(cb func(hasValue bool, value JobIdPath)) err
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Job", cb0)
+		p.Name, cb0)
+}
+
+// property Job (uo)
+
+func (v *interfaceUnit) Job() PropUnitJob {
+	return &implPropUnitJob{
+		Impl: v,
+		Name: "Job",
+	}
 }
 
 // property StopWhenUnneeded b
 
-func (v *unit) StopWhenUnneeded() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) StopWhenUnneeded() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "StopWhenUnneeded",
 	}
@@ -2800,8 +3186,8 @@ func (v *unit) StopWhenUnneeded() proxy.PropBool {
 
 // property RefuseManualStart b
 
-func (v *unit) RefuseManualStart() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) RefuseManualStart() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RefuseManualStart",
 	}
@@ -2809,8 +3195,8 @@ func (v *unit) RefuseManualStart() proxy.PropBool {
 
 // property RefuseManualStop b
 
-func (v *unit) RefuseManualStop() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) RefuseManualStop() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RefuseManualStop",
 	}
@@ -2818,8 +3204,8 @@ func (v *unit) RefuseManualStop() proxy.PropBool {
 
 // property AllowIsolate b
 
-func (v *unit) AllowIsolate() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) AllowIsolate() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "AllowIsolate",
 	}
@@ -2827,8 +3213,8 @@ func (v *unit) AllowIsolate() proxy.PropBool {
 
 // property DefaultDependencies b
 
-func (v *unit) DefaultDependencies() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) DefaultDependencies() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DefaultDependencies",
 	}
@@ -2836,8 +3222,8 @@ func (v *unit) DefaultDependencies() proxy.PropBool {
 
 // property OnFailureJobMode s
 
-func (v *unit) OnFailureJobMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) OnFailureJobMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OnFailureJobMode",
 	}
@@ -2845,8 +3231,8 @@ func (v *unit) OnFailureJobMode() proxy.PropString {
 
 // property IgnoreOnIsolate b
 
-func (v *unit) IgnoreOnIsolate() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) IgnoreOnIsolate() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IgnoreOnIsolate",
 	}
@@ -2854,8 +3240,8 @@ func (v *unit) IgnoreOnIsolate() proxy.PropBool {
 
 // property NeedDaemonReload b
 
-func (v *unit) NeedDaemonReload() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) NeedDaemonReload() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NeedDaemonReload",
 	}
@@ -2863,8 +3249,8 @@ func (v *unit) NeedDaemonReload() proxy.PropBool {
 
 // property JobTimeoutUSec t
 
-func (v *unit) JobTimeoutUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) JobTimeoutUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "JobTimeoutUSec",
 	}
@@ -2872,8 +3258,8 @@ func (v *unit) JobTimeoutUSec() proxy.PropUint64 {
 
 // property JobRunningTimeoutUSec t
 
-func (v *unit) JobRunningTimeoutUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) JobRunningTimeoutUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "JobRunningTimeoutUSec",
 	}
@@ -2881,8 +3267,8 @@ func (v *unit) JobRunningTimeoutUSec() proxy.PropUint64 {
 
 // property JobTimeoutAction s
 
-func (v *unit) JobTimeoutAction() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) JobTimeoutAction() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "JobTimeoutAction",
 	}
@@ -2890,8 +3276,8 @@ func (v *unit) JobTimeoutAction() proxy.PropString {
 
 // property JobTimeoutRebootArgument s
 
-func (v *unit) JobTimeoutRebootArgument() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) JobTimeoutRebootArgument() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "JobTimeoutRebootArgument",
 	}
@@ -2899,8 +3285,8 @@ func (v *unit) JobTimeoutRebootArgument() proxy.PropString {
 
 // property ConditionResult b
 
-func (v *unit) ConditionResult() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) ConditionResult() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ConditionResult",
 	}
@@ -2908,8 +3294,8 @@ func (v *unit) ConditionResult() proxy.PropBool {
 
 // property AssertResult b
 
-func (v *unit) AssertResult() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) AssertResult() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "AssertResult",
 	}
@@ -2917,8 +3303,8 @@ func (v *unit) AssertResult() proxy.PropBool {
 
 // property ConditionTimestamp t
 
-func (v *unit) ConditionTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ConditionTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ConditionTimestamp",
 	}
@@ -2926,8 +3312,8 @@ func (v *unit) ConditionTimestamp() proxy.PropUint64 {
 
 // property ConditionTimestampMonotonic t
 
-func (v *unit) ConditionTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) ConditionTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ConditionTimestampMonotonic",
 	}
@@ -2935,8 +3321,8 @@ func (v *unit) ConditionTimestampMonotonic() proxy.PropUint64 {
 
 // property AssertTimestamp t
 
-func (v *unit) AssertTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) AssertTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "AssertTimestamp",
 	}
@@ -2944,32 +3330,35 @@ func (v *unit) AssertTimestamp() proxy.PropUint64 {
 
 // property AssertTimestampMonotonic t
 
-func (v *unit) AssertTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) AssertTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "AssertTimestampMonotonic",
 	}
 }
 
-// property Conditions a(sbbsi)
-
-func (v *unit) Conditions() PropUnitConditions {
-	return PropUnitConditions{
-		Impl: v,
-	}
+type PropUnitConditions interface {
+	Get(flags dbus.Flags) (value []Condition, err error)
+	Set(flags dbus.Flags, value []Condition) error
+	ConnectChanged(cb func(hasValue bool, value []Condition)) error
 }
 
-type PropUnitConditions struct {
+type implPropUnitConditions struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropUnitConditions) Get(flags dbus.Flags) (value []Condition, err error) {
+func (p implPropUnitConditions) Get(flags dbus.Flags) (value []Condition, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Conditions", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropUnitConditions) ConnectChanged(cb func(hasValue bool, value []Condition)) error {
+func (p implPropUnitConditions) Set(flags dbus.Flags, value []Condition) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropUnitConditions) ConnectChanged(cb func(hasValue bool, value []Condition)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -2986,28 +3375,40 @@ func (p PropUnitConditions) ConnectChanged(cb func(hasValue bool, value []Condit
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Conditions", cb0)
+		p.Name, cb0)
 }
 
-// property Asserts a(sbbsi)
+// property Conditions a(sbbsi)
 
-func (v *unit) Asserts() PropUnitAsserts {
-	return PropUnitAsserts{
+func (v *interfaceUnit) Conditions() PropUnitConditions {
+	return &implPropUnitConditions{
 		Impl: v,
+		Name: "Conditions",
 	}
 }
 
-type PropUnitAsserts struct {
-	Impl proxy.Implementer
+type PropUnitAsserts interface {
+	Get(flags dbus.Flags) (value []Assert, err error)
+	Set(flags dbus.Flags, value []Assert) error
+	ConnectChanged(cb func(hasValue bool, value []Assert)) error
 }
 
-func (p PropUnitAsserts) Get(flags dbus.Flags) (value []Assert, err error) {
+type implPropUnitAsserts struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropUnitAsserts) Get(flags dbus.Flags) (value []Assert, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Asserts", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropUnitAsserts) ConnectChanged(cb func(hasValue bool, value []Assert)) error {
+func (p implPropUnitAsserts) Set(flags dbus.Flags, value []Assert) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropUnitAsserts) ConnectChanged(cb func(hasValue bool, value []Assert)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -3024,28 +3425,40 @@ func (p PropUnitAsserts) ConnectChanged(cb func(hasValue bool, value []Assert)) 
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Asserts", cb0)
+		p.Name, cb0)
 }
 
-// property LoadError (ss)
+// property Asserts a(sbbsi)
 
-func (v *unit) LoadError() PropUnitLoadError {
-	return PropUnitLoadError{
+func (v *interfaceUnit) Asserts() PropUnitAsserts {
+	return &implPropUnitAsserts{
 		Impl: v,
+		Name: "Asserts",
 	}
 }
 
-type PropUnitLoadError struct {
-	Impl proxy.Implementer
+type PropUnitLoadError interface {
+	Get(flags dbus.Flags) (value LoadError, err error)
+	Set(flags dbus.Flags, value LoadError) error
+	ConnectChanged(cb func(hasValue bool, value LoadError)) error
 }
 
-func (p PropUnitLoadError) Get(flags dbus.Flags) (value LoadError, err error) {
+type implPropUnitLoadError struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropUnitLoadError) Get(flags dbus.Flags) (value LoadError, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"LoadError", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropUnitLoadError) ConnectChanged(cb func(hasValue bool, value LoadError)) error {
+func (p implPropUnitLoadError) Set(flags dbus.Flags, value LoadError) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropUnitLoadError) ConnectChanged(cb func(hasValue bool, value LoadError)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -3062,13 +3475,22 @@ func (p PropUnitLoadError) ConnectChanged(cb func(hasValue bool, value LoadError
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"LoadError", cb0)
+		p.Name, cb0)
+}
+
+// property LoadError (ss)
+
+func (v *interfaceUnit) LoadError() PropUnitLoadError {
+	return &implPropUnitLoadError{
+		Impl: v,
+		Name: "LoadError",
+	}
 }
 
 // property Transient b
 
-func (v *unit) Transient() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) Transient() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Transient",
 	}
@@ -3076,8 +3498,8 @@ func (v *unit) Transient() proxy.PropBool {
 
 // property Perpetual b
 
-func (v *unit) Perpetual() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUnit) Perpetual() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Perpetual",
 	}
@@ -3085,8 +3507,8 @@ func (v *unit) Perpetual() proxy.PropBool {
 
 // property StartLimitIntervalUSec t
 
-func (v *unit) StartLimitIntervalUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUnit) StartLimitIntervalUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StartLimitIntervalUSec",
 	}
@@ -3094,8 +3516,8 @@ func (v *unit) StartLimitIntervalUSec() proxy.PropUint64 {
 
 // property StartLimitBurst u
 
-func (v *unit) StartLimitBurst() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceUnit) StartLimitBurst() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "StartLimitBurst",
 	}
@@ -3103,8 +3525,8 @@ func (v *unit) StartLimitBurst() proxy.PropUint32 {
 
 // property StartLimitAction s
 
-func (v *unit) StartLimitAction() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) StartLimitAction() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StartLimitAction",
 	}
@@ -3112,8 +3534,8 @@ func (v *unit) StartLimitAction() proxy.PropString {
 
 // property FailureAction s
 
-func (v *unit) FailureAction() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) FailureAction() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FailureAction",
 	}
@@ -3121,8 +3543,8 @@ func (v *unit) FailureAction() proxy.PropString {
 
 // property FailureActionExitStatus i
 
-func (v *unit) FailureActionExitStatus() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceUnit) FailureActionExitStatus() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "FailureActionExitStatus",
 	}
@@ -3130,8 +3552,8 @@ func (v *unit) FailureActionExitStatus() proxy.PropInt32 {
 
 // property SuccessAction s
 
-func (v *unit) SuccessAction() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) SuccessAction() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SuccessAction",
 	}
@@ -3139,8 +3561,8 @@ func (v *unit) SuccessAction() proxy.PropString {
 
 // property SuccessActionExitStatus i
 
-func (v *unit) SuccessActionExitStatus() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceUnit) SuccessActionExitStatus() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SuccessActionExitStatus",
 	}
@@ -3148,8 +3570,8 @@ func (v *unit) SuccessActionExitStatus() proxy.PropInt32 {
 
 // property RebootArgument s
 
-func (v *unit) RebootArgument() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) RebootArgument() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RebootArgument",
 	}
@@ -3157,8 +3579,8 @@ func (v *unit) RebootArgument() proxy.PropString {
 
 // property InvocationID ay
 
-func (v *unit) InvocationID() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceUnit) InvocationID() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "InvocationID",
 	}
@@ -3166,8 +3588,8 @@ func (v *unit) InvocationID() proxy.PropByteArray {
 
 // property CollectMode s
 
-func (v *unit) CollectMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUnit) CollectMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CollectMode",
 	}
@@ -3175,57 +3597,286 @@ func (v *unit) CollectMode() proxy.PropString {
 
 // property Refs as
 
-func (v *unit) Refs() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceUnit) Refs() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Refs",
 	}
 }
 
-func (obj *Unit) Service() *service {
-	return &obj.service
+func (obj *objectUnit) Service() service {
+	return &obj.interfaceService
 }
 
-type service struct{}
-
-func (v *service) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type service interface {
+	GoGetProcesses(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetProcesses(flags dbus.Flags) ([]UnitProcess, error)
+	GoAttachProcesses(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 []uint32) *dbus.Call
+	AttachProcesses(flags dbus.Flags, arg0 string, arg1 []uint32) error
+	Type() proxy.PropString
+	Restart() proxy.PropString
+	PIDFile() proxy.PropString
+	NotifyAccess() proxy.PropString
+	RestartUSec() proxy.PropUint64
+	TimeoutStartUSec() proxy.PropUint64
+	TimeoutStopUSec() proxy.PropUint64
+	RuntimeMaxUSec() proxy.PropUint64
+	WatchdogUSec() proxy.PropUint64
+	WatchdogTimestamp() proxy.PropUint64
+	WatchdogTimestampMonotonic() proxy.PropUint64
+	RootDirectoryStartOnly() proxy.PropBool
+	RemainAfterExit() proxy.PropBool
+	GuessMainPID() proxy.PropBool
+	RestartPreventExitStatus() PropExitStatus
+	RestartForceExitStatus() PropExitStatus
+	SuccessExitStatus() PropExitStatus
+	MainPID() proxy.PropUint32
+	ControlPID() proxy.PropUint32
+	BusName() proxy.PropString
+	FileDescriptorStoreMax() proxy.PropUint32
+	NFileDescriptorStore() proxy.PropUint32
+	StatusText() proxy.PropString
+	StatusErrno() proxy.PropInt32
+	Result() proxy.PropString
+	USBFunctionDescriptors() proxy.PropString
+	USBFunctionStrings() proxy.PropString
+	UID() proxy.PropUint32
+	GID() proxy.PropUint32
+	NRestarts() proxy.PropUint32
+	ExecMainStartTimestamp() proxy.PropUint64
+	ExecMainStartTimestampMonotonic() proxy.PropUint64
+	ExecMainExitTimestamp() proxy.PropUint64
+	ExecMainExitTimestampMonotonic() proxy.PropUint64
+	ExecMainPID() proxy.PropUint32
+	ExecMainCode() proxy.PropInt32
+	ExecMainStatus() proxy.PropInt32
+	ExecStartPre() PropExecInfos
+	ExecStart() PropExecInfos
+	ExecStartPost() PropExecInfos
+	ExecReload() PropExecInfos
+	ExecStop() PropExecInfos
+	ExecStopPost() PropExecInfos
+	Slice() proxy.PropString
+	ControlGroup() proxy.PropString
+	MemoryCurrent() proxy.PropUint64
+	CPUUsageNSec() proxy.PropUint64
+	TasksCurrent() proxy.PropUint64
+	IPIngressBytes() proxy.PropUint64
+	IPIngressPackets() proxy.PropUint64
+	IPEgressBytes() proxy.PropUint64
+	IPEgressPackets() proxy.PropUint64
+	Delegate() proxy.PropBool
+	DelegateControllers() proxy.PropStringArray
+	CPUAccounting() proxy.PropBool
+	CPUWeight() proxy.PropUint64
+	StartupCPUWeight() proxy.PropUint64
+	CPUShares() proxy.PropUint64
+	StartupCPUShares() proxy.PropUint64
+	CPUQuotaPerSecUSec() proxy.PropUint64
+	IOAccounting() proxy.PropBool
+	IOWeight() proxy.PropUint64
+	StartupIOWeight() proxy.PropUint64
+	IODeviceWeight() PropIOParams
+	IOReadBandwidthMax() PropIOParams
+	IOWriteBandwidthMax() PropIOParams
+	IOReadIOPSMax() PropIOParams
+	IOWriteIOPSMax() PropIOParams
+	IODeviceLatencyTargetUSec() PropIOParams
+	BlockIOAccounting() proxy.PropBool
+	BlockIOWeight() proxy.PropUint64
+	StartupBlockIOWeight() proxy.PropUint64
+	BlockIODeviceWeight() PropIOParams
+	BlockIOReadBandwidth() PropIOParams
+	BlockIOWriteBandwidth() PropIOParams
+	MemoryAccounting() proxy.PropBool
+	MemoryMin() proxy.PropUint64
+	MemoryLow() proxy.PropUint64
+	MemoryHigh() proxy.PropUint64
+	MemoryMax() proxy.PropUint64
+	MemorySwapMax() proxy.PropUint64
+	MemoryLimit() proxy.PropUint64
+	DevicePolicy() proxy.PropString
+	DeviceAllow() PropServiceDeviceAllow
+	TasksAccounting() proxy.PropBool
+	TasksMax() proxy.PropUint64
+	IPAccounting() proxy.PropBool
+	IPAddressAllow() PropServiceIPAddressAllow
+	IPAddressDeny() PropServiceIPAddressDeny
+	DisableControllers() proxy.PropStringArray
+	Environment() proxy.PropStringArray
+	EnvironmentFiles() PropEnvironmentFiles
+	PassEnvironment() proxy.PropStringArray
+	UnsetEnvironment() proxy.PropStringArray
+	UMask() proxy.PropUint32
+	LimitCPU() proxy.PropUint64
+	LimitCPUSoft() proxy.PropUint64
+	LimitFSIZE() proxy.PropUint64
+	LimitFSIZESoft() proxy.PropUint64
+	LimitDATA() proxy.PropUint64
+	LimitDATASoft() proxy.PropUint64
+	LimitSTACK() proxy.PropUint64
+	LimitSTACKSoft() proxy.PropUint64
+	LimitCORE() proxy.PropUint64
+	LimitCORESoft() proxy.PropUint64
+	LimitRSS() proxy.PropUint64
+	LimitRSSSoft() proxy.PropUint64
+	LimitNOFILE() proxy.PropUint64
+	LimitNOFILESoft() proxy.PropUint64
+	LimitAS() proxy.PropUint64
+	LimitASSoft() proxy.PropUint64
+	LimitNPROC() proxy.PropUint64
+	LimitNPROCSoft() proxy.PropUint64
+	LimitMEMLOCK() proxy.PropUint64
+	LimitMEMLOCKSoft() proxy.PropUint64
+	LimitLOCKS() proxy.PropUint64
+	LimitLOCKSSoft() proxy.PropUint64
+	LimitSIGPENDING() proxy.PropUint64
+	LimitSIGPENDINGSoft() proxy.PropUint64
+	LimitMSGQUEUE() proxy.PropUint64
+	LimitMSGQUEUESoft() proxy.PropUint64
+	LimitNICE() proxy.PropUint64
+	LimitNICESoft() proxy.PropUint64
+	LimitRTPRIO() proxy.PropUint64
+	LimitRTPRIOSoft() proxy.PropUint64
+	LimitRTTIME() proxy.PropUint64
+	LimitRTTIMESoft() proxy.PropUint64
+	WorkingDirectory() proxy.PropString
+	RootDirectory() proxy.PropString
+	RootImage() proxy.PropString
+	OOMScoreAdjust() proxy.PropInt32
+	Nice() proxy.PropInt32
+	IOSchedulingClass() proxy.PropInt32
+	IOSchedulingPriority() proxy.PropInt32
+	CPUSchedulingPolicy() proxy.PropInt32
+	CPUSchedulingPriority() proxy.PropInt32
+	CPUAffinity() proxy.PropByteArray
+	TimerSlackNSec() proxy.PropUint64
+	CPUSchedulingResetOnFork() proxy.PropBool
+	NonBlocking() proxy.PropBool
+	StandardInput() proxy.PropString
+	StandardInputFileDescriptorName() proxy.PropString
+	StandardInputData() proxy.PropByteArray
+	StandardOutput() proxy.PropString
+	StandardOutputFileDescriptorName() proxy.PropString
+	StandardError() proxy.PropString
+	StandardErrorFileDescriptorName() proxy.PropString
+	TTYPath() proxy.PropString
+	TTYReset() proxy.PropBool
+	TTYVHangup() proxy.PropBool
+	TTYVTDisallocate() proxy.PropBool
+	SyslogPriority() proxy.PropInt32
+	SyslogIdentifier() proxy.PropString
+	SyslogLevelPrefix() proxy.PropBool
+	SyslogLevel() proxy.PropInt32
+	SyslogFacility() proxy.PropInt32
+	LogLevelMax() proxy.PropInt32
+	LogRateLimitIntervalUSec() proxy.PropUint64
+	LogRateLimitBurst() proxy.PropUint32
+	LogExtraFields() PropServiceLogExtraFields
+	SecureBits() proxy.PropInt32
+	CapabilityBoundingSet() proxy.PropUint64
+	AmbientCapabilities() proxy.PropUint64
+	User() proxy.PropString
+	Group() proxy.PropString
+	DynamicUser() proxy.PropBool
+	RemoveIPC() proxy.PropBool
+	SupplementaryGroups() proxy.PropStringArray
+	PAMName() proxy.PropString
+	ReadWritePaths() proxy.PropStringArray
+	ReadOnlyPaths() proxy.PropStringArray
+	InaccessiblePaths() proxy.PropStringArray
+	MountFlags() proxy.PropUint64
+	PrivateTmp() proxy.PropBool
+	PrivateDevices() proxy.PropBool
+	ProtectKernelTunables() proxy.PropBool
+	ProtectKernelModules() proxy.PropBool
+	ProtectControlGroups() proxy.PropBool
+	PrivateNetwork() proxy.PropBool
+	PrivateUsers() proxy.PropBool
+	PrivateMounts() proxy.PropBool
+	ProtectHome() proxy.PropString
+	ProtectSystem() proxy.PropString
+	SameProcessGroup() proxy.PropBool
+	UtmpIdentifier() proxy.PropString
+	UtmpMode() proxy.PropString
+	SELinuxContext() PropBS
+	AppArmorProfile() PropBS
+	SmackProcessLabel() PropBS
+	IgnoreSIGPIPE() proxy.PropBool
+	NoNewPrivileges() proxy.PropBool
+	SystemCallFilter() PropServiceSystemCallFilter
+	SystemCallArchitectures() proxy.PropStringArray
+	SystemCallErrorNumber() proxy.PropInt32
+	Personality() proxy.PropString
+	LockPersonality() proxy.PropBool
+	RestrictAddressFamilies() PropServiceRestrictAddressFamilies
+	RuntimeDirectoryPreserve() proxy.PropString
+	RuntimeDirectoryMode() proxy.PropUint32
+	RuntimeDirectory() proxy.PropStringArray
+	StateDirectoryMode() proxy.PropUint32
+	StateDirectory() proxy.PropStringArray
+	CacheDirectoryMode() proxy.PropUint32
+	CacheDirectory() proxy.PropStringArray
+	LogsDirectoryMode() proxy.PropUint32
+	LogsDirectory() proxy.PropStringArray
+	ConfigurationDirectoryMode() proxy.PropUint32
+	ConfigurationDirectory() proxy.PropStringArray
+	MemoryDenyWriteExecute() proxy.PropBool
+	RestrictRealtime() proxy.PropBool
+	RestrictNamespaces() proxy.PropUint64
+	BindPaths() PropBindPaths
+	BindReadOnlyPaths() PropBindPaths
+	TemporaryFileSystem() PropServiceTemporaryFileSystem
+	MountAPIVFS() proxy.PropBool
+	KeyringMode() proxy.PropString
+	KillMode() proxy.PropString
+	KillSignal() proxy.PropInt32
+	FinalKillSignal() proxy.PropInt32
+	SendSIGKILL() proxy.PropBool
+	SendSIGHUP() proxy.PropBool
+	WatchdogSignal() proxy.PropInt32
 }
 
-func (*service) GetInterfaceName_() string {
+type interfaceService struct{}
+
+func (v *interfaceService) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceService) GetInterfaceName_() string {
 	return "org.freedesktop.systemd1.Service"
 }
 
 // method GetProcesses
 
-func (v *service) GoGetProcesses(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceService) GoGetProcesses(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProcesses", flags, ch)
 }
 
-func (*service) StoreGetProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
+func (*interfaceService) StoreGetProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
 	err = call.Store(&processes)
 	return
 }
 
-func (v *service) GetProcesses(flags dbus.Flags) (processes []UnitProcess, err error) {
+func (v *interfaceService) GetProcesses(flags dbus.Flags) ([]UnitProcess, error) {
 	return v.StoreGetProcesses(
 		<-v.GoGetProcesses(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method AttachProcesses
 
-func (v *service) GoAttachProcesses(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 []uint32) *dbus.Call {
+func (v *interfaceService) GoAttachProcesses(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 []uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachProcesses", flags, ch, arg0, arg1)
 }
 
-func (v *service) AttachProcesses(flags dbus.Flags, arg0 string, arg1 []uint32) error {
+func (v *interfaceService) AttachProcesses(flags dbus.Flags, arg0 string, arg1 []uint32) error {
 	return (<-v.GoAttachProcesses(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // property Type s
 
-func (v *service) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -3233,8 +3884,8 @@ func (v *service) Type() proxy.PropString {
 
 // property Restart s
 
-func (v *service) Restart() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Restart() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Restart",
 	}
@@ -3242,8 +3893,8 @@ func (v *service) Restart() proxy.PropString {
 
 // property PIDFile s
 
-func (v *service) PIDFile() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) PIDFile() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PIDFile",
 	}
@@ -3251,8 +3902,8 @@ func (v *service) PIDFile() proxy.PropString {
 
 // property NotifyAccess s
 
-func (v *service) NotifyAccess() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) NotifyAccess() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "NotifyAccess",
 	}
@@ -3260,8 +3911,8 @@ func (v *service) NotifyAccess() proxy.PropString {
 
 // property RestartUSec t
 
-func (v *service) RestartUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) RestartUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RestartUSec",
 	}
@@ -3269,8 +3920,8 @@ func (v *service) RestartUSec() proxy.PropUint64 {
 
 // property TimeoutStartUSec t
 
-func (v *service) TimeoutStartUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) TimeoutStartUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeoutStartUSec",
 	}
@@ -3278,8 +3929,8 @@ func (v *service) TimeoutStartUSec() proxy.PropUint64 {
 
 // property TimeoutStopUSec t
 
-func (v *service) TimeoutStopUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) TimeoutStopUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeoutStopUSec",
 	}
@@ -3287,8 +3938,8 @@ func (v *service) TimeoutStopUSec() proxy.PropUint64 {
 
 // property RuntimeMaxUSec t
 
-func (v *service) RuntimeMaxUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) RuntimeMaxUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RuntimeMaxUSec",
 	}
@@ -3296,8 +3947,8 @@ func (v *service) RuntimeMaxUSec() proxy.PropUint64 {
 
 // property WatchdogUSec t
 
-func (v *service) WatchdogUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) WatchdogUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "WatchdogUSec",
 	}
@@ -3305,8 +3956,8 @@ func (v *service) WatchdogUSec() proxy.PropUint64 {
 
 // property WatchdogTimestamp t
 
-func (v *service) WatchdogTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) WatchdogTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "WatchdogTimestamp",
 	}
@@ -3314,8 +3965,8 @@ func (v *service) WatchdogTimestamp() proxy.PropUint64 {
 
 // property WatchdogTimestampMonotonic t
 
-func (v *service) WatchdogTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) WatchdogTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "WatchdogTimestampMonotonic",
 	}
@@ -3323,8 +3974,8 @@ func (v *service) WatchdogTimestampMonotonic() proxy.PropUint64 {
 
 // property RootDirectoryStartOnly b
 
-func (v *service) RootDirectoryStartOnly() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) RootDirectoryStartOnly() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RootDirectoryStartOnly",
 	}
@@ -3332,8 +3983,8 @@ func (v *service) RootDirectoryStartOnly() proxy.PropBool {
 
 // property RemainAfterExit b
 
-func (v *service) RemainAfterExit() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) RemainAfterExit() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RemainAfterExit",
 	}
@@ -3341,8 +3992,8 @@ func (v *service) RemainAfterExit() proxy.PropBool {
 
 // property GuessMainPID b
 
-func (v *service) GuessMainPID() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) GuessMainPID() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "GuessMainPID",
 	}
@@ -3350,8 +4001,8 @@ func (v *service) GuessMainPID() proxy.PropBool {
 
 // property RestartPreventExitStatus (aiai)
 
-func (v *service) RestartPreventExitStatus() PropExitStatus {
-	return PropExitStatus{
+func (v *interfaceService) RestartPreventExitStatus() PropExitStatus {
+	return &implPropExitStatus{
 		Impl: v,
 		Name: "RestartPreventExitStatus",
 	}
@@ -3359,8 +4010,8 @@ func (v *service) RestartPreventExitStatus() PropExitStatus {
 
 // property RestartForceExitStatus (aiai)
 
-func (v *service) RestartForceExitStatus() PropExitStatus {
-	return PropExitStatus{
+func (v *interfaceService) RestartForceExitStatus() PropExitStatus {
+	return &implPropExitStatus{
 		Impl: v,
 		Name: "RestartForceExitStatus",
 	}
@@ -3368,8 +4019,8 @@ func (v *service) RestartForceExitStatus() PropExitStatus {
 
 // property SuccessExitStatus (aiai)
 
-func (v *service) SuccessExitStatus() PropExitStatus {
-	return PropExitStatus{
+func (v *interfaceService) SuccessExitStatus() PropExitStatus {
+	return &implPropExitStatus{
 		Impl: v,
 		Name: "SuccessExitStatus",
 	}
@@ -3377,8 +4028,8 @@ func (v *service) SuccessExitStatus() PropExitStatus {
 
 // property MainPID u
 
-func (v *service) MainPID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) MainPID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MainPID",
 	}
@@ -3386,8 +4037,8 @@ func (v *service) MainPID() proxy.PropUint32 {
 
 // property ControlPID u
 
-func (v *service) ControlPID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) ControlPID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ControlPID",
 	}
@@ -3395,8 +4046,8 @@ func (v *service) ControlPID() proxy.PropUint32 {
 
 // property BusName s
 
-func (v *service) BusName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) BusName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BusName",
 	}
@@ -3404,8 +4055,8 @@ func (v *service) BusName() proxy.PropString {
 
 // property FileDescriptorStoreMax u
 
-func (v *service) FileDescriptorStoreMax() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) FileDescriptorStoreMax() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "FileDescriptorStoreMax",
 	}
@@ -3413,8 +4064,8 @@ func (v *service) FileDescriptorStoreMax() proxy.PropUint32 {
 
 // property NFileDescriptorStore u
 
-func (v *service) NFileDescriptorStore() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) NFileDescriptorStore() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NFileDescriptorStore",
 	}
@@ -3422,8 +4073,8 @@ func (v *service) NFileDescriptorStore() proxy.PropUint32 {
 
 // property StatusText s
 
-func (v *service) StatusText() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StatusText() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StatusText",
 	}
@@ -3431,8 +4082,8 @@ func (v *service) StatusText() proxy.PropString {
 
 // property StatusErrno i
 
-func (v *service) StatusErrno() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) StatusErrno() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "StatusErrno",
 	}
@@ -3440,8 +4091,8 @@ func (v *service) StatusErrno() proxy.PropInt32 {
 
 // property Result s
 
-func (v *service) Result() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Result() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Result",
 	}
@@ -3449,8 +4100,8 @@ func (v *service) Result() proxy.PropString {
 
 // property USBFunctionDescriptors s
 
-func (v *service) USBFunctionDescriptors() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) USBFunctionDescriptors() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "USBFunctionDescriptors",
 	}
@@ -3458,8 +4109,8 @@ func (v *service) USBFunctionDescriptors() proxy.PropString {
 
 // property USBFunctionStrings s
 
-func (v *service) USBFunctionStrings() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) USBFunctionStrings() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "USBFunctionStrings",
 	}
@@ -3467,8 +4118,8 @@ func (v *service) USBFunctionStrings() proxy.PropString {
 
 // property UID u
 
-func (v *service) UID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) UID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "UID",
 	}
@@ -3476,8 +4127,8 @@ func (v *service) UID() proxy.PropUint32 {
 
 // property GID u
 
-func (v *service) GID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) GID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "GID",
 	}
@@ -3485,8 +4136,8 @@ func (v *service) GID() proxy.PropUint32 {
 
 // property NRestarts u
 
-func (v *service) NRestarts() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) NRestarts() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NRestarts",
 	}
@@ -3494,8 +4145,8 @@ func (v *service) NRestarts() proxy.PropUint32 {
 
 // property ExecMainStartTimestamp t
 
-func (v *service) ExecMainStartTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) ExecMainStartTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ExecMainStartTimestamp",
 	}
@@ -3503,8 +4154,8 @@ func (v *service) ExecMainStartTimestamp() proxy.PropUint64 {
 
 // property ExecMainStartTimestampMonotonic t
 
-func (v *service) ExecMainStartTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) ExecMainStartTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ExecMainStartTimestampMonotonic",
 	}
@@ -3512,8 +4163,8 @@ func (v *service) ExecMainStartTimestampMonotonic() proxy.PropUint64 {
 
 // property ExecMainExitTimestamp t
 
-func (v *service) ExecMainExitTimestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) ExecMainExitTimestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ExecMainExitTimestamp",
 	}
@@ -3521,8 +4172,8 @@ func (v *service) ExecMainExitTimestamp() proxy.PropUint64 {
 
 // property ExecMainExitTimestampMonotonic t
 
-func (v *service) ExecMainExitTimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) ExecMainExitTimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "ExecMainExitTimestampMonotonic",
 	}
@@ -3530,8 +4181,8 @@ func (v *service) ExecMainExitTimestampMonotonic() proxy.PropUint64 {
 
 // property ExecMainPID u
 
-func (v *service) ExecMainPID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) ExecMainPID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ExecMainPID",
 	}
@@ -3539,8 +4190,8 @@ func (v *service) ExecMainPID() proxy.PropUint32 {
 
 // property ExecMainCode i
 
-func (v *service) ExecMainCode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) ExecMainCode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "ExecMainCode",
 	}
@@ -3548,8 +4199,8 @@ func (v *service) ExecMainCode() proxy.PropInt32 {
 
 // property ExecMainStatus i
 
-func (v *service) ExecMainStatus() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) ExecMainStatus() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "ExecMainStatus",
 	}
@@ -3557,8 +4208,8 @@ func (v *service) ExecMainStatus() proxy.PropInt32 {
 
 // property ExecStartPre a(sasbttttuii)
 
-func (v *service) ExecStartPre() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecStartPre() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecStartPre",
 	}
@@ -3566,8 +4217,8 @@ func (v *service) ExecStartPre() PropExecInfos {
 
 // property ExecStart a(sasbttttuii)
 
-func (v *service) ExecStart() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecStart() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecStart",
 	}
@@ -3575,8 +4226,8 @@ func (v *service) ExecStart() PropExecInfos {
 
 // property ExecStartPost a(sasbttttuii)
 
-func (v *service) ExecStartPost() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecStartPost() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecStartPost",
 	}
@@ -3584,8 +4235,8 @@ func (v *service) ExecStartPost() PropExecInfos {
 
 // property ExecReload a(sasbttttuii)
 
-func (v *service) ExecReload() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecReload() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecReload",
 	}
@@ -3593,8 +4244,8 @@ func (v *service) ExecReload() PropExecInfos {
 
 // property ExecStop a(sasbttttuii)
 
-func (v *service) ExecStop() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecStop() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecStop",
 	}
@@ -3602,8 +4253,8 @@ func (v *service) ExecStop() PropExecInfos {
 
 // property ExecStopPost a(sasbttttuii)
 
-func (v *service) ExecStopPost() PropExecInfos {
-	return PropExecInfos{
+func (v *interfaceService) ExecStopPost() PropExecInfos {
+	return &implPropExecInfos{
 		Impl: v,
 		Name: "ExecStopPost",
 	}
@@ -3611,8 +4262,8 @@ func (v *service) ExecStopPost() PropExecInfos {
 
 // property Slice s
 
-func (v *service) Slice() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Slice() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Slice",
 	}
@@ -3620,8 +4271,8 @@ func (v *service) Slice() proxy.PropString {
 
 // property ControlGroup s
 
-func (v *service) ControlGroup() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) ControlGroup() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ControlGroup",
 	}
@@ -3629,8 +4280,8 @@ func (v *service) ControlGroup() proxy.PropString {
 
 // property MemoryCurrent t
 
-func (v *service) MemoryCurrent() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryCurrent() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryCurrent",
 	}
@@ -3638,8 +4289,8 @@ func (v *service) MemoryCurrent() proxy.PropUint64 {
 
 // property CPUUsageNSec t
 
-func (v *service) CPUUsageNSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) CPUUsageNSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CPUUsageNSec",
 	}
@@ -3647,8 +4298,8 @@ func (v *service) CPUUsageNSec() proxy.PropUint64 {
 
 // property TasksCurrent t
 
-func (v *service) TasksCurrent() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) TasksCurrent() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TasksCurrent",
 	}
@@ -3656,8 +4307,8 @@ func (v *service) TasksCurrent() proxy.PropUint64 {
 
 // property IPIngressBytes t
 
-func (v *service) IPIngressBytes() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) IPIngressBytes() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IPIngressBytes",
 	}
@@ -3665,8 +4316,8 @@ func (v *service) IPIngressBytes() proxy.PropUint64 {
 
 // property IPIngressPackets t
 
-func (v *service) IPIngressPackets() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) IPIngressPackets() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IPIngressPackets",
 	}
@@ -3674,8 +4325,8 @@ func (v *service) IPIngressPackets() proxy.PropUint64 {
 
 // property IPEgressBytes t
 
-func (v *service) IPEgressBytes() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) IPEgressBytes() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IPEgressBytes",
 	}
@@ -3683,8 +4334,8 @@ func (v *service) IPEgressBytes() proxy.PropUint64 {
 
 // property IPEgressPackets t
 
-func (v *service) IPEgressPackets() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) IPEgressPackets() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IPEgressPackets",
 	}
@@ -3692,8 +4343,8 @@ func (v *service) IPEgressPackets() proxy.PropUint64 {
 
 // property Delegate b
 
-func (v *service) Delegate() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) Delegate() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Delegate",
 	}
@@ -3701,8 +4352,8 @@ func (v *service) Delegate() proxy.PropBool {
 
 // property DelegateControllers as
 
-func (v *service) DelegateControllers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) DelegateControllers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DelegateControllers",
 	}
@@ -3710,8 +4361,8 @@ func (v *service) DelegateControllers() proxy.PropStringArray {
 
 // property CPUAccounting b
 
-func (v *service) CPUAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) CPUAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CPUAccounting",
 	}
@@ -3719,8 +4370,8 @@ func (v *service) CPUAccounting() proxy.PropBool {
 
 // property CPUWeight t
 
-func (v *service) CPUWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) CPUWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CPUWeight",
 	}
@@ -3728,8 +4379,8 @@ func (v *service) CPUWeight() proxy.PropUint64 {
 
 // property StartupCPUWeight t
 
-func (v *service) StartupCPUWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) StartupCPUWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StartupCPUWeight",
 	}
@@ -3737,8 +4388,8 @@ func (v *service) StartupCPUWeight() proxy.PropUint64 {
 
 // property CPUShares t
 
-func (v *service) CPUShares() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) CPUShares() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CPUShares",
 	}
@@ -3746,8 +4397,8 @@ func (v *service) CPUShares() proxy.PropUint64 {
 
 // property StartupCPUShares t
 
-func (v *service) StartupCPUShares() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) StartupCPUShares() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StartupCPUShares",
 	}
@@ -3755,8 +4406,8 @@ func (v *service) StartupCPUShares() proxy.PropUint64 {
 
 // property CPUQuotaPerSecUSec t
 
-func (v *service) CPUQuotaPerSecUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) CPUQuotaPerSecUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CPUQuotaPerSecUSec",
 	}
@@ -3764,8 +4415,8 @@ func (v *service) CPUQuotaPerSecUSec() proxy.PropUint64 {
 
 // property IOAccounting b
 
-func (v *service) IOAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) IOAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IOAccounting",
 	}
@@ -3773,8 +4424,8 @@ func (v *service) IOAccounting() proxy.PropBool {
 
 // property IOWeight t
 
-func (v *service) IOWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) IOWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IOWeight",
 	}
@@ -3782,8 +4433,8 @@ func (v *service) IOWeight() proxy.PropUint64 {
 
 // property StartupIOWeight t
 
-func (v *service) StartupIOWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) StartupIOWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StartupIOWeight",
 	}
@@ -3791,8 +4442,8 @@ func (v *service) StartupIOWeight() proxy.PropUint64 {
 
 // property IODeviceWeight a(st)
 
-func (v *service) IODeviceWeight() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IODeviceWeight() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IODeviceWeight",
 	}
@@ -3800,8 +4451,8 @@ func (v *service) IODeviceWeight() PropIOParams {
 
 // property IOReadBandwidthMax a(st)
 
-func (v *service) IOReadBandwidthMax() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IOReadBandwidthMax() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IOReadBandwidthMax",
 	}
@@ -3809,8 +4460,8 @@ func (v *service) IOReadBandwidthMax() PropIOParams {
 
 // property IOWriteBandwidthMax a(st)
 
-func (v *service) IOWriteBandwidthMax() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IOWriteBandwidthMax() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IOWriteBandwidthMax",
 	}
@@ -3818,8 +4469,8 @@ func (v *service) IOWriteBandwidthMax() PropIOParams {
 
 // property IOReadIOPSMax a(st)
 
-func (v *service) IOReadIOPSMax() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IOReadIOPSMax() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IOReadIOPSMax",
 	}
@@ -3827,8 +4478,8 @@ func (v *service) IOReadIOPSMax() PropIOParams {
 
 // property IOWriteIOPSMax a(st)
 
-func (v *service) IOWriteIOPSMax() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IOWriteIOPSMax() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IOWriteIOPSMax",
 	}
@@ -3836,8 +4487,8 @@ func (v *service) IOWriteIOPSMax() PropIOParams {
 
 // property IODeviceLatencyTargetUSec a(st)
 
-func (v *service) IODeviceLatencyTargetUSec() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) IODeviceLatencyTargetUSec() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "IODeviceLatencyTargetUSec",
 	}
@@ -3845,8 +4496,8 @@ func (v *service) IODeviceLatencyTargetUSec() PropIOParams {
 
 // property BlockIOAccounting b
 
-func (v *service) BlockIOAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) BlockIOAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "BlockIOAccounting",
 	}
@@ -3854,8 +4505,8 @@ func (v *service) BlockIOAccounting() proxy.PropBool {
 
 // property BlockIOWeight t
 
-func (v *service) BlockIOWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) BlockIOWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "BlockIOWeight",
 	}
@@ -3863,8 +4514,8 @@ func (v *service) BlockIOWeight() proxy.PropUint64 {
 
 // property StartupBlockIOWeight t
 
-func (v *service) StartupBlockIOWeight() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) StartupBlockIOWeight() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "StartupBlockIOWeight",
 	}
@@ -3872,8 +4523,8 @@ func (v *service) StartupBlockIOWeight() proxy.PropUint64 {
 
 // property BlockIODeviceWeight a(st)
 
-func (v *service) BlockIODeviceWeight() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) BlockIODeviceWeight() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "BlockIODeviceWeight",
 	}
@@ -3881,8 +4532,8 @@ func (v *service) BlockIODeviceWeight() PropIOParams {
 
 // property BlockIOReadBandwidth a(st)
 
-func (v *service) BlockIOReadBandwidth() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) BlockIOReadBandwidth() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "BlockIOReadBandwidth",
 	}
@@ -3890,8 +4541,8 @@ func (v *service) BlockIOReadBandwidth() PropIOParams {
 
 // property BlockIOWriteBandwidth a(st)
 
-func (v *service) BlockIOWriteBandwidth() PropIOParams {
-	return PropIOParams{
+func (v *interfaceService) BlockIOWriteBandwidth() PropIOParams {
+	return &implPropIOParams{
 		Impl: v,
 		Name: "BlockIOWriteBandwidth",
 	}
@@ -3899,8 +4550,8 @@ func (v *service) BlockIOWriteBandwidth() PropIOParams {
 
 // property MemoryAccounting b
 
-func (v *service) MemoryAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) MemoryAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MemoryAccounting",
 	}
@@ -3908,8 +4559,8 @@ func (v *service) MemoryAccounting() proxy.PropBool {
 
 // property MemoryMin t
 
-func (v *service) MemoryMin() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryMin() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryMin",
 	}
@@ -3917,8 +4568,8 @@ func (v *service) MemoryMin() proxy.PropUint64 {
 
 // property MemoryLow t
 
-func (v *service) MemoryLow() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryLow() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryLow",
 	}
@@ -3926,8 +4577,8 @@ func (v *service) MemoryLow() proxy.PropUint64 {
 
 // property MemoryHigh t
 
-func (v *service) MemoryHigh() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryHigh() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryHigh",
 	}
@@ -3935,8 +4586,8 @@ func (v *service) MemoryHigh() proxy.PropUint64 {
 
 // property MemoryMax t
 
-func (v *service) MemoryMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryMax",
 	}
@@ -3944,8 +4595,8 @@ func (v *service) MemoryMax() proxy.PropUint64 {
 
 // property MemorySwapMax t
 
-func (v *service) MemorySwapMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemorySwapMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemorySwapMax",
 	}
@@ -3953,8 +4604,8 @@ func (v *service) MemorySwapMax() proxy.PropUint64 {
 
 // property MemoryLimit t
 
-func (v *service) MemoryLimit() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MemoryLimit() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MemoryLimit",
 	}
@@ -3962,32 +4613,35 @@ func (v *service) MemoryLimit() proxy.PropUint64 {
 
 // property DevicePolicy s
 
-func (v *service) DevicePolicy() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) DevicePolicy() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DevicePolicy",
 	}
 }
 
-// property DeviceAllow a(ss)
-
-func (v *service) DeviceAllow() PropServiceDeviceAllow {
-	return PropServiceDeviceAllow{
-		Impl: v,
-	}
+type PropServiceDeviceAllow interface {
+	Get(flags dbus.Flags) (value []DeviceAllowItem, err error)
+	Set(flags dbus.Flags, value []DeviceAllowItem) error
+	ConnectChanged(cb func(hasValue bool, value []DeviceAllowItem)) error
 }
 
-type PropServiceDeviceAllow struct {
+type implPropServiceDeviceAllow struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceDeviceAllow) Get(flags dbus.Flags) (value []DeviceAllowItem, err error) {
+func (p implPropServiceDeviceAllow) Get(flags dbus.Flags) (value []DeviceAllowItem, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"DeviceAllow", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceDeviceAllow) ConnectChanged(cb func(hasValue bool, value []DeviceAllowItem)) error {
+func (p implPropServiceDeviceAllow) Set(flags dbus.Flags, value []DeviceAllowItem) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceDeviceAllow) ConnectChanged(cb func(hasValue bool, value []DeviceAllowItem)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4004,13 +4658,22 @@ func (p PropServiceDeviceAllow) ConnectChanged(cb func(hasValue bool, value []De
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"DeviceAllow", cb0)
+		p.Name, cb0)
+}
+
+// property DeviceAllow a(ss)
+
+func (v *interfaceService) DeviceAllow() PropServiceDeviceAllow {
+	return &implPropServiceDeviceAllow{
+		Impl: v,
+		Name: "DeviceAllow",
+	}
 }
 
 // property TasksAccounting b
 
-func (v *service) TasksAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) TasksAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TasksAccounting",
 	}
@@ -4018,8 +4681,8 @@ func (v *service) TasksAccounting() proxy.PropBool {
 
 // property TasksMax t
 
-func (v *service) TasksMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) TasksMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TasksMax",
 	}
@@ -4027,32 +4690,35 @@ func (v *service) TasksMax() proxy.PropUint64 {
 
 // property IPAccounting b
 
-func (v *service) IPAccounting() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) IPAccounting() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IPAccounting",
 	}
 }
 
-// property IPAddressAllow a(iayu)
-
-func (v *service) IPAddressAllow() PropServiceIPAddressAllow {
-	return PropServiceIPAddressAllow{
-		Impl: v,
-	}
+type PropServiceIPAddressAllow interface {
+	Get(flags dbus.Flags) (value []IPAddressAllowItem, err error)
+	Set(flags dbus.Flags, value []IPAddressAllowItem) error
+	ConnectChanged(cb func(hasValue bool, value []IPAddressAllowItem)) error
 }
 
-type PropServiceIPAddressAllow struct {
+type implPropServiceIPAddressAllow struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceIPAddressAllow) Get(flags dbus.Flags) (value []IPAddressAllowItem, err error) {
+func (p implPropServiceIPAddressAllow) Get(flags dbus.Flags) (value []IPAddressAllowItem, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"IPAddressAllow", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceIPAddressAllow) ConnectChanged(cb func(hasValue bool, value []IPAddressAllowItem)) error {
+func (p implPropServiceIPAddressAllow) Set(flags dbus.Flags, value []IPAddressAllowItem) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceIPAddressAllow) ConnectChanged(cb func(hasValue bool, value []IPAddressAllowItem)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4069,28 +4735,40 @@ func (p PropServiceIPAddressAllow) ConnectChanged(cb func(hasValue bool, value [
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"IPAddressAllow", cb0)
+		p.Name, cb0)
 }
 
-// property IPAddressDeny a(iayu)
+// property IPAddressAllow a(iayu)
 
-func (v *service) IPAddressDeny() PropServiceIPAddressDeny {
-	return PropServiceIPAddressDeny{
+func (v *interfaceService) IPAddressAllow() PropServiceIPAddressAllow {
+	return &implPropServiceIPAddressAllow{
 		Impl: v,
+		Name: "IPAddressAllow",
 	}
 }
 
-type PropServiceIPAddressDeny struct {
-	Impl proxy.Implementer
+type PropServiceIPAddressDeny interface {
+	Get(flags dbus.Flags) (value []IPAddressDenyItem, err error)
+	Set(flags dbus.Flags, value []IPAddressDenyItem) error
+	ConnectChanged(cb func(hasValue bool, value []IPAddressDenyItem)) error
 }
 
-func (p PropServiceIPAddressDeny) Get(flags dbus.Flags) (value []IPAddressDenyItem, err error) {
+type implPropServiceIPAddressDeny struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropServiceIPAddressDeny) Get(flags dbus.Flags) (value []IPAddressDenyItem, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"IPAddressDeny", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceIPAddressDeny) ConnectChanged(cb func(hasValue bool, value []IPAddressDenyItem)) error {
+func (p implPropServiceIPAddressDeny) Set(flags dbus.Flags, value []IPAddressDenyItem) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceIPAddressDeny) ConnectChanged(cb func(hasValue bool, value []IPAddressDenyItem)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4107,13 +4785,22 @@ func (p PropServiceIPAddressDeny) ConnectChanged(cb func(hasValue bool, value []
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"IPAddressDeny", cb0)
+		p.Name, cb0)
+}
+
+// property IPAddressDeny a(iayu)
+
+func (v *interfaceService) IPAddressDeny() PropServiceIPAddressDeny {
+	return &implPropServiceIPAddressDeny{
+		Impl: v,
+		Name: "IPAddressDeny",
+	}
 }
 
 // property DisableControllers as
 
-func (v *service) DisableControllers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) DisableControllers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DisableControllers",
 	}
@@ -4121,8 +4808,8 @@ func (v *service) DisableControllers() proxy.PropStringArray {
 
 // property Environment as
 
-func (v *service) Environment() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) Environment() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Environment",
 	}
@@ -4130,8 +4817,8 @@ func (v *service) Environment() proxy.PropStringArray {
 
 // property EnvironmentFiles a(sb)
 
-func (v *service) EnvironmentFiles() PropEnvironmentFiles {
-	return PropEnvironmentFiles{
+func (v *interfaceService) EnvironmentFiles() PropEnvironmentFiles {
+	return &implPropEnvironmentFiles{
 		Impl: v,
 		Name: "EnvironmentFiles",
 	}
@@ -4139,8 +4826,8 @@ func (v *service) EnvironmentFiles() PropEnvironmentFiles {
 
 // property PassEnvironment as
 
-func (v *service) PassEnvironment() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) PassEnvironment() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "PassEnvironment",
 	}
@@ -4148,8 +4835,8 @@ func (v *service) PassEnvironment() proxy.PropStringArray {
 
 // property UnsetEnvironment as
 
-func (v *service) UnsetEnvironment() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) UnsetEnvironment() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UnsetEnvironment",
 	}
@@ -4157,8 +4844,8 @@ func (v *service) UnsetEnvironment() proxy.PropStringArray {
 
 // property UMask u
 
-func (v *service) UMask() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) UMask() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "UMask",
 	}
@@ -4166,8 +4853,8 @@ func (v *service) UMask() proxy.PropUint32 {
 
 // property LimitCPU t
 
-func (v *service) LimitCPU() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitCPU() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitCPU",
 	}
@@ -4175,8 +4862,8 @@ func (v *service) LimitCPU() proxy.PropUint64 {
 
 // property LimitCPUSoft t
 
-func (v *service) LimitCPUSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitCPUSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitCPUSoft",
 	}
@@ -4184,8 +4871,8 @@ func (v *service) LimitCPUSoft() proxy.PropUint64 {
 
 // property LimitFSIZE t
 
-func (v *service) LimitFSIZE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitFSIZE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitFSIZE",
 	}
@@ -4193,8 +4880,8 @@ func (v *service) LimitFSIZE() proxy.PropUint64 {
 
 // property LimitFSIZESoft t
 
-func (v *service) LimitFSIZESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitFSIZESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitFSIZESoft",
 	}
@@ -4202,8 +4889,8 @@ func (v *service) LimitFSIZESoft() proxy.PropUint64 {
 
 // property LimitDATA t
 
-func (v *service) LimitDATA() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitDATA() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitDATA",
 	}
@@ -4211,8 +4898,8 @@ func (v *service) LimitDATA() proxy.PropUint64 {
 
 // property LimitDATASoft t
 
-func (v *service) LimitDATASoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitDATASoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitDATASoft",
 	}
@@ -4220,8 +4907,8 @@ func (v *service) LimitDATASoft() proxy.PropUint64 {
 
 // property LimitSTACK t
 
-func (v *service) LimitSTACK() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitSTACK() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitSTACK",
 	}
@@ -4229,8 +4916,8 @@ func (v *service) LimitSTACK() proxy.PropUint64 {
 
 // property LimitSTACKSoft t
 
-func (v *service) LimitSTACKSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitSTACKSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitSTACKSoft",
 	}
@@ -4238,8 +4925,8 @@ func (v *service) LimitSTACKSoft() proxy.PropUint64 {
 
 // property LimitCORE t
 
-func (v *service) LimitCORE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitCORE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitCORE",
 	}
@@ -4247,8 +4934,8 @@ func (v *service) LimitCORE() proxy.PropUint64 {
 
 // property LimitCORESoft t
 
-func (v *service) LimitCORESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitCORESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitCORESoft",
 	}
@@ -4256,8 +4943,8 @@ func (v *service) LimitCORESoft() proxy.PropUint64 {
 
 // property LimitRSS t
 
-func (v *service) LimitRSS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRSS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRSS",
 	}
@@ -4265,8 +4952,8 @@ func (v *service) LimitRSS() proxy.PropUint64 {
 
 // property LimitRSSSoft t
 
-func (v *service) LimitRSSSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRSSSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRSSSoft",
 	}
@@ -4274,8 +4961,8 @@ func (v *service) LimitRSSSoft() proxy.PropUint64 {
 
 // property LimitNOFILE t
 
-func (v *service) LimitNOFILE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNOFILE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNOFILE",
 	}
@@ -4283,8 +4970,8 @@ func (v *service) LimitNOFILE() proxy.PropUint64 {
 
 // property LimitNOFILESoft t
 
-func (v *service) LimitNOFILESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNOFILESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNOFILESoft",
 	}
@@ -4292,8 +4979,8 @@ func (v *service) LimitNOFILESoft() proxy.PropUint64 {
 
 // property LimitAS t
 
-func (v *service) LimitAS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitAS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitAS",
 	}
@@ -4301,8 +4988,8 @@ func (v *service) LimitAS() proxy.PropUint64 {
 
 // property LimitASSoft t
 
-func (v *service) LimitASSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitASSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitASSoft",
 	}
@@ -4310,8 +4997,8 @@ func (v *service) LimitASSoft() proxy.PropUint64 {
 
 // property LimitNPROC t
 
-func (v *service) LimitNPROC() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNPROC() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNPROC",
 	}
@@ -4319,8 +5006,8 @@ func (v *service) LimitNPROC() proxy.PropUint64 {
 
 // property LimitNPROCSoft t
 
-func (v *service) LimitNPROCSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNPROCSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNPROCSoft",
 	}
@@ -4328,8 +5015,8 @@ func (v *service) LimitNPROCSoft() proxy.PropUint64 {
 
 // property LimitMEMLOCK t
 
-func (v *service) LimitMEMLOCK() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitMEMLOCK() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitMEMLOCK",
 	}
@@ -4337,8 +5024,8 @@ func (v *service) LimitMEMLOCK() proxy.PropUint64 {
 
 // property LimitMEMLOCKSoft t
 
-func (v *service) LimitMEMLOCKSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitMEMLOCKSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitMEMLOCKSoft",
 	}
@@ -4346,8 +5033,8 @@ func (v *service) LimitMEMLOCKSoft() proxy.PropUint64 {
 
 // property LimitLOCKS t
 
-func (v *service) LimitLOCKS() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitLOCKS() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitLOCKS",
 	}
@@ -4355,8 +5042,8 @@ func (v *service) LimitLOCKS() proxy.PropUint64 {
 
 // property LimitLOCKSSoft t
 
-func (v *service) LimitLOCKSSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitLOCKSSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitLOCKSSoft",
 	}
@@ -4364,8 +5051,8 @@ func (v *service) LimitLOCKSSoft() proxy.PropUint64 {
 
 // property LimitSIGPENDING t
 
-func (v *service) LimitSIGPENDING() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitSIGPENDING() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitSIGPENDING",
 	}
@@ -4373,8 +5060,8 @@ func (v *service) LimitSIGPENDING() proxy.PropUint64 {
 
 // property LimitSIGPENDINGSoft t
 
-func (v *service) LimitSIGPENDINGSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitSIGPENDINGSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitSIGPENDINGSoft",
 	}
@@ -4382,8 +5069,8 @@ func (v *service) LimitSIGPENDINGSoft() proxy.PropUint64 {
 
 // property LimitMSGQUEUE t
 
-func (v *service) LimitMSGQUEUE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitMSGQUEUE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitMSGQUEUE",
 	}
@@ -4391,8 +5078,8 @@ func (v *service) LimitMSGQUEUE() proxy.PropUint64 {
 
 // property LimitMSGQUEUESoft t
 
-func (v *service) LimitMSGQUEUESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitMSGQUEUESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitMSGQUEUESoft",
 	}
@@ -4400,8 +5087,8 @@ func (v *service) LimitMSGQUEUESoft() proxy.PropUint64 {
 
 // property LimitNICE t
 
-func (v *service) LimitNICE() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNICE() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNICE",
 	}
@@ -4409,8 +5096,8 @@ func (v *service) LimitNICE() proxy.PropUint64 {
 
 // property LimitNICESoft t
 
-func (v *service) LimitNICESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitNICESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitNICESoft",
 	}
@@ -4418,8 +5105,8 @@ func (v *service) LimitNICESoft() proxy.PropUint64 {
 
 // property LimitRTPRIO t
 
-func (v *service) LimitRTPRIO() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRTPRIO() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRTPRIO",
 	}
@@ -4427,8 +5114,8 @@ func (v *service) LimitRTPRIO() proxy.PropUint64 {
 
 // property LimitRTPRIOSoft t
 
-func (v *service) LimitRTPRIOSoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRTPRIOSoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRTPRIOSoft",
 	}
@@ -4436,8 +5123,8 @@ func (v *service) LimitRTPRIOSoft() proxy.PropUint64 {
 
 // property LimitRTTIME t
 
-func (v *service) LimitRTTIME() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRTTIME() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRTTIME",
 	}
@@ -4445,8 +5132,8 @@ func (v *service) LimitRTTIME() proxy.PropUint64 {
 
 // property LimitRTTIMESoft t
 
-func (v *service) LimitRTTIMESoft() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LimitRTTIMESoft() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LimitRTTIMESoft",
 	}
@@ -4454,8 +5141,8 @@ func (v *service) LimitRTTIMESoft() proxy.PropUint64 {
 
 // property WorkingDirectory s
 
-func (v *service) WorkingDirectory() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) WorkingDirectory() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WorkingDirectory",
 	}
@@ -4463,8 +5150,8 @@ func (v *service) WorkingDirectory() proxy.PropString {
 
 // property RootDirectory s
 
-func (v *service) RootDirectory() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) RootDirectory() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RootDirectory",
 	}
@@ -4472,8 +5159,8 @@ func (v *service) RootDirectory() proxy.PropString {
 
 // property RootImage s
 
-func (v *service) RootImage() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) RootImage() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RootImage",
 	}
@@ -4481,8 +5168,8 @@ func (v *service) RootImage() proxy.PropString {
 
 // property OOMScoreAdjust i
 
-func (v *service) OOMScoreAdjust() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) OOMScoreAdjust() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "OOMScoreAdjust",
 	}
@@ -4490,8 +5177,8 @@ func (v *service) OOMScoreAdjust() proxy.PropInt32 {
 
 // property Nice i
 
-func (v *service) Nice() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) Nice() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Nice",
 	}
@@ -4499,8 +5186,8 @@ func (v *service) Nice() proxy.PropInt32 {
 
 // property IOSchedulingClass i
 
-func (v *service) IOSchedulingClass() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) IOSchedulingClass() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "IOSchedulingClass",
 	}
@@ -4508,8 +5195,8 @@ func (v *service) IOSchedulingClass() proxy.PropInt32 {
 
 // property IOSchedulingPriority i
 
-func (v *service) IOSchedulingPriority() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) IOSchedulingPriority() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "IOSchedulingPriority",
 	}
@@ -4517,8 +5204,8 @@ func (v *service) IOSchedulingPriority() proxy.PropInt32 {
 
 // property CPUSchedulingPolicy i
 
-func (v *service) CPUSchedulingPolicy() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) CPUSchedulingPolicy() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "CPUSchedulingPolicy",
 	}
@@ -4526,8 +5213,8 @@ func (v *service) CPUSchedulingPolicy() proxy.PropInt32 {
 
 // property CPUSchedulingPriority i
 
-func (v *service) CPUSchedulingPriority() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) CPUSchedulingPriority() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "CPUSchedulingPriority",
 	}
@@ -4535,8 +5222,8 @@ func (v *service) CPUSchedulingPriority() proxy.PropInt32 {
 
 // property CPUAffinity ay
 
-func (v *service) CPUAffinity() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceService) CPUAffinity() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "CPUAffinity",
 	}
@@ -4544,8 +5231,8 @@ func (v *service) CPUAffinity() proxy.PropByteArray {
 
 // property TimerSlackNSec t
 
-func (v *service) TimerSlackNSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) TimerSlackNSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimerSlackNSec",
 	}
@@ -4553,8 +5240,8 @@ func (v *service) TimerSlackNSec() proxy.PropUint64 {
 
 // property CPUSchedulingResetOnFork b
 
-func (v *service) CPUSchedulingResetOnFork() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) CPUSchedulingResetOnFork() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CPUSchedulingResetOnFork",
 	}
@@ -4562,8 +5249,8 @@ func (v *service) CPUSchedulingResetOnFork() proxy.PropBool {
 
 // property NonBlocking b
 
-func (v *service) NonBlocking() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) NonBlocking() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NonBlocking",
 	}
@@ -4571,8 +5258,8 @@ func (v *service) NonBlocking() proxy.PropBool {
 
 // property StandardInput s
 
-func (v *service) StandardInput() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardInput() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardInput",
 	}
@@ -4580,8 +5267,8 @@ func (v *service) StandardInput() proxy.PropString {
 
 // property StandardInputFileDescriptorName s
 
-func (v *service) StandardInputFileDescriptorName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardInputFileDescriptorName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardInputFileDescriptorName",
 	}
@@ -4589,8 +5276,8 @@ func (v *service) StandardInputFileDescriptorName() proxy.PropString {
 
 // property StandardInputData ay
 
-func (v *service) StandardInputData() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceService) StandardInputData() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "StandardInputData",
 	}
@@ -4598,8 +5285,8 @@ func (v *service) StandardInputData() proxy.PropByteArray {
 
 // property StandardOutput s
 
-func (v *service) StandardOutput() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardOutput() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardOutput",
 	}
@@ -4607,8 +5294,8 @@ func (v *service) StandardOutput() proxy.PropString {
 
 // property StandardOutputFileDescriptorName s
 
-func (v *service) StandardOutputFileDescriptorName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardOutputFileDescriptorName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardOutputFileDescriptorName",
 	}
@@ -4616,8 +5303,8 @@ func (v *service) StandardOutputFileDescriptorName() proxy.PropString {
 
 // property StandardError s
 
-func (v *service) StandardError() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardError() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardError",
 	}
@@ -4625,8 +5312,8 @@ func (v *service) StandardError() proxy.PropString {
 
 // property StandardErrorFileDescriptorName s
 
-func (v *service) StandardErrorFileDescriptorName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) StandardErrorFileDescriptorName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "StandardErrorFileDescriptorName",
 	}
@@ -4634,8 +5321,8 @@ func (v *service) StandardErrorFileDescriptorName() proxy.PropString {
 
 // property TTYPath s
 
-func (v *service) TTYPath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) TTYPath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "TTYPath",
 	}
@@ -4643,8 +5330,8 @@ func (v *service) TTYPath() proxy.PropString {
 
 // property TTYReset b
 
-func (v *service) TTYReset() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) TTYReset() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TTYReset",
 	}
@@ -4652,8 +5339,8 @@ func (v *service) TTYReset() proxy.PropBool {
 
 // property TTYVHangup b
 
-func (v *service) TTYVHangup() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) TTYVHangup() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TTYVHangup",
 	}
@@ -4661,8 +5348,8 @@ func (v *service) TTYVHangup() proxy.PropBool {
 
 // property TTYVTDisallocate b
 
-func (v *service) TTYVTDisallocate() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) TTYVTDisallocate() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TTYVTDisallocate",
 	}
@@ -4670,8 +5357,8 @@ func (v *service) TTYVTDisallocate() proxy.PropBool {
 
 // property SyslogPriority i
 
-func (v *service) SyslogPriority() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) SyslogPriority() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SyslogPriority",
 	}
@@ -4679,8 +5366,8 @@ func (v *service) SyslogPriority() proxy.PropInt32 {
 
 // property SyslogIdentifier s
 
-func (v *service) SyslogIdentifier() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) SyslogIdentifier() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SyslogIdentifier",
 	}
@@ -4688,8 +5375,8 @@ func (v *service) SyslogIdentifier() proxy.PropString {
 
 // property SyslogLevelPrefix b
 
-func (v *service) SyslogLevelPrefix() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) SyslogLevelPrefix() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SyslogLevelPrefix",
 	}
@@ -4697,8 +5384,8 @@ func (v *service) SyslogLevelPrefix() proxy.PropBool {
 
 // property SyslogLevel i
 
-func (v *service) SyslogLevel() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) SyslogLevel() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SyslogLevel",
 	}
@@ -4706,8 +5393,8 @@ func (v *service) SyslogLevel() proxy.PropInt32 {
 
 // property SyslogFacility i
 
-func (v *service) SyslogFacility() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) SyslogFacility() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SyslogFacility",
 	}
@@ -4715,8 +5402,8 @@ func (v *service) SyslogFacility() proxy.PropInt32 {
 
 // property LogLevelMax i
 
-func (v *service) LogLevelMax() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) LogLevelMax() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "LogLevelMax",
 	}
@@ -4724,8 +5411,8 @@ func (v *service) LogLevelMax() proxy.PropInt32 {
 
 // property LogRateLimitIntervalUSec t
 
-func (v *service) LogRateLimitIntervalUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) LogRateLimitIntervalUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "LogRateLimitIntervalUSec",
 	}
@@ -4733,32 +5420,35 @@ func (v *service) LogRateLimitIntervalUSec() proxy.PropUint64 {
 
 // property LogRateLimitBurst u
 
-func (v *service) LogRateLimitBurst() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) LogRateLimitBurst() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "LogRateLimitBurst",
 	}
 }
 
-// property LogExtraFields aay
-
-func (v *service) LogExtraFields() PropServiceLogExtraFields {
-	return PropServiceLogExtraFields{
-		Impl: v,
-	}
+type PropServiceLogExtraFields interface {
+	Get(flags dbus.Flags) (value [][]byte, err error)
+	Set(flags dbus.Flags, value [][]byte) error
+	ConnectChanged(cb func(hasValue bool, value [][]byte)) error
 }
 
-type PropServiceLogExtraFields struct {
+type implPropServiceLogExtraFields struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceLogExtraFields) Get(flags dbus.Flags) (value [][]byte, err error) {
+func (p implPropServiceLogExtraFields) Get(flags dbus.Flags) (value [][]byte, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"LogExtraFields", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceLogExtraFields) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
+func (p implPropServiceLogExtraFields) Set(flags dbus.Flags, value [][]byte) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceLogExtraFields) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4775,13 +5465,22 @@ func (p PropServiceLogExtraFields) ConnectChanged(cb func(hasValue bool, value [
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"LogExtraFields", cb0)
+		p.Name, cb0)
+}
+
+// property LogExtraFields aay
+
+func (v *interfaceService) LogExtraFields() PropServiceLogExtraFields {
+	return &implPropServiceLogExtraFields{
+		Impl: v,
+		Name: "LogExtraFields",
+	}
 }
 
 // property SecureBits i
 
-func (v *service) SecureBits() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) SecureBits() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SecureBits",
 	}
@@ -4789,8 +5488,8 @@ func (v *service) SecureBits() proxy.PropInt32 {
 
 // property CapabilityBoundingSet t
 
-func (v *service) CapabilityBoundingSet() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) CapabilityBoundingSet() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CapabilityBoundingSet",
 	}
@@ -4798,8 +5497,8 @@ func (v *service) CapabilityBoundingSet() proxy.PropUint64 {
 
 // property AmbientCapabilities t
 
-func (v *service) AmbientCapabilities() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) AmbientCapabilities() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "AmbientCapabilities",
 	}
@@ -4807,8 +5506,8 @@ func (v *service) AmbientCapabilities() proxy.PropUint64 {
 
 // property User s
 
-func (v *service) User() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) User() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "User",
 	}
@@ -4816,8 +5515,8 @@ func (v *service) User() proxy.PropString {
 
 // property Group s
 
-func (v *service) Group() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Group() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Group",
 	}
@@ -4825,8 +5524,8 @@ func (v *service) Group() proxy.PropString {
 
 // property DynamicUser b
 
-func (v *service) DynamicUser() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) DynamicUser() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DynamicUser",
 	}
@@ -4834,8 +5533,8 @@ func (v *service) DynamicUser() proxy.PropBool {
 
 // property RemoveIPC b
 
-func (v *service) RemoveIPC() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) RemoveIPC() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RemoveIPC",
 	}
@@ -4843,8 +5542,8 @@ func (v *service) RemoveIPC() proxy.PropBool {
 
 // property SupplementaryGroups as
 
-func (v *service) SupplementaryGroups() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) SupplementaryGroups() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "SupplementaryGroups",
 	}
@@ -4852,8 +5551,8 @@ func (v *service) SupplementaryGroups() proxy.PropStringArray {
 
 // property PAMName s
 
-func (v *service) PAMName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) PAMName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PAMName",
 	}
@@ -4861,8 +5560,8 @@ func (v *service) PAMName() proxy.PropString {
 
 // property ReadWritePaths as
 
-func (v *service) ReadWritePaths() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) ReadWritePaths() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ReadWritePaths",
 	}
@@ -4870,8 +5569,8 @@ func (v *service) ReadWritePaths() proxy.PropStringArray {
 
 // property ReadOnlyPaths as
 
-func (v *service) ReadOnlyPaths() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) ReadOnlyPaths() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ReadOnlyPaths",
 	}
@@ -4879,8 +5578,8 @@ func (v *service) ReadOnlyPaths() proxy.PropStringArray {
 
 // property InaccessiblePaths as
 
-func (v *service) InaccessiblePaths() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) InaccessiblePaths() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "InaccessiblePaths",
 	}
@@ -4888,8 +5587,8 @@ func (v *service) InaccessiblePaths() proxy.PropStringArray {
 
 // property MountFlags t
 
-func (v *service) MountFlags() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) MountFlags() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "MountFlags",
 	}
@@ -4897,8 +5596,8 @@ func (v *service) MountFlags() proxy.PropUint64 {
 
 // property PrivateTmp b
 
-func (v *service) PrivateTmp() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) PrivateTmp() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PrivateTmp",
 	}
@@ -4906,8 +5605,8 @@ func (v *service) PrivateTmp() proxy.PropBool {
 
 // property PrivateDevices b
 
-func (v *service) PrivateDevices() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) PrivateDevices() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PrivateDevices",
 	}
@@ -4915,8 +5614,8 @@ func (v *service) PrivateDevices() proxy.PropBool {
 
 // property ProtectKernelTunables b
 
-func (v *service) ProtectKernelTunables() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) ProtectKernelTunables() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ProtectKernelTunables",
 	}
@@ -4924,8 +5623,8 @@ func (v *service) ProtectKernelTunables() proxy.PropBool {
 
 // property ProtectKernelModules b
 
-func (v *service) ProtectKernelModules() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) ProtectKernelModules() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ProtectKernelModules",
 	}
@@ -4933,8 +5632,8 @@ func (v *service) ProtectKernelModules() proxy.PropBool {
 
 // property ProtectControlGroups b
 
-func (v *service) ProtectControlGroups() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) ProtectControlGroups() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ProtectControlGroups",
 	}
@@ -4942,8 +5641,8 @@ func (v *service) ProtectControlGroups() proxy.PropBool {
 
 // property PrivateNetwork b
 
-func (v *service) PrivateNetwork() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) PrivateNetwork() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PrivateNetwork",
 	}
@@ -4951,8 +5650,8 @@ func (v *service) PrivateNetwork() proxy.PropBool {
 
 // property PrivateUsers b
 
-func (v *service) PrivateUsers() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) PrivateUsers() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PrivateUsers",
 	}
@@ -4960,8 +5659,8 @@ func (v *service) PrivateUsers() proxy.PropBool {
 
 // property PrivateMounts b
 
-func (v *service) PrivateMounts() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) PrivateMounts() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PrivateMounts",
 	}
@@ -4969,8 +5668,8 @@ func (v *service) PrivateMounts() proxy.PropBool {
 
 // property ProtectHome s
 
-func (v *service) ProtectHome() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) ProtectHome() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ProtectHome",
 	}
@@ -4978,8 +5677,8 @@ func (v *service) ProtectHome() proxy.PropString {
 
 // property ProtectSystem s
 
-func (v *service) ProtectSystem() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) ProtectSystem() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ProtectSystem",
 	}
@@ -4987,8 +5686,8 @@ func (v *service) ProtectSystem() proxy.PropString {
 
 // property SameProcessGroup b
 
-func (v *service) SameProcessGroup() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) SameProcessGroup() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SameProcessGroup",
 	}
@@ -4996,8 +5695,8 @@ func (v *service) SameProcessGroup() proxy.PropBool {
 
 // property UtmpIdentifier s
 
-func (v *service) UtmpIdentifier() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) UtmpIdentifier() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UtmpIdentifier",
 	}
@@ -5005,8 +5704,8 @@ func (v *service) UtmpIdentifier() proxy.PropString {
 
 // property UtmpMode s
 
-func (v *service) UtmpMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) UtmpMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UtmpMode",
 	}
@@ -5014,8 +5713,8 @@ func (v *service) UtmpMode() proxy.PropString {
 
 // property SELinuxContext (bs)
 
-func (v *service) SELinuxContext() PropBS {
-	return PropBS{
+func (v *interfaceService) SELinuxContext() PropBS {
+	return &implPropBS{
 		Impl: v,
 		Name: "SELinuxContext",
 	}
@@ -5023,8 +5722,8 @@ func (v *service) SELinuxContext() PropBS {
 
 // property AppArmorProfile (bs)
 
-func (v *service) AppArmorProfile() PropBS {
-	return PropBS{
+func (v *interfaceService) AppArmorProfile() PropBS {
+	return &implPropBS{
 		Impl: v,
 		Name: "AppArmorProfile",
 	}
@@ -5032,8 +5731,8 @@ func (v *service) AppArmorProfile() PropBS {
 
 // property SmackProcessLabel (bs)
 
-func (v *service) SmackProcessLabel() PropBS {
-	return PropBS{
+func (v *interfaceService) SmackProcessLabel() PropBS {
+	return &implPropBS{
 		Impl: v,
 		Name: "SmackProcessLabel",
 	}
@@ -5041,8 +5740,8 @@ func (v *service) SmackProcessLabel() PropBS {
 
 // property IgnoreSIGPIPE b
 
-func (v *service) IgnoreSIGPIPE() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) IgnoreSIGPIPE() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IgnoreSIGPIPE",
 	}
@@ -5050,32 +5749,35 @@ func (v *service) IgnoreSIGPIPE() proxy.PropBool {
 
 // property NoNewPrivileges b
 
-func (v *service) NoNewPrivileges() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) NoNewPrivileges() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NoNewPrivileges",
 	}
 }
 
-// property SystemCallFilter (bas)
-
-func (v *service) SystemCallFilter() PropServiceSystemCallFilter {
-	return PropServiceSystemCallFilter{
-		Impl: v,
-	}
+type PropServiceSystemCallFilter interface {
+	Get(flags dbus.Flags) (value SystemCallFilter, err error)
+	Set(flags dbus.Flags, value SystemCallFilter) error
+	ConnectChanged(cb func(hasValue bool, value SystemCallFilter)) error
 }
 
-type PropServiceSystemCallFilter struct {
+type implPropServiceSystemCallFilter struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceSystemCallFilter) Get(flags dbus.Flags) (value SystemCallFilter, err error) {
+func (p implPropServiceSystemCallFilter) Get(flags dbus.Flags) (value SystemCallFilter, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"SystemCallFilter", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceSystemCallFilter) ConnectChanged(cb func(hasValue bool, value SystemCallFilter)) error {
+func (p implPropServiceSystemCallFilter) Set(flags dbus.Flags, value SystemCallFilter) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceSystemCallFilter) ConnectChanged(cb func(hasValue bool, value SystemCallFilter)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5092,13 +5794,22 @@ func (p PropServiceSystemCallFilter) ConnectChanged(cb func(hasValue bool, value
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"SystemCallFilter", cb0)
+		p.Name, cb0)
+}
+
+// property SystemCallFilter (bas)
+
+func (v *interfaceService) SystemCallFilter() PropServiceSystemCallFilter {
+	return &implPropServiceSystemCallFilter{
+		Impl: v,
+		Name: "SystemCallFilter",
+	}
 }
 
 // property SystemCallArchitectures as
 
-func (v *service) SystemCallArchitectures() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) SystemCallArchitectures() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "SystemCallArchitectures",
 	}
@@ -5106,8 +5817,8 @@ func (v *service) SystemCallArchitectures() proxy.PropStringArray {
 
 // property SystemCallErrorNumber i
 
-func (v *service) SystemCallErrorNumber() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) SystemCallErrorNumber() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SystemCallErrorNumber",
 	}
@@ -5115,8 +5826,8 @@ func (v *service) SystemCallErrorNumber() proxy.PropInt32 {
 
 // property Personality s
 
-func (v *service) Personality() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) Personality() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Personality",
 	}
@@ -5124,32 +5835,35 @@ func (v *service) Personality() proxy.PropString {
 
 // property LockPersonality b
 
-func (v *service) LockPersonality() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) LockPersonality() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "LockPersonality",
 	}
 }
 
-// property RestrictAddressFamilies (bas)
-
-func (v *service) RestrictAddressFamilies() PropServiceRestrictAddressFamilies {
-	return PropServiceRestrictAddressFamilies{
-		Impl: v,
-	}
+type PropServiceRestrictAddressFamilies interface {
+	Get(flags dbus.Flags) (value RestrictAddressFamilies, err error)
+	Set(flags dbus.Flags, value RestrictAddressFamilies) error
+	ConnectChanged(cb func(hasValue bool, value RestrictAddressFamilies)) error
 }
 
-type PropServiceRestrictAddressFamilies struct {
+type implPropServiceRestrictAddressFamilies struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceRestrictAddressFamilies) Get(flags dbus.Flags) (value RestrictAddressFamilies, err error) {
+func (p implPropServiceRestrictAddressFamilies) Get(flags dbus.Flags) (value RestrictAddressFamilies, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"RestrictAddressFamilies", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceRestrictAddressFamilies) ConnectChanged(cb func(hasValue bool, value RestrictAddressFamilies)) error {
+func (p implPropServiceRestrictAddressFamilies) Set(flags dbus.Flags, value RestrictAddressFamilies) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceRestrictAddressFamilies) ConnectChanged(cb func(hasValue bool, value RestrictAddressFamilies)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5166,13 +5880,22 @@ func (p PropServiceRestrictAddressFamilies) ConnectChanged(cb func(hasValue bool
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"RestrictAddressFamilies", cb0)
+		p.Name, cb0)
+}
+
+// property RestrictAddressFamilies (bas)
+
+func (v *interfaceService) RestrictAddressFamilies() PropServiceRestrictAddressFamilies {
+	return &implPropServiceRestrictAddressFamilies{
+		Impl: v,
+		Name: "RestrictAddressFamilies",
+	}
 }
 
 // property RuntimeDirectoryPreserve s
 
-func (v *service) RuntimeDirectoryPreserve() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) RuntimeDirectoryPreserve() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RuntimeDirectoryPreserve",
 	}
@@ -5180,8 +5903,8 @@ func (v *service) RuntimeDirectoryPreserve() proxy.PropString {
 
 // property RuntimeDirectoryMode u
 
-func (v *service) RuntimeDirectoryMode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) RuntimeDirectoryMode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RuntimeDirectoryMode",
 	}
@@ -5189,8 +5912,8 @@ func (v *service) RuntimeDirectoryMode() proxy.PropUint32 {
 
 // property RuntimeDirectory as
 
-func (v *service) RuntimeDirectory() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) RuntimeDirectory() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "RuntimeDirectory",
 	}
@@ -5198,8 +5921,8 @@ func (v *service) RuntimeDirectory() proxy.PropStringArray {
 
 // property StateDirectoryMode u
 
-func (v *service) StateDirectoryMode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) StateDirectoryMode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "StateDirectoryMode",
 	}
@@ -5207,8 +5930,8 @@ func (v *service) StateDirectoryMode() proxy.PropUint32 {
 
 // property StateDirectory as
 
-func (v *service) StateDirectory() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) StateDirectory() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "StateDirectory",
 	}
@@ -5216,8 +5939,8 @@ func (v *service) StateDirectory() proxy.PropStringArray {
 
 // property CacheDirectoryMode u
 
-func (v *service) CacheDirectoryMode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) CacheDirectoryMode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "CacheDirectoryMode",
 	}
@@ -5225,8 +5948,8 @@ func (v *service) CacheDirectoryMode() proxy.PropUint32 {
 
 // property CacheDirectory as
 
-func (v *service) CacheDirectory() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) CacheDirectory() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "CacheDirectory",
 	}
@@ -5234,8 +5957,8 @@ func (v *service) CacheDirectory() proxy.PropStringArray {
 
 // property LogsDirectoryMode u
 
-func (v *service) LogsDirectoryMode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) LogsDirectoryMode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "LogsDirectoryMode",
 	}
@@ -5243,8 +5966,8 @@ func (v *service) LogsDirectoryMode() proxy.PropUint32 {
 
 // property LogsDirectory as
 
-func (v *service) LogsDirectory() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) LogsDirectory() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "LogsDirectory",
 	}
@@ -5252,8 +5975,8 @@ func (v *service) LogsDirectory() proxy.PropStringArray {
 
 // property ConfigurationDirectoryMode u
 
-func (v *service) ConfigurationDirectoryMode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceService) ConfigurationDirectoryMode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ConfigurationDirectoryMode",
 	}
@@ -5261,8 +5984,8 @@ func (v *service) ConfigurationDirectoryMode() proxy.PropUint32 {
 
 // property ConfigurationDirectory as
 
-func (v *service) ConfigurationDirectory() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceService) ConfigurationDirectory() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "ConfigurationDirectory",
 	}
@@ -5270,8 +5993,8 @@ func (v *service) ConfigurationDirectory() proxy.PropStringArray {
 
 // property MemoryDenyWriteExecute b
 
-func (v *service) MemoryDenyWriteExecute() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) MemoryDenyWriteExecute() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MemoryDenyWriteExecute",
 	}
@@ -5279,8 +6002,8 @@ func (v *service) MemoryDenyWriteExecute() proxy.PropBool {
 
 // property RestrictRealtime b
 
-func (v *service) RestrictRealtime() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) RestrictRealtime() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RestrictRealtime",
 	}
@@ -5288,8 +6011,8 @@ func (v *service) RestrictRealtime() proxy.PropBool {
 
 // property RestrictNamespaces t
 
-func (v *service) RestrictNamespaces() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceService) RestrictNamespaces() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RestrictNamespaces",
 	}
@@ -5297,8 +6020,8 @@ func (v *service) RestrictNamespaces() proxy.PropUint64 {
 
 // property BindPaths a(ssbt)
 
-func (v *service) BindPaths() PropBindPaths {
-	return PropBindPaths{
+func (v *interfaceService) BindPaths() PropBindPaths {
+	return &implPropBindPaths{
 		Impl: v,
 		Name: "BindPaths",
 	}
@@ -5306,32 +6029,35 @@ func (v *service) BindPaths() PropBindPaths {
 
 // property BindReadOnlyPaths a(ssbt)
 
-func (v *service) BindReadOnlyPaths() PropBindPaths {
-	return PropBindPaths{
+func (v *interfaceService) BindReadOnlyPaths() PropBindPaths {
+	return &implPropBindPaths{
 		Impl: v,
 		Name: "BindReadOnlyPaths",
 	}
 }
 
-// property TemporaryFileSystem a(ss)
-
-func (v *service) TemporaryFileSystem() PropServiceTemporaryFileSystem {
-	return PropServiceTemporaryFileSystem{
-		Impl: v,
-	}
+type PropServiceTemporaryFileSystem interface {
+	Get(flags dbus.Flags) (value []TemporaryFileSystemItem, err error)
+	Set(flags dbus.Flags, value []TemporaryFileSystemItem) error
+	ConnectChanged(cb func(hasValue bool, value []TemporaryFileSystemItem)) error
 }
 
-type PropServiceTemporaryFileSystem struct {
+type implPropServiceTemporaryFileSystem struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropServiceTemporaryFileSystem) Get(flags dbus.Flags) (value []TemporaryFileSystemItem, err error) {
+func (p implPropServiceTemporaryFileSystem) Get(flags dbus.Flags) (value []TemporaryFileSystemItem, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"TemporaryFileSystem", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropServiceTemporaryFileSystem) ConnectChanged(cb func(hasValue bool, value []TemporaryFileSystemItem)) error {
+func (p implPropServiceTemporaryFileSystem) Set(flags dbus.Flags, value []TemporaryFileSystemItem) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropServiceTemporaryFileSystem) ConnectChanged(cb func(hasValue bool, value []TemporaryFileSystemItem)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5348,13 +6074,22 @@ func (p PropServiceTemporaryFileSystem) ConnectChanged(cb func(hasValue bool, va
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"TemporaryFileSystem", cb0)
+		p.Name, cb0)
+}
+
+// property TemporaryFileSystem a(ss)
+
+func (v *interfaceService) TemporaryFileSystem() PropServiceTemporaryFileSystem {
+	return &implPropServiceTemporaryFileSystem{
+		Impl: v,
+		Name: "TemporaryFileSystem",
+	}
 }
 
 // property MountAPIVFS b
 
-func (v *service) MountAPIVFS() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) MountAPIVFS() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MountAPIVFS",
 	}
@@ -5362,8 +6097,8 @@ func (v *service) MountAPIVFS() proxy.PropBool {
 
 // property KeyringMode s
 
-func (v *service) KeyringMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) KeyringMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KeyringMode",
 	}
@@ -5371,8 +6106,8 @@ func (v *service) KeyringMode() proxy.PropString {
 
 // property KillMode s
 
-func (v *service) KillMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceService) KillMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KillMode",
 	}
@@ -5380,8 +6115,8 @@ func (v *service) KillMode() proxy.PropString {
 
 // property KillSignal i
 
-func (v *service) KillSignal() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) KillSignal() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "KillSignal",
 	}
@@ -5389,8 +6124,8 @@ func (v *service) KillSignal() proxy.PropInt32 {
 
 // property FinalKillSignal i
 
-func (v *service) FinalKillSignal() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) FinalKillSignal() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "FinalKillSignal",
 	}
@@ -5398,8 +6133,8 @@ func (v *service) FinalKillSignal() proxy.PropInt32 {
 
 // property SendSIGKILL b
 
-func (v *service) SendSIGKILL() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) SendSIGKILL() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SendSIGKILL",
 	}
@@ -5407,8 +6142,8 @@ func (v *service) SendSIGKILL() proxy.PropBool {
 
 // property SendSIGHUP b
 
-func (v *service) SendSIGHUP() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceService) SendSIGHUP() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SendSIGHUP",
 	}
@@ -5416,29 +6151,35 @@ func (v *service) SendSIGHUP() proxy.PropBool {
 
 // property WatchdogSignal i
 
-func (v *service) WatchdogSignal() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceService) WatchdogSignal() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "WatchdogSignal",
 	}
 }
 
-type PropExitStatus struct {
+type PropExitStatus interface {
+	Get(flags dbus.Flags) (value ExitStatus, err error)
+	Set(flags dbus.Flags, value ExitStatus) error
+	ConnectChanged(cb func(hasValue bool, value ExitStatus)) error
+}
+
+type implPropExitStatus struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropExitStatus) Get(flags dbus.Flags) (value ExitStatus, err error) {
+func (p implPropExitStatus) Get(flags dbus.Flags) (value ExitStatus, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropExitStatus) Set(flags dbus.Flags, value ExitStatus) error {
+func (p implPropExitStatus) Set(flags dbus.Flags, value ExitStatus) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropExitStatus) ConnectChanged(cb func(hasValue bool, value ExitStatus)) error {
+func (p implPropExitStatus) ConnectChanged(cb func(hasValue bool, value ExitStatus)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5458,22 +6199,28 @@ func (p PropExitStatus) ConnectChanged(cb func(hasValue bool, value ExitStatus))
 		p.Name, cb0)
 }
 
-type PropExecInfos struct {
+type PropExecInfos interface {
+	Get(flags dbus.Flags) (value []ExecInfo, err error)
+	Set(flags dbus.Flags, value []ExecInfo) error
+	ConnectChanged(cb func(hasValue bool, value []ExecInfo)) error
+}
+
+type implPropExecInfos struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropExecInfos) Get(flags dbus.Flags) (value []ExecInfo, err error) {
+func (p implPropExecInfos) Get(flags dbus.Flags) (value []ExecInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropExecInfos) Set(flags dbus.Flags, value []ExecInfo) error {
+func (p implPropExecInfos) Set(flags dbus.Flags, value []ExecInfo) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropExecInfos) ConnectChanged(cb func(hasValue bool, value []ExecInfo)) error {
+func (p implPropExecInfos) ConnectChanged(cb func(hasValue bool, value []ExecInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5493,22 +6240,28 @@ func (p PropExecInfos) ConnectChanged(cb func(hasValue bool, value []ExecInfo)) 
 		p.Name, cb0)
 }
 
-type PropIOParams struct {
+type PropIOParams interface {
+	Get(flags dbus.Flags) (value []IOParam, err error)
+	Set(flags dbus.Flags, value []IOParam) error
+	ConnectChanged(cb func(hasValue bool, value []IOParam)) error
+}
+
+type implPropIOParams struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropIOParams) Get(flags dbus.Flags) (value []IOParam, err error) {
+func (p implPropIOParams) Get(flags dbus.Flags) (value []IOParam, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropIOParams) Set(flags dbus.Flags, value []IOParam) error {
+func (p implPropIOParams) Set(flags dbus.Flags, value []IOParam) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropIOParams) ConnectChanged(cb func(hasValue bool, value []IOParam)) error {
+func (p implPropIOParams) ConnectChanged(cb func(hasValue bool, value []IOParam)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5528,22 +6281,28 @@ func (p PropIOParams) ConnectChanged(cb func(hasValue bool, value []IOParam)) er
 		p.Name, cb0)
 }
 
-type PropEnvironmentFiles struct {
+type PropEnvironmentFiles interface {
+	Get(flags dbus.Flags) (value []EnvironmentFile, err error)
+	Set(flags dbus.Flags, value []EnvironmentFile) error
+	ConnectChanged(cb func(hasValue bool, value []EnvironmentFile)) error
+}
+
+type implPropEnvironmentFiles struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropEnvironmentFiles) Get(flags dbus.Flags) (value []EnvironmentFile, err error) {
+func (p implPropEnvironmentFiles) Get(flags dbus.Flags) (value []EnvironmentFile, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropEnvironmentFiles) Set(flags dbus.Flags, value []EnvironmentFile) error {
+func (p implPropEnvironmentFiles) Set(flags dbus.Flags, value []EnvironmentFile) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropEnvironmentFiles) ConnectChanged(cb func(hasValue bool, value []EnvironmentFile)) error {
+func (p implPropEnvironmentFiles) ConnectChanged(cb func(hasValue bool, value []EnvironmentFile)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5563,22 +6322,28 @@ func (p PropEnvironmentFiles) ConnectChanged(cb func(hasValue bool, value []Envi
 		p.Name, cb0)
 }
 
-type PropBS struct {
+type PropBS interface {
+	Get(flags dbus.Flags) (value BS, err error)
+	Set(flags dbus.Flags, value BS) error
+	ConnectChanged(cb func(hasValue bool, value BS)) error
+}
+
+type implPropBS struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropBS) Get(flags dbus.Flags) (value BS, err error) {
+func (p implPropBS) Get(flags dbus.Flags) (value BS, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropBS) Set(flags dbus.Flags, value BS) error {
+func (p implPropBS) Set(flags dbus.Flags, value BS) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropBS) ConnectChanged(cb func(hasValue bool, value BS)) error {
+func (p implPropBS) ConnectChanged(cb func(hasValue bool, value BS)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -5598,22 +6363,28 @@ func (p PropBS) ConnectChanged(cb func(hasValue bool, value BS)) error {
 		p.Name, cb0)
 }
 
-type PropBindPaths struct {
+type PropBindPaths interface {
+	Get(flags dbus.Flags) (value []BindPath, err error)
+	Set(flags dbus.Flags, value []BindPath) error
+	ConnectChanged(cb func(hasValue bool, value []BindPath)) error
+}
+
+type implPropBindPaths struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropBindPaths) Get(flags dbus.Flags) (value []BindPath, err error) {
+func (p implPropBindPaths) Get(flags dbus.Flags) (value []BindPath, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropBindPaths) Set(flags dbus.Flags, value []BindPath) error {
+func (p implPropBindPaths) Set(flags dbus.Flags, value []BindPath) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropBindPaths) ConnectChanged(cb func(hasValue bool, value []BindPath)) error {
+func (p implPropBindPaths) ConnectChanged(cb func(hasValue bool, value []BindPath)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

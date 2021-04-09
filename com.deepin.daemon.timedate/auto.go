@@ -12,30 +12,39 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Timedate struct {
+type Timedate interface {
 	timedate // interface com.deepin.daemon.Timedate
 	proxy.Object
 }
 
-func NewTimedate(conn *dbus.Conn) *Timedate {
-	obj := new(Timedate)
-	obj.Object.Init_(conn, "com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate")
+type objectTimedate struct {
+	interfaceTimedate // interface com.deepin.daemon.Timedate
+	proxy.ImplObject
+}
+
+func NewTimedate(conn *dbus.Conn) Timedate {
+	obj := new(objectTimedate)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate")
 	return obj
 }
 
-type timedate struct{}
-
-func (v *timedate) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type timedate interface {
+	ConnectTimeUpdate(cb func()) (dbusutil.SignalHandlerId, error)
 }
 
-func (*timedate) GetInterfaceName_() string {
+type interfaceTimedate struct{}
+
+func (v *interfaceTimedate) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTimedate) GetInterfaceName_() string {
 	return "com.deepin.daemon.Timedate"
 }
 
 // signal TimeUpdate
 
-func (v *timedate) ConnectTimeUpdate(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceTimedate) ConnectTimeUpdate(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

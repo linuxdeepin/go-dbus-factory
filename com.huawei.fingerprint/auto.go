@@ -12,140 +12,168 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Fingerprint struct {
+type Fingerprint interface {
 	fingerprint // interface com.huawei.Fingerprint
 	proxy.Object
 }
 
-func NewFingerprint(conn *dbus.Conn) *Fingerprint {
-	obj := new(Fingerprint)
-	obj.Object.Init_(conn, "com.huawei.Fingerprint", "/com/huawei/Fingerprint")
+type objectFingerprint struct {
+	interfaceFingerprint // interface com.huawei.Fingerprint
+	proxy.ImplObject
+}
+
+func NewFingerprint(conn *dbus.Conn) Fingerprint {
+	obj := new(objectFingerprint)
+	obj.ImplObject.Init_(conn, "com.huawei.Fingerprint", "/com/huawei/Fingerprint")
 	return obj
 }
 
-type fingerprint struct{}
-
-func (v *fingerprint) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type fingerprint interface {
+	GoSearchDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SearchDevice(flags dbus.Flags) (bool, error)
+	GoIdentify(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call
+	Identify(flags dbus.Flags, uuid string) error
+	GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IdentifyWithMultipleUser(flags dbus.Flags) error
+	GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetStatus(flags dbus.Flags) (int32, error)
+	GoEnroll(flags dbus.Flags, ch chan *dbus.Call, filePath string, uuid string) *dbus.Call
+	Enroll(flags dbus.Flags, filePath string, uuid string) error
+	GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Close(flags dbus.Flags) (int32, error)
+	GoReload(flags dbus.Flags, ch chan *dbus.Call, deleteType int32) *dbus.Call
+	Reload(flags dbus.Flags, deleteType int32) (int32, error)
+	GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearPovImage(flags dbus.Flags) (int32, error)
+	ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error)
+	ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error)
+	ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error)
+	ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*fingerprint) GetInterfaceName_() string {
+type interfaceFingerprint struct{}
+
+func (v *interfaceFingerprint) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceFingerprint) GetInterfaceName_() string {
 	return "com.huawei.Fingerprint"
 }
 
 // method SearchDevice
 
-func (v *fingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceFingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SearchDevice", flags, ch)
 }
 
-func (*fingerprint) StoreSearchDevice(call *dbus.Call) (result bool, err error) {
+func (*interfaceFingerprint) StoreSearchDevice(call *dbus.Call) (result bool, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *fingerprint) SearchDevice(flags dbus.Flags) (result bool, err error) {
+func (v *interfaceFingerprint) SearchDevice(flags dbus.Flags) (bool, error) {
 	return v.StoreSearchDevice(
 		<-v.GoSearchDevice(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Identify
 
-func (v *fingerprint) GoIdentify(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+func (v *interfaceFingerprint) GoIdentify(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Identify", flags, ch, uuid)
 }
 
-func (v *fingerprint) Identify(flags dbus.Flags, uuid string) error {
+func (v *interfaceFingerprint) Identify(flags dbus.Flags, uuid string) error {
 	return (<-v.GoIdentify(flags, make(chan *dbus.Call, 1), uuid).Done).Err
 }
 
 // method IdentifyWithMultipleUser
 
-func (v *fingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceFingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IdentifyWithMultipleUser", flags, ch)
 }
 
-func (v *fingerprint) IdentifyWithMultipleUser(flags dbus.Flags) error {
+func (v *interfaceFingerprint) IdentifyWithMultipleUser(flags dbus.Flags) error {
 	return (<-v.GoIdentifyWithMultipleUser(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method GetStatus
 
-func (v *fingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceFingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetStatus", flags, ch)
 }
 
-func (*fingerprint) StoreGetStatus(call *dbus.Call) (result int32, err error) {
+func (*interfaceFingerprint) StoreGetStatus(call *dbus.Call) (result int32, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *fingerprint) GetStatus(flags dbus.Flags) (result int32, err error) {
+func (v *interfaceFingerprint) GetStatus(flags dbus.Flags) (int32, error) {
 	return v.StoreGetStatus(
 		<-v.GoGetStatus(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Enroll
 
-func (v *fingerprint) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, filePath string, uuid string) *dbus.Call {
+func (v *interfaceFingerprint) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, filePath string, uuid string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enroll", flags, ch, filePath, uuid)
 }
 
-func (v *fingerprint) Enroll(flags dbus.Flags, filePath string, uuid string) error {
+func (v *interfaceFingerprint) Enroll(flags dbus.Flags, filePath string, uuid string) error {
 	return (<-v.GoEnroll(flags, make(chan *dbus.Call, 1), filePath, uuid).Done).Err
 }
 
 // method Close
 
-func (v *fingerprint) GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceFingerprint) GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Close", flags, ch)
 }
 
-func (*fingerprint) StoreClose(call *dbus.Call) (result int32, err error) {
+func (*interfaceFingerprint) StoreClose(call *dbus.Call) (result int32, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *fingerprint) Close(flags dbus.Flags) (result int32, err error) {
+func (v *interfaceFingerprint) Close(flags dbus.Flags) (int32, error) {
 	return v.StoreClose(
 		<-v.GoClose(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Reload
 
-func (v *fingerprint) GoReload(flags dbus.Flags, ch chan *dbus.Call, deleteType int32) *dbus.Call {
+func (v *interfaceFingerprint) GoReload(flags dbus.Flags, ch chan *dbus.Call, deleteType int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch, deleteType)
 }
 
-func (*fingerprint) StoreReload(call *dbus.Call) (result int32, err error) {
+func (*interfaceFingerprint) StoreReload(call *dbus.Call) (result int32, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *fingerprint) Reload(flags dbus.Flags, deleteType int32) (result int32, err error) {
+func (v *interfaceFingerprint) Reload(flags dbus.Flags, deleteType int32) (int32, error) {
 	return v.StoreReload(
 		<-v.GoReload(flags, make(chan *dbus.Call, 1), deleteType).Done)
 }
 
 // method ClearPovImage
 
-func (v *fingerprint) GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceFingerprint) GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearPovImage", flags, ch)
 }
 
-func (*fingerprint) StoreClearPovImage(call *dbus.Call) (result int32, err error) {
+func (*interfaceFingerprint) StoreClearPovImage(call *dbus.Call) (result int32, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *fingerprint) ClearPovImage(flags dbus.Flags) (result int32, err error) {
+func (v *interfaceFingerprint) ClearPovImage(flags dbus.Flags) (int32, error) {
 	return v.StoreClearPovImage(
 		<-v.GoClearPovImage(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal EnrollStatus
 
-func (v *fingerprint) ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceFingerprint) ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -172,7 +200,7 @@ func (v *fingerprint) ConnectEnrollStatus(cb func(progress int32, result int32))
 
 // signal IdentifyStatus
 
-func (v *fingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceFingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -198,7 +226,7 @@ func (v *fingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.Sig
 
 // signal IdentifyNoAccount
 
-func (v *fingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceFingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -225,7 +253,7 @@ func (v *fingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName st
 
 // signal VerifyStatus
 
-func (v *fingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceFingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

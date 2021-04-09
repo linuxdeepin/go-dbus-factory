@@ -9,49 +9,61 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ImageEffect struct {
+type ImageEffect interface {
 	imageEffect // interface com.deepin.daemon.ImageEffect
 	proxy.Object
 }
 
-func NewImageEffect(conn *dbus.Conn) *ImageEffect {
-	obj := new(ImageEffect)
-	obj.Object.Init_(conn, "com.deepin.daemon.ImageEffect", "/com/deepin/daemon/ImageEffect")
+type objectImageEffect struct {
+	interfaceImageEffect // interface com.deepin.daemon.ImageEffect
+	proxy.ImplObject
+}
+
+func NewImageEffect(conn *dbus.Conn) ImageEffect {
+	obj := new(objectImageEffect)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.ImageEffect", "/com/deepin/daemon/ImageEffect")
 	return obj
 }
 
-type imageEffect struct{}
-
-func (v *imageEffect) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type imageEffect interface {
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call
+	Delete(flags dbus.Flags, effect string, filename string) error
+	GoGet(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call
+	Get(flags dbus.Flags, effect string, filename string) (string, error)
 }
 
-func (*imageEffect) GetInterfaceName_() string {
+type interfaceImageEffect struct{}
+
+func (v *interfaceImageEffect) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceImageEffect) GetInterfaceName_() string {
 	return "com.deepin.daemon.ImageEffect"
 }
 
 // method Delete
 
-func (v *imageEffect) GoDelete(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
+func (v *interfaceImageEffect) GoDelete(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, effect, filename)
 }
 
-func (v *imageEffect) Delete(flags dbus.Flags, effect string, filename string) error {
+func (v *interfaceImageEffect) Delete(flags dbus.Flags, effect string, filename string) error {
 	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), effect, filename).Done).Err
 }
 
 // method Get
 
-func (v *imageEffect) GoGet(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
+func (v *interfaceImageEffect) GoGet(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Get", flags, ch, effect, filename)
 }
 
-func (*imageEffect) StoreGet(call *dbus.Call) (outputFile string, err error) {
+func (*interfaceImageEffect) StoreGet(call *dbus.Call) (outputFile string, err error) {
 	err = call.Store(&outputFile)
 	return
 }
 
-func (v *imageEffect) Get(flags dbus.Flags, effect string, filename string) (outputFile string, err error) {
+func (v *interfaceImageEffect) Get(flags dbus.Flags, effect string, filename string) (string, error) {
 	return v.StoreGet(
 		<-v.GoGet(flags, make(chan *dbus.Call, 1), effect, filename).Done)
 }

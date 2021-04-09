@@ -12,310 +12,359 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type DBus struct {
+type DBus interface {
 	dbusIfc // interface org.freedesktop.DBus
 	proxy.Object
 }
 
-func NewDBus(conn *dbus.Conn) *DBus {
-	obj := new(DBus)
-	obj.Object.Init_(conn, "org.freedesktop.DBus", "/org/freedesktop/DBus")
+type objectDBus struct {
+	interfaceDbusIfc // interface org.freedesktop.DBus
+	proxy.ImplObject
+}
+
+func NewDBus(conn *dbus.Conn) DBus {
+	obj := new(objectDBus)
+	obj.ImplObject.Init_(conn, "org.freedesktop.DBus", "/org/freedesktop/DBus")
 	return obj
 }
 
-type dbusIfc struct{}
-
-func (v *dbusIfc) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type dbusIfc interface {
+	GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Hello(flags dbus.Flags) (string, error)
+	GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call
+	RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error)
+	GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	ReleaseName(flags dbus.Flags, arg0 string) (uint32, error)
+	GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call
+	StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error)
+	GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call
+	UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error
+	GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	NameHasOwner(flags dbus.Flags, arg0 string) (bool, error)
+	GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListNames(flags dbus.Flags) ([]string, error)
+	GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListActivatableNames(flags dbus.Flags) ([]string, error)
+	GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	AddMatch(flags dbus.Flags, arg0 string) error
+	GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	RemoveMatch(flags dbus.Flags, arg0 string) error
+	GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetNameOwner(flags dbus.Flags, arg0 string) (string, error)
+	GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	ListQueuedOwners(flags dbus.Flags, arg0 string) ([]string, error)
+	GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetConnectionUnixUser(flags dbus.Flags, arg0 string) (uint32, error)
+	GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (uint32, error)
+	GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetAdtAuditSessionData(flags dbus.Flags, arg0 string) ([]uint8, error)
+	GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 string) ([]uint8, error)
+	GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ReloadConfig(flags dbus.Flags) error
+	GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetId(flags dbus.Flags) (string, error)
+	GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call
+	GetConnectionCredentials(flags dbus.Flags, arg0 string) (map[string]dbus.Variant, error)
+	ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2 string)) (dbusutil.SignalHandlerId, error)
+	ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerId, error)
+	ConnectNameAcquired(cb func(arg0 string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*dbusIfc) GetInterfaceName_() string {
+type interfaceDbusIfc struct{}
+
+func (v *interfaceDbusIfc) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDbusIfc) GetInterfaceName_() string {
 	return "org.freedesktop.DBus"
 }
 
 // method Hello
 
-func (v *dbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hello", flags, ch)
 }
 
-func (*dbusIfc) StoreHello(call *dbus.Call) (arg0 string, err error) {
+func (*interfaceDbusIfc) StoreHello(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *dbusIfc) Hello(flags dbus.Flags) (arg0 string, err error) {
+func (v *interfaceDbusIfc) Hello(flags dbus.Flags) (string, error) {
 	return v.StoreHello(
 		<-v.GoHello(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RequestName
 
-func (v *dbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+func (v *interfaceDbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestName", flags, ch, arg0, arg1)
 }
 
-func (*dbusIfc) StoreRequestName(call *dbus.Call) (arg2 uint32, err error) {
+func (*interfaceDbusIfc) StoreRequestName(call *dbus.Call) (arg2 uint32, err error) {
 	err = call.Store(&arg2)
 	return
 }
 
-func (v *dbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (arg2 uint32, err error) {
+func (v *interfaceDbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
 	return v.StoreRequestName(
 		<-v.GoRequestName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
 }
 
 // method ReleaseName
 
-func (v *dbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseName", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreReleaseName(call *dbus.Call) (arg1 uint32, err error) {
+func (*interfaceDbusIfc) StoreReleaseName(call *dbus.Call) (arg1 uint32, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+func (v *interfaceDbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (uint32, error) {
 	return v.StoreReleaseName(
 		<-v.GoReleaseName(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method StartServiceByName
 
-func (v *dbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+func (v *interfaceDbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartServiceByName", flags, ch, arg0, arg1)
 }
 
-func (*dbusIfc) StoreStartServiceByName(call *dbus.Call) (arg2 uint32, err error) {
+func (*interfaceDbusIfc) StoreStartServiceByName(call *dbus.Call) (arg2 uint32, err error) {
 	err = call.Store(&arg2)
 	return
 }
 
-func (v *dbusIfc) StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32) (arg2 uint32, err error) {
+func (v *interfaceDbusIfc) StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
 	return v.StoreStartServiceByName(
 		<-v.GoStartServiceByName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
 }
 
 // method UpdateActivationEnvironment
 
-func (v *dbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
+func (v *interfaceDbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateActivationEnvironment", flags, ch, arg0)
 }
 
-func (v *dbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error {
+func (v *interfaceDbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error {
 	return (<-v.GoUpdateActivationEnvironment(flags, make(chan *dbus.Call, 1), arg0).Done).Err
 }
 
 // method NameHasOwner
 
-func (v *dbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NameHasOwner", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreNameHasOwner(call *dbus.Call) (arg1 bool, err error) {
+func (*interfaceDbusIfc) StoreNameHasOwner(call *dbus.Call) (arg1 bool, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (arg1 bool, err error) {
+func (v *interfaceDbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (bool, error) {
 	return v.StoreNameHasOwner(
 		<-v.GoNameHasOwner(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method ListNames
 
-func (v *dbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListNames", flags, ch)
 }
 
-func (*dbusIfc) StoreListNames(call *dbus.Call) (arg0 []string, err error) {
+func (*interfaceDbusIfc) StoreListNames(call *dbus.Call) (arg0 []string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *dbusIfc) ListNames(flags dbus.Flags) (arg0 []string, err error) {
+func (v *interfaceDbusIfc) ListNames(flags dbus.Flags) ([]string, error) {
 	return v.StoreListNames(
 		<-v.GoListNames(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListActivatableNames
 
-func (v *dbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListActivatableNames", flags, ch)
 }
 
-func (*dbusIfc) StoreListActivatableNames(call *dbus.Call) (arg0 []string, err error) {
+func (*interfaceDbusIfc) StoreListActivatableNames(call *dbus.Call) (arg0 []string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *dbusIfc) ListActivatableNames(flags dbus.Flags) (arg0 []string, err error) {
+func (v *interfaceDbusIfc) ListActivatableNames(flags dbus.Flags) ([]string, error) {
 	return v.StoreListActivatableNames(
 		<-v.GoListActivatableNames(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method AddMatch
 
-func (v *dbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddMatch", flags, ch, arg0)
 }
 
-func (v *dbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
+func (v *interfaceDbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoAddMatch(flags, make(chan *dbus.Call, 1), arg0).Done).Err
 }
 
 // method RemoveMatch
 
-func (v *dbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveMatch", flags, ch, arg0)
 }
 
-func (v *dbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error {
+func (v *interfaceDbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoRemoveMatch(flags, make(chan *dbus.Call, 1), arg0).Done).Err
 }
 
 // method GetNameOwner
 
-func (v *dbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetNameOwner", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetNameOwner(call *dbus.Call) (arg1 string, err error) {
+func (*interfaceDbusIfc) StoreGetNameOwner(call *dbus.Call) (arg1 string, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (arg1 string, err error) {
+func (v *interfaceDbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (string, error) {
 	return v.StoreGetNameOwner(
 		<-v.GoGetNameOwner(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method ListQueuedOwners
 
-func (v *dbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListQueuedOwners", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreListQueuedOwners(call *dbus.Call) (arg1 []string, err error) {
+func (*interfaceDbusIfc) StoreListQueuedOwners(call *dbus.Call) (arg1 []string, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) (arg1 []string, err error) {
+func (v *interfaceDbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) ([]string, error) {
 	return v.StoreListQueuedOwners(
 		<-v.GoListQueuedOwners(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method GetConnectionUnixUser
 
-func (v *dbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionUnixUser", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetConnectionUnixUser(call *dbus.Call) (arg1 uint32, err error) {
+func (*interfaceDbusIfc) StoreGetConnectionUnixUser(call *dbus.Call) (arg1 uint32, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+func (v *interfaceDbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 string) (uint32, error) {
 	return v.StoreGetConnectionUnixUser(
 		<-v.GoGetConnectionUnixUser(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method GetConnectionUnixProcessID
 
-func (v *dbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionUnixProcessID", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetConnectionUnixProcessID(call *dbus.Call) (arg1 uint32, err error) {
+func (*interfaceDbusIfc) StoreGetConnectionUnixProcessID(call *dbus.Call) (arg1 uint32, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+func (v *interfaceDbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (uint32, error) {
 	return v.StoreGetConnectionUnixProcessID(
 		<-v.GoGetConnectionUnixProcessID(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method GetAdtAuditSessionData
 
-func (v *dbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAdtAuditSessionData", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetAdtAuditSessionData(call *dbus.Call) (arg1 []uint8, err error) {
+func (*interfaceDbusIfc) StoreGetAdtAuditSessionData(call *dbus.Call) (arg1 []uint8, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 string) (arg1 []uint8, err error) {
+func (v *interfaceDbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 string) ([]uint8, error) {
 	return v.StoreGetAdtAuditSessionData(
 		<-v.GoGetAdtAuditSessionData(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method GetConnectionSELinuxSecurityContext
 
-func (v *dbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionSELinuxSecurityContext", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetConnectionSELinuxSecurityContext(call *dbus.Call) (arg1 []uint8, err error) {
+func (*interfaceDbusIfc) StoreGetConnectionSELinuxSecurityContext(call *dbus.Call) (arg1 []uint8, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 string) (arg1 []uint8, err error) {
+func (v *interfaceDbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 string) ([]uint8, error) {
 	return v.StoreGetConnectionSELinuxSecurityContext(
 		<-v.GoGetConnectionSELinuxSecurityContext(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // method ReloadConfig
 
-func (v *dbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadConfig", flags, ch)
 }
 
-func (v *dbusIfc) ReloadConfig(flags dbus.Flags) error {
+func (v *interfaceDbusIfc) ReloadConfig(flags dbus.Flags) error {
 	return (<-v.GoReloadConfig(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method GetId
 
-func (v *dbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetId", flags, ch)
 }
 
-func (*dbusIfc) StoreGetId(call *dbus.Call) (arg0 string, err error) {
+func (*interfaceDbusIfc) StoreGetId(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *dbusIfc) GetId(flags dbus.Flags) (arg0 string, err error) {
+func (v *interfaceDbusIfc) GetId(flags dbus.Flags) (string, error) {
 	return v.StoreGetId(
 		<-v.GoGetId(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetConnectionCredentials
 
-func (v *dbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *interfaceDbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionCredentials", flags, ch, arg0)
 }
 
-func (*dbusIfc) StoreGetConnectionCredentials(call *dbus.Call) (arg1 map[string]dbus.Variant, err error) {
+func (*interfaceDbusIfc) StoreGetConnectionCredentials(call *dbus.Call) (arg1 map[string]dbus.Variant, err error) {
 	err = call.Store(&arg1)
 	return
 }
 
-func (v *dbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 string) (arg1 map[string]dbus.Variant, err error) {
+func (v *interfaceDbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 string) (map[string]dbus.Variant, error) {
 	return v.StoreGetConnectionCredentials(
 		<-v.GoGetConnectionCredentials(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
 // signal NameOwnerChanged
 
-func (v *dbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -343,7 +392,7 @@ func (v *dbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2
 
 // signal NameLost
 
-func (v *dbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -369,7 +418,7 @@ func (v *dbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerI
 
 // signal NameAcquired
 
-func (v *dbusIfc) ConnectNameAcquired(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDbusIfc) ConnectNameAcquired(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

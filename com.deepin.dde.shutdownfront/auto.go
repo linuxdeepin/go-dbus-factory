@@ -12,110 +12,135 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ShutdownFront struct {
+type ShutdownFront interface {
 	shutdownfront // interface com.deepin.dde.shutdownFront
 	proxy.Object
 }
 
-func NewShutdownFront(conn *dbus.Conn) *ShutdownFront {
-	obj := new(ShutdownFront)
-	obj.Object.Init_(conn, "com.deepin.dde.shutdownFront", "/com/deepin/dde/shutdownFront")
+type objectShutdownFront struct {
+	interfaceShutdownfront // interface com.deepin.dde.shutdownFront
+	proxy.ImplObject
+}
+
+func NewShutdownFront(conn *dbus.Conn) ShutdownFront {
+	obj := new(objectShutdownFront)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.shutdownFront", "/com/deepin/dde/shutdownFront")
 	return obj
 }
 
-type shutdownfront struct{}
-
-func (v *shutdownfront) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type shutdownfront interface {
+	GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Hibernate(flags dbus.Flags) error
+	GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Lock(flags dbus.Flags) error
+	GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Logout(flags dbus.Flags) error
+	GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Restart(flags dbus.Flags) error
+	GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Show(flags dbus.Flags) error
+	GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Shutdown(flags dbus.Flags) error
+	GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Suspend(flags dbus.Flags) error
+	GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SwitchUser(flags dbus.Flags) error
+	ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*shutdownfront) GetInterfaceName_() string {
+type interfaceShutdownfront struct{}
+
+func (v *interfaceShutdownfront) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceShutdownfront) GetInterfaceName_() string {
 	return "com.deepin.dde.shutdownFront"
 }
 
 // method Hibernate
 
-func (v *shutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch)
 }
 
-func (v *shutdownfront) Hibernate(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Hibernate(flags dbus.Flags) error {
 	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Lock
 
-func (v *shutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Lock", flags, ch)
 }
 
-func (v *shutdownfront) Lock(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Lock(flags dbus.Flags) error {
 	return (<-v.GoLock(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Logout
 
-func (v *shutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Logout", flags, ch)
 }
 
-func (v *shutdownfront) Logout(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Logout(flags dbus.Flags) error {
 	return (<-v.GoLogout(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Restart
 
-func (v *shutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Restart", flags, ch)
 }
 
-func (v *shutdownfront) Restart(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Restart(flags dbus.Flags) error {
 	return (<-v.GoRestart(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Show
 
-func (v *shutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
 }
 
-func (v *shutdownfront) Show(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Show(flags dbus.Flags) error {
 	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Shutdown
 
-func (v *shutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Shutdown", flags, ch)
 }
 
-func (v *shutdownfront) Shutdown(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Shutdown(flags dbus.Flags) error {
 	return (<-v.GoShutdown(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Suspend
 
-func (v *shutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch)
 }
 
-func (v *shutdownfront) Suspend(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) Suspend(flags dbus.Flags) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SwitchUser
 
-func (v *shutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceShutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchUser", flags, ch)
 }
 
-func (v *shutdownfront) SwitchUser(flags dbus.Flags) error {
+func (v *interfaceShutdownfront) SwitchUser(flags dbus.Flags) error {
 	return (<-v.GoSwitchUser(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal ChangKey
 
-func (v *shutdownfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceShutdownfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

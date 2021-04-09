@@ -12,30 +12,41 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type InputDevices struct {
+type InputDevices interface {
 	inputDevices // interface com.deepin.system.InputDevices
 	proxy.Object
 }
 
-func NewInputDevices(conn *dbus.Conn) *InputDevices {
-	obj := new(InputDevices)
-	obj.Object.Init_(conn, "com.deepin.system.InputDevices", "/com/deepin/system/InputDevices")
+type objectInputDevices struct {
+	interfaceInputDevices // interface com.deepin.system.InputDevices
+	proxy.ImplObject
+}
+
+func NewInputDevices(conn *dbus.Conn) InputDevices {
+	obj := new(objectInputDevices)
+	obj.ImplObject.Init_(conn, "com.deepin.system.InputDevices", "/com/deepin/system/InputDevices")
 	return obj
 }
 
-type inputDevices struct{}
-
-func (v *inputDevices) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type inputDevices interface {
+	ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Touchscreens() proxy.PropObjectPathArray
 }
 
-func (*inputDevices) GetInterfaceName_() string {
+type interfaceInputDevices struct{}
+
+func (v *interfaceInputDevices) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInputDevices) GetInterfaceName_() string {
 	return "com.deepin.system.InputDevices"
 }
 
 // signal TouchscreenAdded
 
-func (v *inputDevices) ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInputDevices) ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -61,7 +72,7 @@ func (v *inputDevices) ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (d
 
 // signal TouchscreenRemoved
 
-func (v *inputDevices) ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInputDevices) ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -87,41 +98,58 @@ func (v *inputDevices) ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) 
 
 // property Touchscreens ao
 
-func (v *inputDevices) Touchscreens() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInputDevices) Touchscreens() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Touchscreens",
 	}
 }
 
-type Touchscreen struct {
+type Touchscreen interface {
 	touchscreen // interface com.deepin.system.InputDevices.Touchscreen
 	proxy.Object
 }
 
-func NewTouchscreen(conn *dbus.Conn, path dbus.ObjectPath) (*Touchscreen, error) {
+type objectTouchscreen struct {
+	interfaceTouchscreen // interface com.deepin.system.InputDevices.Touchscreen
+	proxy.ImplObject
+}
+
+func NewTouchscreen(conn *dbus.Conn, path dbus.ObjectPath) (Touchscreen, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Touchscreen)
-	obj.Object.Init_(conn, "com.deepin.system.InputDevices", path)
+	obj := new(objectTouchscreen)
+	obj.ImplObject.Init_(conn, "com.deepin.system.InputDevices", path)
 	return obj, nil
 }
 
-type touchscreen struct{}
-
-func (v *touchscreen) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type touchscreen interface {
+	DevNode() proxy.PropString
+	BusType() proxy.PropString
+	UUID() proxy.PropString
+	Phys() proxy.PropString
+	OutputName() proxy.PropString
+	Width() proxy.PropDouble
+	Height() proxy.PropDouble
+	Name() proxy.PropString
+	Serial() proxy.PropString
 }
 
-func (*touchscreen) GetInterfaceName_() string {
+type interfaceTouchscreen struct{}
+
+func (v *interfaceTouchscreen) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTouchscreen) GetInterfaceName_() string {
 	return "com.deepin.system.InputDevices.Touchscreen"
 }
 
 // property DevNode s
 
-func (v *touchscreen) DevNode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) DevNode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DevNode",
 	}
@@ -129,8 +157,8 @@ func (v *touchscreen) DevNode() proxy.PropString {
 
 // property BusType s
 
-func (v *touchscreen) BusType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) BusType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BusType",
 	}
@@ -138,8 +166,8 @@ func (v *touchscreen) BusType() proxy.PropString {
 
 // property UUID s
 
-func (v *touchscreen) UUID() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) UUID() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UUID",
 	}
@@ -147,8 +175,8 @@ func (v *touchscreen) UUID() proxy.PropString {
 
 // property Phys s
 
-func (v *touchscreen) Phys() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) Phys() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Phys",
 	}
@@ -156,8 +184,8 @@ func (v *touchscreen) Phys() proxy.PropString {
 
 // property OutputName s
 
-func (v *touchscreen) OutputName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) OutputName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OutputName",
 	}
@@ -165,8 +193,8 @@ func (v *touchscreen) OutputName() proxy.PropString {
 
 // property Width d
 
-func (v *touchscreen) Width() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceTouchscreen) Width() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Width",
 	}
@@ -174,8 +202,8 @@ func (v *touchscreen) Width() proxy.PropDouble {
 
 // property Height d
 
-func (v *touchscreen) Height() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceTouchscreen) Height() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Height",
 	}
@@ -183,8 +211,8 @@ func (v *touchscreen) Height() proxy.PropDouble {
 
 // property Name s
 
-func (v *touchscreen) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -192,8 +220,8 @@ func (v *touchscreen) Name() proxy.PropString {
 
 // property Serial s
 
-func (v *touchscreen) Serial() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchscreen) Serial() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Serial",
 	}

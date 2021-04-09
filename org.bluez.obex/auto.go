@@ -11,152 +11,192 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ObjectManager struct {
+type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
 	proxy.Object
 }
 
-func NewObjectManager(conn *dbus.Conn) *ObjectManager {
-	obj := new(ObjectManager)
-	obj.Object.Init_(conn, "org.bluez.obex", "/")
+type objectObjectManager struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewObjectManager(conn *dbus.Conn) ObjectManager {
+	obj := new(objectObjectManager)
+	obj.ImplObject.Init_(conn, "org.bluez.obex", "/")
 	return obj
 }
 
-type Manager struct {
-	agentManager // interface org.bluez.obex.AgentManager1
-	client       // interface org.bluez.obex.Client1
+type Manager interface {
+	AgentManager() agentManager // interface org.bluez.obex.AgentManager1
+	Client() client             // interface org.bluez.obex.Client1
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.bluez.obex", "/org/bluez/obex")
+type objectManager struct {
+	interfaceAgentManager // interface org.bluez.obex.AgentManager1
+	interfaceClient       // interface org.bluez.obex.Client1
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.bluez.obex", "/org/bluez/obex")
 	return obj
 }
 
-func (obj *Manager) AgentManager() *agentManager {
-	return &obj.agentManager
+func (obj *objectManager) AgentManager() agentManager {
+	return &obj.interfaceAgentManager
 }
 
-type agentManager struct{}
-
-func (v *agentManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type agentManager interface {
+	GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call
+	RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error
+	GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call
+	UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error
 }
 
-func (*agentManager) GetInterfaceName_() string {
+type interfaceAgentManager struct{}
+
+func (v *interfaceAgentManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAgentManager) GetInterfaceName_() string {
 	return "org.bluez.obex.AgentManager1"
 }
 
 // method RegisterAgent
 
-func (v *agentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *interfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterAgent", flags, ch, agent)
 }
 
-func (v *agentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *interfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	return (<-v.GoRegisterAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
 }
 
 // method UnregisterAgent
 
-func (v *agentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *interfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterAgent", flags, ch, agent)
 }
 
-func (v *agentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *interfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	return (<-v.GoUnregisterAgent(flags, make(chan *dbus.Call, 1), agent).Done).Err
 }
 
-func (obj *Manager) Client() *client {
-	return &obj.client
+func (obj *objectManager) Client() client {
+	return &obj.interfaceClient
 }
 
-type client struct{}
-
-func (v *client) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type client interface {
+	GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, destination string, args map[string]dbus.Variant) *dbus.Call
+	CreateSession(flags dbus.Flags, destination string, args map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoRemoveSession(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call
+	RemoveSession(flags dbus.Flags, session dbus.ObjectPath) error
 }
 
-func (*client) GetInterfaceName_() string {
+type interfaceClient struct{}
+
+func (v *interfaceClient) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceClient) GetInterfaceName_() string {
 	return "org.bluez.obex.Client1"
 }
 
 // method CreateSession
 
-func (v *client) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, destination string, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceClient) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, destination string, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateSession", flags, ch, destination, args)
 }
 
-func (*client) StoreCreateSession(call *dbus.Call) (session dbus.ObjectPath, err error) {
+func (*interfaceClient) StoreCreateSession(call *dbus.Call) (session dbus.ObjectPath, err error) {
 	err = call.Store(&session)
 	return
 }
 
-func (v *client) CreateSession(flags dbus.Flags, destination string, args map[string]dbus.Variant) (session dbus.ObjectPath, err error) {
+func (v *interfaceClient) CreateSession(flags dbus.Flags, destination string, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreateSession(
 		<-v.GoCreateSession(flags, make(chan *dbus.Call, 1), destination, args).Done)
 }
 
 // method RemoveSession
 
-func (v *client) GoRemoveSession(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
+func (v *interfaceClient) GoRemoveSession(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveSession", flags, ch, session)
 }
 
-func (v *client) RemoveSession(flags dbus.Flags, session dbus.ObjectPath) error {
+func (v *interfaceClient) RemoveSession(flags dbus.Flags, session dbus.ObjectPath) error {
 	return (<-v.GoRemoveSession(flags, make(chan *dbus.Call, 1), session).Done).Err
 }
 
-type Session struct {
-	session    // interface org.bluez.obex.Session1
-	objectPush // interface org.bluez.obex.ObjectPush1
+type Session interface {
+	Session() session       // interface org.bluez.obex.Session1
+	ObjectPush() objectPush // interface org.bluez.obex.ObjectPush1
 	proxy.Object
 }
 
-func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
+type objectSession struct {
+	interfaceSession    // interface org.bluez.obex.Session1
+	interfaceObjectPush // interface org.bluez.obex.ObjectPush1
+	proxy.ImplObject
+}
+
+func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (Session, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Session)
-	obj.Object.Init_(conn, "org.bluez.obex", path)
+	obj := new(objectSession)
+	obj.ImplObject.Init_(conn, "org.bluez.obex", path)
 	return obj, nil
 }
 
-func (obj *Session) Session() *session {
-	return &obj.session
+func (obj *objectSession) Session() session {
+	return &obj.interfaceSession
 }
 
-type session struct{}
-
-func (v *session) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type session interface {
+	GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetCapabilities(flags dbus.Flags) (string, error)
+	Source() proxy.PropString
+	Destination() proxy.PropString
+	Channel() proxy.PropByte
+	Target() proxy.PropString
 }
 
-func (*session) GetInterfaceName_() string {
+type interfaceSession struct{}
+
+func (v *interfaceSession) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSession) GetInterfaceName_() string {
 	return "org.bluez.obex.Session1"
 }
 
 // method GetCapabilities
 
-func (v *session) GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetCapabilities", flags, ch)
 }
 
-func (*session) StoreGetCapabilities(call *dbus.Call) (capabilities string, err error) {
+func (*interfaceSession) StoreGetCapabilities(call *dbus.Call) (capabilities string, err error) {
 	err = call.Store(&capabilities)
 	return
 }
 
-func (v *session) GetCapabilities(flags dbus.Flags) (capabilities string, err error) {
+func (v *interfaceSession) GetCapabilities(flags dbus.Flags) (string, error) {
 	return v.StoreGetCapabilities(
 		<-v.GoGetCapabilities(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // property Source s
 
-func (v *session) Source() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Source() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Source",
 	}
@@ -164,8 +204,8 @@ func (v *session) Source() proxy.PropString {
 
 // property Destination s
 
-func (v *session) Destination() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Destination() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Destination",
 	}
@@ -173,8 +213,8 @@ func (v *session) Destination() proxy.PropString {
 
 // property Channel y
 
-func (v *session) Channel() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceSession) Channel() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Channel",
 	}
@@ -182,113 +222,140 @@ func (v *session) Channel() proxy.PropByte {
 
 // property Target s
 
-func (v *session) Target() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Target() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Target",
 	}
 }
 
-func (obj *Session) ObjectPush() *objectPush {
-	return &obj.objectPush
+func (obj *objectSession) ObjectPush() objectPush {
+	return &obj.interfaceObjectPush
 }
 
-type objectPush struct{}
-
-func (v *objectPush) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type objectPush interface {
+	GoSendFile(flags dbus.Flags, ch chan *dbus.Call, sourcefile string) *dbus.Call
+	SendFile(flags dbus.Flags, sourcefile string) (dbus.ObjectPath, map[string]dbus.Variant, error)
+	GoPullBusinessCard(flags dbus.Flags, ch chan *dbus.Call, targetfile string) *dbus.Call
+	PullBusinessCard(flags dbus.Flags, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error)
+	GoExchangeBusinessCards(flags dbus.Flags, ch chan *dbus.Call, clientfile string, targetfile string) *dbus.Call
+	ExchangeBusinessCards(flags dbus.Flags, clientfile string, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error)
 }
 
-func (*objectPush) GetInterfaceName_() string {
+type interfaceObjectPush struct{}
+
+func (v *interfaceObjectPush) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceObjectPush) GetInterfaceName_() string {
 	return "org.bluez.obex.ObjectPush1"
 }
 
 // method SendFile
 
-func (v *objectPush) GoSendFile(flags dbus.Flags, ch chan *dbus.Call, sourcefile string) *dbus.Call {
+func (v *interfaceObjectPush) GoSendFile(flags dbus.Flags, ch chan *dbus.Call, sourcefile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SendFile", flags, ch, sourcefile)
 }
 
-func (*objectPush) StoreSendFile(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (*interfaceObjectPush) StoreSendFile(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
 	err = call.Store(&transfer, &properties)
 	return
 }
 
-func (v *objectPush) SendFile(flags dbus.Flags, sourcefile string) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (v *interfaceObjectPush) SendFile(flags dbus.Flags, sourcefile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	return v.StoreSendFile(
 		<-v.GoSendFile(flags, make(chan *dbus.Call, 1), sourcefile).Done)
 }
 
 // method PullBusinessCard
 
-func (v *objectPush) GoPullBusinessCard(flags dbus.Flags, ch chan *dbus.Call, targetfile string) *dbus.Call {
+func (v *interfaceObjectPush) GoPullBusinessCard(flags dbus.Flags, ch chan *dbus.Call, targetfile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PullBusinessCard", flags, ch, targetfile)
 }
 
-func (*objectPush) StorePullBusinessCard(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (*interfaceObjectPush) StorePullBusinessCard(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
 	err = call.Store(&transfer, &properties)
 	return
 }
 
-func (v *objectPush) PullBusinessCard(flags dbus.Flags, targetfile string) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (v *interfaceObjectPush) PullBusinessCard(flags dbus.Flags, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	return v.StorePullBusinessCard(
 		<-v.GoPullBusinessCard(flags, make(chan *dbus.Call, 1), targetfile).Done)
 }
 
 // method ExchangeBusinessCards
 
-func (v *objectPush) GoExchangeBusinessCards(flags dbus.Flags, ch chan *dbus.Call, clientfile string, targetfile string) *dbus.Call {
+func (v *interfaceObjectPush) GoExchangeBusinessCards(flags dbus.Flags, ch chan *dbus.Call, clientfile string, targetfile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ExchangeBusinessCards", flags, ch, clientfile, targetfile)
 }
 
-func (*objectPush) StoreExchangeBusinessCards(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (*interfaceObjectPush) StoreExchangeBusinessCards(call *dbus.Call) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
 	err = call.Store(&transfer, &properties)
 	return
 }
 
-func (v *objectPush) ExchangeBusinessCards(flags dbus.Flags, clientfile string, targetfile string) (transfer dbus.ObjectPath, properties map[string]dbus.Variant, err error) {
+func (v *interfaceObjectPush) ExchangeBusinessCards(flags dbus.Flags, clientfile string, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	return v.StoreExchangeBusinessCards(
 		<-v.GoExchangeBusinessCards(flags, make(chan *dbus.Call, 1), clientfile, targetfile).Done)
 }
 
-type Transfer struct {
+type Transfer interface {
 	transfer // interface org.bluez.obex.Transfer1
 	proxy.Object
 }
 
-func NewTransfer(conn *dbus.Conn, path dbus.ObjectPath) (*Transfer, error) {
+type objectTransfer struct {
+	interfaceTransfer // interface org.bluez.obex.Transfer1
+	proxy.ImplObject
+}
+
+func NewTransfer(conn *dbus.Conn, path dbus.ObjectPath) (Transfer, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Transfer)
-	obj.Object.Init_(conn, "org.bluez.obex", path)
+	obj := new(objectTransfer)
+	obj.ImplObject.Init_(conn, "org.bluez.obex", path)
 	return obj, nil
 }
 
-type transfer struct{}
-
-func (v *transfer) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type transfer interface {
+	GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Cancel(flags dbus.Flags) error
+	Status() proxy.PropString
+	Session() proxy.PropObjectPath
+	Name() proxy.PropString
+	Type() proxy.PropString
+	Size() proxy.PropUint64
+	Time() proxy.PropUint64
+	Filename() proxy.PropString
+	Transferred() proxy.PropUint64
 }
 
-func (*transfer) GetInterfaceName_() string {
+type interfaceTransfer struct{}
+
+func (v *interfaceTransfer) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTransfer) GetInterfaceName_() string {
 	return "org.bluez.obex.Transfer1"
 }
 
 // method Cancel
 
-func (v *transfer) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceTransfer) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Cancel", flags, ch)
 }
 
-func (v *transfer) Cancel(flags dbus.Flags) error {
+func (v *interfaceTransfer) Cancel(flags dbus.Flags) error {
 	return (<-v.GoCancel(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Status s
 
-func (v *transfer) Status() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTransfer) Status() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Status",
 	}
@@ -296,8 +363,8 @@ func (v *transfer) Status() proxy.PropString {
 
 // property Session o
 
-func (v *transfer) Session() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceTransfer) Session() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Session",
 	}
@@ -305,8 +372,8 @@ func (v *transfer) Session() proxy.PropObjectPath {
 
 // property Name s
 
-func (v *transfer) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTransfer) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -314,8 +381,8 @@ func (v *transfer) Name() proxy.PropString {
 
 // property Type s
 
-func (v *transfer) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTransfer) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -323,8 +390,8 @@ func (v *transfer) Type() proxy.PropString {
 
 // property Size t
 
-func (v *transfer) Size() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceTransfer) Size() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Size",
 	}
@@ -332,8 +399,8 @@ func (v *transfer) Size() proxy.PropUint64 {
 
 // property Time t
 
-func (v *transfer) Time() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceTransfer) Time() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Time",
 	}
@@ -341,8 +408,8 @@ func (v *transfer) Time() proxy.PropUint64 {
 
 // property Filename s
 
-func (v *transfer) Filename() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTransfer) Filename() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Filename",
 	}
@@ -350,8 +417,8 @@ func (v *transfer) Filename() proxy.PropString {
 
 // property Transferred t
 
-func (v *transfer) Transferred() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceTransfer) Transferred() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Transferred",
 	}

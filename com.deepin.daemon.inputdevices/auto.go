@@ -9,123 +9,155 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Keyboard struct {
+type Keyboard interface {
 	keyboard // interface com.deepin.daemon.InputDevice.Keyboard
 	proxy.Object
 }
 
-func NewKeyboard(conn *dbus.Conn) *Keyboard {
-	obj := new(Keyboard)
-	obj.Object.Init_(conn, "com.deepin.daemon.InputDevices", "/com/deepin/daemon/InputDevice/Keyboard")
+type objectKeyboard struct {
+	interfaceKeyboard // interface com.deepin.daemon.InputDevice.Keyboard
+	proxy.ImplObject
+}
+
+func NewKeyboard(conn *dbus.Conn) Keyboard {
+	obj := new(objectKeyboard)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.InputDevices", "/com/deepin/daemon/InputDevice/Keyboard")
 	return obj
 }
 
-type keyboard struct{}
-
-func (v *keyboard) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type keyboard interface {
+	GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call
+	AddLayoutOption(flags dbus.Flags, option string) error
+	GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call
+	AddUserLayout(flags dbus.Flags, layout string) error
+	GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearLayoutOption(flags dbus.Flags) error
+	GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call
+	DeleteLayoutOption(flags dbus.Flags, option string) error
+	GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call
+	DeleteUserLayout(flags dbus.Flags, layout string) error
+	GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call
+	GetLayoutDesc(flags dbus.Flags, layout string) (string, error)
+	GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	LayoutList(flags dbus.Flags) (map[string]string, error)
+	GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reset(flags dbus.Flags) error
+	UserOptionList() proxy.PropStringArray
+	RepeatEnabled() proxy.PropBool
+	CapslockToggle() proxy.PropBool
+	CursorBlink() proxy.PropInt32
+	RepeatInterval() proxy.PropUint32
+	RepeatDelay() proxy.PropUint32
+	CurrentLayout() proxy.PropString
+	UserLayoutList() proxy.PropStringArray
 }
 
-func (*keyboard) GetInterfaceName_() string {
+type interfaceKeyboard struct{}
+
+func (v *interfaceKeyboard) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceKeyboard) GetInterfaceName_() string {
 	return "com.deepin.daemon.InputDevice.Keyboard"
 }
 
 // method AddLayoutOption
 
-func (v *keyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+func (v *interfaceKeyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddLayoutOption", flags, ch, option)
 }
 
-func (v *keyboard) AddLayoutOption(flags dbus.Flags, option string) error {
+func (v *interfaceKeyboard) AddLayoutOption(flags dbus.Flags, option string) error {
 	return (<-v.GoAddLayoutOption(flags, make(chan *dbus.Call, 1), option).Done).Err
 }
 
 // method AddUserLayout
 
-func (v *keyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *interfaceKeyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddUserLayout", flags, ch, layout)
 }
 
-func (v *keyboard) AddUserLayout(flags dbus.Flags, layout string) error {
+func (v *interfaceKeyboard) AddUserLayout(flags dbus.Flags, layout string) error {
 	return (<-v.GoAddUserLayout(flags, make(chan *dbus.Call, 1), layout).Done).Err
 }
 
 // method ClearLayoutOption
 
-func (v *keyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceKeyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearLayoutOption", flags, ch)
 }
 
-func (v *keyboard) ClearLayoutOption(flags dbus.Flags) error {
+func (v *interfaceKeyboard) ClearLayoutOption(flags dbus.Flags) error {
 	return (<-v.GoClearLayoutOption(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method DeleteLayoutOption
 
-func (v *keyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+func (v *interfaceKeyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteLayoutOption", flags, ch, option)
 }
 
-func (v *keyboard) DeleteLayoutOption(flags dbus.Flags, option string) error {
+func (v *interfaceKeyboard) DeleteLayoutOption(flags dbus.Flags, option string) error {
 	return (<-v.GoDeleteLayoutOption(flags, make(chan *dbus.Call, 1), option).Done).Err
 }
 
 // method DeleteUserLayout
 
-func (v *keyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *interfaceKeyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteUserLayout", flags, ch, layout)
 }
 
-func (v *keyboard) DeleteUserLayout(flags dbus.Flags, layout string) error {
+func (v *interfaceKeyboard) DeleteUserLayout(flags dbus.Flags, layout string) error {
 	return (<-v.GoDeleteUserLayout(flags, make(chan *dbus.Call, 1), layout).Done).Err
 }
 
 // method GetLayoutDesc
 
-func (v *keyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *interfaceKeyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetLayoutDesc", flags, ch, layout)
 }
 
-func (*keyboard) StoreGetLayoutDesc(call *dbus.Call) (description string, err error) {
+func (*interfaceKeyboard) StoreGetLayoutDesc(call *dbus.Call) (description string, err error) {
 	err = call.Store(&description)
 	return
 }
 
-func (v *keyboard) GetLayoutDesc(flags dbus.Flags, layout string) (description string, err error) {
+func (v *interfaceKeyboard) GetLayoutDesc(flags dbus.Flags, layout string) (string, error) {
 	return v.StoreGetLayoutDesc(
 		<-v.GoGetLayoutDesc(flags, make(chan *dbus.Call, 1), layout).Done)
 }
 
 // method LayoutList
 
-func (v *keyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceKeyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LayoutList", flags, ch)
 }
 
-func (*keyboard) StoreLayoutList(call *dbus.Call) (layout_list map[string]string, err error) {
+func (*interfaceKeyboard) StoreLayoutList(call *dbus.Call) (layout_list map[string]string, err error) {
 	err = call.Store(&layout_list)
 	return
 }
 
-func (v *keyboard) LayoutList(flags dbus.Flags) (layout_list map[string]string, err error) {
+func (v *interfaceKeyboard) LayoutList(flags dbus.Flags) (map[string]string, error) {
 	return v.StoreLayoutList(
 		<-v.GoLayoutList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Reset
 
-func (v *keyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceKeyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
-func (v *keyboard) Reset(flags dbus.Flags) error {
+func (v *interfaceKeyboard) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property UserOptionList as
 
-func (v *keyboard) UserOptionList() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceKeyboard) UserOptionList() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UserOptionList",
 	}
@@ -133,8 +165,8 @@ func (v *keyboard) UserOptionList() proxy.PropStringArray {
 
 // property RepeatEnabled b
 
-func (v *keyboard) RepeatEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceKeyboard) RepeatEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RepeatEnabled",
 	}
@@ -142,8 +174,8 @@ func (v *keyboard) RepeatEnabled() proxy.PropBool {
 
 // property CapslockToggle b
 
-func (v *keyboard) CapslockToggle() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceKeyboard) CapslockToggle() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CapslockToggle",
 	}
@@ -151,8 +183,8 @@ func (v *keyboard) CapslockToggle() proxy.PropBool {
 
 // property CursorBlink i
 
-func (v *keyboard) CursorBlink() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceKeyboard) CursorBlink() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "CursorBlink",
 	}
@@ -160,8 +192,8 @@ func (v *keyboard) CursorBlink() proxy.PropInt32 {
 
 // property RepeatInterval u
 
-func (v *keyboard) RepeatInterval() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceKeyboard) RepeatInterval() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RepeatInterval",
 	}
@@ -169,8 +201,8 @@ func (v *keyboard) RepeatInterval() proxy.PropUint32 {
 
 // property RepeatDelay u
 
-func (v *keyboard) RepeatDelay() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceKeyboard) RepeatDelay() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RepeatDelay",
 	}
@@ -178,8 +210,8 @@ func (v *keyboard) RepeatDelay() proxy.PropUint32 {
 
 // property CurrentLayout s
 
-func (v *keyboard) CurrentLayout() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceKeyboard) CurrentLayout() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CurrentLayout",
 	}
@@ -187,48 +219,77 @@ func (v *keyboard) CurrentLayout() proxy.PropString {
 
 // property UserLayoutList as
 
-func (v *keyboard) UserLayoutList() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceKeyboard) UserLayoutList() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "UserLayoutList",
 	}
 }
 
-type TouchPad struct {
+type TouchPad interface {
 	touchPad // interface com.deepin.daemon.InputDevice.TouchPad
 	proxy.Object
 }
 
-func NewTouchPad(conn *dbus.Conn) *TouchPad {
-	obj := new(TouchPad)
-	obj.Object.Init_(conn, "com.deepin.daemon.InputDevices", "/com/deepin/daemon/InputDevice/TouchPad")
+type objectTouchPad struct {
+	interfaceTouchPad // interface com.deepin.daemon.InputDevice.TouchPad
+	proxy.ImplObject
+}
+
+func NewTouchPad(conn *dbus.Conn) TouchPad {
+	obj := new(objectTouchPad)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.InputDevices", "/com/deepin/daemon/InputDevice/TouchPad")
 	return obj
 }
 
-type touchPad struct{}
-
-func (v *touchPad) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type touchPad interface {
+	GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reset(flags dbus.Flags) error
+	EdgeScroll() proxy.PropBool
+	PalmDetect() proxy.PropBool
+	MotionAcceleration() proxy.PropDouble
+	DeltaScroll() proxy.PropInt32
+	DragThreshold() proxy.PropInt32
+	LeftHanded() proxy.PropBool
+	DisableIfTyping() proxy.PropBool
+	NaturalScroll() proxy.PropBool
+	HorizScroll() proxy.PropBool
+	VertScroll() proxy.PropBool
+	MotionThreshold() proxy.PropDouble
+	DoubleClick() proxy.PropInt32
+	DeviceList() proxy.PropString
+	TPadEnable() proxy.PropBool
+	PalmMinZ() proxy.PropInt32
+	Exist() proxy.PropBool
+	TapClick() proxy.PropBool
+	MotionScaling() proxy.PropDouble
+	PalmMinWidth() proxy.PropInt32
 }
 
-func (*touchPad) GetInterfaceName_() string {
+type interfaceTouchPad struct{}
+
+func (v *interfaceTouchPad) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTouchPad) GetInterfaceName_() string {
 	return "com.deepin.daemon.InputDevice.TouchPad"
 }
 
 // method Reset
 
-func (v *touchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceTouchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
-func (v *touchPad) Reset(flags dbus.Flags) error {
+func (v *interfaceTouchPad) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property EdgeScroll b
 
-func (v *touchPad) EdgeScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) EdgeScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "EdgeScroll",
 	}
@@ -236,8 +297,8 @@ func (v *touchPad) EdgeScroll() proxy.PropBool {
 
 // property PalmDetect b
 
-func (v *touchPad) PalmDetect() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) PalmDetect() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PalmDetect",
 	}
@@ -245,8 +306,8 @@ func (v *touchPad) PalmDetect() proxy.PropBool {
 
 // property MotionAcceleration d
 
-func (v *touchPad) MotionAcceleration() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceTouchPad) MotionAcceleration() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "MotionAcceleration",
 	}
@@ -254,8 +315,8 @@ func (v *touchPad) MotionAcceleration() proxy.PropDouble {
 
 // property DeltaScroll i
 
-func (v *touchPad) DeltaScroll() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceTouchPad) DeltaScroll() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DeltaScroll",
 	}
@@ -263,8 +324,8 @@ func (v *touchPad) DeltaScroll() proxy.PropInt32 {
 
 // property DragThreshold i
 
-func (v *touchPad) DragThreshold() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceTouchPad) DragThreshold() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DragThreshold",
 	}
@@ -272,8 +333,8 @@ func (v *touchPad) DragThreshold() proxy.PropInt32 {
 
 // property LeftHanded b
 
-func (v *touchPad) LeftHanded() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) LeftHanded() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "LeftHanded",
 	}
@@ -281,8 +342,8 @@ func (v *touchPad) LeftHanded() proxy.PropBool {
 
 // property DisableIfTyping b
 
-func (v *touchPad) DisableIfTyping() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) DisableIfTyping() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DisableIfTyping",
 	}
@@ -290,8 +351,8 @@ func (v *touchPad) DisableIfTyping() proxy.PropBool {
 
 // property NaturalScroll b
 
-func (v *touchPad) NaturalScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) NaturalScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NaturalScroll",
 	}
@@ -299,8 +360,8 @@ func (v *touchPad) NaturalScroll() proxy.PropBool {
 
 // property HorizScroll b
 
-func (v *touchPad) HorizScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) HorizScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HorizScroll",
 	}
@@ -308,8 +369,8 @@ func (v *touchPad) HorizScroll() proxy.PropBool {
 
 // property VertScroll b
 
-func (v *touchPad) VertScroll() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) VertScroll() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "VertScroll",
 	}
@@ -317,8 +378,8 @@ func (v *touchPad) VertScroll() proxy.PropBool {
 
 // property MotionThreshold d
 
-func (v *touchPad) MotionThreshold() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceTouchPad) MotionThreshold() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "MotionThreshold",
 	}
@@ -326,8 +387,8 @@ func (v *touchPad) MotionThreshold() proxy.PropDouble {
 
 // property DoubleClick i
 
-func (v *touchPad) DoubleClick() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceTouchPad) DoubleClick() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DoubleClick",
 	}
@@ -335,8 +396,8 @@ func (v *touchPad) DoubleClick() proxy.PropInt32 {
 
 // property DeviceList s
 
-func (v *touchPad) DeviceList() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTouchPad) DeviceList() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DeviceList",
 	}
@@ -344,8 +405,8 @@ func (v *touchPad) DeviceList() proxy.PropString {
 
 // property TPadEnable b
 
-func (v *touchPad) TPadEnable() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) TPadEnable() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TPadEnable",
 	}
@@ -353,8 +414,8 @@ func (v *touchPad) TPadEnable() proxy.PropBool {
 
 // property PalmMinZ i
 
-func (v *touchPad) PalmMinZ() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceTouchPad) PalmMinZ() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "PalmMinZ",
 	}
@@ -362,8 +423,8 @@ func (v *touchPad) PalmMinZ() proxy.PropInt32 {
 
 // property Exist b
 
-func (v *touchPad) Exist() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) Exist() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Exist",
 	}
@@ -371,8 +432,8 @@ func (v *touchPad) Exist() proxy.PropBool {
 
 // property TapClick b
 
-func (v *touchPad) TapClick() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTouchPad) TapClick() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "TapClick",
 	}
@@ -380,8 +441,8 @@ func (v *touchPad) TapClick() proxy.PropBool {
 
 // property MotionScaling d
 
-func (v *touchPad) MotionScaling() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceTouchPad) MotionScaling() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "MotionScaling",
 	}
@@ -389,8 +450,8 @@ func (v *touchPad) MotionScaling() proxy.PropDouble {
 
 // property PalmMinWidth i
 
-func (v *touchPad) PalmMinWidth() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceTouchPad) PalmMinWidth() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "PalmMinWidth",
 	}

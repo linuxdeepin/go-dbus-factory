@@ -12,31 +12,53 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type UKey struct {
+type UKey interface {
 	ukey // interface com.deepin.daemon.Authenticate.UKey.Device
 	proxy.Object
 }
 
-func NewUKey(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (*UKey, error) {
+type objectUKey struct {
+	interfaceUkey // interface com.deepin.daemon.Authenticate.UKey.Device
+	proxy.ImplObject
+}
+
+func NewUKey(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (UKey, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(UKey)
-	obj.Object.Init_(conn, serviceName, path)
+	obj := new(objectUKey)
+	obj.ImplObject.Init_(conn, serviceName, path)
 	return obj, nil
 }
 
-type ukey struct{}
-
-func (v *ukey) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ukey interface {
+	SetInterfaceName_(name string)
+	GoSetPin(flags dbus.Flags, ch chan *dbus.Call, username string, id string, pin string) *dbus.Call
+	SetPin(flags dbus.Flags, username string, id string, pin string) error
+	GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, username string, id string, path string) *dbus.Call
+	SetSessionPath(flags dbus.Flags, username string, id string, path string) error
+	GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call
+	StopVerify(flags dbus.Flags, username string, id string) error
+	GoVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call
+	Verify(flags dbus.Flags, username string, id string) error
+	ConnectVerifyResult(cb func(id string, msg string)) (dbusutil.SignalHandlerId, error)
+	State() proxy.PropInt32
+	Type() proxy.PropInt32
+	Capability() proxy.PropInt32
+	Name() proxy.PropString
 }
 
-func (v *ukey) SetInterfaceName_(name string) {
+type interfaceUkey struct{}
+
+func (v *interfaceUkey) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (v *interfaceUkey) SetInterfaceName_(name string) {
 	v.GetObject_().SetExtra("customIfc", name)
 }
 
-func (v *ukey) GetInterfaceName_() string {
+func (v *interfaceUkey) GetInterfaceName_() string {
 	ifcName, _ := v.GetObject_().GetExtra("customIfc")
 	ifcNameStr, _ := ifcName.(string)
 	return ifcNameStr
@@ -44,47 +66,47 @@ func (v *ukey) GetInterfaceName_() string {
 
 // method SetPin
 
-func (v *ukey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, username string, id string, pin string) *dbus.Call {
+func (v *interfaceUkey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, username string, id string, pin string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPin", flags, ch, username, id, pin)
 }
 
-func (v *ukey) SetPin(flags dbus.Flags, username string, id string, pin string) error {
+func (v *interfaceUkey) SetPin(flags dbus.Flags, username string, id string, pin string) error {
 	return (<-v.GoSetPin(flags, make(chan *dbus.Call, 1), username, id, pin).Done).Err
 }
 
 // method SetSessionPath
 
-func (v *ukey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, username string, id string, path string) *dbus.Call {
+func (v *interfaceUkey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, username string, id string, path string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSessionPath", flags, ch, username, id, path)
 }
 
-func (v *ukey) SetSessionPath(flags dbus.Flags, username string, id string, path string) error {
+func (v *interfaceUkey) SetSessionPath(flags dbus.Flags, username string, id string, path string) error {
 	return (<-v.GoSetSessionPath(flags, make(chan *dbus.Call, 1), username, id, path).Done).Err
 }
 
 // method StopVerify
 
-func (v *ukey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
+func (v *interfaceUkey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch, username, id)
 }
 
-func (v *ukey) StopVerify(flags dbus.Flags, username string, id string) error {
+func (v *interfaceUkey) StopVerify(flags dbus.Flags, username string, id string) error {
 	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1), username, id).Done).Err
 }
 
 // method Verify
 
-func (v *ukey) GoVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
+func (v *interfaceUkey) GoVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Verify", flags, ch, username, id)
 }
 
-func (v *ukey) Verify(flags dbus.Flags, username string, id string) error {
+func (v *interfaceUkey) Verify(flags dbus.Flags, username string, id string) error {
 	return (<-v.GoVerify(flags, make(chan *dbus.Call, 1), username, id).Done).Err
 }
 
 // signal VerifyResult
 
-func (v *ukey) ConnectVerifyResult(cb func(id string, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceUkey) ConnectVerifyResult(cb func(id string, msg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -111,8 +133,8 @@ func (v *ukey) ConnectVerifyResult(cb func(id string, msg string)) (dbusutil.Sig
 
 // property State i
 
-func (v *ukey) State() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceUkey) State() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "State",
 	}
@@ -120,8 +142,8 @@ func (v *ukey) State() proxy.PropInt32 {
 
 // property Type i
 
-func (v *ukey) Type() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceUkey) Type() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Type",
 	}
@@ -129,8 +151,8 @@ func (v *ukey) Type() proxy.PropInt32 {
 
 // property Capability i
 
-func (v *ukey) Capability() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceUkey) Capability() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Capability",
 	}
@@ -138,8 +160,8 @@ func (v *ukey) Capability() proxy.PropInt32 {
 
 // property Name s
 
-func (v *ukey) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUkey) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}

@@ -9,81 +9,101 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Timedated struct {
+type Timedated interface {
 	timedated // interface com.deepin.daemon.Timedated
 	proxy.Object
 }
 
-func NewTimedated(conn *dbus.Conn) *Timedated {
-	obj := new(Timedated)
-	obj.Object.Init_(conn, "com.deepin.daemon.Timedated", "/com/deepin/daemon/Timedated")
+type objectTimedated struct {
+	interfaceTimedated // interface com.deepin.daemon.Timedated
+	proxy.ImplObject
+}
+
+func NewTimedated(conn *dbus.Conn) Timedated {
+	obj := new(objectTimedated)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Timedated", "/com/deepin/daemon/Timedated")
 	return obj
 }
 
-type timedated struct{}
-
-func (v *timedated) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type timedated interface {
+	GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, enabled bool, fixSystem bool, message string) *dbus.Call
+	SetLocalRTC(flags dbus.Flags, enabled bool, fixSystem bool, message string) error
+	GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, enabled bool, message string) *dbus.Call
+	SetNTP(flags dbus.Flags, enabled bool, message string) error
+	GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call
+	SetNTPServer(flags dbus.Flags, server string, message string) error
+	GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call
+	SetTime(flags dbus.Flags, usec int64, relative bool, message string) error
+	GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone string, message string) *dbus.Call
+	SetTimezone(flags dbus.Flags, timezone string, message string) error
+	NTPServer() proxy.PropString
+	Timezone() proxy.PropString
 }
 
-func (*timedated) GetInterfaceName_() string {
+type interfaceTimedated struct{}
+
+func (v *interfaceTimedated) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTimedated) GetInterfaceName_() string {
 	return "com.deepin.daemon.Timedated"
 }
 
 // method SetLocalRTC
 
-func (v *timedated) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, enabled bool, fixSystem bool, message string) *dbus.Call {
+func (v *interfaceTimedated) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, enabled bool, fixSystem bool, message string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocalRTC", flags, ch, enabled, fixSystem, message)
 }
 
-func (v *timedated) SetLocalRTC(flags dbus.Flags, enabled bool, fixSystem bool, message string) error {
+func (v *interfaceTimedated) SetLocalRTC(flags dbus.Flags, enabled bool, fixSystem bool, message string) error {
 	return (<-v.GoSetLocalRTC(flags, make(chan *dbus.Call, 1), enabled, fixSystem, message).Done).Err
 }
 
 // method SetNTP
 
-func (v *timedated) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, enabled bool, message string) *dbus.Call {
+func (v *interfaceTimedated) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, enabled bool, message string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetNTP", flags, ch, enabled, message)
 }
 
-func (v *timedated) SetNTP(flags dbus.Flags, enabled bool, message string) error {
+func (v *interfaceTimedated) SetNTP(flags dbus.Flags, enabled bool, message string) error {
 	return (<-v.GoSetNTP(flags, make(chan *dbus.Call, 1), enabled, message).Done).Err
 }
 
 // method SetNTPServer
 
-func (v *timedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call {
+func (v *interfaceTimedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetNTPServer", flags, ch, server, message)
 }
 
-func (v *timedated) SetNTPServer(flags dbus.Flags, server string, message string) error {
+func (v *interfaceTimedated) SetNTPServer(flags dbus.Flags, server string, message string) error {
 	return (<-v.GoSetNTPServer(flags, make(chan *dbus.Call, 1), server, message).Done).Err
 }
 
 // method SetTime
 
-func (v *timedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call {
+func (v *interfaceTimedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTime", flags, ch, usec, relative, message)
 }
 
-func (v *timedated) SetTime(flags dbus.Flags, usec int64, relative bool, message string) error {
+func (v *interfaceTimedated) SetTime(flags dbus.Flags, usec int64, relative bool, message string) error {
 	return (<-v.GoSetTime(flags, make(chan *dbus.Call, 1), usec, relative, message).Done).Err
 }
 
 // method SetTimezone
 
-func (v *timedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone string, message string) *dbus.Call {
+func (v *interfaceTimedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone string, message string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTimezone", flags, ch, timezone, message)
 }
 
-func (v *timedated) SetTimezone(flags dbus.Flags, timezone string, message string) error {
+func (v *interfaceTimedated) SetTimezone(flags dbus.Flags, timezone string, message string) error {
 	return (<-v.GoSetTimezone(flags, make(chan *dbus.Call, 1), timezone, message).Done).Err
 }
 
 // property NTPServer s
 
-func (v *timedated) NTPServer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTimedated) NTPServer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "NTPServer",
 	}
@@ -91,8 +111,8 @@ func (v *timedated) NTPServer() proxy.PropString {
 
 // property Timezone s
 
-func (v *timedated) Timezone() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTimedated) Timezone() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Timezone",
 	}

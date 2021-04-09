@@ -12,116 +12,141 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type App struct {
+type App interface {
 	app // interface com.deepin.system.proxy.App
 	proxy.Object
 }
 
-func NewApp(conn *dbus.Conn) *App {
-	obj := new(App)
-	obj.Object.Init_(conn, "com.deepin.system.proxy", "/com/deepin/system/proxy/App")
+type objectApp struct {
+	interfaceApp // interface com.deepin.system.proxy.App
+	proxy.ImplObject
+}
+
+func NewApp(conn *dbus.Conn) App {
+	obj := new(objectApp)
+	obj.ImplObject.Init_(conn, "com.deepin.system.proxy", "/com/deepin/system/proxy/App")
 	return obj
 }
 
-type app struct{}
-
-func (v *app) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type app interface {
+	GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call
+	AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error
+	GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call
+	AddProxyApps(flags dbus.Flags, app []string) error
+	GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearProxy(flags dbus.Flags) error
+	GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call
+	DelProxyApps(flags dbus.Flags, app []string) error
+	GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetProxy(flags dbus.Flags) (string, error)
+	GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call
+	SetProxies(flags dbus.Flags, proxies []interface{}) error
+	GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call
+	StartProxy(flags dbus.Flags, proto string, name string, udp bool) error
+	GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopProxy(flags dbus.Flags) error
+	ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error)
 }
 
-func (*app) GetInterfaceName_() string {
+type interfaceApp struct{}
+
+func (v *interfaceApp) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceApp) GetInterfaceName_() string {
 	return "com.deepin.system.proxy.App"
 }
 
 // method AddProxy
 
-func (v *app) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
+func (v *interfaceApp) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddProxy", flags, ch, proto, name, proxy)
 }
 
-func (v *app) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
+func (v *interfaceApp) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
 	return (<-v.GoAddProxy(flags, make(chan *dbus.Call, 1), proto, name, proxy).Done).Err
 }
 
 // method AddProxyApps
 
-func (v *app) GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *interfaceApp) GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddProxyApps", flags, ch, app)
 }
 
-func (v *app) AddProxyApps(flags dbus.Flags, app []string) error {
+func (v *interfaceApp) AddProxyApps(flags dbus.Flags, app []string) error {
 	return (<-v.GoAddProxyApps(flags, make(chan *dbus.Call, 1), app).Done).Err
 }
 
 // method ClearProxy
 
-func (v *app) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApp) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearProxy", flags, ch)
 }
 
-func (v *app) ClearProxy(flags dbus.Flags) error {
+func (v *interfaceApp) ClearProxy(flags dbus.Flags) error {
 	return (<-v.GoClearProxy(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method DelProxyApps
 
-func (v *app) GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *interfaceApp) GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DelProxyApps", flags, ch, app)
 }
 
-func (v *app) DelProxyApps(flags dbus.Flags, app []string) error {
+func (v *interfaceApp) DelProxyApps(flags dbus.Flags, app []string) error {
 	return (<-v.GoDelProxyApps(flags, make(chan *dbus.Call, 1), app).Done).Err
 }
 
 // method GetProxy
 
-func (v *app) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApp) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProxy", flags, ch)
 }
 
-func (*app) StoreGetProxy(call *dbus.Call) (proxy string, err error) {
+func (*interfaceApp) StoreGetProxy(call *dbus.Call) (proxy string, err error) {
 	err = call.Store(&proxy)
 	return
 }
 
-func (v *app) GetProxy(flags dbus.Flags) (proxy string, err error) {
+func (v *interfaceApp) GetProxy(flags dbus.Flags) (string, error) {
 	return v.StoreGetProxy(
 		<-v.GoGetProxy(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetProxies
 
-func (v *app) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
+func (v *interfaceApp) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProxies", flags, ch, proxies)
 }
 
-func (v *app) SetProxies(flags dbus.Flags, proxies []interface{}) error {
+func (v *interfaceApp) SetProxies(flags dbus.Flags, proxies []interface{}) error {
 	return (<-v.GoSetProxies(flags, make(chan *dbus.Call, 1), proxies).Done).Err
 }
 
 // method StartProxy
 
-func (v *app) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
+func (v *interfaceApp) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartProxy", flags, ch, proto, name, udp)
 }
 
-func (v *app) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
+func (v *interfaceApp) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
 	return (<-v.GoStartProxy(flags, make(chan *dbus.Call, 1), proto, name, udp).Done).Err
 }
 
 // method StopProxy
 
-func (v *app) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceApp) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopProxy", flags, ch)
 }
 
-func (v *app) StopProxy(flags dbus.Flags) error {
+func (v *interfaceApp) StopProxy(flags dbus.Flags) error {
 	return (<-v.GoStopProxy(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal Proxy
 
-func (v *app) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceApp) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -145,116 +170,142 @@ func (v *app) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandler
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-type Global struct {
+type Global interface {
 	global // interface com.deepin.system.proxy.Global
 	proxy.Object
 }
 
-func NewGlobal(conn *dbus.Conn) *Global {
-	obj := new(Global)
-	obj.Object.Init_(conn, "com.deepin.system.proxy", "/com/deepin/system/proxy/Global")
+type objectGlobal struct {
+	interfaceGlobal // interface com.deepin.system.proxy.Global
+	proxy.ImplObject
+}
+
+func NewGlobal(conn *dbus.Conn) Global {
+	obj := new(objectGlobal)
+	obj.ImplObject.Init_(conn, "com.deepin.system.proxy", "/com/deepin/system/proxy/Global")
 	return obj
 }
 
-type global struct{}
-
-func (v *global) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type global interface {
+	GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call
+	AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error
+	GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearProxy(flags dbus.Flags) error
+	GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetProxy(flags dbus.Flags) (string, error)
+	GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call
+	IgnoreProxyApps(flags dbus.Flags, app []string) error
+	GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call
+	SetProxies(flags dbus.Flags, proxies []interface{}) error
+	GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call
+	StartProxy(flags dbus.Flags, proto string, name string, udp bool) error
+	GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopProxy(flags dbus.Flags) error
+	GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call
+	UnIgnoreProxyApps(flags dbus.Flags, app []string) error
+	ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error)
+	IgnoreApp() proxy.PropStringArray
 }
 
-func (*global) GetInterfaceName_() string {
+type interfaceGlobal struct{}
+
+func (v *interfaceGlobal) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceGlobal) GetInterfaceName_() string {
 	return "com.deepin.system.proxy.Global"
 }
 
 // method AddProxy
 
-func (v *global) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
+func (v *interfaceGlobal) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddProxy", flags, ch, proto, name, proxy)
 }
 
-func (v *global) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
+func (v *interfaceGlobal) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
 	return (<-v.GoAddProxy(flags, make(chan *dbus.Call, 1), proto, name, proxy).Done).Err
 }
 
 // method ClearProxy
 
-func (v *global) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceGlobal) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearProxy", flags, ch)
 }
 
-func (v *global) ClearProxy(flags dbus.Flags) error {
+func (v *interfaceGlobal) ClearProxy(flags dbus.Flags) error {
 	return (<-v.GoClearProxy(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method GetProxy
 
-func (v *global) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceGlobal) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProxy", flags, ch)
 }
 
-func (*global) StoreGetProxy(call *dbus.Call) (proxy string, err error) {
+func (*interfaceGlobal) StoreGetProxy(call *dbus.Call) (proxy string, err error) {
 	err = call.Store(&proxy)
 	return
 }
 
-func (v *global) GetProxy(flags dbus.Flags) (proxy string, err error) {
+func (v *interfaceGlobal) GetProxy(flags dbus.Flags) (string, error) {
 	return v.StoreGetProxy(
 		<-v.GoGetProxy(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IgnoreProxyApps
 
-func (v *global) GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *interfaceGlobal) GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IgnoreProxyApps", flags, ch, app)
 }
 
-func (v *global) IgnoreProxyApps(flags dbus.Flags, app []string) error {
+func (v *interfaceGlobal) IgnoreProxyApps(flags dbus.Flags, app []string) error {
 	return (<-v.GoIgnoreProxyApps(flags, make(chan *dbus.Call, 1), app).Done).Err
 }
 
 // method SetProxies
 
-func (v *global) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
+func (v *interfaceGlobal) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProxies", flags, ch, proxies)
 }
 
-func (v *global) SetProxies(flags dbus.Flags, proxies []interface{}) error {
+func (v *interfaceGlobal) SetProxies(flags dbus.Flags, proxies []interface{}) error {
 	return (<-v.GoSetProxies(flags, make(chan *dbus.Call, 1), proxies).Done).Err
 }
 
 // method StartProxy
 
-func (v *global) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
+func (v *interfaceGlobal) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartProxy", flags, ch, proto, name, udp)
 }
 
-func (v *global) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
+func (v *interfaceGlobal) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
 	return (<-v.GoStartProxy(flags, make(chan *dbus.Call, 1), proto, name, udp).Done).Err
 }
 
 // method StopProxy
 
-func (v *global) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceGlobal) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopProxy", flags, ch)
 }
 
-func (v *global) StopProxy(flags dbus.Flags) error {
+func (v *interfaceGlobal) StopProxy(flags dbus.Flags) error {
 	return (<-v.GoStopProxy(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method UnIgnoreProxyApps
 
-func (v *global) GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *interfaceGlobal) GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnIgnoreProxyApps", flags, ch, app)
 }
 
-func (v *global) UnIgnoreProxyApps(flags dbus.Flags, app []string) error {
+func (v *interfaceGlobal) UnIgnoreProxyApps(flags dbus.Flags, app []string) error {
 	return (<-v.GoUnIgnoreProxyApps(flags, make(chan *dbus.Call, 1), app).Done).Err
 }
 
 // signal Proxy
 
-func (v *global) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceGlobal) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -280,8 +331,8 @@ func (v *global) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHand
 
 // property IgnoreApp as
 
-func (v *global) IgnoreApp() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceGlobal) IgnoreApp() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "IgnoreApp",
 	}

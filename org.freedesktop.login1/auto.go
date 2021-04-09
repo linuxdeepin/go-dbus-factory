@@ -12,548 +12,678 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.login1.Manager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.login1", "/org/freedesktop/login1")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.login1.Manager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.login1", "/org/freedesktop/login1")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	GetSession(flags dbus.Flags, sessionId string) (dbus.ObjectPath, error)
+	GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
+	GetSessionByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error)
+	GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call
+	GetUser(flags dbus.Flags, uid uint32) (dbus.ObjectPath, error)
+	GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
+	GetUserByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error)
+	GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call
+	GetSeat(flags dbus.Flags, seatId string) (dbus.ObjectPath, error)
+	GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListSessions(flags dbus.Flags) ([]SessionDetail, error)
+	GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListUsers(flags dbus.Flags) ([]UserDetail, error)
+	GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListSeats(flags dbus.Flags) ([]SeatInfo, error)
+	GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListInhibitors(flags dbus.Flags) ([]InhibitorInfo, error)
+	GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call
+	CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (string, dbus.ObjectPath, string, dbus.UnixFD, uint32, string, uint32, bool, error)
+	GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	ReleaseSession(flags dbus.Flags, sessionId string) error
+	GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	ActivateSession(flags dbus.Flags, sessionId string) error
+	GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call
+	ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error
+	GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	LockSession(flags dbus.Flags, sessionId string) error
+	GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	UnlockSession(flags dbus.Flags, sessionId string) error
+	GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	LockSessions(flags dbus.Flags) error
+	GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	UnlockSessions(flags dbus.Flags) error
+	GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call
+	KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error
+	GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call
+	KillUser(flags dbus.Flags, uid uint32, signo int32) error
+	GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	TerminateSession(flags dbus.Flags, sessionId string) error
+	GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call
+	TerminateUser(flags dbus.Flags, uid uint32) error
+	GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call
+	TerminateSeat(flags dbus.Flags, seatId string) error
+	GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call
+	SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error
+	GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call
+	AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error
+	GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	FlushDevices(flags dbus.Flags, interactive bool) error
+	GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	PowerOff(flags dbus.Flags, interactive bool) error
+	GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	Reboot(flags dbus.Flags, interactive bool) error
+	GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	Suspend(flags dbus.Flags, interactive bool) error
+	GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	Hibernate(flags dbus.Flags, interactive bool) error
+	GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call
+	HybridSleep(flags dbus.Flags, interactive bool) error
+	GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanPowerOff(flags dbus.Flags) (string, error)
+	GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanReboot(flags dbus.Flags) (string, error)
+	GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanSuspend(flags dbus.Flags) (string, error)
+	GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanHibernate(flags dbus.Flags) (string, error)
+	GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanHybridSleep(flags dbus.Flags) (string, error)
+	GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call
+	ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error
+	GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CancelScheduledShutdown(flags dbus.Flags) (bool, error)
+	GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call
+	Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (dbus.UnixFD, error)
+	GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanRebootToFirmwareSetup(flags dbus.Flags) (string, error)
+	GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call
+	SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error
+	GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call
+	SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error
+	ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error)
+	ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error)
+	EnableWallMessages() proxy.PropBool
+	WallMessage() proxy.PropString
+	NAutoVTs() proxy.PropUint32
+	KillOnlyUsers() proxy.PropStringArray
+	KillExcludeUsers() proxy.PropStringArray
+	KillUserProcesses() proxy.PropBool
+	RebootToFirmwareSetup() proxy.PropBool
+	IdleHint() proxy.PropBool
+	IdleSinceHint() proxy.PropUint64
+	IdleSinceHintMonotonic() proxy.PropUint64
+	BlockInhibited() proxy.PropString
+	DelayInhibited() proxy.PropString
+	InhibitDelayMaxUSec() proxy.PropUint64
+	HandlePowerKey() proxy.PropString
+	HandleSuspendKey() proxy.PropString
+	HandleHibernateKey() proxy.PropString
+	HandleLidSwitch() proxy.PropString
+	HandleLidSwitchDocked() proxy.PropString
+	HoldoffTimeoutUSec() proxy.PropUint64
+	IdleAction() proxy.PropString
+	IdleActionUSec() proxy.PropUint64
+	PreparingForShutdown() proxy.PropBool
+	PreparingForSleep() proxy.PropBool
+	ScheduledShutdown() PropManagerScheduledShutdown
+	Docked() proxy.PropBool
+	RemoveIPC() proxy.PropBool
+	RuntimeDirectorySize() proxy.PropUint64
+	InhibitorsMax() proxy.PropUint64
+	NCurrentInhibitors() proxy.PropUint64
+	SessionsMax() proxy.PropUint64
+	NCurrentSessions() proxy.PropUint64
+	UserTasksMax() proxy.PropUint64
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.login1.Manager"
 }
 
 // method GetSession
 
-func (v *manager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSession", flags, ch, sessionId)
 }
 
-func (*manager) StoreGetSession(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetSession(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
 	err = call.Store(&sessionPath)
 	return
 }
 
-func (v *manager) GetSession(flags dbus.Flags, sessionId string) (sessionPath dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetSession(flags dbus.Flags, sessionId string) (dbus.ObjectPath, error) {
 	return v.StoreGetSession(
 		<-v.GoGetSession(flags, make(chan *dbus.Call, 1), sessionId).Done)
 }
 
 // method GetSessionByPID
 
-func (v *manager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *interfaceManager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSessionByPID", flags, ch, pid)
 }
 
-func (*manager) StoreGetSessionByPID(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetSessionByPID(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
 	err = call.Store(&sessionPath)
 	return
 }
 
-func (v *manager) GetSessionByPID(flags dbus.Flags, pid uint32) (sessionPath dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetSessionByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
 	return v.StoreGetSessionByPID(
 		<-v.GoGetSessionByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
 // method GetUser
 
-func (v *manager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+func (v *interfaceManager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUser", flags, ch, uid)
 }
 
-func (*manager) StoreGetUser(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUser(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
 	err = call.Store(&userPath)
 	return
 }
 
-func (v *manager) GetUser(flags dbus.Flags, uid uint32) (userPath dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUser(flags dbus.Flags, uid uint32) (dbus.ObjectPath, error) {
 	return v.StoreGetUser(
 		<-v.GoGetUser(flags, make(chan *dbus.Call, 1), uid).Done)
 }
 
 // method GetUserByPID
 
-func (v *manager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *interfaceManager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUserByPID", flags, ch, pid)
 }
 
-func (*manager) StoreGetUserByPID(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetUserByPID(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
 	err = call.Store(&userPath)
 	return
 }
 
-func (v *manager) GetUserByPID(flags dbus.Flags, pid uint32) (userPath dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetUserByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
 	return v.StoreGetUserByPID(
 		<-v.GoGetUserByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
 // method GetSeat
 
-func (v *manager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+func (v *interfaceManager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSeat", flags, ch, seatId)
 }
 
-func (*manager) StoreGetSeat(call *dbus.Call) (seatPath dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetSeat(call *dbus.Call) (seatPath dbus.ObjectPath, err error) {
 	err = call.Store(&seatPath)
 	return
 }
 
-func (v *manager) GetSeat(flags dbus.Flags, seatId string) (seatPath dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetSeat(flags dbus.Flags, seatId string) (dbus.ObjectPath, error) {
 	return v.StoreGetSeat(
 		<-v.GoGetSeat(flags, make(chan *dbus.Call, 1), seatId).Done)
 }
 
 // method ListSessions
 
-func (v *manager) GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListSessions", flags, ch)
 }
 
-func (*manager) StoreListSessions(call *dbus.Call) (sessionList []SessionDetail, err error) {
+func (*interfaceManager) StoreListSessions(call *dbus.Call) (sessionList []SessionDetail, err error) {
 	err = call.Store(&sessionList)
 	return
 }
 
-func (v *manager) ListSessions(flags dbus.Flags) (sessionList []SessionDetail, err error) {
+func (v *interfaceManager) ListSessions(flags dbus.Flags) ([]SessionDetail, error) {
 	return v.StoreListSessions(
 		<-v.GoListSessions(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListUsers
 
-func (v *manager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUsers", flags, ch)
 }
 
-func (*manager) StoreListUsers(call *dbus.Call) (userList []UserDetail, err error) {
+func (*interfaceManager) StoreListUsers(call *dbus.Call) (userList []UserDetail, err error) {
 	err = call.Store(&userList)
 	return
 }
 
-func (v *manager) ListUsers(flags dbus.Flags) (userList []UserDetail, err error) {
+func (v *interfaceManager) ListUsers(flags dbus.Flags) ([]UserDetail, error) {
 	return v.StoreListUsers(
 		<-v.GoListUsers(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListSeats
 
-func (v *manager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListSeats", flags, ch)
 }
 
-func (*manager) StoreListSeats(call *dbus.Call) (seatList []SeatInfo, err error) {
+func (*interfaceManager) StoreListSeats(call *dbus.Call) (seatList []SeatInfo, err error) {
 	err = call.Store(&seatList)
 	return
 }
 
-func (v *manager) ListSeats(flags dbus.Flags) (seatList []SeatInfo, err error) {
+func (v *interfaceManager) ListSeats(flags dbus.Flags) ([]SeatInfo, error) {
 	return v.StoreListSeats(
 		<-v.GoListSeats(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ListInhibitors
 
-func (v *manager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListInhibitors", flags, ch)
 }
 
-func (*manager) StoreListInhibitors(call *dbus.Call) (inhibitorList []InhibitorInfo, err error) {
+func (*interfaceManager) StoreListInhibitors(call *dbus.Call) (inhibitorList []InhibitorInfo, err error) {
 	err = call.Store(&inhibitorList)
 	return
 }
 
-func (v *manager) ListInhibitors(flags dbus.Flags) (inhibitorList []InhibitorInfo, err error) {
+func (v *interfaceManager) ListInhibitors(flags dbus.Flags) ([]InhibitorInfo, error) {
 	return v.StoreListInhibitors(
 		<-v.GoListInhibitors(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CreateSession
 
-func (v *manager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
+func (v *interfaceManager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateSession", flags, ch, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 }
 
-func (*manager) StoreCreateSession(call *dbus.Call) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
+func (*interfaceManager) StoreCreateSession(call *dbus.Call) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
 	err = call.Store(&sessionId, &sessionPath, &runtimePath, &fifoFd, &uid0, &seatId0, &vtnr0, &existing)
 	return
 }
 
-func (v *manager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
+func (v *interfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (string, dbus.ObjectPath, string, dbus.UnixFD, uint32, string, uint32, bool, error) {
 	return v.StoreCreateSession(
 		<-v.GoCreateSession(flags, make(chan *dbus.Call, 1), uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties).Done)
 }
 
 // method ReleaseSession
 
-func (v *manager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseSession", flags, ch, sessionId)
 }
 
-func (v *manager) ReleaseSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceManager) ReleaseSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoReleaseSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method ActivateSession
 
-func (v *manager) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
 }
 
-func (v *manager) ActivateSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceManager) ActivateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoActivateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method ActivateSessionOnSeat
 
-func (v *manager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call {
+func (v *interfaceManager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSessionOnSeat", flags, ch, sessionId, seatId)
 }
 
-func (v *manager) ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error {
+func (v *interfaceManager) ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error {
 	return (<-v.GoActivateSessionOnSeat(flags, make(chan *dbus.Call, 1), sessionId, seatId).Done).Err
 }
 
 // method LockSession
 
-func (v *manager) GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockSession", flags, ch, sessionId)
 }
 
-func (v *manager) LockSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceManager) LockSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoLockSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method UnlockSession
 
-func (v *manager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnlockSession", flags, ch, sessionId)
 }
 
-func (v *manager) UnlockSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceManager) UnlockSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoUnlockSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method LockSessions
 
-func (v *manager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockSessions", flags, ch)
 }
 
-func (v *manager) LockSessions(flags dbus.Flags) error {
+func (v *interfaceManager) LockSessions(flags dbus.Flags) error {
 	return (<-v.GoLockSessions(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method UnlockSessions
 
-func (v *manager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnlockSessions", flags, ch)
 }
 
-func (v *manager) UnlockSessions(flags dbus.Flags) error {
+func (v *interfaceManager) UnlockSessions(flags dbus.Flags) error {
 	return (<-v.GoUnlockSessions(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method KillSession
 
-func (v *manager) GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call {
+func (v *interfaceManager) GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillSession", flags, ch, sessionId, who, signo)
 }
 
-func (v *manager) KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error {
+func (v *interfaceManager) KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error {
 	return (<-v.GoKillSession(flags, make(chan *dbus.Call, 1), sessionId, who, signo).Done).Err
 }
 
 // method KillUser
 
-func (v *manager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call {
+func (v *interfaceManager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillUser", flags, ch, uid, signo)
 }
 
-func (v *manager) KillUser(flags dbus.Flags, uid uint32, signo int32) error {
+func (v *interfaceManager) KillUser(flags dbus.Flags, uid uint32, signo int32) error {
 	return (<-v.GoKillUser(flags, make(chan *dbus.Call, 1), uid, signo).Done).Err
 }
 
 // method TerminateSession
 
-func (v *manager) GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceManager) GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateSession", flags, ch, sessionId)
 }
 
-func (v *manager) TerminateSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceManager) TerminateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoTerminateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method TerminateUser
 
-func (v *manager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+func (v *interfaceManager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateUser", flags, ch, uid)
 }
 
-func (v *manager) TerminateUser(flags dbus.Flags, uid uint32) error {
+func (v *interfaceManager) TerminateUser(flags dbus.Flags, uid uint32) error {
 	return (<-v.GoTerminateUser(flags, make(chan *dbus.Call, 1), uid).Done).Err
 }
 
 // method TerminateSeat
 
-func (v *manager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+func (v *interfaceManager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateSeat", flags, ch, seatId)
 }
 
-func (v *manager) TerminateSeat(flags dbus.Flags, seatId string) error {
+func (v *interfaceManager) TerminateSeat(flags dbus.Flags, seatId string) error {
 	return (<-v.GoTerminateSeat(flags, make(chan *dbus.Call, 1), seatId).Done).Err
 }
 
 // method SetUserLinger
 
-func (v *manager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUserLinger", flags, ch, uid, linger, interactive)
 }
 
-func (v *manager) SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
+func (v *interfaceManager) SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
 	return (<-v.GoSetUserLinger(flags, make(chan *dbus.Call, 1), uid, linger, interactive).Done).Err
 }
 
 // method AttachDevice
 
-func (v *manager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachDevice", flags, ch, seatId, sysfs, interactive)
 }
 
-func (v *manager) AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
+func (v *interfaceManager) AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
 	return (<-v.GoAttachDevice(flags, make(chan *dbus.Call, 1), seatId, sysfs, interactive).Done).Err
 }
 
 // method FlushDevices
 
-func (v *manager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FlushDevices", flags, ch, interactive)
 }
 
-func (v *manager) FlushDevices(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) FlushDevices(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoFlushDevices(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method PowerOff
 
-func (v *manager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch, interactive)
 }
 
-func (v *manager) PowerOff(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) PowerOff(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method Reboot
 
-func (v *manager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reboot", flags, ch, interactive)
 }
 
-func (v *manager) Reboot(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) Reboot(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoReboot(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method Suspend
 
-func (v *manager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch, interactive)
 }
 
-func (v *manager) Suspend(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) Suspend(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method Hibernate
 
-func (v *manager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch, interactive)
 }
 
-func (v *manager) Hibernate(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) Hibernate(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method HybridSleep
 
-func (v *manager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *interfaceManager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HybridSleep", flags, ch, interactive)
 }
 
-func (v *manager) HybridSleep(flags dbus.Flags, interactive bool) error {
+func (v *interfaceManager) HybridSleep(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoHybridSleep(flags, make(chan *dbus.Call, 1), interactive).Done).Err
 }
 
 // method CanPowerOff
 
-func (v *manager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanPowerOff", flags, ch)
 }
 
-func (*manager) StoreCanPowerOff(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanPowerOff(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanPowerOff(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanPowerOff(flags dbus.Flags) (string, error) {
 	return v.StoreCanPowerOff(
 		<-v.GoCanPowerOff(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CanReboot
 
-func (v *manager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanReboot", flags, ch)
 }
 
-func (*manager) StoreCanReboot(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanReboot(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanReboot(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanReboot(flags dbus.Flags) (string, error) {
 	return v.StoreCanReboot(
 		<-v.GoCanReboot(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CanSuspend
 
-func (v *manager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanSuspend", flags, ch)
 }
 
-func (*manager) StoreCanSuspend(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanSuspend(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanSuspend(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanSuspend(flags dbus.Flags) (string, error) {
 	return v.StoreCanSuspend(
 		<-v.GoCanSuspend(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CanHibernate
 
-func (v *manager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanHibernate", flags, ch)
 }
 
-func (*manager) StoreCanHibernate(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanHibernate(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanHibernate(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanHibernate(flags dbus.Flags) (string, error) {
 	return v.StoreCanHibernate(
 		<-v.GoCanHibernate(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CanHybridSleep
 
-func (v *manager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanHybridSleep", flags, ch)
 }
 
-func (*manager) StoreCanHybridSleep(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanHybridSleep(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanHybridSleep(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanHybridSleep(flags dbus.Flags) (string, error) {
 	return v.StoreCanHybridSleep(
 		<-v.GoCanHybridSleep(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ScheduleShutdown
 
-func (v *manager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
+func (v *interfaceManager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ScheduleShutdown", flags, ch, type0, usec)
 }
 
-func (v *manager) ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error {
+func (v *interfaceManager) ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error {
 	return (<-v.GoScheduleShutdown(flags, make(chan *dbus.Call, 1), type0, usec).Done).Err
 }
 
 // method CancelScheduledShutdown
 
-func (v *manager) GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelScheduledShutdown", flags, ch)
 }
 
-func (*manager) StoreCancelScheduledShutdown(call *dbus.Call) (cancelled bool, err error) {
+func (*interfaceManager) StoreCancelScheduledShutdown(call *dbus.Call) (cancelled bool, err error) {
 	err = call.Store(&cancelled)
 	return
 }
 
-func (v *manager) CancelScheduledShutdown(flags dbus.Flags) (cancelled bool, err error) {
+func (v *interfaceManager) CancelScheduledShutdown(flags dbus.Flags) (bool, error) {
 	return v.StoreCancelScheduledShutdown(
 		<-v.GoCancelScheduledShutdown(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Inhibit
 
-func (v *manager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
+func (v *interfaceManager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Inhibit", flags, ch, what, who, why, mode)
 }
 
-func (*manager) StoreInhibit(call *dbus.Call) (pipeFd dbus.UnixFD, err error) {
+func (*interfaceManager) StoreInhibit(call *dbus.Call) (pipeFd dbus.UnixFD, err error) {
 	err = call.Store(&pipeFd)
 	return
 }
 
-func (v *manager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (pipeFd dbus.UnixFD, err error) {
+func (v *interfaceManager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (dbus.UnixFD, error) {
 	return v.StoreInhibit(
 		<-v.GoInhibit(flags, make(chan *dbus.Call, 1), what, who, why, mode).Done)
 }
 
 // method CanRebootToFirmwareSetup
 
-func (v *manager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanRebootToFirmwareSetup", flags, ch)
 }
 
-func (*manager) StoreCanRebootToFirmwareSetup(call *dbus.Call) (result string, err error) {
+func (*interfaceManager) StoreCanRebootToFirmwareSetup(call *dbus.Call) (result string, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CanRebootToFirmwareSetup(flags dbus.Flags) (result string, err error) {
+func (v *interfaceManager) CanRebootToFirmwareSetup(flags dbus.Flags) (string, error) {
 	return v.StoreCanRebootToFirmwareSetup(
 		<-v.GoCanRebootToFirmwareSetup(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetRebootToFirmwareSetup
 
-func (v *manager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *interfaceManager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRebootToFirmwareSetup", flags, ch, enable)
 }
 
-func (v *manager) SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error {
+func (v *interfaceManager) SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error {
 	return (<-v.GoSetRebootToFirmwareSetup(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method SetWallMessage
 
-func (v *manager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call {
+func (v *interfaceManager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWallMessage", flags, ch, wallMessage, enable)
 }
 
-func (v *manager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error {
+func (v *interfaceManager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error {
 	return (<-v.GoSetWallMessage(flags, make(chan *dbus.Call, 1), wallMessage, enable).Done).Err
 }
 
 // signal SessionNew
 
-func (v *manager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -580,7 +710,7 @@ func (v *manager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.O
 
 // signal SessionRemoved
 
-func (v *manager) ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -607,7 +737,7 @@ func (v *manager) ConnectSessionRemoved(cb func(sessionId string, sessionPath db
 
 // signal UserNew
 
-func (v *manager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -634,7 +764,7 @@ func (v *manager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) 
 
 // signal UserRemoved
 
-func (v *manager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -661,7 +791,7 @@ func (v *manager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPat
 
 // signal SeatNew
 
-func (v *manager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -688,7 +818,7 @@ func (v *manager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath
 
 // signal SeatRemoved
 
-func (v *manager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -715,7 +845,7 @@ func (v *manager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.Object
 
 // signal PrepareForShutdown
 
-func (v *manager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -741,7 +871,7 @@ func (v *manager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.Signa
 
 // signal PrepareForSleep
 
-func (v *manager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -767,8 +897,8 @@ func (v *manager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHa
 
 // property EnableWallMessages b
 
-func (v *manager) EnableWallMessages() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) EnableWallMessages() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "EnableWallMessages",
 	}
@@ -776,8 +906,8 @@ func (v *manager) EnableWallMessages() proxy.PropBool {
 
 // property WallMessage s
 
-func (v *manager) WallMessage() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) WallMessage() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WallMessage",
 	}
@@ -785,8 +915,8 @@ func (v *manager) WallMessage() proxy.PropString {
 
 // property NAutoVTs u
 
-func (v *manager) NAutoVTs() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) NAutoVTs() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NAutoVTs",
 	}
@@ -794,8 +924,8 @@ func (v *manager) NAutoVTs() proxy.PropUint32 {
 
 // property KillOnlyUsers as
 
-func (v *manager) KillOnlyUsers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceManager) KillOnlyUsers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "KillOnlyUsers",
 	}
@@ -803,8 +933,8 @@ func (v *manager) KillOnlyUsers() proxy.PropStringArray {
 
 // property KillExcludeUsers as
 
-func (v *manager) KillExcludeUsers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceManager) KillExcludeUsers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "KillExcludeUsers",
 	}
@@ -812,8 +942,8 @@ func (v *manager) KillExcludeUsers() proxy.PropStringArray {
 
 // property KillUserProcesses b
 
-func (v *manager) KillUserProcesses() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) KillUserProcesses() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "KillUserProcesses",
 	}
@@ -821,8 +951,8 @@ func (v *manager) KillUserProcesses() proxy.PropBool {
 
 // property RebootToFirmwareSetup b
 
-func (v *manager) RebootToFirmwareSetup() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) RebootToFirmwareSetup() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RebootToFirmwareSetup",
 	}
@@ -830,8 +960,8 @@ func (v *manager) RebootToFirmwareSetup() proxy.PropBool {
 
 // property IdleHint b
 
-func (v *manager) IdleHint() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) IdleHint() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -839,8 +969,8 @@ func (v *manager) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *manager) IdleSinceHint() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) IdleSinceHint() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -848,8 +978,8 @@ func (v *manager) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *manager) IdleSinceHintMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -857,8 +987,8 @@ func (v *manager) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property BlockInhibited s
 
-func (v *manager) BlockInhibited() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) BlockInhibited() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BlockInhibited",
 	}
@@ -866,8 +996,8 @@ func (v *manager) BlockInhibited() proxy.PropString {
 
 // property DelayInhibited s
 
-func (v *manager) DelayInhibited() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) DelayInhibited() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DelayInhibited",
 	}
@@ -875,8 +1005,8 @@ func (v *manager) DelayInhibited() proxy.PropString {
 
 // property InhibitDelayMaxUSec t
 
-func (v *manager) InhibitDelayMaxUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InhibitDelayMaxUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InhibitDelayMaxUSec",
 	}
@@ -884,8 +1014,8 @@ func (v *manager) InhibitDelayMaxUSec() proxy.PropUint64 {
 
 // property HandlePowerKey s
 
-func (v *manager) HandlePowerKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) HandlePowerKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HandlePowerKey",
 	}
@@ -893,8 +1023,8 @@ func (v *manager) HandlePowerKey() proxy.PropString {
 
 // property HandleSuspendKey s
 
-func (v *manager) HandleSuspendKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) HandleSuspendKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HandleSuspendKey",
 	}
@@ -902,8 +1032,8 @@ func (v *manager) HandleSuspendKey() proxy.PropString {
 
 // property HandleHibernateKey s
 
-func (v *manager) HandleHibernateKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) HandleHibernateKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HandleHibernateKey",
 	}
@@ -911,8 +1041,8 @@ func (v *manager) HandleHibernateKey() proxy.PropString {
 
 // property HandleLidSwitch s
 
-func (v *manager) HandleLidSwitch() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) HandleLidSwitch() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HandleLidSwitch",
 	}
@@ -920,8 +1050,8 @@ func (v *manager) HandleLidSwitch() proxy.PropString {
 
 // property HandleLidSwitchDocked s
 
-func (v *manager) HandleLidSwitchDocked() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) HandleLidSwitchDocked() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HandleLidSwitchDocked",
 	}
@@ -929,8 +1059,8 @@ func (v *manager) HandleLidSwitchDocked() proxy.PropString {
 
 // property HoldoffTimeoutUSec t
 
-func (v *manager) HoldoffTimeoutUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) HoldoffTimeoutUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "HoldoffTimeoutUSec",
 	}
@@ -938,8 +1068,8 @@ func (v *manager) HoldoffTimeoutUSec() proxy.PropUint64 {
 
 // property IdleAction s
 
-func (v *manager) IdleAction() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) IdleAction() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IdleAction",
 	}
@@ -947,8 +1077,8 @@ func (v *manager) IdleAction() proxy.PropString {
 
 // property IdleActionUSec t
 
-func (v *manager) IdleActionUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) IdleActionUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleActionUSec",
 	}
@@ -956,8 +1086,8 @@ func (v *manager) IdleActionUSec() proxy.PropUint64 {
 
 // property PreparingForShutdown b
 
-func (v *manager) PreparingForShutdown() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) PreparingForShutdown() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PreparingForShutdown",
 	}
@@ -965,32 +1095,35 @@ func (v *manager) PreparingForShutdown() proxy.PropBool {
 
 // property PreparingForSleep b
 
-func (v *manager) PreparingForSleep() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) PreparingForSleep() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PreparingForSleep",
 	}
 }
 
-// property ScheduledShutdown (st)
-
-func (v *manager) ScheduledShutdown() PropManagerScheduledShutdown {
-	return PropManagerScheduledShutdown{
-		Impl: v,
-	}
+type PropManagerScheduledShutdown interface {
+	Get(flags dbus.Flags) (value ScheduledShutdown, err error)
+	Set(flags dbus.Flags, value ScheduledShutdown) error
+	ConnectChanged(cb func(hasValue bool, value ScheduledShutdown)) error
 }
 
-type PropManagerScheduledShutdown struct {
+type implPropManagerScheduledShutdown struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropManagerScheduledShutdown) Get(flags dbus.Flags) (value ScheduledShutdown, err error) {
+func (p implPropManagerScheduledShutdown) Get(flags dbus.Flags) (value ScheduledShutdown, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"ScheduledShutdown", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, value ScheduledShutdown)) error {
+func (p implPropManagerScheduledShutdown) Set(flags dbus.Flags, value ScheduledShutdown) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, value ScheduledShutdown)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1007,13 +1140,22 @@ func (p PropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, valu
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"ScheduledShutdown", cb0)
+		p.Name, cb0)
+}
+
+// property ScheduledShutdown (st)
+
+func (v *interfaceManager) ScheduledShutdown() PropManagerScheduledShutdown {
+	return &implPropManagerScheduledShutdown{
+		Impl: v,
+		Name: "ScheduledShutdown",
+	}
 }
 
 // property Docked b
 
-func (v *manager) Docked() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) Docked() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Docked",
 	}
@@ -1021,8 +1163,8 @@ func (v *manager) Docked() proxy.PropBool {
 
 // property RemoveIPC b
 
-func (v *manager) RemoveIPC() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) RemoveIPC() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "RemoveIPC",
 	}
@@ -1030,8 +1172,8 @@ func (v *manager) RemoveIPC() proxy.PropBool {
 
 // property RuntimeDirectorySize t
 
-func (v *manager) RuntimeDirectorySize() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) RuntimeDirectorySize() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RuntimeDirectorySize",
 	}
@@ -1039,8 +1181,8 @@ func (v *manager) RuntimeDirectorySize() proxy.PropUint64 {
 
 // property InhibitorsMax t
 
-func (v *manager) InhibitorsMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) InhibitorsMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "InhibitorsMax",
 	}
@@ -1048,8 +1190,8 @@ func (v *manager) InhibitorsMax() proxy.PropUint64 {
 
 // property NCurrentInhibitors t
 
-func (v *manager) NCurrentInhibitors() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) NCurrentInhibitors() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "NCurrentInhibitors",
 	}
@@ -1057,8 +1199,8 @@ func (v *manager) NCurrentInhibitors() proxy.PropUint64 {
 
 // property SessionsMax t
 
-func (v *manager) SessionsMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) SessionsMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "SessionsMax",
 	}
@@ -1066,8 +1208,8 @@ func (v *manager) SessionsMax() proxy.PropUint64 {
 
 // property NCurrentSessions t
 
-func (v *manager) NCurrentSessions() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) NCurrentSessions() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "NCurrentSessions",
 	}
@@ -1075,91 +1217,118 @@ func (v *manager) NCurrentSessions() proxy.PropUint64 {
 
 // property UserTasksMax t
 
-func (v *manager) UserTasksMax() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceManager) UserTasksMax() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "UserTasksMax",
 	}
 }
 
-type Seat struct {
+type Seat interface {
 	seat // interface org.freedesktop.login1.Seat
 	proxy.Object
 }
 
-func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) (*Seat, error) {
+type objectSeat struct {
+	interfaceSeat // interface org.freedesktop.login1.Seat
+	proxy.ImplObject
+}
+
+func NewSeat(conn *dbus.Conn, path dbus.ObjectPath) (Seat, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Seat)
-	obj.Object.Init_(conn, "org.freedesktop.login1", path)
+	obj := new(objectSeat)
+	obj.ImplObject.Init_(conn, "org.freedesktop.login1", path)
 	return obj, nil
 }
 
-type seat struct{}
-
-func (v *seat) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type seat interface {
+	GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Terminate(flags dbus.Flags) error
+	GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call
+	ActivateSession(flags dbus.Flags, sessionId string) error
+	GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call
+	SwitchTo(flags dbus.Flags, vtnr uint32) error
+	GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SwitchToNext(flags dbus.Flags) error
+	GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SwitchToPrevious(flags dbus.Flags) error
+	Id() proxy.PropString
+	ActiveSession() PropSessionInfo
+	CanMultiSession() proxy.PropBool
+	CanTTY() proxy.PropBool
+	CanGraphical() proxy.PropBool
+	Sessions() PropSessionInfoSlice
+	IdleHint() proxy.PropBool
+	IdleSinceHint() proxy.PropUint64
+	IdleSinceHintMonotonic() proxy.PropUint64
 }
 
-func (*seat) GetInterfaceName_() string {
+type interfaceSeat struct{}
+
+func (v *interfaceSeat) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSeat) GetInterfaceName_() string {
 	return "org.freedesktop.login1.Seat"
 }
 
 // method Terminate
 
-func (v *seat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSeat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
-func (v *seat) Terminate(flags dbus.Flags) error {
+func (v *interfaceSeat) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ActivateSession
 
-func (v *seat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *interfaceSeat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
 }
 
-func (v *seat) ActivateSession(flags dbus.Flags, sessionId string) error {
+func (v *interfaceSeat) ActivateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoActivateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
 }
 
 // method SwitchTo
 
-func (v *seat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call {
+func (v *interfaceSeat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchTo", flags, ch, vtnr)
 }
 
-func (v *seat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
+func (v *interfaceSeat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
 	return (<-v.GoSwitchTo(flags, make(chan *dbus.Call, 1), vtnr).Done).Err
 }
 
 // method SwitchToNext
 
-func (v *seat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSeat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchToNext", flags, ch)
 }
 
-func (v *seat) SwitchToNext(flags dbus.Flags) error {
+func (v *interfaceSeat) SwitchToNext(flags dbus.Flags) error {
 	return (<-v.GoSwitchToNext(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SwitchToPrevious
 
-func (v *seat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSeat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchToPrevious", flags, ch)
 }
 
-func (v *seat) SwitchToPrevious(flags dbus.Flags) error {
+func (v *interfaceSeat) SwitchToPrevious(flags dbus.Flags) error {
 	return (<-v.GoSwitchToPrevious(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property Id s
 
-func (v *seat) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSeat) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -1167,8 +1336,8 @@ func (v *seat) Id() proxy.PropString {
 
 // property ActiveSession (so)
 
-func (v *seat) ActiveSession() PropSessionInfo {
-	return PropSessionInfo{
+func (v *interfaceSeat) ActiveSession() PropSessionInfo {
+	return &implPropSessionInfo{
 		Impl: v,
 		Name: "ActiveSession",
 	}
@@ -1176,8 +1345,8 @@ func (v *seat) ActiveSession() PropSessionInfo {
 
 // property CanMultiSession b
 
-func (v *seat) CanMultiSession() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSeat) CanMultiSession() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanMultiSession",
 	}
@@ -1185,8 +1354,8 @@ func (v *seat) CanMultiSession() proxy.PropBool {
 
 // property CanTTY b
 
-func (v *seat) CanTTY() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSeat) CanTTY() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanTTY",
 	}
@@ -1194,8 +1363,8 @@ func (v *seat) CanTTY() proxy.PropBool {
 
 // property CanGraphical b
 
-func (v *seat) CanGraphical() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSeat) CanGraphical() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanGraphical",
 	}
@@ -1203,8 +1372,8 @@ func (v *seat) CanGraphical() proxy.PropBool {
 
 // property Sessions a(so)
 
-func (v *seat) Sessions() PropSessionInfoSlice {
-	return PropSessionInfoSlice{
+func (v *interfaceSeat) Sessions() PropSessionInfoSlice {
+	return &implPropSessionInfoSlice{
 		Impl: v,
 		Name: "Sessions",
 	}
@@ -1212,8 +1381,8 @@ func (v *seat) Sessions() PropSessionInfoSlice {
 
 // property IdleHint b
 
-func (v *seat) IdleHint() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSeat) IdleHint() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1221,8 +1390,8 @@ func (v *seat) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *seat) IdleSinceHint() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSeat) IdleSinceHint() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1230,166 +1399,227 @@ func (v *seat) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *seat) IdleSinceHintMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSeat) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
 }
 
-type Session struct {
+type Session interface {
 	session // interface org.freedesktop.login1.Session
 	proxy.Object
 }
 
-func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (*Session, error) {
+type objectSession struct {
+	interfaceSession // interface org.freedesktop.login1.Session
+	proxy.ImplObject
+}
+
+func NewSession(conn *dbus.Conn, path dbus.ObjectPath) (Session, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Session)
-	obj.Object.Init_(conn, "org.freedesktop.login1", path)
+	obj := new(objectSession)
+	obj.ImplObject.Init_(conn, "org.freedesktop.login1", path)
 	return obj, nil
 }
 
-type session struct{}
-
-func (v *session) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type session interface {
+	GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Terminate(flags dbus.Flags) error
+	GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Activate(flags dbus.Flags) error
+	GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Lock(flags dbus.Flags) error
+	GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Unlock(flags dbus.Flags) error
+	GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call
+	SetIdleHint(flags dbus.Flags, idle bool) error
+	GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call
+	SetLockedHint(flags dbus.Flags, locked bool) error
+	GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call
+	Kill(flags dbus.Flags, who string, signo int32) error
+	GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call
+	TakeControl(flags dbus.Flags, force bool) error
+	GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ReleaseControl(flags dbus.Flags) error
+	GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call
+	TakeDevice(flags dbus.Flags, major uint32, minor uint32) (dbus.UnixFD, bool, error)
+	GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call
+	ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error
+	GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call
+	PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error
+	ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error)
+	ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error)
+	ConnectLock(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error)
+	Id() proxy.PropString
+	User() PropSessionUser
+	Name() proxy.PropString
+	Timestamp() proxy.PropUint64
+	TimestampMonotonic() proxy.PropUint64
+	VTNr() proxy.PropUint32
+	Seat() PropSessionSeat
+	TTY() proxy.PropString
+	Display() proxy.PropString
+	Remote() proxy.PropBool
+	RemoteHost() proxy.PropString
+	RemoteUser() proxy.PropString
+	Service() proxy.PropString
+	Desktop() proxy.PropString
+	Scope() proxy.PropString
+	Leader() proxy.PropUint32
+	Audit() proxy.PropUint32
+	Type() proxy.PropString
+	Class() proxy.PropString
+	Active() proxy.PropBool
+	State() proxy.PropString
+	IdleHint() proxy.PropBool
+	IdleSinceHint() proxy.PropUint64
+	IdleSinceHintMonotonic() proxy.PropUint64
+	LockedHint() proxy.PropBool
 }
 
-func (*session) GetInterfaceName_() string {
+type interfaceSession struct{}
+
+func (v *interfaceSession) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSession) GetInterfaceName_() string {
 	return "org.freedesktop.login1.Session"
 }
 
 // method Terminate
 
-func (v *session) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
-func (v *session) Terminate(flags dbus.Flags) error {
+func (v *interfaceSession) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Activate
 
-func (v *session) GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Activate", flags, ch)
 }
 
-func (v *session) Activate(flags dbus.Flags) error {
+func (v *interfaceSession) Activate(flags dbus.Flags) error {
 	return (<-v.GoActivate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Lock
 
-func (v *session) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Lock", flags, ch)
 }
 
-func (v *session) Lock(flags dbus.Flags) error {
+func (v *interfaceSession) Lock(flags dbus.Flags) error {
 	return (<-v.GoLock(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Unlock
 
-func (v *session) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unlock", flags, ch)
 }
 
-func (v *session) Unlock(flags dbus.Flags) error {
+func (v *interfaceSession) Unlock(flags dbus.Flags) error {
 	return (<-v.GoUnlock(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetIdleHint
 
-func (v *session) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call {
+func (v *interfaceSession) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIdleHint", flags, ch, idle)
 }
 
-func (v *session) SetIdleHint(flags dbus.Flags, idle bool) error {
+func (v *interfaceSession) SetIdleHint(flags dbus.Flags, idle bool) error {
 	return (<-v.GoSetIdleHint(flags, make(chan *dbus.Call, 1), idle).Done).Err
 }
 
 // method SetLockedHint
 
-func (v *session) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
+func (v *interfaceSession) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLockedHint", flags, ch, locked)
 }
 
-func (v *session) SetLockedHint(flags dbus.Flags, locked bool) error {
+func (v *interfaceSession) SetLockedHint(flags dbus.Flags, locked bool) error {
 	return (<-v.GoSetLockedHint(flags, make(chan *dbus.Call, 1), locked).Done).Err
 }
 
 // method Kill
 
-func (v *session) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call {
+func (v *interfaceSession) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, who, signo)
 }
 
-func (v *session) Kill(flags dbus.Flags, who string, signo int32) error {
+func (v *interfaceSession) Kill(flags dbus.Flags, who string, signo int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), who, signo).Done).Err
 }
 
 // method TakeControl
 
-func (v *session) GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call {
+func (v *interfaceSession) GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TakeControl", flags, ch, force)
 }
 
-func (v *session) TakeControl(flags dbus.Flags, force bool) error {
+func (v *interfaceSession) TakeControl(flags dbus.Flags, force bool) error {
 	return (<-v.GoTakeControl(flags, make(chan *dbus.Call, 1), force).Done).Err
 }
 
 // method ReleaseControl
 
-func (v *session) GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSession) GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseControl", flags, ch)
 }
 
-func (v *session) ReleaseControl(flags dbus.Flags) error {
+func (v *interfaceSession) ReleaseControl(flags dbus.Flags) error {
 	return (<-v.GoReleaseControl(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method TakeDevice
 
-func (v *session) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *interfaceSession) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TakeDevice", flags, ch, major, minor)
 }
 
-func (*session) StoreTakeDevice(call *dbus.Call) (fd dbus.UnixFD, inactive bool, err error) {
+func (*interfaceSession) StoreTakeDevice(call *dbus.Call) (fd dbus.UnixFD, inactive bool, err error) {
 	err = call.Store(&fd, &inactive)
 	return
 }
 
-func (v *session) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (fd dbus.UnixFD, inactive bool, err error) {
+func (v *interfaceSession) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (dbus.UnixFD, bool, error) {
 	return v.StoreTakeDevice(
 		<-v.GoTakeDevice(flags, make(chan *dbus.Call, 1), major, minor).Done)
 }
 
 // method ReleaseDevice
 
-func (v *session) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *interfaceSession) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseDevice", flags, ch, major, minor)
 }
 
-func (v *session) ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error {
+func (v *interfaceSession) ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error {
 	return (<-v.GoReleaseDevice(flags, make(chan *dbus.Call, 1), major, minor).Done).Err
 }
 
 // method PauseDeviceComplete
 
-func (v *session) GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *interfaceSession) GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PauseDeviceComplete", flags, ch, major, minor)
 }
 
-func (v *session) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error {
+func (v *interfaceSession) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error {
 	return (<-v.GoPauseDeviceComplete(flags, make(chan *dbus.Call, 1), major, minor).Done).Err
 }
 
 // signal PauseDevice
 
-func (v *session) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSession) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1417,7 +1647,7 @@ func (v *session) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 s
 
 // signal ResumeDevice
 
-func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSession) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1445,7 +1675,7 @@ func (v *session) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbu
 
 // signal Lock
 
-func (v *session) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSession) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1467,7 +1697,7 @@ func (v *session) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal Unlock
 
-func (v *session) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSession) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1489,32 +1719,35 @@ func (v *session) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // property Id s
 
-func (v *session) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
 }
 
-// property User (uo)
-
-func (v *session) User() PropSessionUser {
-	return PropSessionUser{
-		Impl: v,
-	}
+type PropSessionUser interface {
+	Get(flags dbus.Flags) (value UserInfo, err error)
+	Set(flags dbus.Flags, value UserInfo) error
+	ConnectChanged(cb func(hasValue bool, value UserInfo)) error
 }
 
-type PropSessionUser struct {
+type implPropSessionUser struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropSessionUser) Get(flags dbus.Flags) (value UserInfo, err error) {
+func (p implPropSessionUser) Get(flags dbus.Flags) (value UserInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"User", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInfo)) error {
+func (p implPropSessionUser) Set(flags dbus.Flags, value UserInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1531,13 +1764,22 @@ func (p PropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInfo)) 
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"User", cb0)
+		p.Name, cb0)
+}
+
+// property User (uo)
+
+func (v *interfaceSession) User() PropSessionUser {
+	return &implPropSessionUser{
+		Impl: v,
+		Name: "User",
+	}
 }
 
 // property Name s
 
-func (v *session) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1545,8 +1787,8 @@ func (v *session) Name() proxy.PropString {
 
 // property Timestamp t
 
-func (v *session) Timestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSession) Timestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Timestamp",
 	}
@@ -1554,8 +1796,8 @@ func (v *session) Timestamp() proxy.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *session) TimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSession) TimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimestampMonotonic",
 	}
@@ -1563,32 +1805,35 @@ func (v *session) TimestampMonotonic() proxy.PropUint64 {
 
 // property VTNr u
 
-func (v *session) VTNr() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceSession) VTNr() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "VTNr",
 	}
 }
 
-// property Seat (so)
-
-func (v *session) Seat() PropSessionSeat {
-	return PropSessionSeat{
-		Impl: v,
-	}
+type PropSessionSeat interface {
+	Get(flags dbus.Flags) (value SeatInfo, err error)
+	Set(flags dbus.Flags, value SeatInfo) error
+	ConnectChanged(cb func(hasValue bool, value SeatInfo)) error
 }
 
-type PropSessionSeat struct {
+type implPropSessionSeat struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropSessionSeat) Get(flags dbus.Flags) (value SeatInfo, err error) {
+func (p implPropSessionSeat) Get(flags dbus.Flags) (value SeatInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Seat", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInfo)) error {
+func (p implPropSessionSeat) Set(flags dbus.Flags, value SeatInfo) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1605,13 +1850,22 @@ func (p PropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInfo)) 
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Seat", cb0)
+		p.Name, cb0)
+}
+
+// property Seat (so)
+
+func (v *interfaceSession) Seat() PropSessionSeat {
+	return &implPropSessionSeat{
+		Impl: v,
+		Name: "Seat",
+	}
 }
 
 // property TTY s
 
-func (v *session) TTY() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) TTY() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "TTY",
 	}
@@ -1619,8 +1873,8 @@ func (v *session) TTY() proxy.PropString {
 
 // property Display s
 
-func (v *session) Display() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Display() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Display",
 	}
@@ -1628,8 +1882,8 @@ func (v *session) Display() proxy.PropString {
 
 // property Remote b
 
-func (v *session) Remote() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSession) Remote() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Remote",
 	}
@@ -1637,8 +1891,8 @@ func (v *session) Remote() proxy.PropBool {
 
 // property RemoteHost s
 
-func (v *session) RemoteHost() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) RemoteHost() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RemoteHost",
 	}
@@ -1646,8 +1900,8 @@ func (v *session) RemoteHost() proxy.PropString {
 
 // property RemoteUser s
 
-func (v *session) RemoteUser() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) RemoteUser() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RemoteUser",
 	}
@@ -1655,8 +1909,8 @@ func (v *session) RemoteUser() proxy.PropString {
 
 // property Service s
 
-func (v *session) Service() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Service() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Service",
 	}
@@ -1664,8 +1918,8 @@ func (v *session) Service() proxy.PropString {
 
 // property Desktop s
 
-func (v *session) Desktop() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Desktop() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Desktop",
 	}
@@ -1673,8 +1927,8 @@ func (v *session) Desktop() proxy.PropString {
 
 // property Scope s
 
-func (v *session) Scope() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Scope() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Scope",
 	}
@@ -1682,8 +1936,8 @@ func (v *session) Scope() proxy.PropString {
 
 // property Leader u
 
-func (v *session) Leader() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceSession) Leader() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Leader",
 	}
@@ -1691,8 +1945,8 @@ func (v *session) Leader() proxy.PropUint32 {
 
 // property Audit u
 
-func (v *session) Audit() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceSession) Audit() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Audit",
 	}
@@ -1700,8 +1954,8 @@ func (v *session) Audit() proxy.PropUint32 {
 
 // property Type s
 
-func (v *session) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -1709,8 +1963,8 @@ func (v *session) Type() proxy.PropString {
 
 // property Class s
 
-func (v *session) Class() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) Class() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Class",
 	}
@@ -1718,8 +1972,8 @@ func (v *session) Class() proxy.PropString {
 
 // property Active b
 
-func (v *session) Active() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSession) Active() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Active",
 	}
@@ -1727,8 +1981,8 @@ func (v *session) Active() proxy.PropBool {
 
 // property State s
 
-func (v *session) State() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSession) State() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "State",
 	}
@@ -1736,8 +1990,8 @@ func (v *session) State() proxy.PropString {
 
 // property IdleHint b
 
-func (v *session) IdleHint() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSession) IdleHint() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1745,8 +1999,8 @@ func (v *session) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *session) IdleSinceHint() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSession) IdleSinceHint() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1754,8 +2008,8 @@ func (v *session) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *session) IdleSinceHintMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceSession) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -1763,61 +2017,88 @@ func (v *session) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property LockedHint b
 
-func (v *session) LockedHint() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSession) LockedHint() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "LockedHint",
 	}
 }
 
-type User struct {
+type User interface {
 	user // interface org.freedesktop.login1.User
 	proxy.Object
 }
 
-func NewUser(conn *dbus.Conn, path dbus.ObjectPath) (*User, error) {
+type objectUser struct {
+	interfaceUser // interface org.freedesktop.login1.User
+	proxy.ImplObject
+}
+
+func NewUser(conn *dbus.Conn, path dbus.ObjectPath) (User, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(User)
-	obj.Object.Init_(conn, "org.freedesktop.login1", path)
+	obj := new(objectUser)
+	obj.ImplObject.Init_(conn, "org.freedesktop.login1", path)
 	return obj, nil
 }
 
-type user struct{}
-
-func (v *user) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type user interface {
+	GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Terminate(flags dbus.Flags) error
+	GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call
+	Kill(flags dbus.Flags, signo int32) error
+	UID() proxy.PropUint32
+	GID() proxy.PropUint32
+	Name() proxy.PropString
+	Timestamp() proxy.PropUint64
+	TimestampMonotonic() proxy.PropUint64
+	RuntimePath() proxy.PropString
+	Service() proxy.PropString
+	Slice() proxy.PropString
+	Display() PropSessionInfo
+	State() proxy.PropString
+	Sessions() PropSessionInfoSlice
+	IdleHint() proxy.PropBool
+	IdleSinceHint() proxy.PropUint64
+	IdleSinceHintMonotonic() proxy.PropUint64
+	Linger() proxy.PropBool
 }
 
-func (*user) GetInterfaceName_() string {
+type interfaceUser struct{}
+
+func (v *interfaceUser) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceUser) GetInterfaceName_() string {
 	return "org.freedesktop.login1.User"
 }
 
 // method Terminate
 
-func (v *user) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceUser) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
-func (v *user) Terminate(flags dbus.Flags) error {
+func (v *interfaceUser) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Kill
 
-func (v *user) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call {
+func (v *interfaceUser) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, signo)
 }
 
-func (v *user) Kill(flags dbus.Flags, signo int32) error {
+func (v *interfaceUser) Kill(flags dbus.Flags, signo int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), signo).Done).Err
 }
 
 // property UID u
 
-func (v *user) UID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceUser) UID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "UID",
 	}
@@ -1825,8 +2106,8 @@ func (v *user) UID() proxy.PropUint32 {
 
 // property GID u
 
-func (v *user) GID() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceUser) GID() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "GID",
 	}
@@ -1834,8 +2115,8 @@ func (v *user) GID() proxy.PropUint32 {
 
 // property Name s
 
-func (v *user) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUser) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -1843,8 +2124,8 @@ func (v *user) Name() proxy.PropString {
 
 // property Timestamp t
 
-func (v *user) Timestamp() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUser) Timestamp() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Timestamp",
 	}
@@ -1852,8 +2133,8 @@ func (v *user) Timestamp() proxy.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *user) TimestampMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUser) TimestampMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimestampMonotonic",
 	}
@@ -1861,8 +2142,8 @@ func (v *user) TimestampMonotonic() proxy.PropUint64 {
 
 // property RuntimePath s
 
-func (v *user) RuntimePath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUser) RuntimePath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RuntimePath",
 	}
@@ -1870,8 +2151,8 @@ func (v *user) RuntimePath() proxy.PropString {
 
 // property Service s
 
-func (v *user) Service() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUser) Service() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Service",
 	}
@@ -1879,8 +2160,8 @@ func (v *user) Service() proxy.PropString {
 
 // property Slice s
 
-func (v *user) Slice() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUser) Slice() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Slice",
 	}
@@ -1888,8 +2169,8 @@ func (v *user) Slice() proxy.PropString {
 
 // property Display (so)
 
-func (v *user) Display() PropSessionInfo {
-	return PropSessionInfo{
+func (v *interfaceUser) Display() PropSessionInfo {
+	return &implPropSessionInfo{
 		Impl: v,
 		Name: "Display",
 	}
@@ -1897,8 +2178,8 @@ func (v *user) Display() PropSessionInfo {
 
 // property State s
 
-func (v *user) State() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceUser) State() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "State",
 	}
@@ -1906,8 +2187,8 @@ func (v *user) State() proxy.PropString {
 
 // property Sessions a(so)
 
-func (v *user) Sessions() PropSessionInfoSlice {
-	return PropSessionInfoSlice{
+func (v *interfaceUser) Sessions() PropSessionInfoSlice {
+	return &implPropSessionInfoSlice{
 		Impl: v,
 		Name: "Sessions",
 	}
@@ -1915,8 +2196,8 @@ func (v *user) Sessions() PropSessionInfoSlice {
 
 // property IdleHint b
 
-func (v *user) IdleHint() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUser) IdleHint() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IdleHint",
 	}
@@ -1924,8 +2205,8 @@ func (v *user) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *user) IdleSinceHint() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUser) IdleSinceHint() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHint",
 	}
@@ -1933,8 +2214,8 @@ func (v *user) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *user) IdleSinceHintMonotonic() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceUser) IdleSinceHintMonotonic() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "IdleSinceHintMonotonic",
 	}
@@ -1942,29 +2223,35 @@ func (v *user) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property Linger b
 
-func (v *user) Linger() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceUser) Linger() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Linger",
 	}
 }
 
-type PropSessionInfo struct {
+type PropSessionInfo interface {
+	Get(flags dbus.Flags) (value SessionInfo, err error)
+	Set(flags dbus.Flags, value SessionInfo) error
+	ConnectChanged(cb func(hasValue bool, value SessionInfo)) error
+}
+
+type implPropSessionInfo struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropSessionInfo) Get(flags dbus.Flags) (value SessionInfo, err error) {
+func (p implPropSessionInfo) Get(flags dbus.Flags) (value SessionInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropSessionInfo) Set(flags dbus.Flags, value SessionInfo) error {
+func (p implPropSessionInfo) Set(flags dbus.Flags, value SessionInfo) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropSessionInfo) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
+func (p implPropSessionInfo) ConnectChanged(cb func(hasValue bool, value SessionInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1984,22 +2271,28 @@ func (p PropSessionInfo) ConnectChanged(cb func(hasValue bool, value SessionInfo
 		p.Name, cb0)
 }
 
-type PropSessionInfoSlice struct {
+type PropSessionInfoSlice interface {
+	Get(flags dbus.Flags) (value []SessionInfo, err error)
+	Set(flags dbus.Flags, value []SessionInfo) error
+	ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error
+}
+
+type implPropSessionInfoSlice struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropSessionInfoSlice) Get(flags dbus.Flags) (value []SessionInfo, err error) {
+func (p implPropSessionInfoSlice) Get(flags dbus.Flags) (value []SessionInfo, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropSessionInfoSlice) Set(flags dbus.Flags, value []SessionInfo) error {
+func (p implPropSessionInfoSlice) Set(flags dbus.Flags, value []SessionInfo) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropSessionInfoSlice) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
+func (p implPropSessionInfoSlice) ConnectChanged(cb func(hasValue bool, value []SessionInfo)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

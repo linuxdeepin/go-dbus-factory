@@ -12,80 +12,99 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type LockFront struct {
+type LockFront interface {
 	lockfront // interface com.deepin.dde.lockFront
 	proxy.Object
 }
 
-func NewLockFront(conn *dbus.Conn) *LockFront {
-	obj := new(LockFront)
-	obj.Object.Init_(conn, "com.deepin.dde.lockFront", "/com/deepin/dde/lockFront")
+type objectLockFront struct {
+	interfaceLockfront // interface com.deepin.dde.lockFront
+	proxy.ImplObject
+}
+
+func NewLockFront(conn *dbus.Conn) LockFront {
+	obj := new(objectLockFront)
+	obj.ImplObject.Init_(conn, "com.deepin.dde.lockFront", "/com/deepin/dde/lockFront")
 	return obj
 }
 
-type lockfront struct{}
-
-func (v *lockfront) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type lockfront interface {
+	GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Show(flags dbus.Flags) error
+	GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ShowUserList(flags dbus.Flags) error
+	GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call
+	ShowAuth(flags dbus.Flags, active bool) error
+	GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call
+	Suspend(flags dbus.Flags, enable bool) error
+	GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call
+	Hibernate(flags dbus.Flags, enable bool) error
+	ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*lockfront) GetInterfaceName_() string {
+type interfaceLockfront struct{}
+
+func (v *interfaceLockfront) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceLockfront) GetInterfaceName_() string {
 	return "com.deepin.dde.lockFront"
 }
 
 // method Show
 
-func (v *lockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Show", flags, ch)
 }
 
-func (v *lockfront) Show(flags dbus.Flags) error {
+func (v *interfaceLockfront) Show(flags dbus.Flags) error {
 	return (<-v.GoShow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ShowUserList
 
-func (v *lockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceLockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowUserList", flags, ch)
 }
 
-func (v *lockfront) ShowUserList(flags dbus.Flags) error {
+func (v *interfaceLockfront) ShowUserList(flags dbus.Flags) error {
 	return (<-v.GoShowUserList(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ShowAuth
 
-func (v *lockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call {
+func (v *interfaceLockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowAuth", flags, ch, active)
 }
 
-func (v *lockfront) ShowAuth(flags dbus.Flags, active bool) error {
+func (v *interfaceLockfront) ShowAuth(flags dbus.Flags, active bool) error {
 	return (<-v.GoShowAuth(flags, make(chan *dbus.Call, 1), active).Done).Err
 }
 
 // method Suspend
 
-func (v *lockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *interfaceLockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch, enable)
 }
 
-func (v *lockfront) Suspend(flags dbus.Flags, enable bool) error {
+func (v *interfaceLockfront) Suspend(flags dbus.Flags, enable bool) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method Hibernate
 
-func (v *lockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *interfaceLockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch, enable)
 }
 
-func (v *lockfront) Hibernate(flags dbus.Flags, enable bool) error {
+func (v *interfaceLockfront) Hibernate(flags dbus.Flags, enable bool) error {
 	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // signal ChangKey
 
-func (v *lockfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceLockfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

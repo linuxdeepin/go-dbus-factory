@@ -13,44 +13,68 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type ObjectManager struct {
+type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
 	proxy.Object
 }
 
-func NewObjectManager(conn *dbus.Conn) *ObjectManager {
-	obj := new(ObjectManager)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop")
+type objectObjectManager struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewObjectManager(conn *dbus.Conn) ObjectManager {
+	obj := new(objectObjectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop")
 	return obj
 }
 
-type AccessPoint struct {
+type AccessPoint interface {
 	accessPoint // interface org.freedesktop.NetworkManager.AccessPoint
 	proxy.Object
 }
 
-func NewAccessPoint(conn *dbus.Conn, path dbus.ObjectPath) (*AccessPoint, error) {
+type objectAccessPoint struct {
+	interfaceAccessPoint // interface org.freedesktop.NetworkManager.AccessPoint
+	proxy.ImplObject
+}
+
+func NewAccessPoint(conn *dbus.Conn, path dbus.ObjectPath) (AccessPoint, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(AccessPoint)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectAccessPoint)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type accessPoint struct{}
-
-func (v *accessPoint) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type accessPoint interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Flags() proxy.PropUint32
+	WpaFlags() proxy.PropUint32
+	RsnFlags() proxy.PropUint32
+	Ssid() proxy.PropByteArray
+	Frequency() proxy.PropUint32
+	HwAddress() proxy.PropString
+	Mode() proxy.PropUint32
+	MaxBitrate() proxy.PropUint32
+	Strength() proxy.PropByte
+	LastSeen() proxy.PropInt32
 }
 
-func (*accessPoint) GetInterfaceName_() string {
+type interfaceAccessPoint struct{}
+
+func (v *interfaceAccessPoint) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAccessPoint) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.AccessPoint"
 }
 
 // signal PropertiesChanged
 
-func (v *accessPoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceAccessPoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -76,8 +100,8 @@ func (v *accessPoint) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property Flags u
 
-func (v *accessPoint) Flags() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) Flags() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Flags",
 	}
@@ -85,8 +109,8 @@ func (v *accessPoint) Flags() proxy.PropUint32 {
 
 // property WpaFlags u
 
-func (v *accessPoint) WpaFlags() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) WpaFlags() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "WpaFlags",
 	}
@@ -94,8 +118,8 @@ func (v *accessPoint) WpaFlags() proxy.PropUint32 {
 
 // property RsnFlags u
 
-func (v *accessPoint) RsnFlags() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) RsnFlags() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RsnFlags",
 	}
@@ -103,8 +127,8 @@ func (v *accessPoint) RsnFlags() proxy.PropUint32 {
 
 // property Ssid ay
 
-func (v *accessPoint) Ssid() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceAccessPoint) Ssid() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "Ssid",
 	}
@@ -112,8 +136,8 @@ func (v *accessPoint) Ssid() proxy.PropByteArray {
 
 // property Frequency u
 
-func (v *accessPoint) Frequency() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) Frequency() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Frequency",
 	}
@@ -121,8 +145,8 @@ func (v *accessPoint) Frequency() proxy.PropUint32 {
 
 // property HwAddress s
 
-func (v *accessPoint) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceAccessPoint) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -130,8 +154,8 @@ func (v *accessPoint) HwAddress() proxy.PropString {
 
 // property Mode u
 
-func (v *accessPoint) Mode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) Mode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -139,8 +163,8 @@ func (v *accessPoint) Mode() proxy.PropUint32 {
 
 // property MaxBitrate u
 
-func (v *accessPoint) MaxBitrate() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceAccessPoint) MaxBitrate() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MaxBitrate",
 	}
@@ -148,8 +172,8 @@ func (v *accessPoint) MaxBitrate() proxy.PropUint32 {
 
 // property Strength y
 
-func (v *accessPoint) Strength() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceAccessPoint) Strength() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Strength",
 	}
@@ -157,91 +181,117 @@ func (v *accessPoint) Strength() proxy.PropByte {
 
 // property LastSeen i
 
-func (v *accessPoint) LastSeen() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceAccessPoint) LastSeen() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "LastSeen",
 	}
 }
 
-type AgentManager struct {
+type AgentManager interface {
 	agentManager // interface org.freedesktop.NetworkManager.AgentManager
 	proxy.Object
 }
 
-func NewAgentManager(conn *dbus.Conn) *AgentManager {
-	obj := new(AgentManager)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/AgentManager")
+type objectAgentManager struct {
+	interfaceAgentManager // interface org.freedesktop.NetworkManager.AgentManager
+	proxy.ImplObject
+}
+
+func NewAgentManager(conn *dbus.Conn) AgentManager {
+	obj := new(objectAgentManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/AgentManager")
 	return obj
 }
 
-type agentManager struct{}
-
-func (v *agentManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type agentManager interface {
+	GoRegister(flags dbus.Flags, ch chan *dbus.Call, identifier string) *dbus.Call
+	Register(flags dbus.Flags, identifier string) error
+	GoRegisterWithCapabilities(flags dbus.Flags, ch chan *dbus.Call, identifier string, capabilities uint32) *dbus.Call
+	RegisterWithCapabilities(flags dbus.Flags, identifier string, capabilities uint32) error
+	GoUnregister(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Unregister(flags dbus.Flags) error
 }
 
-func (*agentManager) GetInterfaceName_() string {
+type interfaceAgentManager struct{}
+
+func (v *interfaceAgentManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceAgentManager) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.AgentManager"
 }
 
 // method Register
 
-func (v *agentManager) GoRegister(flags dbus.Flags, ch chan *dbus.Call, identifier string) *dbus.Call {
+func (v *interfaceAgentManager) GoRegister(flags dbus.Flags, ch chan *dbus.Call, identifier string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Register", flags, ch, identifier)
 }
 
-func (v *agentManager) Register(flags dbus.Flags, identifier string) error {
+func (v *interfaceAgentManager) Register(flags dbus.Flags, identifier string) error {
 	return (<-v.GoRegister(flags, make(chan *dbus.Call, 1), identifier).Done).Err
 }
 
 // method RegisterWithCapabilities
 
-func (v *agentManager) GoRegisterWithCapabilities(flags dbus.Flags, ch chan *dbus.Call, identifier string, capabilities uint32) *dbus.Call {
+func (v *interfaceAgentManager) GoRegisterWithCapabilities(flags dbus.Flags, ch chan *dbus.Call, identifier string, capabilities uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterWithCapabilities", flags, ch, identifier, capabilities)
 }
 
-func (v *agentManager) RegisterWithCapabilities(flags dbus.Flags, identifier string, capabilities uint32) error {
+func (v *interfaceAgentManager) RegisterWithCapabilities(flags dbus.Flags, identifier string, capabilities uint32) error {
 	return (<-v.GoRegisterWithCapabilities(flags, make(chan *dbus.Call, 1), identifier, capabilities).Done).Err
 }
 
 // method Unregister
 
-func (v *agentManager) GoUnregister(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceAgentManager) GoUnregister(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unregister", flags, ch)
 }
 
-func (v *agentManager) Unregister(flags dbus.Flags) error {
+func (v *interfaceAgentManager) Unregister(flags dbus.Flags) error {
 	return (<-v.GoUnregister(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
-type Checkpoint struct {
+type Checkpoint interface {
 	checkpoint // interface org.freedesktop.NetworkManager.Checkpoint
 	proxy.Object
 }
 
-func NewCheckpoint(conn *dbus.Conn, path dbus.ObjectPath) (*Checkpoint, error) {
+type objectCheckpoint struct {
+	interfaceCheckpoint // interface org.freedesktop.NetworkManager.Checkpoint
+	proxy.ImplObject
+}
+
+func NewCheckpoint(conn *dbus.Conn, path dbus.ObjectPath) (Checkpoint, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Checkpoint)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectCheckpoint)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type checkpoint struct{}
-
-func (v *checkpoint) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type checkpoint interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Devices() proxy.PropObjectPathArray
+	Created() proxy.PropInt64
+	RollbackTimeout() proxy.PropUint32
 }
 
-func (*checkpoint) GetInterfaceName_() string {
+type interfaceCheckpoint struct{}
+
+func (v *interfaceCheckpoint) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceCheckpoint) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Checkpoint"
 }
 
 // signal PropertiesChanged
 
-func (v *checkpoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceCheckpoint) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -267,8 +317,8 @@ func (v *checkpoint) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property Devices ao
 
-func (v *checkpoint) Devices() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceCheckpoint) Devices() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Devices",
 	}
@@ -276,8 +326,8 @@ func (v *checkpoint) Devices() proxy.PropObjectPathArray {
 
 // property Created x
 
-func (v *checkpoint) Created() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceCheckpoint) Created() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "Created",
 	}
@@ -285,40 +335,65 @@ func (v *checkpoint) Created() proxy.PropInt64 {
 
 // property RollbackTimeout u
 
-func (v *checkpoint) RollbackTimeout() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceCheckpoint) RollbackTimeout() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RollbackTimeout",
 	}
 }
 
-type ActiveConnection struct {
+type ActiveConnection interface {
 	activeConnection // interface org.freedesktop.NetworkManager.Connection.Active
 	proxy.Object
 }
 
-func NewActiveConnection(conn *dbus.Conn, path dbus.ObjectPath) (*ActiveConnection, error) {
+type objectActiveConnection struct {
+	interfaceActiveConnection // interface org.freedesktop.NetworkManager.Connection.Active
+	proxy.ImplObject
+}
+
+func NewActiveConnection(conn *dbus.Conn, path dbus.ObjectPath) (ActiveConnection, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(ActiveConnection)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectActiveConnection)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type activeConnection struct{}
-
-func (v *activeConnection) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type activeConnection interface {
+	ConnectStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Connection() proxy.PropObjectPath
+	SpecificObject() proxy.PropObjectPath
+	Id() proxy.PropString
+	Uuid() proxy.PropString
+	Type() proxy.PropString
+	Devices() proxy.PropObjectPathArray
+	State() proxy.PropUint32
+	Default() proxy.PropBool
+	Ip4Config() proxy.PropObjectPath
+	Dhcp4Config() proxy.PropObjectPath
+	Default6() proxy.PropBool
+	Ip6Config() proxy.PropObjectPath
+	Dhcp6Config() proxy.PropObjectPath
+	Vpn() proxy.PropBool
+	Master() proxy.PropObjectPath
 }
 
-func (*activeConnection) GetInterfaceName_() string {
+type interfaceActiveConnection struct{}
+
+func (v *interfaceActiveConnection) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceActiveConnection) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Connection.Active"
 }
 
 // signal StateChanged
 
-func (v *activeConnection) ConnectStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceActiveConnection) ConnectStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -345,7 +420,7 @@ func (v *activeConnection) ConnectStateChanged(cb func(state uint32, reason uint
 
 // signal PropertiesChanged
 
-func (v *activeConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceActiveConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -371,8 +446,8 @@ func (v *activeConnection) ConnectSignalPropertiesChanged(cb func(properties map
 
 // property Connection o
 
-func (v *activeConnection) Connection() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Connection() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Connection",
 	}
@@ -380,8 +455,8 @@ func (v *activeConnection) Connection() proxy.PropObjectPath {
 
 // property SpecificObject o
 
-func (v *activeConnection) SpecificObject() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) SpecificObject() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "SpecificObject",
 	}
@@ -389,8 +464,8 @@ func (v *activeConnection) SpecificObject() proxy.PropObjectPath {
 
 // property Id s
 
-func (v *activeConnection) Id() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceActiveConnection) Id() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Id",
 	}
@@ -398,8 +473,8 @@ func (v *activeConnection) Id() proxy.PropString {
 
 // property Uuid s
 
-func (v *activeConnection) Uuid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceActiveConnection) Uuid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Uuid",
 	}
@@ -407,8 +482,8 @@ func (v *activeConnection) Uuid() proxy.PropString {
 
 // property Type s
 
-func (v *activeConnection) Type() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceActiveConnection) Type() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Type",
 	}
@@ -416,8 +491,8 @@ func (v *activeConnection) Type() proxy.PropString {
 
 // property Devices ao
 
-func (v *activeConnection) Devices() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceActiveConnection) Devices() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Devices",
 	}
@@ -425,8 +500,8 @@ func (v *activeConnection) Devices() proxy.PropObjectPathArray {
 
 // property State u
 
-func (v *activeConnection) State() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceActiveConnection) State() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
 	}
@@ -434,8 +509,8 @@ func (v *activeConnection) State() proxy.PropUint32 {
 
 // property Default b
 
-func (v *activeConnection) Default() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceActiveConnection) Default() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Default",
 	}
@@ -443,8 +518,8 @@ func (v *activeConnection) Default() proxy.PropBool {
 
 // property Ip4Config o
 
-func (v *activeConnection) Ip4Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Ip4Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Ip4Config",
 	}
@@ -452,8 +527,8 @@ func (v *activeConnection) Ip4Config() proxy.PropObjectPath {
 
 // property Dhcp4Config o
 
-func (v *activeConnection) Dhcp4Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Dhcp4Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Dhcp4Config",
 	}
@@ -461,8 +536,8 @@ func (v *activeConnection) Dhcp4Config() proxy.PropObjectPath {
 
 // property Default6 b
 
-func (v *activeConnection) Default6() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceActiveConnection) Default6() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Default6",
 	}
@@ -470,8 +545,8 @@ func (v *activeConnection) Default6() proxy.PropBool {
 
 // property Ip6Config o
 
-func (v *activeConnection) Ip6Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Ip6Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Ip6Config",
 	}
@@ -479,8 +554,8 @@ func (v *activeConnection) Ip6Config() proxy.PropObjectPath {
 
 // property Dhcp6Config o
 
-func (v *activeConnection) Dhcp6Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Dhcp6Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Dhcp6Config",
 	}
@@ -488,8 +563,8 @@ func (v *activeConnection) Dhcp6Config() proxy.PropObjectPath {
 
 // property Vpn b
 
-func (v *activeConnection) Vpn() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceActiveConnection) Vpn() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Vpn",
 	}
@@ -497,40 +572,50 @@ func (v *activeConnection) Vpn() proxy.PropBool {
 
 // property Master o
 
-func (v *activeConnection) Master() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceActiveConnection) Master() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Master",
 	}
 }
 
-type Dhcp4Config struct {
+type Dhcp4Config interface {
 	dhcp4Config // interface org.freedesktop.NetworkManager.DHCP4Config
 	proxy.Object
 }
 
-func NewDhcp4Config(conn *dbus.Conn, path dbus.ObjectPath) (*Dhcp4Config, error) {
+type objectDhcp4Config struct {
+	interfaceDhcp4Config // interface org.freedesktop.NetworkManager.DHCP4Config
+	proxy.ImplObject
+}
+
+func NewDhcp4Config(conn *dbus.Conn, path dbus.ObjectPath) (Dhcp4Config, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Dhcp4Config)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectDhcp4Config)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type dhcp4Config struct{}
-
-func (v *dhcp4Config) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type dhcp4Config interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Options() PropMapStringVariant
 }
 
-func (*dhcp4Config) GetInterfaceName_() string {
+type interfaceDhcp4Config struct{}
+
+func (v *interfaceDhcp4Config) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDhcp4Config) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.DHCP4Config"
 }
 
 // signal PropertiesChanged
 
-func (v *dhcp4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDhcp4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -556,40 +641,50 @@ func (v *dhcp4Config) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property Options a{sv}
 
-func (v *dhcp4Config) Options() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceDhcp4Config) Options() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Options",
 	}
 }
 
-type Dhcp6Config struct {
+type Dhcp6Config interface {
 	dhcp6Config // interface org.freedesktop.NetworkManager.DHCP6Config
 	proxy.Object
 }
 
-func NewDhcp6Config(conn *dbus.Conn, path dbus.ObjectPath) (*Dhcp6Config, error) {
+type objectDhcp6Config struct {
+	interfaceDhcp6Config // interface org.freedesktop.NetworkManager.DHCP6Config
+	proxy.ImplObject
+}
+
+func NewDhcp6Config(conn *dbus.Conn, path dbus.ObjectPath) (Dhcp6Config, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Dhcp6Config)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectDhcp6Config)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type dhcp6Config struct{}
-
-func (v *dhcp6Config) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type dhcp6Config interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Options() PropMapStringVariant
 }
 
-func (*dhcp6Config) GetInterfaceName_() string {
+type interfaceDhcp6Config struct{}
+
+func (v *interfaceDhcp6Config) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDhcp6Config) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.DHCP6Config"
 }
 
 // signal PropertiesChanged
 
-func (v *dhcp6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDhcp6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -615,38 +710,49 @@ func (v *dhcp6Config) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property Options a{sv}
 
-func (v *dhcp6Config) Options() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceDhcp6Config) Options() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Options",
 	}
 }
 
-type DnsManager struct {
+type DnsManager interface {
 	dnsManager // interface org.freedesktop.NetworkManager.DnsManager
 	proxy.Object
 }
 
-func NewDnsManager(conn *dbus.Conn) *DnsManager {
-	obj := new(DnsManager)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/DnsManager")
+type objectDnsManager struct {
+	interfaceDnsManager // interface org.freedesktop.NetworkManager.DnsManager
+	proxy.ImplObject
+}
+
+func NewDnsManager(conn *dbus.Conn) DnsManager {
+	obj := new(objectDnsManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/DnsManager")
 	return obj
 }
 
-type dnsManager struct{}
-
-func (v *dnsManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type dnsManager interface {
+	Mode() proxy.PropString
+	RcManager() proxy.PropString
+	Configuration() PropMapSVSlice
 }
 
-func (*dnsManager) GetInterfaceName_() string {
+type interfaceDnsManager struct{}
+
+func (v *interfaceDnsManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDnsManager) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.DnsManager"
 }
 
 // property Mode s
 
-func (v *dnsManager) Mode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDnsManager) Mode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -654,8 +760,8 @@ func (v *dnsManager) Mode() proxy.PropString {
 
 // property RcManager s
 
-func (v *dnsManager) RcManager() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDnsManager) RcManager() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RcManager",
 	}
@@ -663,40 +769,60 @@ func (v *dnsManager) RcManager() proxy.PropString {
 
 // property Configuration aa{sv}
 
-func (v *dnsManager) Configuration() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceDnsManager) Configuration() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "Configuration",
 	}
 }
 
-type IP4Config struct {
+type IP4Config interface {
 	ip4Config // interface org.freedesktop.NetworkManager.IP4Config
 	proxy.Object
 }
 
-func NewIP4Config(conn *dbus.Conn, path dbus.ObjectPath) (*IP4Config, error) {
+type objectIP4Config struct {
+	interfaceIp4Config // interface org.freedesktop.NetworkManager.IP4Config
+	proxy.ImplObject
+}
+
+func NewIP4Config(conn *dbus.Conn, path dbus.ObjectPath) (IP4Config, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(IP4Config)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectIP4Config)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type ip4Config struct{}
-
-func (v *ip4Config) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ip4Config interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Addresses() PropUint32SliceSlice
+	AddressData() PropMapSVSlice
+	Gateway() proxy.PropString
+	Routes() PropUint32SliceSlice
+	RouteData() PropMapSVSlice
+	Nameservers() proxy.PropUint32Array
+	Domains() proxy.PropStringArray
+	Searches() proxy.PropStringArray
+	DnsOptions() proxy.PropStringArray
+	DnsPriority() proxy.PropInt32
+	WinsServers() proxy.PropUint32Array
 }
 
-func (*ip4Config) GetInterfaceName_() string {
+type interfaceIp4Config struct{}
+
+func (v *interfaceIp4Config) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceIp4Config) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.IP4Config"
 }
 
 // signal PropertiesChanged
 
-func (v *ip4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceIp4Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -722,8 +848,8 @@ func (v *ip4Config) ConnectSignalPropertiesChanged(cb func(properties map[string
 
 // property Addresses aau
 
-func (v *ip4Config) Addresses() PropUint32SliceSlice {
-	return PropUint32SliceSlice{
+func (v *interfaceIp4Config) Addresses() PropUint32SliceSlice {
+	return &implPropUint32SliceSlice{
 		Impl: v,
 		Name: "Addresses",
 	}
@@ -731,8 +857,8 @@ func (v *ip4Config) Addresses() PropUint32SliceSlice {
 
 // property AddressData aa{sv}
 
-func (v *ip4Config) AddressData() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceIp4Config) AddressData() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "AddressData",
 	}
@@ -740,8 +866,8 @@ func (v *ip4Config) AddressData() PropMapSVSlice {
 
 // property Gateway s
 
-func (v *ip4Config) Gateway() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceIp4Config) Gateway() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Gateway",
 	}
@@ -749,8 +875,8 @@ func (v *ip4Config) Gateway() proxy.PropString {
 
 // property Routes aau
 
-func (v *ip4Config) Routes() PropUint32SliceSlice {
-	return PropUint32SliceSlice{
+func (v *interfaceIp4Config) Routes() PropUint32SliceSlice {
+	return &implPropUint32SliceSlice{
 		Impl: v,
 		Name: "Routes",
 	}
@@ -758,8 +884,8 @@ func (v *ip4Config) Routes() PropUint32SliceSlice {
 
 // property RouteData aa{sv}
 
-func (v *ip4Config) RouteData() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceIp4Config) RouteData() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "RouteData",
 	}
@@ -767,8 +893,8 @@ func (v *ip4Config) RouteData() PropMapSVSlice {
 
 // property Nameservers au
 
-func (v *ip4Config) Nameservers() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceIp4Config) Nameservers() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "Nameservers",
 	}
@@ -776,8 +902,8 @@ func (v *ip4Config) Nameservers() proxy.PropUint32Array {
 
 // property Domains as
 
-func (v *ip4Config) Domains() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp4Config) Domains() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Domains",
 	}
@@ -785,8 +911,8 @@ func (v *ip4Config) Domains() proxy.PropStringArray {
 
 // property Searches as
 
-func (v *ip4Config) Searches() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp4Config) Searches() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Searches",
 	}
@@ -794,8 +920,8 @@ func (v *ip4Config) Searches() proxy.PropStringArray {
 
 // property DnsOptions as
 
-func (v *ip4Config) DnsOptions() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp4Config) DnsOptions() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DnsOptions",
 	}
@@ -803,8 +929,8 @@ func (v *ip4Config) DnsOptions() proxy.PropStringArray {
 
 // property DnsPriority i
 
-func (v *ip4Config) DnsPriority() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceIp4Config) DnsPriority() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DnsPriority",
 	}
@@ -812,40 +938,59 @@ func (v *ip4Config) DnsPriority() proxy.PropInt32 {
 
 // property WinsServers au
 
-func (v *ip4Config) WinsServers() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceIp4Config) WinsServers() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "WinsServers",
 	}
 }
 
-type IP6Config struct {
+type IP6Config interface {
 	ip6Config // interface org.freedesktop.NetworkManager.IP6Config
 	proxy.Object
 }
 
-func NewIP6Config(conn *dbus.Conn, path dbus.ObjectPath) (*IP6Config, error) {
+type objectIP6Config struct {
+	interfaceIp6Config // interface org.freedesktop.NetworkManager.IP6Config
+	proxy.ImplObject
+}
+
+func NewIP6Config(conn *dbus.Conn, path dbus.ObjectPath) (IP6Config, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(IP6Config)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectIP6Config)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type ip6Config struct{}
-
-func (v *ip6Config) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ip6Config interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Addresses() PropIP6ConfigAddresses
+	AddressData() PropMapSVSlice
+	Gateway() proxy.PropString
+	Routes() PropIP6ConfigRoutes
+	RouteData() PropMapSVSlice
+	Nameservers() PropIP6NameServers
+	Domains() proxy.PropStringArray
+	Searches() proxy.PropStringArray
+	DnsOptions() proxy.PropStringArray
+	DnsPriority() proxy.PropInt32
 }
 
-func (*ip6Config) GetInterfaceName_() string {
+type interfaceIp6Config struct{}
+
+func (v *interfaceIp6Config) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceIp6Config) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.IP6Config"
 }
 
 // signal PropertiesChanged
 
-func (v *ip6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceIp6Config) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -869,25 +1014,28 @@ func (v *ip6Config) ConnectSignalPropertiesChanged(cb func(properties map[string
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property Addresses a(ayuay)
-
-func (v *ip6Config) Addresses() PropIP6ConfigAddresses {
-	return PropIP6ConfigAddresses{
-		Impl: v,
-	}
+type PropIP6ConfigAddresses interface {
+	Get(flags dbus.Flags) (value []IP6Address, err error)
+	Set(flags dbus.Flags, value []IP6Address) error
+	ConnectChanged(cb func(hasValue bool, value []IP6Address)) error
 }
 
-type PropIP6ConfigAddresses struct {
+type implPropIP6ConfigAddresses struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropIP6ConfigAddresses) Get(flags dbus.Flags) (value []IP6Address, err error) {
+func (p implPropIP6ConfigAddresses) Get(flags dbus.Flags) (value []IP6Address, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Addresses", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropIP6ConfigAddresses) ConnectChanged(cb func(hasValue bool, value []IP6Address)) error {
+func (p implPropIP6ConfigAddresses) Set(flags dbus.Flags, value []IP6Address) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropIP6ConfigAddresses) ConnectChanged(cb func(hasValue bool, value []IP6Address)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -904,13 +1052,22 @@ func (p PropIP6ConfigAddresses) ConnectChanged(cb func(hasValue bool, value []IP
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Addresses", cb0)
+		p.Name, cb0)
+}
+
+// property Addresses a(ayuay)
+
+func (v *interfaceIp6Config) Addresses() PropIP6ConfigAddresses {
+	return &implPropIP6ConfigAddresses{
+		Impl: v,
+		Name: "Addresses",
+	}
 }
 
 // property AddressData aa{sv}
 
-func (v *ip6Config) AddressData() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceIp6Config) AddressData() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "AddressData",
 	}
@@ -918,32 +1075,35 @@ func (v *ip6Config) AddressData() PropMapSVSlice {
 
 // property Gateway s
 
-func (v *ip6Config) Gateway() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceIp6Config) Gateway() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Gateway",
 	}
 }
 
-// property Routes a(ayuayu)
-
-func (v *ip6Config) Routes() PropIP6ConfigRoutes {
-	return PropIP6ConfigRoutes{
-		Impl: v,
-	}
+type PropIP6ConfigRoutes interface {
+	Get(flags dbus.Flags) (value []IP6Route, err error)
+	Set(flags dbus.Flags, value []IP6Route) error
+	ConnectChanged(cb func(hasValue bool, value []IP6Route)) error
 }
 
-type PropIP6ConfigRoutes struct {
+type implPropIP6ConfigRoutes struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropIP6ConfigRoutes) Get(flags dbus.Flags) (value []IP6Route, err error) {
+func (p implPropIP6ConfigRoutes) Get(flags dbus.Flags) (value []IP6Route, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Routes", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropIP6ConfigRoutes) ConnectChanged(cb func(hasValue bool, value []IP6Route)) error {
+func (p implPropIP6ConfigRoutes) Set(flags dbus.Flags, value []IP6Route) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropIP6ConfigRoutes) ConnectChanged(cb func(hasValue bool, value []IP6Route)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -960,37 +1120,49 @@ func (p PropIP6ConfigRoutes) ConnectChanged(cb func(hasValue bool, value []IP6Ro
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Routes", cb0)
+		p.Name, cb0)
+}
+
+// property Routes a(ayuayu)
+
+func (v *interfaceIp6Config) Routes() PropIP6ConfigRoutes {
+	return &implPropIP6ConfigRoutes{
+		Impl: v,
+		Name: "Routes",
+	}
 }
 
 // property RouteData aa{sv}
 
-func (v *ip6Config) RouteData() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceIp6Config) RouteData() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "RouteData",
 	}
 }
 
-// property Nameservers aay
-
-func (v *ip6Config) Nameservers() PropIP6NameServers {
-	return PropIP6NameServers{
-		Impl: v,
-	}
+type PropIP6NameServers interface {
+	Get(flags dbus.Flags) (value [][]byte, err error)
+	Set(flags dbus.Flags, value [][]byte) error
+	ConnectChanged(cb func(hasValue bool, value [][]byte)) error
 }
 
-type PropIP6NameServers struct {
+type implPropIP6NameServers struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropIP6NameServers) Get(flags dbus.Flags) (value [][]byte, err error) {
+func (p implPropIP6NameServers) Get(flags dbus.Flags) (value [][]byte, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Nameservers", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropIP6NameServers) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
+func (p implPropIP6NameServers) Set(flags dbus.Flags, value [][]byte) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropIP6NameServers) ConnectChanged(cb func(hasValue bool, value [][]byte)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1007,13 +1179,22 @@ func (p PropIP6NameServers) ConnectChanged(cb func(hasValue bool, value [][]byte
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Nameservers", cb0)
+		p.Name, cb0)
+}
+
+// property Nameservers aay
+
+func (v *interfaceIp6Config) Nameservers() PropIP6NameServers {
+	return &implPropIP6NameServers{
+		Impl: v,
+		Name: "Nameservers",
+	}
 }
 
 // property Domains as
 
-func (v *ip6Config) Domains() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp6Config) Domains() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Domains",
 	}
@@ -1021,8 +1202,8 @@ func (v *ip6Config) Domains() proxy.PropStringArray {
 
 // property Searches as
 
-func (v *ip6Config) Searches() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp6Config) Searches() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Searches",
 	}
@@ -1030,8 +1211,8 @@ func (v *ip6Config) Searches() proxy.PropStringArray {
 
 // property DnsOptions as
 
-func (v *ip6Config) DnsOptions() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceIp6Config) DnsOptions() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "DnsOptions",
 	}
@@ -1039,273 +1220,340 @@ func (v *ip6Config) DnsOptions() proxy.PropStringArray {
 
 // property DnsPriority i
 
-func (v *ip6Config) DnsPriority() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceIp6Config) DnsPriority() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DnsPriority",
 	}
 }
 
-type Manager struct {
+type Manager interface {
 	manager // interface org.freedesktop.NetworkManager
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+type objectManager struct {
+	interfaceManager // interface org.freedesktop.NetworkManager
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
 	return obj
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type manager interface {
+	GoReload(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call
+	Reload(flags dbus.Flags, flags0 uint32) error
+	GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetAllDevices(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetDeviceByIpIface(flags dbus.Flags, ch chan *dbus.Call, iface string) *dbus.Call
+	GetDeviceByIpIface(flags dbus.Flags, iface string) (dbus.ObjectPath, error)
+	GoActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call
+	ActivateConnection(flags dbus.Flags, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) (dbus.ObjectPath, error)
+	GoAddAndActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call
+	AddAndActivateConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) (dbus.ObjectPath, dbus.ObjectPath, error)
+	GoDeactivateConnection(flags dbus.Flags, ch chan *dbus.Call, active_connection dbus.ObjectPath) *dbus.Call
+	DeactivateConnection(flags dbus.Flags, active_connection dbus.ObjectPath) error
+	GoSleep(flags dbus.Flags, ch chan *dbus.Call, sleep bool) *dbus.Call
+	Sleep(flags dbus.Flags, sleep bool) error
+	GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call
+	Enable(flags dbus.Flags, enable bool) error
+	GoGetPermissions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetPermissions(flags dbus.Flags) (map[string]string, error)
+	GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string, domains string) *dbus.Call
+	SetLogging(flags dbus.Flags, level string, domains string) error
+	GoGetLogging(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetLogging(flags dbus.Flags) (string, string, error)
+	GoCheckConnectivity(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CheckConnectivity(flags dbus.Flags) (uint32, error)
+	GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	State(flags dbus.Flags) (uint32, error)
+	GoCheckpointCreate(flags dbus.Flags, ch chan *dbus.Call, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) *dbus.Call
+	CheckpointCreate(flags dbus.Flags, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) (dbus.ObjectPath, error)
+	GoCheckpointDestroy(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call
+	CheckpointDestroy(flags dbus.Flags, checkpoint dbus.ObjectPath) error
+	GoCheckpointRollback(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call
+	CheckpointRollback(flags dbus.Flags, checkpoint dbus.ObjectPath) (map[string]uint32, error)
+	ConnectCheckPermissions(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceAdded(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceRemoved(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Devices() proxy.PropObjectPathArray
+	AllDevices() proxy.PropObjectPathArray
+	NetworkingEnabled() proxy.PropBool
+	WirelessEnabled() proxy.PropBool
+	WirelessHardwareEnabled() proxy.PropBool
+	WwanEnabled() proxy.PropBool
+	WwanHardwareEnabled() proxy.PropBool
+	WimaxEnabled() proxy.PropBool
+	WimaxHardwareEnabled() proxy.PropBool
+	ActiveConnections() proxy.PropObjectPathArray
+	PrimaryConnection() proxy.PropObjectPath
+	PrimaryConnectionType() proxy.PropString
+	Metered() proxy.PropUint32
+	ActivatingConnection() proxy.PropObjectPath
+	Startup() proxy.PropBool
+	Version() proxy.PropString
+	Capabilities() proxy.PropUint32Array
+	PropState() proxy.PropUint32
+	Connectivity() proxy.PropUint32
+	GlobalDnsConfiguration() PropMapStringVariant
 }
 
-func (*manager) GetInterfaceName_() string {
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager"
 }
 
 // method Reload
 
-func (v *manager) GoReload(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call {
+func (v *interfaceManager) GoReload(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch, flags0)
 }
 
-func (v *manager) Reload(flags dbus.Flags, flags0 uint32) error {
+func (v *interfaceManager) Reload(flags dbus.Flags, flags0 uint32) error {
 	return (<-v.GoReload(flags, make(chan *dbus.Call, 1), flags0).Done).Err
 }
 
 // method GetDevices
 
-func (v *manager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDevices", flags, ch)
 }
 
-func (*manager) StoreGetDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetDevices(flags dbus.Flags) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetDevices(
 		<-v.GoGetDevices(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetAllDevices
 
-func (v *manager) GoGetAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllDevices", flags, ch)
 }
 
-func (*manager) StoreGetAllDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetAllDevices(call *dbus.Call) (devices []dbus.ObjectPath, err error) {
 	err = call.Store(&devices)
 	return
 }
 
-func (v *manager) GetAllDevices(flags dbus.Flags) (devices []dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetAllDevices(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetAllDevices(
 		<-v.GoGetAllDevices(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetDeviceByIpIface
 
-func (v *manager) GoGetDeviceByIpIface(flags dbus.Flags, ch chan *dbus.Call, iface string) *dbus.Call {
+func (v *interfaceManager) GoGetDeviceByIpIface(flags dbus.Flags, ch chan *dbus.Call, iface string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDeviceByIpIface", flags, ch, iface)
 }
 
-func (*manager) StoreGetDeviceByIpIface(call *dbus.Call) (device dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreGetDeviceByIpIface(call *dbus.Call) (device dbus.ObjectPath, err error) {
 	err = call.Store(&device)
 	return
 }
 
-func (v *manager) GetDeviceByIpIface(flags dbus.Flags, iface string) (device dbus.ObjectPath, err error) {
+func (v *interfaceManager) GetDeviceByIpIface(flags dbus.Flags, iface string) (dbus.ObjectPath, error) {
 	return v.StoreGetDeviceByIpIface(
 		<-v.GoGetDeviceByIpIface(flags, make(chan *dbus.Call, 1), iface).Done)
 }
 
 // method ActivateConnection
 
-func (v *manager) GoActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateConnection", flags, ch, connection, device, specific_object)
 }
 
-func (*manager) StoreActivateConnection(call *dbus.Call) (active_connection dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreActivateConnection(call *dbus.Call) (active_connection dbus.ObjectPath, err error) {
 	err = call.Store(&active_connection)
 	return
 }
 
-func (v *manager) ActivateConnection(flags dbus.Flags, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) (active_connection dbus.ObjectPath, err error) {
+func (v *interfaceManager) ActivateConnection(flags dbus.Flags, connection dbus.ObjectPath, device dbus.ObjectPath, specific_object dbus.ObjectPath) (dbus.ObjectPath, error) {
 	return v.StoreActivateConnection(
 		<-v.GoActivateConnection(flags, make(chan *dbus.Call, 1), connection, device, specific_object).Done)
 }
 
 // method AddAndActivateConnection
 
-func (v *manager) GoAddAndActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoAddAndActivateConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddAndActivateConnection", flags, ch, connection, device, specific_object)
 }
 
-func (*manager) StoreAddAndActivateConnection(call *dbus.Call) (path dbus.ObjectPath, active_connection dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreAddAndActivateConnection(call *dbus.Call) (path dbus.ObjectPath, active_connection dbus.ObjectPath, err error) {
 	err = call.Store(&path, &active_connection)
 	return
 }
 
-func (v *manager) AddAndActivateConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) (path dbus.ObjectPath, active_connection dbus.ObjectPath, err error) {
+func (v *interfaceManager) AddAndActivateConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant, device dbus.ObjectPath, specific_object dbus.ObjectPath) (dbus.ObjectPath, dbus.ObjectPath, error) {
 	return v.StoreAddAndActivateConnection(
 		<-v.GoAddAndActivateConnection(flags, make(chan *dbus.Call, 1), connection, device, specific_object).Done)
 }
 
 // method DeactivateConnection
 
-func (v *manager) GoDeactivateConnection(flags dbus.Flags, ch chan *dbus.Call, active_connection dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoDeactivateConnection(flags dbus.Flags, ch chan *dbus.Call, active_connection dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeactivateConnection", flags, ch, active_connection)
 }
 
-func (v *manager) DeactivateConnection(flags dbus.Flags, active_connection dbus.ObjectPath) error {
+func (v *interfaceManager) DeactivateConnection(flags dbus.Flags, active_connection dbus.ObjectPath) error {
 	return (<-v.GoDeactivateConnection(flags, make(chan *dbus.Call, 1), active_connection).Done).Err
 }
 
 // method Sleep
 
-func (v *manager) GoSleep(flags dbus.Flags, ch chan *dbus.Call, sleep bool) *dbus.Call {
+func (v *interfaceManager) GoSleep(flags dbus.Flags, ch chan *dbus.Call, sleep bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Sleep", flags, ch, sleep)
 }
 
-func (v *manager) Sleep(flags dbus.Flags, sleep bool) error {
+func (v *interfaceManager) Sleep(flags dbus.Flags, sleep bool) error {
 	return (<-v.GoSleep(flags, make(chan *dbus.Call, 1), sleep).Done).Err
 }
 
 // method Enable
 
-func (v *manager) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *interfaceManager) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enable", flags, ch, enable)
 }
 
-func (v *manager) Enable(flags dbus.Flags, enable bool) error {
+func (v *interfaceManager) Enable(flags dbus.Flags, enable bool) error {
 	return (<-v.GoEnable(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method GetPermissions
 
-func (v *manager) GoGetPermissions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetPermissions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetPermissions", flags, ch)
 }
 
-func (*manager) StoreGetPermissions(call *dbus.Call) (permissions map[string]string, err error) {
+func (*interfaceManager) StoreGetPermissions(call *dbus.Call) (permissions map[string]string, err error) {
 	err = call.Store(&permissions)
 	return
 }
 
-func (v *manager) GetPermissions(flags dbus.Flags) (permissions map[string]string, err error) {
+func (v *interfaceManager) GetPermissions(flags dbus.Flags) (map[string]string, error) {
 	return v.StoreGetPermissions(
 		<-v.GoGetPermissions(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetLogging
 
-func (v *manager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string, domains string) *dbus.Call {
+func (v *interfaceManager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string, domains string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLogging", flags, ch, level, domains)
 }
 
-func (v *manager) SetLogging(flags dbus.Flags, level string, domains string) error {
+func (v *interfaceManager) SetLogging(flags dbus.Flags, level string, domains string) error {
 	return (<-v.GoSetLogging(flags, make(chan *dbus.Call, 1), level, domains).Done).Err
 }
 
 // method GetLogging
 
-func (v *manager) GoGetLogging(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoGetLogging(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetLogging", flags, ch)
 }
 
-func (*manager) StoreGetLogging(call *dbus.Call) (level string, domains string, err error) {
+func (*interfaceManager) StoreGetLogging(call *dbus.Call) (level string, domains string, err error) {
 	err = call.Store(&level, &domains)
 	return
 }
 
-func (v *manager) GetLogging(flags dbus.Flags) (level string, domains string, err error) {
+func (v *interfaceManager) GetLogging(flags dbus.Flags) (string, string, error) {
 	return v.StoreGetLogging(
 		<-v.GoGetLogging(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CheckConnectivity
 
-func (v *manager) GoCheckConnectivity(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoCheckConnectivity(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CheckConnectivity", flags, ch)
 }
 
-func (*manager) StoreCheckConnectivity(call *dbus.Call) (connectivity uint32, err error) {
+func (*interfaceManager) StoreCheckConnectivity(call *dbus.Call) (connectivity uint32, err error) {
 	err = call.Store(&connectivity)
 	return
 }
 
-func (v *manager) CheckConnectivity(flags dbus.Flags) (connectivity uint32, err error) {
+func (v *interfaceManager) CheckConnectivity(flags dbus.Flags) (uint32, error) {
 	return v.StoreCheckConnectivity(
 		<-v.GoCheckConnectivity(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method state
 
-func (v *manager) GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".state", flags, ch)
 }
 
-func (*manager) StoreState(call *dbus.Call) (state uint32, err error) {
+func (*interfaceManager) StoreState(call *dbus.Call) (state uint32, err error) {
 	err = call.Store(&state)
 	return
 }
 
-func (v *manager) State(flags dbus.Flags) (state uint32, err error) {
+func (v *interfaceManager) State(flags dbus.Flags) (uint32, error) {
 	return v.StoreState(
 		<-v.GoState(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CheckpointCreate
 
-func (v *manager) GoCheckpointCreate(flags dbus.Flags, ch chan *dbus.Call, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) *dbus.Call {
+func (v *interfaceManager) GoCheckpointCreate(flags dbus.Flags, ch chan *dbus.Call, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CheckpointCreate", flags, ch, devices, rollback_timeout, flags0)
 }
 
-func (*manager) StoreCheckpointCreate(call *dbus.Call) (checkpoint dbus.ObjectPath, err error) {
+func (*interfaceManager) StoreCheckpointCreate(call *dbus.Call) (checkpoint dbus.ObjectPath, err error) {
 	err = call.Store(&checkpoint)
 	return
 }
 
-func (v *manager) CheckpointCreate(flags dbus.Flags, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) (checkpoint dbus.ObjectPath, err error) {
+func (v *interfaceManager) CheckpointCreate(flags dbus.Flags, devices []dbus.ObjectPath, rollback_timeout uint32, flags0 uint32) (dbus.ObjectPath, error) {
 	return v.StoreCheckpointCreate(
 		<-v.GoCheckpointCreate(flags, make(chan *dbus.Call, 1), devices, rollback_timeout, flags0).Done)
 }
 
 // method CheckpointDestroy
 
-func (v *manager) GoCheckpointDestroy(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoCheckpointDestroy(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CheckpointDestroy", flags, ch, checkpoint)
 }
 
-func (v *manager) CheckpointDestroy(flags dbus.Flags, checkpoint dbus.ObjectPath) error {
+func (v *interfaceManager) CheckpointDestroy(flags dbus.Flags, checkpoint dbus.ObjectPath) error {
 	return (<-v.GoCheckpointDestroy(flags, make(chan *dbus.Call, 1), checkpoint).Done).Err
 }
 
 // method CheckpointRollback
 
-func (v *manager) GoCheckpointRollback(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call {
+func (v *interfaceManager) GoCheckpointRollback(flags dbus.Flags, ch chan *dbus.Call, checkpoint dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CheckpointRollback", flags, ch, checkpoint)
 }
 
-func (*manager) StoreCheckpointRollback(call *dbus.Call) (result map[string]uint32, err error) {
+func (*interfaceManager) StoreCheckpointRollback(call *dbus.Call) (result map[string]uint32, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *manager) CheckpointRollback(flags dbus.Flags, checkpoint dbus.ObjectPath) (result map[string]uint32, err error) {
+func (v *interfaceManager) CheckpointRollback(flags dbus.Flags, checkpoint dbus.ObjectPath) (map[string]uint32, error) {
 	return v.StoreCheckpointRollback(
 		<-v.GoCheckpointRollback(flags, make(chan *dbus.Call, 1), checkpoint).Done)
 }
 
 // signal CheckPermissions
 
-func (v *manager) ConnectCheckPermissions(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectCheckPermissions(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1327,7 +1575,7 @@ func (v *manager) ConnectCheckPermissions(cb func()) (dbusutil.SignalHandlerId, 
 
 // signal StateChanged
 
-func (v *manager) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1353,7 +1601,7 @@ func (v *manager) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHan
 
 // signal PropertiesChanged
 
-func (v *manager) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1379,7 +1627,7 @@ func (v *manager) ConnectSignalPropertiesChanged(cb func(properties map[string]d
 
 // signal DeviceAdded
 
-func (v *manager) ConnectDeviceAdded(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectDeviceAdded(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1405,7 +1653,7 @@ func (v *manager) ConnectDeviceAdded(cb func(device_path dbus.ObjectPath)) (dbus
 
 // signal DeviceRemoved
 
-func (v *manager) ConnectDeviceRemoved(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceManager) ConnectDeviceRemoved(cb func(device_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1431,8 +1679,8 @@ func (v *manager) ConnectDeviceRemoved(cb func(device_path dbus.ObjectPath)) (db
 
 // property Devices ao
 
-func (v *manager) Devices() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceManager) Devices() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Devices",
 	}
@@ -1440,8 +1688,8 @@ func (v *manager) Devices() proxy.PropObjectPathArray {
 
 // property AllDevices ao
 
-func (v *manager) AllDevices() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceManager) AllDevices() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "AllDevices",
 	}
@@ -1449,8 +1697,8 @@ func (v *manager) AllDevices() proxy.PropObjectPathArray {
 
 // property NetworkingEnabled b
 
-func (v *manager) NetworkingEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) NetworkingEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NetworkingEnabled",
 	}
@@ -1458,8 +1706,8 @@ func (v *manager) NetworkingEnabled() proxy.PropBool {
 
 // property WirelessEnabled b
 
-func (v *manager) WirelessEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WirelessEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WirelessEnabled",
 	}
@@ -1467,8 +1715,8 @@ func (v *manager) WirelessEnabled() proxy.PropBool {
 
 // property WirelessHardwareEnabled b
 
-func (v *manager) WirelessHardwareEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WirelessHardwareEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WirelessHardwareEnabled",
 	}
@@ -1476,8 +1724,8 @@ func (v *manager) WirelessHardwareEnabled() proxy.PropBool {
 
 // property WwanEnabled b
 
-func (v *manager) WwanEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WwanEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WwanEnabled",
 	}
@@ -1485,8 +1733,8 @@ func (v *manager) WwanEnabled() proxy.PropBool {
 
 // property WwanHardwareEnabled b
 
-func (v *manager) WwanHardwareEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WwanHardwareEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WwanHardwareEnabled",
 	}
@@ -1494,8 +1742,8 @@ func (v *manager) WwanHardwareEnabled() proxy.PropBool {
 
 // property WimaxEnabled b
 
-func (v *manager) WimaxEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WimaxEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WimaxEnabled",
 	}
@@ -1503,8 +1751,8 @@ func (v *manager) WimaxEnabled() proxy.PropBool {
 
 // property WimaxHardwareEnabled b
 
-func (v *manager) WimaxHardwareEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) WimaxHardwareEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "WimaxHardwareEnabled",
 	}
@@ -1512,8 +1760,8 @@ func (v *manager) WimaxHardwareEnabled() proxy.PropBool {
 
 // property ActiveConnections ao
 
-func (v *manager) ActiveConnections() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceManager) ActiveConnections() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "ActiveConnections",
 	}
@@ -1521,8 +1769,8 @@ func (v *manager) ActiveConnections() proxy.PropObjectPathArray {
 
 // property PrimaryConnection o
 
-func (v *manager) PrimaryConnection() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceManager) PrimaryConnection() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "PrimaryConnection",
 	}
@@ -1530,8 +1778,8 @@ func (v *manager) PrimaryConnection() proxy.PropObjectPath {
 
 // property PrimaryConnectionType s
 
-func (v *manager) PrimaryConnectionType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) PrimaryConnectionType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PrimaryConnectionType",
 	}
@@ -1539,8 +1787,8 @@ func (v *manager) PrimaryConnectionType() proxy.PropString {
 
 // property Metered u
 
-func (v *manager) Metered() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) Metered() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Metered",
 	}
@@ -1548,8 +1796,8 @@ func (v *manager) Metered() proxy.PropUint32 {
 
 // property ActivatingConnection o
 
-func (v *manager) ActivatingConnection() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceManager) ActivatingConnection() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "ActivatingConnection",
 	}
@@ -1557,8 +1805,8 @@ func (v *manager) ActivatingConnection() proxy.PropObjectPath {
 
 // property Startup b
 
-func (v *manager) Startup() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceManager) Startup() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Startup",
 	}
@@ -1566,8 +1814,8 @@ func (v *manager) Startup() proxy.PropBool {
 
 // property Version s
 
-func (v *manager) Version() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceManager) Version() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Version",
 	}
@@ -1575,8 +1823,8 @@ func (v *manager) Version() proxy.PropString {
 
 // property Capabilities au
 
-func (v *manager) Capabilities() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceManager) Capabilities() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "Capabilities",
 	}
@@ -1584,8 +1832,8 @@ func (v *manager) Capabilities() proxy.PropUint32Array {
 
 // property State u
 
-func (v *manager) PropState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) PropState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
 	}
@@ -1593,8 +1841,8 @@ func (v *manager) PropState() proxy.PropUint32 {
 
 // property Connectivity u
 
-func (v *manager) Connectivity() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceManager) Connectivity() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Connectivity",
 	}
@@ -1602,262 +1850,320 @@ func (v *manager) Connectivity() proxy.PropUint32 {
 
 // property GlobalDnsConfiguration a{sv}
 
-func (v *manager) GlobalDnsConfiguration() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceManager) GlobalDnsConfiguration() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "GlobalDnsConfiguration",
 	}
 }
 
-type PPP struct {
+type PPP interface {
 	ppp // interface org.freedesktop.NetworkManager.PPP
 	proxy.Object
 }
 
-func NewPPP(conn *dbus.Conn, path dbus.ObjectPath) (*PPP, error) {
+type objectPPP struct {
+	interfacePpp // interface org.freedesktop.NetworkManager.PPP
+	proxy.ImplObject
+}
+
+func NewPPP(conn *dbus.Conn, path dbus.ObjectPath) (PPP, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(PPP)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectPPP)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type ppp struct{}
-
-func (v *ppp) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type ppp interface {
+	GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	NeedSecrets(flags dbus.Flags) (string, string, error)
+	GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error
+	GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error
+	GoSetState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call
+	SetState(flags dbus.Flags, state uint32) error
 }
 
-func (*ppp) GetInterfaceName_() string {
+type interfacePpp struct{}
+
+func (v *interfacePpp) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePpp) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.PPP"
 }
 
 // method NeedSecrets
 
-func (v *ppp) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePpp) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NeedSecrets", flags, ch)
 }
 
-func (*ppp) StoreNeedSecrets(call *dbus.Call) (username string, password string, err error) {
+func (*interfacePpp) StoreNeedSecrets(call *dbus.Call) (username string, password string, err error) {
 	err = call.Store(&username, &password)
 	return
 }
 
-func (v *ppp) NeedSecrets(flags dbus.Flags) (username string, password string, err error) {
+func (v *interfacePpp) NeedSecrets(flags dbus.Flags) (string, string, error) {
 	return v.StoreNeedSecrets(
 		<-v.GoNeedSecrets(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetIp4Config
 
-func (v *ppp) GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePpp) GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIp4Config", flags, ch, config)
 }
 
-func (v *ppp) SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error {
+func (v *interfacePpp) SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error {
 	return (<-v.GoSetIp4Config(flags, make(chan *dbus.Call, 1), config).Done).Err
 }
 
 // method SetIp6Config
 
-func (v *ppp) GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfacePpp) GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIp6Config", flags, ch, config)
 }
 
-func (v *ppp) SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error {
+func (v *interfacePpp) SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error {
 	return (<-v.GoSetIp6Config(flags, make(chan *dbus.Call, 1), config).Done).Err
 }
 
 // method SetState
 
-func (v *ppp) GoSetState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
+func (v *interfacePpp) GoSetState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetState", flags, ch, state)
 }
 
-func (v *ppp) SetState(flags dbus.Flags, state uint32) error {
+func (v *interfacePpp) SetState(flags dbus.Flags, state uint32) error {
 	return (<-v.GoSetState(flags, make(chan *dbus.Call, 1), state).Done).Err
 }
 
-type SecretAgent struct {
+type SecretAgent interface {
 	secretAgent // interface org.freedesktop.NetworkManager.SecretAgent
 	proxy.Object
 }
 
-func NewSecretAgent(conn *dbus.Conn, path dbus.ObjectPath) (*SecretAgent, error) {
+type objectSecretAgent struct {
+	interfaceSecretAgent // interface org.freedesktop.NetworkManager.SecretAgent
+	proxy.ImplObject
+}
+
+func NewSecretAgent(conn *dbus.Conn, path dbus.ObjectPath) (SecretAgent, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(SecretAgent)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectSecretAgent)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type secretAgent struct{}
-
-func (v *secretAgent) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type secretAgent interface {
+	GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) *dbus.Call
+	GetSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) (map[string]map[string]dbus.Variant, error)
+	GoCancelGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection_path dbus.ObjectPath, setting_name string) *dbus.Call
+	CancelGetSecrets(flags dbus.Flags, connection_path dbus.ObjectPath, setting_name string) error
+	GoSaveSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call
+	SaveSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error
+	GoDeleteSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call
+	DeleteSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error
 }
 
-func (*secretAgent) GetInterfaceName_() string {
+type interfaceSecretAgent struct{}
+
+func (v *interfaceSecretAgent) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSecretAgent) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.SecretAgent"
 }
 
 // method GetSecrets
 
-func (v *secretAgent) GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) *dbus.Call {
+func (v *interfaceSecretAgent) GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSecrets", flags, ch, connection, connection_path, setting_name, hints, flags0)
 }
 
-func (*secretAgent) StoreGetSecrets(call *dbus.Call) (secrets map[string]map[string]dbus.Variant, err error) {
+func (*interfaceSecretAgent) StoreGetSecrets(call *dbus.Call) (secrets map[string]map[string]dbus.Variant, err error) {
 	err = call.Store(&secrets)
 	return
 }
 
-func (v *secretAgent) GetSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) (secrets map[string]map[string]dbus.Variant, err error) {
+func (v *interfaceSecretAgent) GetSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath, setting_name string, hints []string, flags0 uint32) (map[string]map[string]dbus.Variant, error) {
 	return v.StoreGetSecrets(
 		<-v.GoGetSecrets(flags, make(chan *dbus.Call, 1), connection, connection_path, setting_name, hints, flags0).Done)
 }
 
 // method CancelGetSecrets
 
-func (v *secretAgent) GoCancelGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection_path dbus.ObjectPath, setting_name string) *dbus.Call {
+func (v *interfaceSecretAgent) GoCancelGetSecrets(flags dbus.Flags, ch chan *dbus.Call, connection_path dbus.ObjectPath, setting_name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelGetSecrets", flags, ch, connection_path, setting_name)
 }
 
-func (v *secretAgent) CancelGetSecrets(flags dbus.Flags, connection_path dbus.ObjectPath, setting_name string) error {
+func (v *interfaceSecretAgent) CancelGetSecrets(flags dbus.Flags, connection_path dbus.ObjectPath, setting_name string) error {
 	return (<-v.GoCancelGetSecrets(flags, make(chan *dbus.Call, 1), connection_path, setting_name).Done).Err
 }
 
 // method SaveSecrets
 
-func (v *secretAgent) GoSaveSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceSecretAgent) GoSaveSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SaveSecrets", flags, ch, connection, connection_path)
 }
 
-func (v *secretAgent) SaveSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error {
+func (v *interfaceSecretAgent) SaveSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error {
 	return (<-v.GoSaveSecrets(flags, make(chan *dbus.Call, 1), connection, connection_path).Done).Err
 }
 
 // method DeleteSecrets
 
-func (v *secretAgent) GoDeleteSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceSecretAgent) GoDeleteSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteSecrets", flags, ch, connection, connection_path)
 }
 
-func (v *secretAgent) DeleteSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error {
+func (v *interfaceSecretAgent) DeleteSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant, connection_path dbus.ObjectPath) error {
 	return (<-v.GoDeleteSecrets(flags, make(chan *dbus.Call, 1), connection, connection_path).Done).Err
 }
 
-type ConnectionSettings struct {
+type ConnectionSettings interface {
 	connectionSettings // interface org.freedesktop.NetworkManager.Settings.Connection
 	proxy.Object
 }
 
-func NewConnectionSettings(conn *dbus.Conn, path dbus.ObjectPath) (*ConnectionSettings, error) {
+type objectConnectionSettings struct {
+	interfaceConnectionSettings // interface org.freedesktop.NetworkManager.Settings.Connection
+	proxy.ImplObject
+}
+
+func NewConnectionSettings(conn *dbus.Conn, path dbus.ObjectPath) (ConnectionSettings, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(ConnectionSettings)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectConnectionSettings)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type connectionSettings struct{}
-
-func (v *connectionSettings) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type connectionSettings interface {
+	GoUpdate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call
+	Update(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error
+	GoUpdateUnsaved(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call
+	UpdateUnsaved(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Delete(flags dbus.Flags) error
+	GoGetSettings(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetSettings(flags dbus.Flags) (map[string]map[string]dbus.Variant, error)
+	GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, setting_name string) *dbus.Call
+	GetSecrets(flags dbus.Flags, setting_name string) (map[string]map[string]dbus.Variant, error)
+	GoClearSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClearSecrets(flags dbus.Flags) error
+	GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Save(flags dbus.Flags) error
+	ConnectUpdated(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectRemoved(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Unsaved() proxy.PropBool
 }
 
-func (*connectionSettings) GetInterfaceName_() string {
+type interfaceConnectionSettings struct{}
+
+func (v *interfaceConnectionSettings) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceConnectionSettings) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Settings.Connection"
 }
 
 // method Update
 
-func (v *connectionSettings) GoUpdate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceConnectionSettings) GoUpdate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Update", flags, ch, properties)
 }
 
-func (v *connectionSettings) Update(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error {
+func (v *interfaceConnectionSettings) Update(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error {
 	return (<-v.GoUpdate(flags, make(chan *dbus.Call, 1), properties).Done).Err
 }
 
 // method UpdateUnsaved
 
-func (v *connectionSettings) GoUpdateUnsaved(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceConnectionSettings) GoUpdateUnsaved(flags dbus.Flags, ch chan *dbus.Call, properties map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateUnsaved", flags, ch, properties)
 }
 
-func (v *connectionSettings) UpdateUnsaved(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error {
+func (v *interfaceConnectionSettings) UpdateUnsaved(flags dbus.Flags, properties map[string]map[string]dbus.Variant) error {
 	return (<-v.GoUpdateUnsaved(flags, make(chan *dbus.Call, 1), properties).Done).Err
 }
 
 // method Delete
 
-func (v *connectionSettings) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceConnectionSettings) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch)
 }
 
-func (v *connectionSettings) Delete(flags dbus.Flags) error {
+func (v *interfaceConnectionSettings) Delete(flags dbus.Flags) error {
 	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method GetSettings
 
-func (v *connectionSettings) GoGetSettings(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceConnectionSettings) GoGetSettings(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSettings", flags, ch)
 }
 
-func (*connectionSettings) StoreGetSettings(call *dbus.Call) (settings map[string]map[string]dbus.Variant, err error) {
+func (*interfaceConnectionSettings) StoreGetSettings(call *dbus.Call) (settings map[string]map[string]dbus.Variant, err error) {
 	err = call.Store(&settings)
 	return
 }
 
-func (v *connectionSettings) GetSettings(flags dbus.Flags) (settings map[string]map[string]dbus.Variant, err error) {
+func (v *interfaceConnectionSettings) GetSettings(flags dbus.Flags) (map[string]map[string]dbus.Variant, error) {
 	return v.StoreGetSettings(
 		<-v.GoGetSettings(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetSecrets
 
-func (v *connectionSettings) GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, setting_name string) *dbus.Call {
+func (v *interfaceConnectionSettings) GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, setting_name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSecrets", flags, ch, setting_name)
 }
 
-func (*connectionSettings) StoreGetSecrets(call *dbus.Call) (secrets map[string]map[string]dbus.Variant, err error) {
+func (*interfaceConnectionSettings) StoreGetSecrets(call *dbus.Call) (secrets map[string]map[string]dbus.Variant, err error) {
 	err = call.Store(&secrets)
 	return
 }
 
-func (v *connectionSettings) GetSecrets(flags dbus.Flags, setting_name string) (secrets map[string]map[string]dbus.Variant, err error) {
+func (v *interfaceConnectionSettings) GetSecrets(flags dbus.Flags, setting_name string) (map[string]map[string]dbus.Variant, error) {
 	return v.StoreGetSecrets(
 		<-v.GoGetSecrets(flags, make(chan *dbus.Call, 1), setting_name).Done)
 }
 
 // method ClearSecrets
 
-func (v *connectionSettings) GoClearSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceConnectionSettings) GoClearSecrets(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearSecrets", flags, ch)
 }
 
-func (v *connectionSettings) ClearSecrets(flags dbus.Flags) error {
+func (v *interfaceConnectionSettings) ClearSecrets(flags dbus.Flags) error {
 	return (<-v.GoClearSecrets(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Save
 
-func (v *connectionSettings) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceConnectionSettings) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Save", flags, ch)
 }
 
-func (v *connectionSettings) Save(flags dbus.Flags) error {
+func (v *interfaceConnectionSettings) Save(flags dbus.Flags) error {
 	return (<-v.GoSave(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal Updated
 
-func (v *connectionSettings) ConnectUpdated(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceConnectionSettings) ConnectUpdated(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1879,7 +2185,7 @@ func (v *connectionSettings) ConnectUpdated(cb func()) (dbusutil.SignalHandlerId
 
 // signal Removed
 
-func (v *connectionSettings) ConnectRemoved(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceConnectionSettings) ConnectRemoved(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1901,7 +2207,7 @@ func (v *connectionSettings) ConnectRemoved(cb func()) (dbusutil.SignalHandlerId
 
 // signal PropertiesChanged
 
-func (v *connectionSettings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceConnectionSettings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1927,143 +2233,171 @@ func (v *connectionSettings) ConnectSignalPropertiesChanged(cb func(properties m
 
 // property Unsaved b
 
-func (v *connectionSettings) Unsaved() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceConnectionSettings) Unsaved() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Unsaved",
 	}
 }
 
-type Settings struct {
+type Settings interface {
 	settings // interface org.freedesktop.NetworkManager.Settings
 	proxy.Object
 }
 
-func NewSettings(conn *dbus.Conn) *Settings {
-	obj := new(Settings)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
+type objectSettings struct {
+	interfaceSettings // interface org.freedesktop.NetworkManager.Settings
+	proxy.ImplObject
+}
+
+func NewSettings(conn *dbus.Conn) Settings {
+	obj := new(objectSettings)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Settings")
 	return obj
 }
 
-type settings struct{}
-
-func (v *settings) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type settings interface {
+	GoListConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListConnections(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetConnectionByUuid(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call
+	GetConnectionByUuid(flags dbus.Flags, uuid string) (dbus.ObjectPath, error)
+	GoAddConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call
+	AddConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoAddConnectionUnsaved(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call
+	AddConnectionUnsaved(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoLoadConnections(flags dbus.Flags, ch chan *dbus.Call, filenames []string) *dbus.Call
+	LoadConnections(flags dbus.Flags, filenames []string) (bool, []string, error)
+	GoReloadConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ReloadConnections(flags dbus.Flags) (bool, error)
+	GoSaveHostname(flags dbus.Flags, ch chan *dbus.Call, hostname string) *dbus.Call
+	SaveHostname(flags dbus.Flags, hostname string) error
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectNewConnection(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectConnectionRemoved(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Connections() proxy.PropObjectPathArray
+	Hostname() proxy.PropString
+	CanModify() proxy.PropBool
 }
 
-func (*settings) GetInterfaceName_() string {
+type interfaceSettings struct{}
+
+func (v *interfaceSettings) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSettings) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Settings"
 }
 
 // method ListConnections
 
-func (v *settings) GoListConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSettings) GoListConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListConnections", flags, ch)
 }
 
-func (*settings) StoreListConnections(call *dbus.Call) (connections []dbus.ObjectPath, err error) {
+func (*interfaceSettings) StoreListConnections(call *dbus.Call) (connections []dbus.ObjectPath, err error) {
 	err = call.Store(&connections)
 	return
 }
 
-func (v *settings) ListConnections(flags dbus.Flags) (connections []dbus.ObjectPath, err error) {
+func (v *interfaceSettings) ListConnections(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreListConnections(
 		<-v.GoListConnections(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetConnectionByUuid
 
-func (v *settings) GoGetConnectionByUuid(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+func (v *interfaceSettings) GoGetConnectionByUuid(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionByUuid", flags, ch, uuid)
 }
 
-func (*settings) StoreGetConnectionByUuid(call *dbus.Call) (connection dbus.ObjectPath, err error) {
+func (*interfaceSettings) StoreGetConnectionByUuid(call *dbus.Call) (connection dbus.ObjectPath, err error) {
 	err = call.Store(&connection)
 	return
 }
 
-func (v *settings) GetConnectionByUuid(flags dbus.Flags, uuid string) (connection dbus.ObjectPath, err error) {
+func (v *interfaceSettings) GetConnectionByUuid(flags dbus.Flags, uuid string) (dbus.ObjectPath, error) {
 	return v.StoreGetConnectionByUuid(
 		<-v.GoGetConnectionByUuid(flags, make(chan *dbus.Call, 1), uuid).Done)
 }
 
 // method AddConnection
 
-func (v *settings) GoAddConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceSettings) GoAddConnection(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddConnection", flags, ch, connection)
 }
 
-func (*settings) StoreAddConnection(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceSettings) StoreAddConnection(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *settings) AddConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceSettings) AddConnection(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreAddConnection(
 		<-v.GoAddConnection(flags, make(chan *dbus.Call, 1), connection).Done)
 }
 
 // method AddConnectionUnsaved
 
-func (v *settings) GoAddConnectionUnsaved(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceSettings) GoAddConnectionUnsaved(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddConnectionUnsaved", flags, ch, connection)
 }
 
-func (*settings) StoreAddConnectionUnsaved(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceSettings) StoreAddConnectionUnsaved(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *settings) AddConnectionUnsaved(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceSettings) AddConnectionUnsaved(flags dbus.Flags, connection map[string]map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreAddConnectionUnsaved(
 		<-v.GoAddConnectionUnsaved(flags, make(chan *dbus.Call, 1), connection).Done)
 }
 
 // method LoadConnections
 
-func (v *settings) GoLoadConnections(flags dbus.Flags, ch chan *dbus.Call, filenames []string) *dbus.Call {
+func (v *interfaceSettings) GoLoadConnections(flags dbus.Flags, ch chan *dbus.Call, filenames []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LoadConnections", flags, ch, filenames)
 }
 
-func (*settings) StoreLoadConnections(call *dbus.Call) (status bool, failures []string, err error) {
+func (*interfaceSettings) StoreLoadConnections(call *dbus.Call) (status bool, failures []string, err error) {
 	err = call.Store(&status, &failures)
 	return
 }
 
-func (v *settings) LoadConnections(flags dbus.Flags, filenames []string) (status bool, failures []string, err error) {
+func (v *interfaceSettings) LoadConnections(flags dbus.Flags, filenames []string) (bool, []string, error) {
 	return v.StoreLoadConnections(
 		<-v.GoLoadConnections(flags, make(chan *dbus.Call, 1), filenames).Done)
 }
 
 // method ReloadConnections
 
-func (v *settings) GoReloadConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSettings) GoReloadConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadConnections", flags, ch)
 }
 
-func (*settings) StoreReloadConnections(call *dbus.Call) (status bool, err error) {
+func (*interfaceSettings) StoreReloadConnections(call *dbus.Call) (status bool, err error) {
 	err = call.Store(&status)
 	return
 }
 
-func (v *settings) ReloadConnections(flags dbus.Flags) (status bool, err error) {
+func (v *interfaceSettings) ReloadConnections(flags dbus.Flags) (bool, error) {
 	return v.StoreReloadConnections(
 		<-v.GoReloadConnections(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SaveHostname
 
-func (v *settings) GoSaveHostname(flags dbus.Flags, ch chan *dbus.Call, hostname string) *dbus.Call {
+func (v *interfaceSettings) GoSaveHostname(flags dbus.Flags, ch chan *dbus.Call, hostname string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SaveHostname", flags, ch, hostname)
 }
 
-func (v *settings) SaveHostname(flags dbus.Flags, hostname string) error {
+func (v *interfaceSettings) SaveHostname(flags dbus.Flags, hostname string) error {
 	return (<-v.GoSaveHostname(flags, make(chan *dbus.Call, 1), hostname).Done).Err
 }
 
 // signal PropertiesChanged
 
-func (v *settings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSettings) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2089,7 +2423,7 @@ func (v *settings) ConnectSignalPropertiesChanged(cb func(properties map[string]
 
 // signal NewConnection
 
-func (v *settings) ConnectNewConnection(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSettings) ConnectNewConnection(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2115,7 +2449,7 @@ func (v *settings) ConnectNewConnection(cb func(connection dbus.ObjectPath)) (db
 
 // signal ConnectionRemoved
 
-func (v *settings) ConnectConnectionRemoved(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceSettings) ConnectConnectionRemoved(cb func(connection dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2141,8 +2475,8 @@ func (v *settings) ConnectConnectionRemoved(cb func(connection dbus.ObjectPath))
 
 // property Connections ao
 
-func (v *settings) Connections() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceSettings) Connections() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Connections",
 	}
@@ -2150,8 +2484,8 @@ func (v *settings) Connections() proxy.PropObjectPathArray {
 
 // property Hostname s
 
-func (v *settings) Hostname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSettings) Hostname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Hostname",
 	}
@@ -2159,40 +2493,52 @@ func (v *settings) Hostname() proxy.PropString {
 
 // property CanModify b
 
-func (v *settings) CanModify() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSettings) CanModify() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanModify",
 	}
 }
 
-type VpnConnection struct {
+type VpnConnection interface {
 	vpnConnection // interface org.freedesktop.NetworkManager.VPN.Connection
 	proxy.Object
 }
 
-func NewVpnConnection(conn *dbus.Conn, path dbus.ObjectPath) (*VpnConnection, error) {
+type objectVpnConnection struct {
+	interfaceVpnConnection // interface org.freedesktop.NetworkManager.VPN.Connection
+	proxy.ImplObject
+}
+
+func NewVpnConnection(conn *dbus.Conn, path dbus.ObjectPath) (VpnConnection, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(VpnConnection)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectVpnConnection)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type vpnConnection struct{}
-
-func (v *vpnConnection) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type vpnConnection interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectVpnStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error)
+	VpnState() proxy.PropUint32
+	Banner() proxy.PropString
 }
 
-func (*vpnConnection) GetInterfaceName_() string {
+type interfaceVpnConnection struct{}
+
+func (v *interfaceVpnConnection) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceVpnConnection) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.VPN.Connection"
 }
 
 // signal PropertiesChanged
 
-func (v *vpnConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnConnection) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2218,7 +2564,7 @@ func (v *vpnConnection) ConnectSignalPropertiesChanged(cb func(properties map[st
 
 // signal VpnStateChanged
 
-func (v *vpnConnection) ConnectVpnStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnConnection) ConnectVpnStateChanged(cb func(state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2245,8 +2591,8 @@ func (v *vpnConnection) ConnectVpnStateChanged(cb func(state uint32, reason uint
 
 // property VpnState u
 
-func (v *vpnConnection) VpnState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceVpnConnection) VpnState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "VpnState",
 	}
@@ -2254,136 +2600,170 @@ func (v *vpnConnection) VpnState() proxy.PropUint32 {
 
 // property Banner s
 
-func (v *vpnConnection) Banner() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceVpnConnection) Banner() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Banner",
 	}
 }
 
-type VpnPlugin struct {
+type VpnPlugin interface {
 	vpnPlugin // interface org.freedesktop.NetworkManager.VPN.Plugin
 	proxy.Object
 }
 
-func NewVpnPlugin(conn *dbus.Conn, path dbus.ObjectPath) (*VpnPlugin, error) {
+type objectVpnPlugin struct {
+	interfaceVpnPlugin // interface org.freedesktop.NetworkManager.VPN.Plugin
+	proxy.ImplObject
+}
+
+func NewVpnPlugin(conn *dbus.Conn, path dbus.ObjectPath) (VpnPlugin, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(VpnPlugin)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectVpnPlugin)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type vpnPlugin struct{}
-
-func (v *vpnPlugin) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type vpnPlugin interface {
+	GoConnect(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call
+	Connect(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error
+	GoConnectInteractive(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) *dbus.Call
+	ConnectInteractive(flags dbus.Flags, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) error
+	GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call, settings map[string]map[string]dbus.Variant) *dbus.Call
+	NeedSecrets(flags dbus.Flags, settings map[string]map[string]dbus.Variant) (string, error)
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	GoSetConfig(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	SetConfig(flags dbus.Flags, config map[string]dbus.Variant) error
+	GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error
+	GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call
+	SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error
+	GoSetFailure(flags dbus.Flags, ch chan *dbus.Call, reason string) *dbus.Call
+	SetFailure(flags dbus.Flags, reason string) error
+	GoNewSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call
+	NewSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error
+	ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error)
+	ConnectSecretsRequired(cb func(message string, secrets []string)) (dbusutil.SignalHandlerId, error)
+	ConnectConfig(cb func(config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectIp4Config(cb func(ip4config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectIp6Config(cb func(ip6config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectLoginBanner(cb func(banner string)) (dbusutil.SignalHandlerId, error)
+	ConnectFailure(cb func(reason uint32)) (dbusutil.SignalHandlerId, error)
+	State() proxy.PropUint32
 }
 
-func (*vpnPlugin) GetInterfaceName_() string {
+type interfaceVpnPlugin struct{}
+
+func (v *interfaceVpnPlugin) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceVpnPlugin) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.VPN.Plugin"
 }
 
 // method Connect
 
-func (v *vpnPlugin) GoConnect(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoConnect(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch, connection)
 }
 
-func (v *vpnPlugin) Connect(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) Connect(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error {
 	return (<-v.GoConnect(flags, make(chan *dbus.Call, 1), connection).Done).Err
 }
 
 // method ConnectInteractive
 
-func (v *vpnPlugin) GoConnectInteractive(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoConnectInteractive(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ConnectInteractive", flags, ch, connection, details)
 }
 
-func (v *vpnPlugin) ConnectInteractive(flags dbus.Flags, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) ConnectInteractive(flags dbus.Flags, connection map[string]map[string]dbus.Variant, details map[string]dbus.Variant) error {
 	return (<-v.GoConnectInteractive(flags, make(chan *dbus.Call, 1), connection, details).Done).Err
 }
 
 // method NeedSecrets
 
-func (v *vpnPlugin) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call, settings map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call, settings map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NeedSecrets", flags, ch, settings)
 }
 
-func (*vpnPlugin) StoreNeedSecrets(call *dbus.Call) (setting_name string, err error) {
+func (*interfaceVpnPlugin) StoreNeedSecrets(call *dbus.Call) (setting_name string, err error) {
 	err = call.Store(&setting_name)
 	return
 }
 
-func (v *vpnPlugin) NeedSecrets(flags dbus.Flags, settings map[string]map[string]dbus.Variant) (setting_name string, err error) {
+func (v *interfaceVpnPlugin) NeedSecrets(flags dbus.Flags, settings map[string]map[string]dbus.Variant) (string, error) {
 	return v.StoreNeedSecrets(
 		<-v.GoNeedSecrets(flags, make(chan *dbus.Call, 1), settings).Done)
 }
 
 // method Disconnect
 
-func (v *vpnPlugin) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceVpnPlugin) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *vpnPlugin) Disconnect(flags dbus.Flags) error {
+func (v *interfaceVpnPlugin) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetConfig
 
-func (v *vpnPlugin) GoSetConfig(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoSetConfig(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetConfig", flags, ch, config)
 }
 
-func (v *vpnPlugin) SetConfig(flags dbus.Flags, config map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) SetConfig(flags dbus.Flags, config map[string]dbus.Variant) error {
 	return (<-v.GoSetConfig(flags, make(chan *dbus.Call, 1), config).Done).Err
 }
 
 // method SetIp4Config
 
-func (v *vpnPlugin) GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoSetIp4Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIp4Config", flags, ch, config)
 }
 
-func (v *vpnPlugin) SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) SetIp4Config(flags dbus.Flags, config map[string]dbus.Variant) error {
 	return (<-v.GoSetIp4Config(flags, make(chan *dbus.Call, 1), config).Done).Err
 }
 
 // method SetIp6Config
 
-func (v *vpnPlugin) GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoSetIp6Config(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIp6Config", flags, ch, config)
 }
 
-func (v *vpnPlugin) SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) SetIp6Config(flags dbus.Flags, config map[string]dbus.Variant) error {
 	return (<-v.GoSetIp6Config(flags, make(chan *dbus.Call, 1), config).Done).Err
 }
 
 // method SetFailure
 
-func (v *vpnPlugin) GoSetFailure(flags dbus.Flags, ch chan *dbus.Call, reason string) *dbus.Call {
+func (v *interfaceVpnPlugin) GoSetFailure(flags dbus.Flags, ch chan *dbus.Call, reason string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFailure", flags, ch, reason)
 }
 
-func (v *vpnPlugin) SetFailure(flags dbus.Flags, reason string) error {
+func (v *interfaceVpnPlugin) SetFailure(flags dbus.Flags, reason string) error {
 	return (<-v.GoSetFailure(flags, make(chan *dbus.Call, 1), reason).Done).Err
 }
 
 // method NewSecrets
 
-func (v *vpnPlugin) GoNewSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceVpnPlugin) GoNewSecrets(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NewSecrets", flags, ch, connection)
 }
 
-func (v *vpnPlugin) NewSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error {
+func (v *interfaceVpnPlugin) NewSecrets(flags dbus.Flags, connection map[string]map[string]dbus.Variant) error {
 	return (<-v.GoNewSecrets(flags, make(chan *dbus.Call, 1), connection).Done).Err
 }
 
 // signal StateChanged
 
-func (v *vpnPlugin) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2409,7 +2789,7 @@ func (v *vpnPlugin) ConnectStateChanged(cb func(state uint32)) (dbusutil.SignalH
 
 // signal SecretsRequired
 
-func (v *vpnPlugin) ConnectSecretsRequired(cb func(message string, secrets []string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectSecretsRequired(cb func(message string, secrets []string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2436,7 +2816,7 @@ func (v *vpnPlugin) ConnectSecretsRequired(cb func(message string, secrets []str
 
 // signal Config
 
-func (v *vpnPlugin) ConnectConfig(cb func(config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectConfig(cb func(config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2462,7 +2842,7 @@ func (v *vpnPlugin) ConnectConfig(cb func(config map[string]dbus.Variant)) (dbus
 
 // signal Ip4Config
 
-func (v *vpnPlugin) ConnectIp4Config(cb func(ip4config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectIp4Config(cb func(ip4config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2488,7 +2868,7 @@ func (v *vpnPlugin) ConnectIp4Config(cb func(ip4config map[string]dbus.Variant))
 
 // signal Ip6Config
 
-func (v *vpnPlugin) ConnectIp6Config(cb func(ip6config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectIp6Config(cb func(ip6config map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2514,7 +2894,7 @@ func (v *vpnPlugin) ConnectIp6Config(cb func(ip6config map[string]dbus.Variant))
 
 // signal LoginBanner
 
-func (v *vpnPlugin) ConnectLoginBanner(cb func(banner string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectLoginBanner(cb func(banner string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2540,7 +2920,7 @@ func (v *vpnPlugin) ConnectLoginBanner(cb func(banner string)) (dbusutil.SignalH
 
 // signal Failure
 
-func (v *vpnPlugin) ConnectFailure(cb func(reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceVpnPlugin) ConnectFailure(cb func(reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2566,110 +2946,173 @@ func (v *vpnPlugin) ConnectFailure(cb func(reason uint32)) (dbusutil.SignalHandl
 
 // property State u
 
-func (v *vpnPlugin) State() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceVpnPlugin) State() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
 	}
 }
 
-type Device struct {
-	device           // interface org.freedesktop.NetworkManager.Device
-	deviceAdsl       // interface org.freedesktop.NetworkManager.Device.Adsl
-	deviceBluetooth  // interface org.freedesktop.NetworkManager.Device.Bluetooth
-	deviceBond       // interface org.freedesktop.NetworkManager.Device.Bond
-	deviceBridge     // interface org.freedesktop.NetworkManager.Device.Bridge
-	deviceGeneric    // interface org.freedesktop.NetworkManager.Device.Generic
-	deviceInfiniband // interface org.freedesktop.NetworkManager.Device.Infiniband
-	deviceIPTunnel   // interface org.freedesktop.NetworkManager.Device.IPTunnel
-	deviceMacsec     // interface org.freedesktop.NetworkManager.Device.Macsec
-	deviceMacvlan    // interface org.freedesktop.NetworkManager.Device.Macvlan
-	deviceModem      // interface org.freedesktop.NetworkManager.Device.Modem
-	deviceOlpcMesh   // interface org.freedesktop.NetworkManager.Device.OlpcMesh
-	deviceStatistics // interface org.freedesktop.NetworkManager.Device.Statistics
-	deviceTeam       // interface org.freedesktop.NetworkManager.Device.Team
-	deviceTun        // interface org.freedesktop.NetworkManager.Device.Tun
-	deviceVeth       // interface org.freedesktop.NetworkManager.Device.Veth
-	deviceVlan       // interface org.freedesktop.NetworkManager.Device.Vlan
-	deviceVxlan      // interface org.freedesktop.NetworkManager.Device.Vxlan
-	deviceWiMax      // interface org.freedesktop.NetworkManager.Device.WiMax
-	deviceWired      // interface org.freedesktop.NetworkManager.Device.Wired
-	deviceWireless   // interface org.freedesktop.NetworkManager.Device.Wireless
+type Device interface {
+	Device() device               // interface org.freedesktop.NetworkManager.Device
+	Adsl() deviceAdsl             // interface org.freedesktop.NetworkManager.Device.Adsl
+	Bluetooth() deviceBluetooth   // interface org.freedesktop.NetworkManager.Device.Bluetooth
+	Bond() deviceBond             // interface org.freedesktop.NetworkManager.Device.Bond
+	Bridge() deviceBridge         // interface org.freedesktop.NetworkManager.Device.Bridge
+	Generic() deviceGeneric       // interface org.freedesktop.NetworkManager.Device.Generic
+	Infiniband() deviceInfiniband // interface org.freedesktop.NetworkManager.Device.Infiniband
+	IPTunnel() deviceIPTunnel     // interface org.freedesktop.NetworkManager.Device.IPTunnel
+	Macsec() deviceMacsec         // interface org.freedesktop.NetworkManager.Device.Macsec
+	Macvlan() deviceMacvlan       // interface org.freedesktop.NetworkManager.Device.Macvlan
+	Modem() deviceModem           // interface org.freedesktop.NetworkManager.Device.Modem
+	OlpcMesh() deviceOlpcMesh     // interface org.freedesktop.NetworkManager.Device.OlpcMesh
+	Statistics() deviceStatistics // interface org.freedesktop.NetworkManager.Device.Statistics
+	Team() deviceTeam             // interface org.freedesktop.NetworkManager.Device.Team
+	Tun() deviceTun               // interface org.freedesktop.NetworkManager.Device.Tun
+	Veth() deviceVeth             // interface org.freedesktop.NetworkManager.Device.Veth
+	Vlan() deviceVlan             // interface org.freedesktop.NetworkManager.Device.Vlan
+	Vxlan() deviceVxlan           // interface org.freedesktop.NetworkManager.Device.Vxlan
+	WiMax() deviceWiMax           // interface org.freedesktop.NetworkManager.Device.WiMax
+	Wired() deviceWired           // interface org.freedesktop.NetworkManager.Device.Wired
+	Wireless() deviceWireless     // interface org.freedesktop.NetworkManager.Device.Wireless
 	proxy.Object
 }
 
-func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (*Device, error) {
+type objectDevice struct {
+	interfaceDevice           // interface org.freedesktop.NetworkManager.Device
+	interfaceDeviceAdsl       // interface org.freedesktop.NetworkManager.Device.Adsl
+	interfaceDeviceBluetooth  // interface org.freedesktop.NetworkManager.Device.Bluetooth
+	interfaceDeviceBond       // interface org.freedesktop.NetworkManager.Device.Bond
+	interfaceDeviceBridge     // interface org.freedesktop.NetworkManager.Device.Bridge
+	interfaceDeviceGeneric    // interface org.freedesktop.NetworkManager.Device.Generic
+	interfaceDeviceInfiniband // interface org.freedesktop.NetworkManager.Device.Infiniband
+	interfaceDeviceIPTunnel   // interface org.freedesktop.NetworkManager.Device.IPTunnel
+	interfaceDeviceMacsec     // interface org.freedesktop.NetworkManager.Device.Macsec
+	interfaceDeviceMacvlan    // interface org.freedesktop.NetworkManager.Device.Macvlan
+	interfaceDeviceModem      // interface org.freedesktop.NetworkManager.Device.Modem
+	interfaceDeviceOlpcMesh   // interface org.freedesktop.NetworkManager.Device.OlpcMesh
+	interfaceDeviceStatistics // interface org.freedesktop.NetworkManager.Device.Statistics
+	interfaceDeviceTeam       // interface org.freedesktop.NetworkManager.Device.Team
+	interfaceDeviceTun        // interface org.freedesktop.NetworkManager.Device.Tun
+	interfaceDeviceVeth       // interface org.freedesktop.NetworkManager.Device.Veth
+	interfaceDeviceVlan       // interface org.freedesktop.NetworkManager.Device.Vlan
+	interfaceDeviceVxlan      // interface org.freedesktop.NetworkManager.Device.Vxlan
+	interfaceDeviceWiMax      // interface org.freedesktop.NetworkManager.Device.WiMax
+	interfaceDeviceWired      // interface org.freedesktop.NetworkManager.Device.Wired
+	interfaceDeviceWireless   // interface org.freedesktop.NetworkManager.Device.Wireless
+	proxy.ImplObject
+}
+
+func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (Device, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Device)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectDevice)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-func (obj *Device) Device() *device {
-	return &obj.device
+func (obj *objectDevice) Device() device {
+	return &obj.interfaceDevice
 }
 
-type device struct{}
-
-func (v *device) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type device interface {
+	GoReapply(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) *dbus.Call
+	Reapply(flags dbus.Flags, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) error
+	GoGetAppliedConnection(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call
+	GetAppliedConnection(flags dbus.Flags, flags0 uint32) (map[string]map[string]dbus.Variant, uint64, error)
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Delete(flags dbus.Flags) error
+	ConnectStateChanged(cb func(new_state uint32, old_state uint32, reason uint32)) (dbusutil.SignalHandlerId, error)
+	Udi() proxy.PropString
+	Interface() proxy.PropString
+	IpInterface() proxy.PropString
+	Driver() proxy.PropString
+	DriverVersion() proxy.PropString
+	FirmwareVersion() proxy.PropString
+	Capabilities() proxy.PropUint32
+	Ip4Address() proxy.PropUint32
+	State() proxy.PropUint32
+	StateReason() PropDeviceStateReason
+	ActiveConnection() proxy.PropObjectPath
+	Ip4Config() proxy.PropObjectPath
+	Dhcp4Config() proxy.PropObjectPath
+	Ip6Config() proxy.PropObjectPath
+	Dhcp6Config() proxy.PropObjectPath
+	Managed() proxy.PropBool
+	Autoconnect() proxy.PropBool
+	FirmwareMissing() proxy.PropBool
+	NmPluginMissing() proxy.PropBool
+	DeviceType() proxy.PropUint32
+	AvailableConnections() proxy.PropObjectPathArray
+	PhysicalPortId() proxy.PropString
+	Mtu() proxy.PropUint32
+	Metered() proxy.PropUint32
+	LldpNeighbors() PropMapSVSlice
+	Real() proxy.PropBool
 }
 
-func (*device) GetInterfaceName_() string {
+type interfaceDevice struct{}
+
+func (v *interfaceDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDevice) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device"
 }
 
 // method Reapply
 
-func (v *device) GoReapply(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) *dbus.Call {
+func (v *interfaceDevice) GoReapply(flags dbus.Flags, ch chan *dbus.Call, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reapply", flags, ch, connection, version_id, flags0)
 }
 
-func (v *device) Reapply(flags dbus.Flags, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) error {
+func (v *interfaceDevice) Reapply(flags dbus.Flags, connection map[string]map[string]dbus.Variant, version_id uint64, flags0 uint32) error {
 	return (<-v.GoReapply(flags, make(chan *dbus.Call, 1), connection, version_id, flags0).Done).Err
 }
 
 // method GetAppliedConnection
 
-func (v *device) GoGetAppliedConnection(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call {
+func (v *interfaceDevice) GoGetAppliedConnection(flags dbus.Flags, ch chan *dbus.Call, flags0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAppliedConnection", flags, ch, flags0)
 }
 
-func (*device) StoreGetAppliedConnection(call *dbus.Call) (connection map[string]map[string]dbus.Variant, version_id uint64, err error) {
+func (*interfaceDevice) StoreGetAppliedConnection(call *dbus.Call) (connection map[string]map[string]dbus.Variant, version_id uint64, err error) {
 	err = call.Store(&connection, &version_id)
 	return
 }
 
-func (v *device) GetAppliedConnection(flags dbus.Flags, flags0 uint32) (connection map[string]map[string]dbus.Variant, version_id uint64, err error) {
+func (v *interfaceDevice) GetAppliedConnection(flags dbus.Flags, flags0 uint32) (map[string]map[string]dbus.Variant, uint64, error) {
 	return v.StoreGetAppliedConnection(
 		<-v.GoGetAppliedConnection(flags, make(chan *dbus.Call, 1), flags0).Done)
 }
 
 // method Disconnect
 
-func (v *device) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *device) Disconnect(flags dbus.Flags) error {
+func (v *interfaceDevice) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Delete
 
-func (v *device) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch)
 }
 
-func (v *device) Delete(flags dbus.Flags) error {
+func (v *interfaceDevice) Delete(flags dbus.Flags) error {
 	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal StateChanged
 
-func (v *device) ConnectStateChanged(cb func(new_state uint32, old_state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDevice) ConnectStateChanged(cb func(new_state uint32, old_state uint32, reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2697,8 +3140,8 @@ func (v *device) ConnectStateChanged(cb func(new_state uint32, old_state uint32,
 
 // property Udi s
 
-func (v *device) Udi() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Udi() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Udi",
 	}
@@ -2706,8 +3149,8 @@ func (v *device) Udi() proxy.PropString {
 
 // property Interface s
 
-func (v *device) Interface() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Interface() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Interface",
 	}
@@ -2715,8 +3158,8 @@ func (v *device) Interface() proxy.PropString {
 
 // property IpInterface s
 
-func (v *device) IpInterface() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) IpInterface() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IpInterface",
 	}
@@ -2724,8 +3167,8 @@ func (v *device) IpInterface() proxy.PropString {
 
 // property Driver s
 
-func (v *device) Driver() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Driver() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Driver",
 	}
@@ -2733,8 +3176,8 @@ func (v *device) Driver() proxy.PropString {
 
 // property DriverVersion s
 
-func (v *device) DriverVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) DriverVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DriverVersion",
 	}
@@ -2742,8 +3185,8 @@ func (v *device) DriverVersion() proxy.PropString {
 
 // property FirmwareVersion s
 
-func (v *device) FirmwareVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) FirmwareVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FirmwareVersion",
 	}
@@ -2751,8 +3194,8 @@ func (v *device) FirmwareVersion() proxy.PropString {
 
 // property Capabilities u
 
-func (v *device) Capabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) Capabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Capabilities",
 	}
@@ -2760,8 +3203,8 @@ func (v *device) Capabilities() proxy.PropUint32 {
 
 // property Ip4Address u
 
-func (v *device) Ip4Address() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) Ip4Address() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Ip4Address",
 	}
@@ -2769,32 +3212,35 @@ func (v *device) Ip4Address() proxy.PropUint32 {
 
 // property State u
 
-func (v *device) State() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) State() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
 	}
 }
 
-// property StateReason (uu)
-
-func (v *device) StateReason() PropDeviceStateReason {
-	return PropDeviceStateReason{
-		Impl: v,
-	}
+type PropDeviceStateReason interface {
+	Get(flags dbus.Flags) (value DeviceStateReason, err error)
+	Set(flags dbus.Flags, value DeviceStateReason) error
+	ConnectChanged(cb func(hasValue bool, value DeviceStateReason)) error
 }
 
-type PropDeviceStateReason struct {
+type implPropDeviceStateReason struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropDeviceStateReason) Get(flags dbus.Flags) (value DeviceStateReason, err error) {
+func (p implPropDeviceStateReason) Get(flags dbus.Flags) (value DeviceStateReason, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"StateReason", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropDeviceStateReason) ConnectChanged(cb func(hasValue bool, value DeviceStateReason)) error {
+func (p implPropDeviceStateReason) Set(flags dbus.Flags, value DeviceStateReason) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDeviceStateReason) ConnectChanged(cb func(hasValue bool, value DeviceStateReason)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -2811,13 +3257,22 @@ func (p PropDeviceStateReason) ConnectChanged(cb func(hasValue bool, value Devic
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"StateReason", cb0)
+		p.Name, cb0)
+}
+
+// property StateReason (uu)
+
+func (v *interfaceDevice) StateReason() PropDeviceStateReason {
+	return &implPropDeviceStateReason{
+		Impl: v,
+		Name: "StateReason",
+	}
 }
 
 // property ActiveConnection o
 
-func (v *device) ActiveConnection() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) ActiveConnection() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "ActiveConnection",
 	}
@@ -2825,8 +3280,8 @@ func (v *device) ActiveConnection() proxy.PropObjectPath {
 
 // property Ip4Config o
 
-func (v *device) Ip4Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) Ip4Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Ip4Config",
 	}
@@ -2834,8 +3289,8 @@ func (v *device) Ip4Config() proxy.PropObjectPath {
 
 // property Dhcp4Config o
 
-func (v *device) Dhcp4Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) Dhcp4Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Dhcp4Config",
 	}
@@ -2843,8 +3298,8 @@ func (v *device) Dhcp4Config() proxy.PropObjectPath {
 
 // property Ip6Config o
 
-func (v *device) Ip6Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) Ip6Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Ip6Config",
 	}
@@ -2852,8 +3307,8 @@ func (v *device) Ip6Config() proxy.PropObjectPath {
 
 // property Dhcp6Config o
 
-func (v *device) Dhcp6Config() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDevice) Dhcp6Config() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Dhcp6Config",
 	}
@@ -2861,8 +3316,8 @@ func (v *device) Dhcp6Config() proxy.PropObjectPath {
 
 // property Managed b
 
-func (v *device) Managed() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Managed() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Managed",
 	}
@@ -2870,8 +3325,8 @@ func (v *device) Managed() proxy.PropBool {
 
 // property Autoconnect b
 
-func (v *device) Autoconnect() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Autoconnect() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Autoconnect",
 	}
@@ -2879,8 +3334,8 @@ func (v *device) Autoconnect() proxy.PropBool {
 
 // property FirmwareMissing b
 
-func (v *device) FirmwareMissing() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) FirmwareMissing() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "FirmwareMissing",
 	}
@@ -2888,8 +3343,8 @@ func (v *device) FirmwareMissing() proxy.PropBool {
 
 // property NmPluginMissing b
 
-func (v *device) NmPluginMissing() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) NmPluginMissing() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NmPluginMissing",
 	}
@@ -2897,8 +3352,8 @@ func (v *device) NmPluginMissing() proxy.PropBool {
 
 // property DeviceType u
 
-func (v *device) DeviceType() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) DeviceType() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "DeviceType",
 	}
@@ -2906,8 +3361,8 @@ func (v *device) DeviceType() proxy.PropUint32 {
 
 // property AvailableConnections ao
 
-func (v *device) AvailableConnections() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDevice) AvailableConnections() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "AvailableConnections",
 	}
@@ -2915,8 +3370,8 @@ func (v *device) AvailableConnections() proxy.PropObjectPathArray {
 
 // property PhysicalPortId s
 
-func (v *device) PhysicalPortId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) PhysicalPortId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PhysicalPortId",
 	}
@@ -2924,8 +3379,8 @@ func (v *device) PhysicalPortId() proxy.PropString {
 
 // property Mtu u
 
-func (v *device) Mtu() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) Mtu() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Mtu",
 	}
@@ -2933,8 +3388,8 @@ func (v *device) Mtu() proxy.PropUint32 {
 
 // property Metered u
 
-func (v *device) Metered() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDevice) Metered() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Metered",
 	}
@@ -2942,8 +3397,8 @@ func (v *device) Metered() proxy.PropUint32 {
 
 // property LldpNeighbors aa{sv}
 
-func (v *device) LldpNeighbors() PropMapSVSlice {
-	return PropMapSVSlice{
+func (v *interfaceDevice) LldpNeighbors() PropMapSVSlice {
+	return &implPropMapSVSlice{
 		Impl: v,
 		Name: "LldpNeighbors",
 	}
@@ -2951,30 +3406,35 @@ func (v *device) LldpNeighbors() PropMapSVSlice {
 
 // property Real b
 
-func (v *device) Real() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDevice) Real() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Real",
 	}
 }
 
-func (obj *Device) Adsl() *deviceAdsl {
-	return &obj.deviceAdsl
+func (obj *objectDevice) Adsl() deviceAdsl {
+	return &obj.interfaceDeviceAdsl
 }
 
-type deviceAdsl struct{}
-
-func (v *deviceAdsl) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceAdsl interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Carrier() proxy.PropBool
 }
 
-func (*deviceAdsl) GetInterfaceName_() string {
+type interfaceDeviceAdsl struct{}
+
+func (v *interfaceDeviceAdsl) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceAdsl) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Adsl"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceAdsl) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceAdsl) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3000,30 +3460,37 @@ func (v *deviceAdsl) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property Carrier b
 
-func (v *deviceAdsl) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceAdsl) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
 }
 
-func (obj *Device) Bluetooth() *deviceBluetooth {
-	return &obj.deviceBluetooth
+func (obj *objectDevice) Bluetooth() deviceBluetooth {
+	return &obj.interfaceDeviceBluetooth
 }
 
-type deviceBluetooth struct{}
-
-func (v *deviceBluetooth) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceBluetooth interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Name() proxy.PropString
+	BtCapabilities() proxy.PropUint32
 }
 
-func (*deviceBluetooth) GetInterfaceName_() string {
+type interfaceDeviceBluetooth struct{}
+
+func (v *interfaceDeviceBluetooth) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceBluetooth) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Bluetooth"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceBluetooth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceBluetooth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3049,8 +3516,8 @@ func (v *deviceBluetooth) ConnectSignalPropertiesChanged(cb func(properties map[
 
 // property HwAddress s
 
-func (v *deviceBluetooth) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceBluetooth) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3058,8 +3525,8 @@ func (v *deviceBluetooth) HwAddress() proxy.PropString {
 
 // property Name s
 
-func (v *deviceBluetooth) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceBluetooth) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -3067,30 +3534,37 @@ func (v *deviceBluetooth) Name() proxy.PropString {
 
 // property BtCapabilities u
 
-func (v *deviceBluetooth) BtCapabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceBluetooth) BtCapabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "BtCapabilities",
 	}
 }
 
-func (obj *Device) Bond() *deviceBond {
-	return &obj.deviceBond
+func (obj *objectDevice) Bond() deviceBond {
+	return &obj.interfaceDeviceBond
 }
 
-type deviceBond struct{}
-
-func (v *deviceBond) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceBond interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Carrier() proxy.PropBool
+	Slaves() proxy.PropObjectPathArray
 }
 
-func (*deviceBond) GetInterfaceName_() string {
+type interfaceDeviceBond struct{}
+
+func (v *interfaceDeviceBond) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceBond) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Bond"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceBond) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceBond) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3116,8 +3590,8 @@ func (v *deviceBond) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property HwAddress s
 
-func (v *deviceBond) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceBond) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3125,8 +3599,8 @@ func (v *deviceBond) HwAddress() proxy.PropString {
 
 // property Carrier b
 
-func (v *deviceBond) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceBond) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
@@ -3134,30 +3608,37 @@ func (v *deviceBond) Carrier() proxy.PropBool {
 
 // property Slaves ao
 
-func (v *deviceBond) Slaves() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDeviceBond) Slaves() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Slaves",
 	}
 }
 
-func (obj *Device) Bridge() *deviceBridge {
-	return &obj.deviceBridge
+func (obj *objectDevice) Bridge() deviceBridge {
+	return &obj.interfaceDeviceBridge
 }
 
-type deviceBridge struct{}
-
-func (v *deviceBridge) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceBridge interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Carrier() proxy.PropBool
+	Slaves() proxy.PropObjectPathArray
 }
 
-func (*deviceBridge) GetInterfaceName_() string {
+type interfaceDeviceBridge struct{}
+
+func (v *interfaceDeviceBridge) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceBridge) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Bridge"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceBridge) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceBridge) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3183,8 +3664,8 @@ func (v *deviceBridge) ConnectSignalPropertiesChanged(cb func(properties map[str
 
 // property HwAddress s
 
-func (v *deviceBridge) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceBridge) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3192,8 +3673,8 @@ func (v *deviceBridge) HwAddress() proxy.PropString {
 
 // property Carrier b
 
-func (v *deviceBridge) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceBridge) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
@@ -3201,30 +3682,36 @@ func (v *deviceBridge) Carrier() proxy.PropBool {
 
 // property Slaves ao
 
-func (v *deviceBridge) Slaves() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDeviceBridge) Slaves() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Slaves",
 	}
 }
 
-func (obj *Device) Generic() *deviceGeneric {
-	return &obj.deviceGeneric
+func (obj *objectDevice) Generic() deviceGeneric {
+	return &obj.interfaceDeviceGeneric
 }
 
-type deviceGeneric struct{}
-
-func (v *deviceGeneric) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceGeneric interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	TypeDescription() proxy.PropString
 }
 
-func (*deviceGeneric) GetInterfaceName_() string {
+type interfaceDeviceGeneric struct{}
+
+func (v *interfaceDeviceGeneric) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceGeneric) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Generic"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceGeneric) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceGeneric) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3250,8 +3737,8 @@ func (v *deviceGeneric) ConnectSignalPropertiesChanged(cb func(properties map[st
 
 // property HwAddress s
 
-func (v *deviceGeneric) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceGeneric) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3259,30 +3746,36 @@ func (v *deviceGeneric) HwAddress() proxy.PropString {
 
 // property TypeDescription s
 
-func (v *deviceGeneric) TypeDescription() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceGeneric) TypeDescription() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "TypeDescription",
 	}
 }
 
-func (obj *Device) Infiniband() *deviceInfiniband {
-	return &obj.deviceInfiniband
+func (obj *objectDevice) Infiniband() deviceInfiniband {
+	return &obj.interfaceDeviceInfiniband
 }
 
-type deviceInfiniband struct{}
-
-func (v *deviceInfiniband) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceInfiniband interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Carrier() proxy.PropBool
 }
 
-func (*deviceInfiniband) GetInterfaceName_() string {
+type interfaceDeviceInfiniband struct{}
+
+func (v *interfaceDeviceInfiniband) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceInfiniband) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Infiniband"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceInfiniband) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceInfiniband) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3308,8 +3801,8 @@ func (v *deviceInfiniband) ConnectSignalPropertiesChanged(cb func(properties map
 
 // property HwAddress s
 
-func (v *deviceInfiniband) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceInfiniband) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3317,30 +3810,45 @@ func (v *deviceInfiniband) HwAddress() proxy.PropString {
 
 // property Carrier b
 
-func (v *deviceInfiniband) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceInfiniband) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
 }
 
-func (obj *Device) IPTunnel() *deviceIPTunnel {
-	return &obj.deviceIPTunnel
+func (obj *objectDevice) IPTunnel() deviceIPTunnel {
+	return &obj.interfaceDeviceIPTunnel
 }
 
-type deviceIPTunnel struct{}
-
-func (v *deviceIPTunnel) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceIPTunnel interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Mode() proxy.PropUint32
+	Parent() proxy.PropObjectPath
+	Local() proxy.PropString
+	Remote() proxy.PropString
+	Ttl() proxy.PropByte
+	Tos() proxy.PropByte
+	PathMtuDiscovery() proxy.PropBool
+	InputKey() proxy.PropString
+	OutputKey() proxy.PropString
+	EncapsulationLimit() proxy.PropByte
+	FlowLabel() proxy.PropUint32
 }
 
-func (*deviceIPTunnel) GetInterfaceName_() string {
+type interfaceDeviceIPTunnel struct{}
+
+func (v *interfaceDeviceIPTunnel) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceIPTunnel) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.IPTunnel"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceIPTunnel) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceIPTunnel) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3366,8 +3874,8 @@ func (v *deviceIPTunnel) ConnectSignalPropertiesChanged(cb func(properties map[s
 
 // property Mode u
 
-func (v *deviceIPTunnel) Mode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceIPTunnel) Mode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -3375,8 +3883,8 @@ func (v *deviceIPTunnel) Mode() proxy.PropUint32 {
 
 // property Parent o
 
-func (v *deviceIPTunnel) Parent() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceIPTunnel) Parent() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Parent",
 	}
@@ -3384,8 +3892,8 @@ func (v *deviceIPTunnel) Parent() proxy.PropObjectPath {
 
 // property Local s
 
-func (v *deviceIPTunnel) Local() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceIPTunnel) Local() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Local",
 	}
@@ -3393,8 +3901,8 @@ func (v *deviceIPTunnel) Local() proxy.PropString {
 
 // property Remote s
 
-func (v *deviceIPTunnel) Remote() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceIPTunnel) Remote() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Remote",
 	}
@@ -3402,8 +3910,8 @@ func (v *deviceIPTunnel) Remote() proxy.PropString {
 
 // property Ttl y
 
-func (v *deviceIPTunnel) Ttl() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceIPTunnel) Ttl() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Ttl",
 	}
@@ -3411,8 +3919,8 @@ func (v *deviceIPTunnel) Ttl() proxy.PropByte {
 
 // property Tos y
 
-func (v *deviceIPTunnel) Tos() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceIPTunnel) Tos() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Tos",
 	}
@@ -3420,8 +3928,8 @@ func (v *deviceIPTunnel) Tos() proxy.PropByte {
 
 // property PathMtuDiscovery b
 
-func (v *deviceIPTunnel) PathMtuDiscovery() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceIPTunnel) PathMtuDiscovery() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PathMtuDiscovery",
 	}
@@ -3429,8 +3937,8 @@ func (v *deviceIPTunnel) PathMtuDiscovery() proxy.PropBool {
 
 // property InputKey s
 
-func (v *deviceIPTunnel) InputKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceIPTunnel) InputKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "InputKey",
 	}
@@ -3438,8 +3946,8 @@ func (v *deviceIPTunnel) InputKey() proxy.PropString {
 
 // property OutputKey s
 
-func (v *deviceIPTunnel) OutputKey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceIPTunnel) OutputKey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OutputKey",
 	}
@@ -3447,8 +3955,8 @@ func (v *deviceIPTunnel) OutputKey() proxy.PropString {
 
 // property EncapsulationLimit y
 
-func (v *deviceIPTunnel) EncapsulationLimit() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceIPTunnel) EncapsulationLimit() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "EncapsulationLimit",
 	}
@@ -3456,30 +3964,47 @@ func (v *deviceIPTunnel) EncapsulationLimit() proxy.PropByte {
 
 // property FlowLabel u
 
-func (v *deviceIPTunnel) FlowLabel() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceIPTunnel) FlowLabel() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "FlowLabel",
 	}
 }
 
-func (obj *Device) Macsec() *deviceMacsec {
-	return &obj.deviceMacsec
+func (obj *objectDevice) Macsec() deviceMacsec {
+	return &obj.interfaceDeviceMacsec
 }
 
-type deviceMacsec struct{}
-
-func (v *deviceMacsec) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceMacsec interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Parent() proxy.PropObjectPath
+	Sci() proxy.PropUint64
+	IcvLength() proxy.PropByte
+	CipherSuite() proxy.PropUint64
+	Window() proxy.PropUint32
+	EncodingSa() proxy.PropByte
+	Validation() proxy.PropString
+	Encrypt() proxy.PropBool
+	Protect() proxy.PropBool
+	IncludeSci() proxy.PropBool
+	Es() proxy.PropBool
+	Scb() proxy.PropBool
+	ReplayProtect() proxy.PropBool
 }
 
-func (*deviceMacsec) GetInterfaceName_() string {
+type interfaceDeviceMacsec struct{}
+
+func (v *interfaceDeviceMacsec) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceMacsec) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Macsec"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceMacsec) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceMacsec) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3505,8 +4030,8 @@ func (v *deviceMacsec) ConnectSignalPropertiesChanged(cb func(properties map[str
 
 // property Parent o
 
-func (v *deviceMacsec) Parent() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceMacsec) Parent() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Parent",
 	}
@@ -3514,8 +4039,8 @@ func (v *deviceMacsec) Parent() proxy.PropObjectPath {
 
 // property Sci t
 
-func (v *deviceMacsec) Sci() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDeviceMacsec) Sci() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "Sci",
 	}
@@ -3523,8 +4048,8 @@ func (v *deviceMacsec) Sci() proxy.PropUint64 {
 
 // property IcvLength y
 
-func (v *deviceMacsec) IcvLength() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceMacsec) IcvLength() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "IcvLength",
 	}
@@ -3532,8 +4057,8 @@ func (v *deviceMacsec) IcvLength() proxy.PropByte {
 
 // property CipherSuite t
 
-func (v *deviceMacsec) CipherSuite() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDeviceMacsec) CipherSuite() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "CipherSuite",
 	}
@@ -3541,8 +4066,8 @@ func (v *deviceMacsec) CipherSuite() proxy.PropUint64 {
 
 // property Window u
 
-func (v *deviceMacsec) Window() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceMacsec) Window() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Window",
 	}
@@ -3550,8 +4075,8 @@ func (v *deviceMacsec) Window() proxy.PropUint32 {
 
 // property EncodingSa y
 
-func (v *deviceMacsec) EncodingSa() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceMacsec) EncodingSa() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "EncodingSa",
 	}
@@ -3559,8 +4084,8 @@ func (v *deviceMacsec) EncodingSa() proxy.PropByte {
 
 // property Validation s
 
-func (v *deviceMacsec) Validation() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceMacsec) Validation() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Validation",
 	}
@@ -3568,8 +4093,8 @@ func (v *deviceMacsec) Validation() proxy.PropString {
 
 // property Encrypt b
 
-func (v *deviceMacsec) Encrypt() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) Encrypt() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Encrypt",
 	}
@@ -3577,8 +4102,8 @@ func (v *deviceMacsec) Encrypt() proxy.PropBool {
 
 // property Protect b
 
-func (v *deviceMacsec) Protect() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) Protect() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Protect",
 	}
@@ -3586,8 +4111,8 @@ func (v *deviceMacsec) Protect() proxy.PropBool {
 
 // property IncludeSci b
 
-func (v *deviceMacsec) IncludeSci() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) IncludeSci() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IncludeSci",
 	}
@@ -3595,8 +4120,8 @@ func (v *deviceMacsec) IncludeSci() proxy.PropBool {
 
 // property Es b
 
-func (v *deviceMacsec) Es() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) Es() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Es",
 	}
@@ -3604,8 +4129,8 @@ func (v *deviceMacsec) Es() proxy.PropBool {
 
 // property Scb b
 
-func (v *deviceMacsec) Scb() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) Scb() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Scb",
 	}
@@ -3613,30 +4138,38 @@ func (v *deviceMacsec) Scb() proxy.PropBool {
 
 // property ReplayProtect b
 
-func (v *deviceMacsec) ReplayProtect() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacsec) ReplayProtect() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ReplayProtect",
 	}
 }
 
-func (obj *Device) Macvlan() *deviceMacvlan {
-	return &obj.deviceMacvlan
+func (obj *objectDevice) Macvlan() deviceMacvlan {
+	return &obj.interfaceDeviceMacvlan
 }
 
-type deviceMacvlan struct{}
-
-func (v *deviceMacvlan) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceMacvlan interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Parent() proxy.PropObjectPath
+	Mode() proxy.PropString
+	NoPromisc() proxy.PropBool
+	Tap() proxy.PropBool
 }
 
-func (*deviceMacvlan) GetInterfaceName_() string {
+type interfaceDeviceMacvlan struct{}
+
+func (v *interfaceDeviceMacvlan) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceMacvlan) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Macvlan"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceMacvlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceMacvlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3662,8 +4195,8 @@ func (v *deviceMacvlan) ConnectSignalPropertiesChanged(cb func(properties map[st
 
 // property Parent o
 
-func (v *deviceMacvlan) Parent() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceMacvlan) Parent() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Parent",
 	}
@@ -3671,8 +4204,8 @@ func (v *deviceMacvlan) Parent() proxy.PropObjectPath {
 
 // property Mode s
 
-func (v *deviceMacvlan) Mode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceMacvlan) Mode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -3680,8 +4213,8 @@ func (v *deviceMacvlan) Mode() proxy.PropString {
 
 // property NoPromisc b
 
-func (v *deviceMacvlan) NoPromisc() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacvlan) NoPromisc() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NoPromisc",
 	}
@@ -3689,30 +4222,36 @@ func (v *deviceMacvlan) NoPromisc() proxy.PropBool {
 
 // property Tap b
 
-func (v *deviceMacvlan) Tap() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceMacvlan) Tap() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Tap",
 	}
 }
 
-func (obj *Device) Modem() *deviceModem {
-	return &obj.deviceModem
+func (obj *objectDevice) Modem() deviceModem {
+	return &obj.interfaceDeviceModem
 }
 
-type deviceModem struct{}
-
-func (v *deviceModem) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceModem interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ModemCapabilities() proxy.PropUint32
+	CurrentCapabilities() proxy.PropUint32
 }
 
-func (*deviceModem) GetInterfaceName_() string {
+type interfaceDeviceModem struct{}
+
+func (v *interfaceDeviceModem) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceModem) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Modem"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceModem) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceModem) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3738,8 +4277,8 @@ func (v *deviceModem) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property ModemCapabilities u
 
-func (v *deviceModem) ModemCapabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceModem) ModemCapabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ModemCapabilities",
 	}
@@ -3747,30 +4286,37 @@ func (v *deviceModem) ModemCapabilities() proxy.PropUint32 {
 
 // property CurrentCapabilities u
 
-func (v *deviceModem) CurrentCapabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceModem) CurrentCapabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "CurrentCapabilities",
 	}
 }
 
-func (obj *Device) OlpcMesh() *deviceOlpcMesh {
-	return &obj.deviceOlpcMesh
+func (obj *objectDevice) OlpcMesh() deviceOlpcMesh {
+	return &obj.interfaceDeviceOlpcMesh
 }
 
-type deviceOlpcMesh struct{}
-
-func (v *deviceOlpcMesh) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceOlpcMesh interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Companion() proxy.PropObjectPath
+	ActiveChannel() proxy.PropUint32
 }
 
-func (*deviceOlpcMesh) GetInterfaceName_() string {
+type interfaceDeviceOlpcMesh struct{}
+
+func (v *interfaceDeviceOlpcMesh) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceOlpcMesh) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.OlpcMesh"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceOlpcMesh) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceOlpcMesh) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3796,8 +4342,8 @@ func (v *deviceOlpcMesh) ConnectSignalPropertiesChanged(cb func(properties map[s
 
 // property HwAddress s
 
-func (v *deviceOlpcMesh) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceOlpcMesh) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3805,8 +4351,8 @@ func (v *deviceOlpcMesh) HwAddress() proxy.PropString {
 
 // property Companion o
 
-func (v *deviceOlpcMesh) Companion() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceOlpcMesh) Companion() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Companion",
 	}
@@ -3814,30 +4360,37 @@ func (v *deviceOlpcMesh) Companion() proxy.PropObjectPath {
 
 // property ActiveChannel u
 
-func (v *deviceOlpcMesh) ActiveChannel() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceOlpcMesh) ActiveChannel() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ActiveChannel",
 	}
 }
 
-func (obj *Device) Statistics() *deviceStatistics {
-	return &obj.deviceStatistics
+func (obj *objectDevice) Statistics() deviceStatistics {
+	return &obj.interfaceDeviceStatistics
 }
 
-type deviceStatistics struct{}
-
-func (v *deviceStatistics) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceStatistics interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	RefreshRateMs() proxy.PropUint32
+	TxBytes() proxy.PropUint64
+	RxBytes() proxy.PropUint64
 }
 
-func (*deviceStatistics) GetInterfaceName_() string {
+type interfaceDeviceStatistics struct{}
+
+func (v *interfaceDeviceStatistics) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceStatistics) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Statistics"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceStatistics) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceStatistics) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3863,8 +4416,8 @@ func (v *deviceStatistics) ConnectSignalPropertiesChanged(cb func(properties map
 
 // property RefreshRateMs u
 
-func (v *deviceStatistics) RefreshRateMs() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceStatistics) RefreshRateMs() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RefreshRateMs",
 	}
@@ -3872,8 +4425,8 @@ func (v *deviceStatistics) RefreshRateMs() proxy.PropUint32 {
 
 // property TxBytes t
 
-func (v *deviceStatistics) TxBytes() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDeviceStatistics) TxBytes() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TxBytes",
 	}
@@ -3881,30 +4434,38 @@ func (v *deviceStatistics) TxBytes() proxy.PropUint64 {
 
 // property RxBytes t
 
-func (v *deviceStatistics) RxBytes() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceDeviceStatistics) RxBytes() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RxBytes",
 	}
 }
 
-func (obj *Device) Team() *deviceTeam {
-	return &obj.deviceTeam
+func (obj *objectDevice) Team() deviceTeam {
+	return &obj.interfaceDeviceTeam
 }
 
-type deviceTeam struct{}
-
-func (v *deviceTeam) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceTeam interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Carrier() proxy.PropBool
+	Slaves() proxy.PropObjectPathArray
+	Config() proxy.PropString
 }
 
-func (*deviceTeam) GetInterfaceName_() string {
+type interfaceDeviceTeam struct{}
+
+func (v *interfaceDeviceTeam) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceTeam) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Team"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceTeam) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceTeam) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3930,8 +4491,8 @@ func (v *deviceTeam) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property HwAddress s
 
-func (v *deviceTeam) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceTeam) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -3939,8 +4500,8 @@ func (v *deviceTeam) HwAddress() proxy.PropString {
 
 // property Carrier b
 
-func (v *deviceTeam) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceTeam) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
@@ -3948,8 +4509,8 @@ func (v *deviceTeam) Carrier() proxy.PropBool {
 
 // property Slaves ao
 
-func (v *deviceTeam) Slaves() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDeviceTeam) Slaves() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Slaves",
 	}
@@ -3957,30 +4518,41 @@ func (v *deviceTeam) Slaves() proxy.PropObjectPathArray {
 
 // property Config s
 
-func (v *deviceTeam) Config() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceTeam) Config() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Config",
 	}
 }
 
-func (obj *Device) Tun() *deviceTun {
-	return &obj.deviceTun
+func (obj *objectDevice) Tun() deviceTun {
+	return &obj.interfaceDeviceTun
 }
 
-type deviceTun struct{}
-
-func (v *deviceTun) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceTun interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Owner() proxy.PropInt64
+	Group() proxy.PropInt64
+	Mode() proxy.PropString
+	NoPi() proxy.PropBool
+	VnetHdr() proxy.PropBool
+	MultiQueue() proxy.PropBool
+	HwAddress() proxy.PropString
 }
 
-func (*deviceTun) GetInterfaceName_() string {
+type interfaceDeviceTun struct{}
+
+func (v *interfaceDeviceTun) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceTun) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Tun"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceTun) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceTun) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4006,8 +4578,8 @@ func (v *deviceTun) ConnectSignalPropertiesChanged(cb func(properties map[string
 
 // property Owner x
 
-func (v *deviceTun) Owner() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceDeviceTun) Owner() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "Owner",
 	}
@@ -4015,8 +4587,8 @@ func (v *deviceTun) Owner() proxy.PropInt64 {
 
 // property Group x
 
-func (v *deviceTun) Group() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceDeviceTun) Group() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "Group",
 	}
@@ -4024,8 +4596,8 @@ func (v *deviceTun) Group() proxy.PropInt64 {
 
 // property Mode s
 
-func (v *deviceTun) Mode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceTun) Mode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -4033,8 +4605,8 @@ func (v *deviceTun) Mode() proxy.PropString {
 
 // property NoPi b
 
-func (v *deviceTun) NoPi() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceTun) NoPi() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NoPi",
 	}
@@ -4042,8 +4614,8 @@ func (v *deviceTun) NoPi() proxy.PropBool {
 
 // property VnetHdr b
 
-func (v *deviceTun) VnetHdr() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceTun) VnetHdr() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "VnetHdr",
 	}
@@ -4051,8 +4623,8 @@ func (v *deviceTun) VnetHdr() proxy.PropBool {
 
 // property MultiQueue b
 
-func (v *deviceTun) MultiQueue() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceTun) MultiQueue() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "MultiQueue",
 	}
@@ -4060,30 +4632,35 @@ func (v *deviceTun) MultiQueue() proxy.PropBool {
 
 // property HwAddress s
 
-func (v *deviceTun) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceTun) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
 }
 
-func (obj *Device) Veth() *deviceVeth {
-	return &obj.deviceVeth
+func (obj *objectDevice) Veth() deviceVeth {
+	return &obj.interfaceDeviceVeth
 }
 
-type deviceVeth struct{}
-
-func (v *deviceVeth) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceVeth interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Peer() proxy.PropObjectPath
 }
 
-func (*deviceVeth) GetInterfaceName_() string {
+type interfaceDeviceVeth struct{}
+
+func (v *interfaceDeviceVeth) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceVeth) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Veth"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceVeth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceVeth) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4109,30 +4686,38 @@ func (v *deviceVeth) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property Peer o
 
-func (v *deviceVeth) Peer() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceVeth) Peer() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Peer",
 	}
 }
 
-func (obj *Device) Vlan() *deviceVlan {
-	return &obj.deviceVlan
+func (obj *objectDevice) Vlan() deviceVlan {
+	return &obj.interfaceDeviceVlan
 }
 
-type deviceVlan struct{}
-
-func (v *deviceVlan) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceVlan interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	Carrier() proxy.PropBool
+	Parent() proxy.PropObjectPath
+	VlanId() proxy.PropUint32
 }
 
-func (*deviceVlan) GetInterfaceName_() string {
+type interfaceDeviceVlan struct{}
+
+func (v *interfaceDeviceVlan) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceVlan) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Vlan"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceVlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceVlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4158,8 +4743,8 @@ func (v *deviceVlan) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // property HwAddress s
 
-func (v *deviceVlan) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceVlan) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -4167,8 +4752,8 @@ func (v *deviceVlan) HwAddress() proxy.PropString {
 
 // property Carrier b
 
-func (v *deviceVlan) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVlan) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
@@ -4176,8 +4761,8 @@ func (v *deviceVlan) Carrier() proxy.PropBool {
 
 // property Parent o
 
-func (v *deviceVlan) Parent() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceVlan) Parent() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Parent",
 	}
@@ -4185,30 +4770,51 @@ func (v *deviceVlan) Parent() proxy.PropObjectPath {
 
 // property VlanId u
 
-func (v *deviceVlan) VlanId() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceVlan) VlanId() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "VlanId",
 	}
 }
 
-func (obj *Device) Vxlan() *deviceVxlan {
-	return &obj.deviceVxlan
+func (obj *objectDevice) Vxlan() deviceVxlan {
+	return &obj.interfaceDeviceVxlan
 }
 
-type deviceVxlan struct{}
-
-func (v *deviceVxlan) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceVxlan interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Parent() proxy.PropObjectPath
+	HwAddress() proxy.PropString
+	Id() proxy.PropUint32
+	Group() proxy.PropString
+	Local() proxy.PropString
+	Tos() proxy.PropByte
+	Ttl() proxy.PropByte
+	Learning() proxy.PropBool
+	Ageing() proxy.PropUint32
+	Limit() proxy.PropUint32
+	DstPort() proxy.PropUint16
+	SrcPortMin() proxy.PropUint16
+	SrcPortMax() proxy.PropUint16
+	Proxy() proxy.PropBool
+	Rsc() proxy.PropBool
+	L2miss() proxy.PropBool
+	L3miss() proxy.PropBool
 }
 
-func (*deviceVxlan) GetInterfaceName_() string {
+type interfaceDeviceVxlan struct{}
+
+func (v *interfaceDeviceVxlan) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceVxlan) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Vxlan"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceVxlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceVxlan) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4234,8 +4840,8 @@ func (v *deviceVxlan) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property Parent o
 
-func (v *deviceVxlan) Parent() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceVxlan) Parent() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Parent",
 	}
@@ -4243,8 +4849,8 @@ func (v *deviceVxlan) Parent() proxy.PropObjectPath {
 
 // property HwAddress s
 
-func (v *deviceVxlan) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceVxlan) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -4252,8 +4858,8 @@ func (v *deviceVxlan) HwAddress() proxy.PropString {
 
 // property Id u
 
-func (v *deviceVxlan) Id() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceVxlan) Id() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Id",
 	}
@@ -4261,8 +4867,8 @@ func (v *deviceVxlan) Id() proxy.PropUint32 {
 
 // property Group s
 
-func (v *deviceVxlan) Group() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceVxlan) Group() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Group",
 	}
@@ -4270,8 +4876,8 @@ func (v *deviceVxlan) Group() proxy.PropString {
 
 // property Local s
 
-func (v *deviceVxlan) Local() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceVxlan) Local() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Local",
 	}
@@ -4279,8 +4885,8 @@ func (v *deviceVxlan) Local() proxy.PropString {
 
 // property Tos y
 
-func (v *deviceVxlan) Tos() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceVxlan) Tos() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Tos",
 	}
@@ -4288,8 +4894,8 @@ func (v *deviceVxlan) Tos() proxy.PropByte {
 
 // property Ttl y
 
-func (v *deviceVxlan) Ttl() proxy.PropByte {
-	return proxy.PropByte{
+func (v *interfaceDeviceVxlan) Ttl() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
 		Name: "Ttl",
 	}
@@ -4297,8 +4903,8 @@ func (v *deviceVxlan) Ttl() proxy.PropByte {
 
 // property Learning b
 
-func (v *deviceVxlan) Learning() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVxlan) Learning() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Learning",
 	}
@@ -4306,8 +4912,8 @@ func (v *deviceVxlan) Learning() proxy.PropBool {
 
 // property Ageing u
 
-func (v *deviceVxlan) Ageing() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceVxlan) Ageing() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Ageing",
 	}
@@ -4315,8 +4921,8 @@ func (v *deviceVxlan) Ageing() proxy.PropUint32 {
 
 // property Limit u
 
-func (v *deviceVxlan) Limit() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceVxlan) Limit() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Limit",
 	}
@@ -4324,8 +4930,8 @@ func (v *deviceVxlan) Limit() proxy.PropUint32 {
 
 // property DstPort q
 
-func (v *deviceVxlan) DstPort() proxy.PropUint16 {
-	return proxy.PropUint16{
+func (v *interfaceDeviceVxlan) DstPort() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
 		Impl: v,
 		Name: "DstPort",
 	}
@@ -4333,8 +4939,8 @@ func (v *deviceVxlan) DstPort() proxy.PropUint16 {
 
 // property SrcPortMin q
 
-func (v *deviceVxlan) SrcPortMin() proxy.PropUint16 {
-	return proxy.PropUint16{
+func (v *interfaceDeviceVxlan) SrcPortMin() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
 		Impl: v,
 		Name: "SrcPortMin",
 	}
@@ -4342,8 +4948,8 @@ func (v *deviceVxlan) SrcPortMin() proxy.PropUint16 {
 
 // property SrcPortMax q
 
-func (v *deviceVxlan) SrcPortMax() proxy.PropUint16 {
-	return proxy.PropUint16{
+func (v *interfaceDeviceVxlan) SrcPortMax() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
 		Impl: v,
 		Name: "SrcPortMax",
 	}
@@ -4351,8 +4957,8 @@ func (v *deviceVxlan) SrcPortMax() proxy.PropUint16 {
 
 // property Proxy b
 
-func (v *deviceVxlan) Proxy() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVxlan) Proxy() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Proxy",
 	}
@@ -4360,8 +4966,8 @@ func (v *deviceVxlan) Proxy() proxy.PropBool {
 
 // property Rsc b
 
-func (v *deviceVxlan) Rsc() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVxlan) Rsc() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Rsc",
 	}
@@ -4369,8 +4975,8 @@ func (v *deviceVxlan) Rsc() proxy.PropBool {
 
 // property L2miss b
 
-func (v *deviceVxlan) L2miss() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVxlan) L2miss() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "L2miss",
 	}
@@ -4378,46 +4984,62 @@ func (v *deviceVxlan) L2miss() proxy.PropBool {
 
 // property L3miss b
 
-func (v *deviceVxlan) L3miss() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceVxlan) L3miss() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "L3miss",
 	}
 }
 
-func (obj *Device) WiMax() *deviceWiMax {
-	return &obj.deviceWiMax
+func (obj *objectDevice) WiMax() deviceWiMax {
+	return &obj.interfaceDeviceWiMax
 }
 
-type deviceWiMax struct{}
-
-func (v *deviceWiMax) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceWiMax interface {
+	GoGetNspList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetNspList(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectNspAdded(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectNspRemoved(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Nsps() proxy.PropObjectPathArray
+	HwAddress() proxy.PropString
+	CenterFrequency() proxy.PropUint32
+	Rssi() proxy.PropInt32
+	Cinr() proxy.PropInt32
+	TxPower() proxy.PropInt32
+	Bsid() proxy.PropString
+	ActiveNsp() proxy.PropObjectPath
 }
 
-func (*deviceWiMax) GetInterfaceName_() string {
+type interfaceDeviceWiMax struct{}
+
+func (v *interfaceDeviceWiMax) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceWiMax) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.WiMax"
 }
 
 // method GetNspList
 
-func (v *deviceWiMax) GoGetNspList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDeviceWiMax) GoGetNspList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetNspList", flags, ch)
 }
 
-func (*deviceWiMax) StoreGetNspList(call *dbus.Call) (nsps []dbus.ObjectPath, err error) {
+func (*interfaceDeviceWiMax) StoreGetNspList(call *dbus.Call) (nsps []dbus.ObjectPath, err error) {
 	err = call.Store(&nsps)
 	return
 }
 
-func (v *deviceWiMax) GetNspList(flags dbus.Flags) (nsps []dbus.ObjectPath, err error) {
+func (v *interfaceDeviceWiMax) GetNspList(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetNspList(
 		<-v.GoGetNspList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal PropertiesChanged
 
-func (v *deviceWiMax) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWiMax) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4443,7 +5065,7 @@ func (v *deviceWiMax) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // signal NspAdded
 
-func (v *deviceWiMax) ConnectNspAdded(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWiMax) ConnectNspAdded(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4469,7 +5091,7 @@ func (v *deviceWiMax) ConnectNspAdded(cb func(nsp dbus.ObjectPath)) (dbusutil.Si
 
 // signal NspRemoved
 
-func (v *deviceWiMax) ConnectNspRemoved(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWiMax) ConnectNspRemoved(cb func(nsp dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4495,8 +5117,8 @@ func (v *deviceWiMax) ConnectNspRemoved(cb func(nsp dbus.ObjectPath)) (dbusutil.
 
 // property Nsps ao
 
-func (v *deviceWiMax) Nsps() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDeviceWiMax) Nsps() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Nsps",
 	}
@@ -4504,8 +5126,8 @@ func (v *deviceWiMax) Nsps() proxy.PropObjectPathArray {
 
 // property HwAddress s
 
-func (v *deviceWiMax) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWiMax) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -4513,8 +5135,8 @@ func (v *deviceWiMax) HwAddress() proxy.PropString {
 
 // property CenterFrequency u
 
-func (v *deviceWiMax) CenterFrequency() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceWiMax) CenterFrequency() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "CenterFrequency",
 	}
@@ -4522,8 +5144,8 @@ func (v *deviceWiMax) CenterFrequency() proxy.PropUint32 {
 
 // property Rssi i
 
-func (v *deviceWiMax) Rssi() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDeviceWiMax) Rssi() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Rssi",
 	}
@@ -4531,8 +5153,8 @@ func (v *deviceWiMax) Rssi() proxy.PropInt32 {
 
 // property Cinr i
 
-func (v *deviceWiMax) Cinr() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDeviceWiMax) Cinr() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Cinr",
 	}
@@ -4540,8 +5162,8 @@ func (v *deviceWiMax) Cinr() proxy.PropInt32 {
 
 // property TxPower i
 
-func (v *deviceWiMax) TxPower() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDeviceWiMax) TxPower() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "TxPower",
 	}
@@ -4549,8 +5171,8 @@ func (v *deviceWiMax) TxPower() proxy.PropInt32 {
 
 // property Bsid s
 
-func (v *deviceWiMax) Bsid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWiMax) Bsid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Bsid",
 	}
@@ -4558,30 +5180,39 @@ func (v *deviceWiMax) Bsid() proxy.PropString {
 
 // property ActiveNsp o
 
-func (v *deviceWiMax) ActiveNsp() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceWiMax) ActiveNsp() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "ActiveNsp",
 	}
 }
 
-func (obj *Device) Wired() *deviceWired {
-	return &obj.deviceWired
+func (obj *objectDevice) Wired() deviceWired {
+	return &obj.interfaceDeviceWired
 }
 
-type deviceWired struct{}
-
-func (v *deviceWired) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceWired interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	PermHwAddress() proxy.PropString
+	Speed() proxy.PropUint32
+	S390Subchannels() proxy.PropStringArray
+	Carrier() proxy.PropBool
 }
 
-func (*deviceWired) GetInterfaceName_() string {
+type interfaceDeviceWired struct{}
+
+func (v *interfaceDeviceWired) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceWired) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Wired"
 }
 
 // signal PropertiesChanged
 
-func (v *deviceWired) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWired) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4607,8 +5238,8 @@ func (v *deviceWired) ConnectSignalPropertiesChanged(cb func(properties map[stri
 
 // property HwAddress s
 
-func (v *deviceWired) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWired) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -4616,8 +5247,8 @@ func (v *deviceWired) HwAddress() proxy.PropString {
 
 // property PermHwAddress s
 
-func (v *deviceWired) PermHwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWired) PermHwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PermHwAddress",
 	}
@@ -4625,8 +5256,8 @@ func (v *deviceWired) PermHwAddress() proxy.PropString {
 
 // property Speed u
 
-func (v *deviceWired) Speed() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceWired) Speed() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Speed",
 	}
@@ -4634,8 +5265,8 @@ func (v *deviceWired) Speed() proxy.PropUint32 {
 
 // property S390Subchannels as
 
-func (v *deviceWired) S390Subchannels() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceDeviceWired) S390Subchannels() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "S390Subchannels",
 	}
@@ -4643,72 +5274,91 @@ func (v *deviceWired) S390Subchannels() proxy.PropStringArray {
 
 // property Carrier b
 
-func (v *deviceWired) Carrier() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceDeviceWired) Carrier() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Carrier",
 	}
 }
 
-func (obj *Device) Wireless() *deviceWireless {
-	return &obj.deviceWireless
+func (obj *objectDevice) Wireless() deviceWireless {
+	return &obj.interfaceDeviceWireless
 }
 
-type deviceWireless struct{}
-
-func (v *deviceWireless) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type deviceWireless interface {
+	GoGetAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetAccessPoints(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoGetAllAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetAllAccessPoints(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoRequestScan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call
+	RequestScan(flags dbus.Flags, options map[string]dbus.Variant) error
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectAccessPointAdded(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectAccessPointRemoved(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	HwAddress() proxy.PropString
+	PermHwAddress() proxy.PropString
+	Mode() proxy.PropUint32
+	Bitrate() proxy.PropUint32
+	AccessPoints() proxy.PropObjectPathArray
+	ActiveAccessPoint() proxy.PropObjectPath
+	WirelessCapabilities() proxy.PropUint32
 }
 
-func (*deviceWireless) GetInterfaceName_() string {
+type interfaceDeviceWireless struct{}
+
+func (v *interfaceDeviceWireless) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceDeviceWireless) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.Device.Wireless"
 }
 
 // method GetAccessPoints
 
-func (v *deviceWireless) GoGetAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDeviceWireless) GoGetAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAccessPoints", flags, ch)
 }
 
-func (*deviceWireless) StoreGetAccessPoints(call *dbus.Call) (access_points []dbus.ObjectPath, err error) {
+func (*interfaceDeviceWireless) StoreGetAccessPoints(call *dbus.Call) (access_points []dbus.ObjectPath, err error) {
 	err = call.Store(&access_points)
 	return
 }
 
-func (v *deviceWireless) GetAccessPoints(flags dbus.Flags) (access_points []dbus.ObjectPath, err error) {
+func (v *interfaceDeviceWireless) GetAccessPoints(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetAccessPoints(
 		<-v.GoGetAccessPoints(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetAllAccessPoints
 
-func (v *deviceWireless) GoGetAllAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDeviceWireless) GoGetAllAccessPoints(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllAccessPoints", flags, ch)
 }
 
-func (*deviceWireless) StoreGetAllAccessPoints(call *dbus.Call) (access_points []dbus.ObjectPath, err error) {
+func (*interfaceDeviceWireless) StoreGetAllAccessPoints(call *dbus.Call) (access_points []dbus.ObjectPath, err error) {
 	err = call.Store(&access_points)
 	return
 }
 
-func (v *deviceWireless) GetAllAccessPoints(flags dbus.Flags) (access_points []dbus.ObjectPath, err error) {
+func (v *interfaceDeviceWireless) GetAllAccessPoints(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetAllAccessPoints(
 		<-v.GoGetAllAccessPoints(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RequestScan
 
-func (v *deviceWireless) GoRequestScan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceDeviceWireless) GoRequestScan(flags dbus.Flags, ch chan *dbus.Call, options map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestScan", flags, ch, options)
 }
 
-func (v *deviceWireless) RequestScan(flags dbus.Flags, options map[string]dbus.Variant) error {
+func (v *interfaceDeviceWireless) RequestScan(flags dbus.Flags, options map[string]dbus.Variant) error {
 	return (<-v.GoRequestScan(flags, make(chan *dbus.Call, 1), options).Done).Err
 }
 
 // signal PropertiesChanged
 
-func (v *deviceWireless) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWireless) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4734,7 +5384,7 @@ func (v *deviceWireless) ConnectSignalPropertiesChanged(cb func(properties map[s
 
 // signal AccessPointAdded
 
-func (v *deviceWireless) ConnectAccessPointAdded(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWireless) ConnectAccessPointAdded(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4760,7 +5410,7 @@ func (v *deviceWireless) ConnectAccessPointAdded(cb func(access_point dbus.Objec
 
 // signal AccessPointRemoved
 
-func (v *deviceWireless) ConnectAccessPointRemoved(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDeviceWireless) ConnectAccessPointRemoved(cb func(access_point dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4786,8 +5436,8 @@ func (v *deviceWireless) ConnectAccessPointRemoved(cb func(access_point dbus.Obj
 
 // property HwAddress s
 
-func (v *deviceWireless) HwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWireless) HwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "HwAddress",
 	}
@@ -4795,8 +5445,8 @@ func (v *deviceWireless) HwAddress() proxy.PropString {
 
 // property PermHwAddress s
 
-func (v *deviceWireless) PermHwAddress() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDeviceWireless) PermHwAddress() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PermHwAddress",
 	}
@@ -4804,8 +5454,8 @@ func (v *deviceWireless) PermHwAddress() proxy.PropString {
 
 // property Mode u
 
-func (v *deviceWireless) Mode() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceWireless) Mode() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -4813,8 +5463,8 @@ func (v *deviceWireless) Mode() proxy.PropUint32 {
 
 // property Bitrate u
 
-func (v *deviceWireless) Bitrate() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceWireless) Bitrate() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Bitrate",
 	}
@@ -4822,8 +5472,8 @@ func (v *deviceWireless) Bitrate() proxy.PropUint32 {
 
 // property AccessPoints ao
 
-func (v *deviceWireless) AccessPoints() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceDeviceWireless) AccessPoints() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "AccessPoints",
 	}
@@ -4831,8 +5481,8 @@ func (v *deviceWireless) AccessPoints() proxy.PropObjectPathArray {
 
 // property ActiveAccessPoint o
 
-func (v *deviceWireless) ActiveAccessPoint() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceDeviceWireless) ActiveAccessPoint() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "ActiveAccessPoint",
 	}
@@ -4840,40 +5490,52 @@ func (v *deviceWireless) ActiveAccessPoint() proxy.PropObjectPath {
 
 // property WirelessCapabilities u
 
-func (v *deviceWireless) WirelessCapabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceDeviceWireless) WirelessCapabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "WirelessCapabilities",
 	}
 }
 
-type WiMaxNsp struct {
+type WiMaxNsp interface {
 	wiMaxNsp // interface org.freedesktop.NetworkManager.WiMax.Nsp
 	proxy.Object
 }
 
-func NewWiMaxNsp(conn *dbus.Conn, path dbus.ObjectPath) (*WiMaxNsp, error) {
+type objectWiMaxNsp struct {
+	interfaceWiMaxNsp // interface org.freedesktop.NetworkManager.WiMax.Nsp
+	proxy.ImplObject
+}
+
+func NewWiMaxNsp(conn *dbus.Conn, path dbus.ObjectPath) (WiMaxNsp, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(WiMaxNsp)
-	obj.Object.Init_(conn, "org.freedesktop.NetworkManager", path)
+	obj := new(objectWiMaxNsp)
+	obj.ImplObject.Init_(conn, "org.freedesktop.NetworkManager", path)
 	return obj, nil
 }
 
-type wiMaxNsp struct{}
-
-func (v *wiMaxNsp) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type wiMaxNsp interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	Name() proxy.PropString
+	SignalQuality() proxy.PropUint32
+	NetworkType() proxy.PropUint32
 }
 
-func (*wiMaxNsp) GetInterfaceName_() string {
+type interfaceWiMaxNsp struct{}
+
+func (v *interfaceWiMaxNsp) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWiMaxNsp) GetInterfaceName_() string {
 	return "org.freedesktop.NetworkManager.WiMax.Nsp"
 }
 
 // signal PropertiesChanged
 
-func (v *wiMaxNsp) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWiMaxNsp) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -4899,8 +5561,8 @@ func (v *wiMaxNsp) ConnectSignalPropertiesChanged(cb func(properties map[string]
 
 // property Name s
 
-func (v *wiMaxNsp) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceWiMaxNsp) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -4908,8 +5570,8 @@ func (v *wiMaxNsp) Name() proxy.PropString {
 
 // property SignalQuality u
 
-func (v *wiMaxNsp) SignalQuality() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceWiMaxNsp) SignalQuality() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "SignalQuality",
 	}
@@ -4917,29 +5579,35 @@ func (v *wiMaxNsp) SignalQuality() proxy.PropUint32 {
 
 // property NetworkType u
 
-func (v *wiMaxNsp) NetworkType() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceWiMaxNsp) NetworkType() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "NetworkType",
 	}
 }
 
-type PropMapStringVariant struct {
+type PropMapStringVariant interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
+}
+
+type implPropMapStringVariant struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+func (p implPropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+func (p implPropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implPropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4959,22 +5627,28 @@ func (p PropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[st
 		p.Name, cb0)
 }
 
-type PropMapSVSlice struct {
+type PropMapSVSlice interface {
+	Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value []map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error
+}
+
+type implPropMapSVSlice struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropMapSVSlice) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
+func (p implPropMapSVSlice) Get(flags dbus.Flags) (value []map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropMapSVSlice) Set(flags dbus.Flags, value []map[string]dbus.Variant) error {
+func (p implPropMapSVSlice) Set(flags dbus.Flags, value []map[string]dbus.Variant) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropMapSVSlice) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
+func (p implPropMapSVSlice) ConnectChanged(cb func(hasValue bool, value []map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -4994,22 +5668,28 @@ func (p PropMapSVSlice) ConnectChanged(cb func(hasValue bool, value []map[string
 		p.Name, cb0)
 }
 
-type PropUint32SliceSlice struct {
+type PropUint32SliceSlice interface {
+	Get(flags dbus.Flags) (value [][]uint32, err error)
+	Set(flags dbus.Flags, value [][]uint32) error
+	ConnectChanged(cb func(hasValue bool, value [][]uint32)) error
+}
+
+type implPropUint32SliceSlice struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropUint32SliceSlice) Get(flags dbus.Flags) (value [][]uint32, err error) {
+func (p implPropUint32SliceSlice) Get(flags dbus.Flags) (value [][]uint32, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropUint32SliceSlice) Set(flags dbus.Flags, value [][]uint32) error {
+func (p implPropUint32SliceSlice) Set(flags dbus.Flags, value [][]uint32) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropUint32SliceSlice) ConnectChanged(cb func(hasValue bool, value [][]uint32)) error {
+func (p implPropUint32SliceSlice) ConnectChanged(cb func(hasValue bool, value [][]uint32)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

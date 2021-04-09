@@ -9,71 +9,94 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Timedate struct {
+type Timedate interface {
 	timedate // interface org.freedesktop.timedate1
 	proxy.Object
 }
 
-func NewTimedate(conn *dbus.Conn) *Timedate {
-	obj := new(Timedate)
-	obj.Object.Init_(conn, "org.freedesktop.timedate1", "/org/freedesktop/timedate1")
+type objectTimedate struct {
+	interfaceTimedate // interface org.freedesktop.timedate1
+	proxy.ImplObject
+}
+
+func NewTimedate(conn *dbus.Conn) Timedate {
+	obj := new(objectTimedate)
+	obj.ImplObject.Init_(conn, "org.freedesktop.timedate1", "/org/freedesktop/timedate1")
 	return obj
 }
 
-type timedate struct{}
-
-func (v *timedate) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type timedate interface {
+	GoSetTime(flags dbus.Flags, ch chan *dbus.Call, arg0 int64, arg1 bool, arg2 bool) *dbus.Call
+	SetTime(flags dbus.Flags, arg0 int64, arg1 bool, arg2 bool) error
+	GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call
+	SetTimezone(flags dbus.Flags, arg0 string, arg1 bool) error
+	GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool, arg2 bool) *dbus.Call
+	SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bool, arg2 bool) error
+	GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool) *dbus.Call
+	SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) error
+	Timezone() proxy.PropString
+	LocalRTC() proxy.PropBool
+	CanNTP() proxy.PropBool
+	NTP() proxy.PropBool
+	NTPSynchronized() proxy.PropBool
+	TimeUSec() proxy.PropUint64
+	RTCTimeUSec() proxy.PropUint64
 }
 
-func (*timedate) GetInterfaceName_() string {
+type interfaceTimedate struct{}
+
+func (v *interfaceTimedate) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceTimedate) GetInterfaceName_() string {
 	return "org.freedesktop.timedate1"
 }
 
 // method SetTime
 
-func (v *timedate) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, arg0 int64, arg1 bool, arg2 bool) *dbus.Call {
+func (v *interfaceTimedate) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, arg0 int64, arg1 bool, arg2 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTime", flags, ch, arg0, arg1, arg2)
 }
 
-func (v *timedate) SetTime(flags dbus.Flags, arg0 int64, arg1 bool, arg2 bool) error {
+func (v *interfaceTimedate) SetTime(flags dbus.Flags, arg0 int64, arg1 bool, arg2 bool) error {
 	return (<-v.GoSetTime(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2).Done).Err
 }
 
 // method SetTimezone
 
-func (v *timedate) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *interfaceTimedate) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTimezone", flags, ch, arg0, arg1)
 }
 
-func (v *timedate) SetTimezone(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *interfaceTimedate) SetTimezone(flags dbus.Flags, arg0 string, arg1 bool) error {
 	return (<-v.GoSetTimezone(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // method SetLocalRTC
 
-func (v *timedate) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool, arg2 bool) *dbus.Call {
+func (v *interfaceTimedate) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool, arg2 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocalRTC", flags, ch, arg0, arg1, arg2)
 }
 
-func (v *timedate) SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bool, arg2 bool) error {
+func (v *interfaceTimedate) SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bool, arg2 bool) error {
 	return (<-v.GoSetLocalRTC(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2).Done).Err
 }
 
 // method SetNTP
 
-func (v *timedate) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool) *dbus.Call {
+func (v *interfaceTimedate) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetNTP", flags, ch, arg0, arg1)
 }
 
-func (v *timedate) SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) error {
+func (v *interfaceTimedate) SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) error {
 	return (<-v.GoSetNTP(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
 }
 
 // property Timezone s
 
-func (v *timedate) Timezone() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceTimedate) Timezone() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Timezone",
 	}
@@ -81,8 +104,8 @@ func (v *timedate) Timezone() proxy.PropString {
 
 // property LocalRTC b
 
-func (v *timedate) LocalRTC() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTimedate) LocalRTC() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "LocalRTC",
 	}
@@ -90,8 +113,8 @@ func (v *timedate) LocalRTC() proxy.PropBool {
 
 // property CanNTP b
 
-func (v *timedate) CanNTP() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTimedate) CanNTP() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanNTP",
 	}
@@ -99,8 +122,8 @@ func (v *timedate) CanNTP() proxy.PropBool {
 
 // property NTP b
 
-func (v *timedate) NTP() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTimedate) NTP() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NTP",
 	}
@@ -108,8 +131,8 @@ func (v *timedate) NTP() proxy.PropBool {
 
 // property NTPSynchronized b
 
-func (v *timedate) NTPSynchronized() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceTimedate) NTPSynchronized() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "NTPSynchronized",
 	}
@@ -117,8 +140,8 @@ func (v *timedate) NTPSynchronized() proxy.PropBool {
 
 // property TimeUSec t
 
-func (v *timedate) TimeUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceTimedate) TimeUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeUSec",
 	}
@@ -126,8 +149,8 @@ func (v *timedate) TimeUSec() proxy.PropUint64 {
 
 // property RTCTimeUSec t
 
-func (v *timedate) RTCTimeUSec() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceTimedate) RTCTimeUSec() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "RTCTimeUSec",
 	}

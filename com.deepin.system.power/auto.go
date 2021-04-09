@@ -12,106 +12,149 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Power struct {
+type Power interface {
 	power // interface com.deepin.system.Power
 	proxy.Object
 }
 
-func NewPower(conn *dbus.Conn) *Power {
-	obj := new(Power)
-	obj.Object.Init_(conn, "com.deepin.system.Power", "/com/deepin/system/Power")
+type objectPower struct {
+	interfacePower // interface com.deepin.system.Power
+	proxy.ImplObject
+}
+
+func NewPower(conn *dbus.Conn) Power {
+	obj := new(objectPower)
+	obj.ImplObject.Init_(conn, "com.deepin.system.Power", "/com/deepin/system/Power")
 	return obj
 }
 
-type power struct{}
-
-func (v *power) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type power interface {
+	GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetBatteries(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Refresh(flags dbus.Flags) error
+	GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RefreshBatteries(flags dbus.Flags) error
+	GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RefreshMains(flags dbus.Flags) error
+	GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call
+	SetCpuGovernor(flags dbus.Flags, governor string) error
+	GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call
+	SetCpuBoost(flags dbus.Flags, enabled bool) error
+	GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call
+	LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error
+	ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error)
+	ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error)
+	PowerSavingModeAuto() proxy.PropBool
+	OnBattery() proxy.PropBool
+	HasLidSwitch() proxy.PropBool
+	BatteryPercentage() proxy.PropDouble
+	BatteryTimeToEmpty() proxy.PropUint64
+	HasBattery() proxy.PropBool
+	BatteryStatus() proxy.PropUint32
+	BatteryTimeToFull() proxy.PropUint64
+	BatteryCapacity() proxy.PropDouble
+	PowerSavingModeEnabled() proxy.PropBool
+	PowerSavingModeAutoWhenBatteryLow() proxy.PropBool
+	PowerSavingModeBrightnessDropPercent() proxy.PropUint32
+	CpuGovernor() proxy.PropString
+	CpuBoost() proxy.PropBool
+	IsBoostSupported() proxy.PropBool
 }
 
-func (*power) GetInterfaceName_() string {
+type interfacePower struct{}
+
+func (v *interfacePower) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfacePower) GetInterfaceName_() string {
 	return "com.deepin.system.Power"
 }
 
 // method GetBatteries
 
-func (v *power) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePower) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetBatteries", flags, ch)
 }
 
-func (*power) StoreGetBatteries(call *dbus.Call) (batteries []dbus.ObjectPath, err error) {
+func (*interfacePower) StoreGetBatteries(call *dbus.Call) (batteries []dbus.ObjectPath, err error) {
 	err = call.Store(&batteries)
 	return
 }
 
-func (v *power) GetBatteries(flags dbus.Flags) (batteries []dbus.ObjectPath, err error) {
+func (v *interfacePower) GetBatteries(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreGetBatteries(
 		<-v.GoGetBatteries(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Refresh
 
-func (v *power) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePower) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Refresh", flags, ch)
 }
 
-func (v *power) Refresh(flags dbus.Flags) error {
+func (v *interfacePower) Refresh(flags dbus.Flags) error {
 	return (<-v.GoRefresh(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RefreshBatteries
 
-func (v *power) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePower) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshBatteries", flags, ch)
 }
 
-func (v *power) RefreshBatteries(flags dbus.Flags) error {
+func (v *interfacePower) RefreshBatteries(flags dbus.Flags) error {
 	return (<-v.GoRefreshBatteries(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RefreshMains
 
-func (v *power) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfacePower) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshMains", flags, ch)
 }
 
-func (v *power) RefreshMains(flags dbus.Flags) error {
+func (v *interfacePower) RefreshMains(flags dbus.Flags) error {
 	return (<-v.GoRefreshMains(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetCpuGovernor
 
-func (v *power) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call {
+func (v *interfacePower) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCpuGovernor", flags, ch, governor)
 }
 
-func (v *power) SetCpuGovernor(flags dbus.Flags, governor string) error {
+func (v *interfacePower) SetCpuGovernor(flags dbus.Flags, governor string) error {
 	return (<-v.GoSetCpuGovernor(flags, make(chan *dbus.Call, 1), governor).Done).Err
 }
 
 // method SetCpuBoost
 
-func (v *power) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *interfacePower) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCpuBoost", flags, ch, enabled)
 }
 
-func (v *power) SetCpuBoost(flags dbus.Flags, enabled bool) error {
+func (v *interfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoSetCpuBoost(flags, make(chan *dbus.Call, 1), enabled).Done).Err
 }
 
 // method LockCpuFreq
 
-func (v *power) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
+func (v *interfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockCpuFreq", flags, ch, governor, lockTime)
 }
 
-func (v *power) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error {
+func (v *interfacePower) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error {
 	return (<-v.GoLockCpuFreq(flags, make(chan *dbus.Call, 1), governor, lockTime).Done).Err
 }
 
 // signal BatteryDisplayUpdate
 
-func (v *power) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -137,7 +180,7 @@ func (v *power) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.
 
 // signal BatteryAdded
 
-func (v *power) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -163,7 +206,7 @@ func (v *power) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.Sig
 
 // signal BatteryRemoved
 
-func (v *power) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -189,7 +232,7 @@ func (v *power) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.S
 
 // signal LidClosed
 
-func (v *power) ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -211,7 +254,7 @@ func (v *power) ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal LidOpened
 
-func (v *power) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -233,7 +276,7 @@ func (v *power) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal PowerActionCode
 
-func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePower) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -259,8 +302,8 @@ func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.Sign
 
 // property PowerSavingModeAuto b
 
-func (v *power) PowerSavingModeAuto() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) PowerSavingModeAuto() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PowerSavingModeAuto",
 	}
@@ -268,8 +311,8 @@ func (v *power) PowerSavingModeAuto() proxy.PropBool {
 
 // property OnBattery b
 
-func (v *power) OnBattery() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) OnBattery() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "OnBattery",
 	}
@@ -277,8 +320,8 @@ func (v *power) OnBattery() proxy.PropBool {
 
 // property HasLidSwitch b
 
-func (v *power) HasLidSwitch() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) HasLidSwitch() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasLidSwitch",
 	}
@@ -286,8 +329,8 @@ func (v *power) HasLidSwitch() proxy.PropBool {
 
 // property BatteryPercentage d
 
-func (v *power) BatteryPercentage() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfacePower) BatteryPercentage() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "BatteryPercentage",
 	}
@@ -295,8 +338,8 @@ func (v *power) BatteryPercentage() proxy.PropDouble {
 
 // property BatteryTimeToEmpty t
 
-func (v *power) BatteryTimeToEmpty() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfacePower) BatteryTimeToEmpty() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "BatteryTimeToEmpty",
 	}
@@ -304,8 +347,8 @@ func (v *power) BatteryTimeToEmpty() proxy.PropUint64 {
 
 // property HasBattery b
 
-func (v *power) HasBattery() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) HasBattery() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasBattery",
 	}
@@ -313,8 +356,8 @@ func (v *power) HasBattery() proxy.PropBool {
 
 // property BatteryStatus u
 
-func (v *power) BatteryStatus() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfacePower) BatteryStatus() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "BatteryStatus",
 	}
@@ -322,8 +365,8 @@ func (v *power) BatteryStatus() proxy.PropUint32 {
 
 // property BatteryTimeToFull t
 
-func (v *power) BatteryTimeToFull() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfacePower) BatteryTimeToFull() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "BatteryTimeToFull",
 	}
@@ -331,8 +374,8 @@ func (v *power) BatteryTimeToFull() proxy.PropUint64 {
 
 // property BatteryCapacity d
 
-func (v *power) BatteryCapacity() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfacePower) BatteryCapacity() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "BatteryCapacity",
 	}
@@ -340,8 +383,8 @@ func (v *power) BatteryCapacity() proxy.PropDouble {
 
 // property PowerSavingModeEnabled b
 
-func (v *power) PowerSavingModeEnabled() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) PowerSavingModeEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PowerSavingModeEnabled",
 	}
@@ -349,8 +392,8 @@ func (v *power) PowerSavingModeEnabled() proxy.PropBool {
 
 // property PowerSavingModeAutoWhenBatteryLow b
 
-func (v *power) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "PowerSavingModeAutoWhenBatteryLow",
 	}
@@ -358,8 +401,8 @@ func (v *power) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
 
 // property PowerSavingModeBrightnessDropPercent u
 
-func (v *power) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfacePower) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "PowerSavingModeBrightnessDropPercent",
 	}
@@ -367,8 +410,8 @@ func (v *power) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
 
 // property CpuGovernor s
 
-func (v *power) CpuGovernor() proxy.PropString {
-	return proxy.PropString{
+func (v *interfacePower) CpuGovernor() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CpuGovernor",
 	}
@@ -376,8 +419,8 @@ func (v *power) CpuGovernor() proxy.PropString {
 
 // property CpuBoost b
 
-func (v *power) CpuBoost() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) CpuBoost() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CpuBoost",
 	}
@@ -385,41 +428,67 @@ func (v *power) CpuBoost() proxy.PropBool {
 
 // property IsBoostSupported b
 
-func (v *power) IsBoostSupported() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfacePower) IsBoostSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsBoostSupported",
 	}
 }
 
-type Battery struct {
+type Battery interface {
 	battery // interface com.deepin.system.Power.Battery
 	proxy.Object
 }
 
-func NewBattery(conn *dbus.Conn, path dbus.ObjectPath) (*Battery, error) {
+type objectBattery struct {
+	interfaceBattery // interface com.deepin.system.Power.Battery
+	proxy.ImplObject
+}
+
+func NewBattery(conn *dbus.Conn, path dbus.ObjectPath) (Battery, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Battery)
-	obj.Object.Init_(conn, "com.deepin.system.Power", path)
+	obj := new(objectBattery)
+	obj.ImplObject.Init_(conn, "com.deepin.system.Power", path)
 	return obj, nil
 }
 
-type battery struct{}
-
-func (v *battery) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type battery interface {
+	EnergyFullDesign() proxy.PropDouble
+	Capacity() proxy.PropDouble
+	Technology() proxy.PropString
+	Energy() proxy.PropDouble
+	EnergyFull() proxy.PropDouble
+	Manufacturer() proxy.PropString
+	ModelName() proxy.PropString
+	TimeToEmpty() proxy.PropUint64
+	IsPresent() proxy.PropBool
+	Status() proxy.PropUint32
+	EnergyRate() proxy.PropDouble
+	Voltage() proxy.PropDouble
+	Percentage() proxy.PropDouble
+	TimeToFull() proxy.PropUint64
+	UpdateTime() proxy.PropInt64
+	SysfsPath() proxy.PropString
+	SerialNumber() proxy.PropString
+	Name() proxy.PropString
 }
 
-func (*battery) GetInterfaceName_() string {
+type interfaceBattery struct{}
+
+func (v *interfaceBattery) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBattery) GetInterfaceName_() string {
 	return "com.deepin.system.Power.Battery"
 }
 
 // property EnergyFullDesign d
 
-func (v *battery) EnergyFullDesign() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) EnergyFullDesign() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "EnergyFullDesign",
 	}
@@ -427,8 +496,8 @@ func (v *battery) EnergyFullDesign() proxy.PropDouble {
 
 // property Capacity d
 
-func (v *battery) Capacity() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) Capacity() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Capacity",
 	}
@@ -436,8 +505,8 @@ func (v *battery) Capacity() proxy.PropDouble {
 
 // property Technology s
 
-func (v *battery) Technology() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) Technology() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Technology",
 	}
@@ -445,8 +514,8 @@ func (v *battery) Technology() proxy.PropString {
 
 // property Energy d
 
-func (v *battery) Energy() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) Energy() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Energy",
 	}
@@ -454,8 +523,8 @@ func (v *battery) Energy() proxy.PropDouble {
 
 // property EnergyFull d
 
-func (v *battery) EnergyFull() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) EnergyFull() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "EnergyFull",
 	}
@@ -463,8 +532,8 @@ func (v *battery) EnergyFull() proxy.PropDouble {
 
 // property Manufacturer s
 
-func (v *battery) Manufacturer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) Manufacturer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Manufacturer",
 	}
@@ -472,8 +541,8 @@ func (v *battery) Manufacturer() proxy.PropString {
 
 // property ModelName s
 
-func (v *battery) ModelName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) ModelName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ModelName",
 	}
@@ -481,8 +550,8 @@ func (v *battery) ModelName() proxy.PropString {
 
 // property TimeToEmpty t
 
-func (v *battery) TimeToEmpty() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceBattery) TimeToEmpty() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeToEmpty",
 	}
@@ -490,8 +559,8 @@ func (v *battery) TimeToEmpty() proxy.PropUint64 {
 
 // property IsPresent b
 
-func (v *battery) IsPresent() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBattery) IsPresent() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsPresent",
 	}
@@ -499,8 +568,8 @@ func (v *battery) IsPresent() proxy.PropBool {
 
 // property Status u
 
-func (v *battery) Status() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceBattery) Status() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Status",
 	}
@@ -508,8 +577,8 @@ func (v *battery) Status() proxy.PropUint32 {
 
 // property EnergyRate d
 
-func (v *battery) EnergyRate() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) EnergyRate() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "EnergyRate",
 	}
@@ -517,8 +586,8 @@ func (v *battery) EnergyRate() proxy.PropDouble {
 
 // property Voltage d
 
-func (v *battery) Voltage() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) Voltage() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Voltage",
 	}
@@ -526,8 +595,8 @@ func (v *battery) Voltage() proxy.PropDouble {
 
 // property Percentage d
 
-func (v *battery) Percentage() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceBattery) Percentage() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "Percentage",
 	}
@@ -535,8 +604,8 @@ func (v *battery) Percentage() proxy.PropDouble {
 
 // property TimeToFull t
 
-func (v *battery) TimeToFull() proxy.PropUint64 {
-	return proxy.PropUint64{
+func (v *interfaceBattery) TimeToFull() proxy.PropUint64 {
+	return &proxy.ImplPropUint64{
 		Impl: v,
 		Name: "TimeToFull",
 	}
@@ -544,8 +613,8 @@ func (v *battery) TimeToFull() proxy.PropUint64 {
 
 // property UpdateTime x
 
-func (v *battery) UpdateTime() proxy.PropInt64 {
-	return proxy.PropInt64{
+func (v *interfaceBattery) UpdateTime() proxy.PropInt64 {
+	return &proxy.ImplPropInt64{
 		Impl: v,
 		Name: "UpdateTime",
 	}
@@ -553,8 +622,8 @@ func (v *battery) UpdateTime() proxy.PropInt64 {
 
 // property SysfsPath s
 
-func (v *battery) SysfsPath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) SysfsPath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SysfsPath",
 	}
@@ -562,8 +631,8 @@ func (v *battery) SysfsPath() proxy.PropString {
 
 // property SerialNumber s
 
-func (v *battery) SerialNumber() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) SerialNumber() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SerialNumber",
 	}
@@ -571,8 +640,8 @@ func (v *battery) SerialNumber() proxy.PropString {
 
 // property Name s
 
-func (v *battery) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBattery) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}

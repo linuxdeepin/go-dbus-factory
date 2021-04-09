@@ -9,33 +9,43 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type CursorHelper struct {
+type CursorHelper interface {
 	cursorHelper // interface com.deepin.api.CursorHelper
 	proxy.Object
 }
 
-func NewCursorHelper(conn *dbus.Conn) *CursorHelper {
-	obj := new(CursorHelper)
-	obj.Object.Init_(conn, "com.deepin.api.CursorHelper", "/com/deepin/api/CursorHelper")
+type objectCursorHelper struct {
+	interfaceCursorHelper // interface com.deepin.api.CursorHelper
+	proxy.ImplObject
+}
+
+func NewCursorHelper(conn *dbus.Conn) CursorHelper {
+	obj := new(objectCursorHelper)
+	obj.ImplObject.Init_(conn, "com.deepin.api.CursorHelper", "/com/deepin/api/CursorHelper")
 	return obj
 }
 
-type cursorHelper struct{}
-
-func (v *cursorHelper) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type cursorHelper interface {
+	GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	Set(flags dbus.Flags, name string) error
 }
 
-func (*cursorHelper) GetInterfaceName_() string {
+type interfaceCursorHelper struct{}
+
+func (v *interfaceCursorHelper) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceCursorHelper) GetInterfaceName_() string {
 	return "com.deepin.api.CursorHelper"
 }
 
 // method Set
 
-func (v *cursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceCursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Set", flags, ch, name)
 }
 
-func (v *cursorHelper) Set(flags dbus.Flags, name string) error {
+func (v *interfaceCursorHelper) Set(flags dbus.Flags, name string) error {
 	return (<-v.GoSet(flags, make(chan *dbus.Call, 1), name).Done).Err
 }

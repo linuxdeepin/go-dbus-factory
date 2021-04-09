@@ -12,72 +12,89 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type OutputManagement struct {
+type OutputManagement interface {
 	outputManagement // interface com.deepin.daemon.KWayland.Output
 	proxy.Object
 }
 
-func NewOutputManagement(conn *dbus.Conn) *OutputManagement {
-	obj := new(OutputManagement)
-	obj.Object.Init_(conn, "com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/Output")
+type objectOutputManagement struct {
+	interfaceOutputManagement // interface com.deepin.daemon.KWayland.Output
+	proxy.ImplObject
+}
+
+func NewOutputManagement(conn *dbus.Conn) OutputManagement {
+	obj := new(objectOutputManagement)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/Output")
 	return obj
 }
 
-type outputManagement struct{}
-
-func (v *outputManagement) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type outputManagement interface {
+	GoListOutput(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListOutput(flags dbus.Flags) (string, error)
+	GoGetOutput(flags dbus.Flags, ch chan *dbus.Call, arg1 string) *dbus.Call
+	GetOutput(flags dbus.Flags, arg1 string) (string, error)
+	GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call
+	Apply(flags dbus.Flags, outputs string) error
+	ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error)
+	ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error)
+	ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error)
 }
 
-func (*outputManagement) GetInterfaceName_() string {
+type interfaceOutputManagement struct{}
+
+func (v *interfaceOutputManagement) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceOutputManagement) GetInterfaceName_() string {
 	return "com.deepin.daemon.KWayland.Output"
 }
 
 // method ListOutput
 
-func (v *outputManagement) GoListOutput(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceOutputManagement) GoListOutput(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListOutput", flags, ch)
 }
 
-func (*outputManagement) StoreListOutput(call *dbus.Call) (arg0 string, err error) {
+func (*interfaceOutputManagement) StoreListOutput(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *outputManagement) ListOutput(flags dbus.Flags) (arg0 string, err error) {
+func (v *interfaceOutputManagement) ListOutput(flags dbus.Flags) (string, error) {
 	return v.StoreListOutput(
 		<-v.GoListOutput(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method GetOutput
 
-func (v *outputManagement) GoGetOutput(flags dbus.Flags, ch chan *dbus.Call, arg1 string) *dbus.Call {
+func (v *interfaceOutputManagement) GoGetOutput(flags dbus.Flags, ch chan *dbus.Call, arg1 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetOutput", flags, ch, arg1)
 }
 
-func (*outputManagement) StoreGetOutput(call *dbus.Call) (arg0 string, err error) {
+func (*interfaceOutputManagement) StoreGetOutput(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
 }
 
-func (v *outputManagement) GetOutput(flags dbus.Flags, arg1 string) (arg0 string, err error) {
+func (v *interfaceOutputManagement) GetOutput(flags dbus.Flags, arg1 string) (string, error) {
 	return v.StoreGetOutput(
 		<-v.GoGetOutput(flags, make(chan *dbus.Call, 1), arg1).Done)
 }
 
 // method Apply
 
-func (v *outputManagement) GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call {
+func (v *interfaceOutputManagement) GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Apply", flags, ch, outputs)
 }
 
-func (v *outputManagement) Apply(flags dbus.Flags, outputs string) error {
+func (v *interfaceOutputManagement) Apply(flags dbus.Flags, outputs string) error {
 	return (<-v.GoApply(flags, make(chan *dbus.Call, 1), outputs).Done).Err
 }
 
 // signal OutputAdded
 
-func (v *outputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceOutputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -103,7 +120,7 @@ func (v *outputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.
 
 // signal OutputRemoved
 
-func (v *outputManagement) ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceOutputManagement) ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -129,7 +146,7 @@ func (v *outputManagement) ConnectOutputRemoved(cb func(output string)) (dbusuti
 
 // signal OutputChanged
 
-func (v *outputManagement) ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceOutputManagement) ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -153,62 +170,77 @@ func (v *outputManagement) ConnectOutputChanged(cb func(output string)) (dbusuti
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-type WindowManager struct {
+type WindowManager interface {
 	windowManager // interface com.deepin.daemon.KWayland.WindowManager
 	proxy.Object
 }
 
-func NewWindowManager(conn *dbus.Conn) *WindowManager {
-	obj := new(WindowManager)
-	obj.Object.Init_(conn, "com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/WindowManager")
+type objectWindowManager struct {
+	interfaceWindowManager // interface com.deepin.daemon.KWayland.WindowManager
+	proxy.ImplObject
+}
+
+func NewWindowManager(conn *dbus.Conn) WindowManager {
+	obj := new(objectWindowManager)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/WindowManager")
 	return obj
 }
 
-type windowManager struct{}
-
-func (v *windowManager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type windowManager interface {
+	GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ActiveWindow(flags dbus.Flags) (uint32, error)
+	GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Windows(flags dbus.Flags) ([]dbus.Variant, error)
+	ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error)
+	ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error)
+	ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHandlerId, error)
 }
 
-func (*windowManager) GetInterfaceName_() string {
+type interfaceWindowManager struct{}
+
+func (v *interfaceWindowManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWindowManager) GetInterfaceName_() string {
 	return "com.deepin.daemon.KWayland.WindowManager"
 }
 
 // method ActiveWindow
 
-func (v *windowManager) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindowManager) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActiveWindow", flags, ch)
 }
 
-func (*windowManager) StoreActiveWindow(call *dbus.Call) (argout0 uint32, err error) {
+func (*interfaceWindowManager) StoreActiveWindow(call *dbus.Call) (argout0 uint32, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *windowManager) ActiveWindow(flags dbus.Flags) (argout0 uint32, err error) {
+func (v *interfaceWindowManager) ActiveWindow(flags dbus.Flags) (uint32, error) {
 	return v.StoreActiveWindow(
 		<-v.GoActiveWindow(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Windows
 
-func (v *windowManager) GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindowManager) GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Windows", flags, ch)
 }
 
-func (*windowManager) StoreWindows(call *dbus.Call) (argout0 []dbus.Variant, err error) {
+func (*interfaceWindowManager) StoreWindows(call *dbus.Call) (argout0 []dbus.Variant, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *windowManager) Windows(flags dbus.Flags) (argout0 []dbus.Variant, err error) {
+func (v *interfaceWindowManager) Windows(flags dbus.Flags) ([]dbus.Variant, error) {
 	return v.StoreWindows(
 		<-v.GoWindows(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal WindowCreated
 
-func (v *windowManager) ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindowManager) ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -234,7 +266,7 @@ func (v *windowManager) ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.
 
 // signal WindowRemove
 
-func (v *windowManager) ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindowManager) ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -260,7 +292,7 @@ func (v *windowManager) ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.S
 
 // signal ActiveWindowChanged
 
-func (v *windowManager) ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindowManager) ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -280,579 +312,691 @@ func (v *windowManager) ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHa
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-type Window struct {
+type Window interface {
 	window // interface com.deepin.daemon.KWayland.PlasmaWindow
 	proxy.Object
 }
 
-func NewWindow(conn *dbus.Conn, path dbus.ObjectPath) (*Window, error) {
+type objectWindow struct {
+	interfaceWindow // interface com.deepin.daemon.KWayland.PlasmaWindow
+	proxy.ImplObject
+}
+
+func NewWindow(conn *dbus.Conn, path dbus.ObjectPath) (Window, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Window)
-	obj.Object.Init_(conn, "com.deepin.daemon.KWayland", path)
+	obj := new(objectWindow)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.KWayland", path)
 	return obj, nil
 }
 
-type window struct{}
-
-func (v *window) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type window interface {
+	GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	AppId(flags dbus.Flags) (string, error)
+	GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Geometry(flags dbus.Flags) (Rect, error)
+	GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Icon(flags dbus.Flags) (string, error)
+	GoInternalId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	InternalId(flags dbus.Flags) (uint32, error)
+	GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsActive(flags dbus.Flags) (bool, error)
+	GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsCloseable(flags dbus.Flags) (bool, error)
+	GoIsDemandingAttention(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsDemandingAttention(flags dbus.Flags) (bool, error)
+	GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsFullscreen(flags dbus.Flags) (bool, error)
+	GoIsFullscreenable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsFullscreenable(flags dbus.Flags) (bool, error)
+	GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsKeepAbove(flags dbus.Flags) (bool, error)
+	GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsMaximizeable(flags dbus.Flags) (bool, error)
+	GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsMaximized(flags dbus.Flags) (bool, error)
+	GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsMinimizeable(flags dbus.Flags) (bool, error)
+	GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsMinimized(flags dbus.Flags) (bool, error)
+	GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsMovable(flags dbus.Flags) (bool, error)
+	GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsOnAllDesktops(flags dbus.Flags) (bool, error)
+	GoIsResizable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsResizable(flags dbus.Flags) (bool, error)
+	GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsShadeable(flags dbus.Flags) (bool, error)
+	GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsShaded(flags dbus.Flags) (bool, error)
+	GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsValid(flags dbus.Flags) (bool, error)
+	GoIsVirtualDesktopChangeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	IsVirtualDesktopChangeable(flags dbus.Flags) (bool, error)
+	GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Pid(flags dbus.Flags) (uint32, error)
+	GoRequestActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestActivate(flags dbus.Flags) error
+	GoRequestClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestClose(flags dbus.Flags) error
+	GoRequestEnterNewVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestEnterNewVirtualDesktop(flags dbus.Flags) error
+	GoRequestEnterVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call
+	RequestEnterVirtualDesktop(flags dbus.Flags, argin0 string) error
+	GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call
+	RequestLeaveVirtualDesktop(flags dbus.Flags, argin0 string) error
+	GoRequestMove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestMove(flags dbus.Flags) error
+	GoRequestResize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestResize(flags dbus.Flags) error
+	GoRequestToggleKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestToggleKeepAbove(flags dbus.Flags) error
+	GoRequestToggleKeepBelow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestToggleKeepBelow(flags dbus.Flags) error
+	GoRequestToggleMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestToggleMaximized(flags dbus.Flags) error
+	GoRequestToggleMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestToggleMinimized(flags dbus.Flags) error
+	GoRequestToggleShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RequestToggleShaded(flags dbus.Flags) error
+	GoRequestVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 uint32) *dbus.Call
+	RequestVirtualDesktop(flags dbus.Flags, argin0 uint32) error
+	GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SkipSwitcher(flags dbus.Flags) (bool, error)
+	GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SkipTaskbar(flags dbus.Flags) (bool, error)
+	GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Title(flags dbus.Flags) (string, error)
+	GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	VirtualDesktop(flags dbus.Flags) (uint32, error)
+	ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandlerId, error)
 }
 
-func (*window) GetInterfaceName_() string {
+type interfaceWindow struct{}
+
+func (v *interfaceWindow) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWindow) GetInterfaceName_() string {
 	return "com.deepin.daemon.KWayland.PlasmaWindow"
 }
 
 // method AppId
 
-func (v *window) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AppId", flags, ch)
 }
 
-func (*window) StoreAppId(call *dbus.Call) (argout0 string, err error) {
+func (*interfaceWindow) StoreAppId(call *dbus.Call) (argout0 string, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) AppId(flags dbus.Flags) (argout0 string, err error) {
+func (v *interfaceWindow) AppId(flags dbus.Flags) (string, error) {
 	return v.StoreAppId(
 		<-v.GoAppId(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Geometry
 
-func (v *window) GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Geometry", flags, ch)
 }
 
-func (*window) StoreGeometry(call *dbus.Call) (argout0 Rect, err error) {
+func (*interfaceWindow) StoreGeometry(call *dbus.Call) (argout0 Rect, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) Geometry(flags dbus.Flags) (argout0 Rect, err error) {
+func (v *interfaceWindow) Geometry(flags dbus.Flags) (Rect, error) {
 	return v.StoreGeometry(
 		<-v.GoGeometry(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Icon
 
-func (v *window) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Icon", flags, ch)
 }
 
-func (*window) StoreIcon(call *dbus.Call) (argout0 string, err error) {
+func (*interfaceWindow) StoreIcon(call *dbus.Call) (argout0 string, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) Icon(flags dbus.Flags) (argout0 string, err error) {
+func (v *interfaceWindow) Icon(flags dbus.Flags) (string, error) {
 	return v.StoreIcon(
 		<-v.GoIcon(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method InternalId
 
-func (v *window) GoInternalId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoInternalId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".InternalId", flags, ch)
 }
 
-func (*window) StoreInternalId(call *dbus.Call) (argout0 uint32, err error) {
+func (*interfaceWindow) StoreInternalId(call *dbus.Call) (argout0 uint32, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) InternalId(flags dbus.Flags) (argout0 uint32, err error) {
+func (v *interfaceWindow) InternalId(flags dbus.Flags) (uint32, error) {
 	return v.StoreInternalId(
 		<-v.GoInternalId(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsActive
 
-func (v *window) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsActive", flags, ch)
 }
 
-func (*window) StoreIsActive(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsActive(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsActive(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsActive(flags dbus.Flags) (bool, error) {
 	return v.StoreIsActive(
 		<-v.GoIsActive(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsCloseable
 
-func (v *window) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsCloseable", flags, ch)
 }
 
-func (*window) StoreIsCloseable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsCloseable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsCloseable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsCloseable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsCloseable(
 		<-v.GoIsCloseable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsDemandingAttention
 
-func (v *window) GoIsDemandingAttention(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsDemandingAttention(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsDemandingAttention", flags, ch)
 }
 
-func (*window) StoreIsDemandingAttention(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsDemandingAttention(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsDemandingAttention(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsDemandingAttention(flags dbus.Flags) (bool, error) {
 	return v.StoreIsDemandingAttention(
 		<-v.GoIsDemandingAttention(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsFullscreen
 
-func (v *window) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsFullscreen", flags, ch)
 }
 
-func (*window) StoreIsFullscreen(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsFullscreen(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsFullscreen(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsFullscreen(flags dbus.Flags) (bool, error) {
 	return v.StoreIsFullscreen(
 		<-v.GoIsFullscreen(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsFullscreenable
 
-func (v *window) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsFullscreenable", flags, ch)
 }
 
-func (*window) StoreIsFullscreenable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsFullscreenable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsFullscreenable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsFullscreenable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsFullscreenable(
 		<-v.GoIsFullscreenable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsKeepAbove
 
-func (v *window) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsKeepAbove", flags, ch)
 }
 
-func (*window) StoreIsKeepAbove(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsKeepAbove(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsKeepAbove(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsKeepAbove(flags dbus.Flags) (bool, error) {
 	return v.StoreIsKeepAbove(
 		<-v.GoIsKeepAbove(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsMaximizeable
 
-func (v *window) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMaximizeable", flags, ch)
 }
 
-func (*window) StoreIsMaximizeable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsMaximizeable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsMaximizeable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsMaximizeable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsMaximizeable(
 		<-v.GoIsMaximizeable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsMaximized
 
-func (v *window) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMaximized", flags, ch)
 }
 
-func (*window) StoreIsMaximized(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsMaximized(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsMaximized(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsMaximized(flags dbus.Flags) (bool, error) {
 	return v.StoreIsMaximized(
 		<-v.GoIsMaximized(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsMinimizeable
 
-func (v *window) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMinimizeable", flags, ch)
 }
 
-func (*window) StoreIsMinimizeable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsMinimizeable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsMinimizeable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsMinimizeable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsMinimizeable(
 		<-v.GoIsMinimizeable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsMinimized
 
-func (v *window) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMinimized", flags, ch)
 }
 
-func (*window) StoreIsMinimized(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsMinimized(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsMinimized(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsMinimized(flags dbus.Flags) (bool, error) {
 	return v.StoreIsMinimized(
 		<-v.GoIsMinimized(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsMovable
 
-func (v *window) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsMovable", flags, ch)
 }
 
-func (*window) StoreIsMovable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsMovable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsMovable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsMovable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsMovable(
 		<-v.GoIsMovable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsOnAllDesktops
 
-func (v *window) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsOnAllDesktops", flags, ch)
 }
 
-func (*window) StoreIsOnAllDesktops(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsOnAllDesktops(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsOnAllDesktops(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsOnAllDesktops(flags dbus.Flags) (bool, error) {
 	return v.StoreIsOnAllDesktops(
 		<-v.GoIsOnAllDesktops(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsResizable
 
-func (v *window) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsResizable", flags, ch)
 }
 
-func (*window) StoreIsResizable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsResizable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsResizable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsResizable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsResizable(
 		<-v.GoIsResizable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsShadeable
 
-func (v *window) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsShadeable", flags, ch)
 }
 
-func (*window) StoreIsShadeable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsShadeable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsShadeable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsShadeable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsShadeable(
 		<-v.GoIsShadeable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsShaded
 
-func (v *window) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsShaded", flags, ch)
 }
 
-func (*window) StoreIsShaded(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsShaded(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsShaded(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsShaded(flags dbus.Flags) (bool, error) {
 	return v.StoreIsShaded(
 		<-v.GoIsShaded(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsValid
 
-func (v *window) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsValid", flags, ch)
 }
 
-func (*window) StoreIsValid(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsValid(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsValid(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsValid(flags dbus.Flags) (bool, error) {
 	return v.StoreIsValid(
 		<-v.GoIsValid(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method IsVirtualDesktopChangeable
 
-func (v *window) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsVirtualDesktopChangeable", flags, ch)
 }
 
-func (*window) StoreIsVirtualDesktopChangeable(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreIsVirtualDesktopChangeable(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) IsVirtualDesktopChangeable(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) IsVirtualDesktopChangeable(flags dbus.Flags) (bool, error) {
 	return v.StoreIsVirtualDesktopChangeable(
 		<-v.GoIsVirtualDesktopChangeable(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Pid
 
-func (v *window) GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pid", flags, ch)
 }
 
-func (*window) StorePid(call *dbus.Call) (argout0 uint32, err error) {
+func (*interfaceWindow) StorePid(call *dbus.Call) (argout0 uint32, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) Pid(flags dbus.Flags) (argout0 uint32, err error) {
+func (v *interfaceWindow) Pid(flags dbus.Flags) (uint32, error) {
 	return v.StorePid(
 		<-v.GoPid(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method RequestActivate
 
-func (v *window) GoRequestActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestActivate", flags, ch)
 }
 
-func (v *window) RequestActivate(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestActivate(flags dbus.Flags) error {
 	return (<-v.GoRequestActivate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestClose
 
-func (v *window) GoRequestClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestClose", flags, ch)
 }
 
-func (v *window) RequestClose(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestClose(flags dbus.Flags) error {
 	return (<-v.GoRequestClose(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestEnterNewVirtualDesktop
 
-func (v *window) GoRequestEnterNewVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestEnterNewVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestEnterNewVirtualDesktop", flags, ch)
 }
 
-func (v *window) RequestEnterNewVirtualDesktop(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestEnterNewVirtualDesktop(flags dbus.Flags) error {
 	return (<-v.GoRequestEnterNewVirtualDesktop(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestEnterVirtualDesktop
 
-func (v *window) GoRequestEnterVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
+func (v *interfaceWindow) GoRequestEnterVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestEnterVirtualDesktop", flags, ch, argin0)
 }
 
-func (v *window) RequestEnterVirtualDesktop(flags dbus.Flags, argin0 string) error {
+func (v *interfaceWindow) RequestEnterVirtualDesktop(flags dbus.Flags, argin0 string) error {
 	return (<-v.GoRequestEnterVirtualDesktop(flags, make(chan *dbus.Call, 1), argin0).Done).Err
 }
 
 // method RequestLeaveVirtualDesktop
 
-func (v *window) GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
+func (v *interfaceWindow) GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestLeaveVirtualDesktop", flags, ch, argin0)
 }
 
-func (v *window) RequestLeaveVirtualDesktop(flags dbus.Flags, argin0 string) error {
+func (v *interfaceWindow) RequestLeaveVirtualDesktop(flags dbus.Flags, argin0 string) error {
 	return (<-v.GoRequestLeaveVirtualDesktop(flags, make(chan *dbus.Call, 1), argin0).Done).Err
 }
 
 // method RequestMove
 
-func (v *window) GoRequestMove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestMove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestMove", flags, ch)
 }
 
-func (v *window) RequestMove(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestMove(flags dbus.Flags) error {
 	return (<-v.GoRequestMove(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestResize
 
-func (v *window) GoRequestResize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestResize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestResize", flags, ch)
 }
 
-func (v *window) RequestResize(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestResize(flags dbus.Flags) error {
 	return (<-v.GoRequestResize(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestToggleKeepAbove
 
-func (v *window) GoRequestToggleKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestToggleKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestToggleKeepAbove", flags, ch)
 }
 
-func (v *window) RequestToggleKeepAbove(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestToggleKeepAbove(flags dbus.Flags) error {
 	return (<-v.GoRequestToggleKeepAbove(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestToggleKeepBelow
 
-func (v *window) GoRequestToggleKeepBelow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestToggleKeepBelow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestToggleKeepBelow", flags, ch)
 }
 
-func (v *window) RequestToggleKeepBelow(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestToggleKeepBelow(flags dbus.Flags) error {
 	return (<-v.GoRequestToggleKeepBelow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestToggleMaximized
 
-func (v *window) GoRequestToggleMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestToggleMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestToggleMaximized", flags, ch)
 }
 
-func (v *window) RequestToggleMaximized(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestToggleMaximized(flags dbus.Flags) error {
 	return (<-v.GoRequestToggleMaximized(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestToggleMinimized
 
-func (v *window) GoRequestToggleMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestToggleMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestToggleMinimized", flags, ch)
 }
 
-func (v *window) RequestToggleMinimized(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestToggleMinimized(flags dbus.Flags) error {
 	return (<-v.GoRequestToggleMinimized(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestToggleShaded
 
-func (v *window) GoRequestToggleShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoRequestToggleShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestToggleShaded", flags, ch)
 }
 
-func (v *window) RequestToggleShaded(flags dbus.Flags) error {
+func (v *interfaceWindow) RequestToggleShaded(flags dbus.Flags) error {
 	return (<-v.GoRequestToggleShaded(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RequestVirtualDesktop
 
-func (v *window) GoRequestVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 uint32) *dbus.Call {
+func (v *interfaceWindow) GoRequestVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestVirtualDesktop", flags, ch, argin0)
 }
 
-func (v *window) RequestVirtualDesktop(flags dbus.Flags, argin0 uint32) error {
+func (v *interfaceWindow) RequestVirtualDesktop(flags dbus.Flags, argin0 uint32) error {
 	return (<-v.GoRequestVirtualDesktop(flags, make(chan *dbus.Call, 1), argin0).Done).Err
 }
 
 // method SkipSwitcher
 
-func (v *window) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SkipSwitcher", flags, ch)
 }
 
-func (*window) StoreSkipSwitcher(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreSkipSwitcher(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) SkipSwitcher(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) SkipSwitcher(flags dbus.Flags) (bool, error) {
 	return v.StoreSkipSwitcher(
 		<-v.GoSkipSwitcher(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SkipTaskbar
 
-func (v *window) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SkipTaskbar", flags, ch)
 }
 
-func (*window) StoreSkipTaskbar(call *dbus.Call) (argout0 bool, err error) {
+func (*interfaceWindow) StoreSkipTaskbar(call *dbus.Call) (argout0 bool, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) SkipTaskbar(flags dbus.Flags) (argout0 bool, err error) {
+func (v *interfaceWindow) SkipTaskbar(flags dbus.Flags) (bool, error) {
 	return v.StoreSkipTaskbar(
 		<-v.GoSkipTaskbar(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Title
 
-func (v *window) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Title", flags, ch)
 }
 
-func (*window) StoreTitle(call *dbus.Call) (argout0 string, err error) {
+func (*interfaceWindow) StoreTitle(call *dbus.Call) (argout0 string, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) Title(flags dbus.Flags) (argout0 string, err error) {
+func (v *interfaceWindow) Title(flags dbus.Flags) (string, error) {
 	return v.StoreTitle(
 		<-v.GoTitle(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method VirtualDesktop
 
-func (v *window) GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWindow) GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".VirtualDesktop", flags, ch)
 }
 
-func (*window) StoreVirtualDesktop(call *dbus.Call) (argout0 uint32, err error) {
+func (*interfaceWindow) StoreVirtualDesktop(call *dbus.Call) (argout0 uint32, err error) {
 	err = call.Store(&argout0)
 	return
 }
 
-func (v *window) VirtualDesktop(flags dbus.Flags) (argout0 uint32, err error) {
+func (v *interfaceWindow) VirtualDesktop(flags dbus.Flags) (uint32, error) {
 	return v.StoreVirtualDesktop(
 		<-v.GoVirtualDesktop(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal ActiveChanged
 
-func (v *window) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -874,7 +1018,7 @@ func (v *window) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, erro
 
 // signal AppIdChanged
 
-func (v *window) ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -896,7 +1040,7 @@ func (v *window) ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error
 
 // signal CloseableChanged
 
-func (v *window) ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -918,7 +1062,7 @@ func (v *window) ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal DemandsAttentionChanged
 
-func (v *window) ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -940,7 +1084,7 @@ func (v *window) ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandl
 
 // signal FullscreenableChanged
 
-func (v *window) ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -962,7 +1106,7 @@ func (v *window) ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandler
 
 // signal FullscreenChanged
 
-func (v *window) ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -984,7 +1128,7 @@ func (v *window) ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, 
 
 // signal GeometryChanged
 
-func (v *window) ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1006,7 +1150,7 @@ func (v *window) ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, er
 
 // signal IconChanged
 
-func (v *window) ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1028,7 +1172,7 @@ func (v *window) ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error)
 
 // signal KeepAboveChanged
 
-func (v *window) ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1050,7 +1194,7 @@ func (v *window) ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal KeepBelowChanged
 
-func (v *window) ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1072,7 +1216,7 @@ func (v *window) ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal MaximizeableChanged
 
-func (v *window) ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1094,7 +1238,7 @@ func (v *window) ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId
 
 // signal MaximizedChanged
 
-func (v *window) ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1116,7 +1260,7 @@ func (v *window) ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal MinimizeableChanged
 
-func (v *window) ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1138,7 +1282,7 @@ func (v *window) ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId
 
 // signal MinimizedChanged
 
-func (v *window) ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1160,7 +1304,7 @@ func (v *window) ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal MovableChanged
 
-func (v *window) ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1182,7 +1326,7 @@ func (v *window) ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, err
 
 // signal OnAllDesktopsChanged
 
-func (v *window) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1204,7 +1348,7 @@ func (v *window) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerI
 
 // signal ParentWindowChanged
 
-func (v *window) ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1226,7 +1370,7 @@ func (v *window) ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId
 
 // signal ResizableChanged
 
-func (v *window) ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1248,7 +1392,7 @@ func (v *window) ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal ShadeableChanged
 
-func (v *window) ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1270,7 +1414,7 @@ func (v *window) ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, e
 
 // signal ShadedChanged
 
-func (v *window) ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1292,7 +1436,7 @@ func (v *window) ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, erro
 
 // signal SkipSwitcherChanged
 
-func (v *window) ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1314,7 +1458,7 @@ func (v *window) ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId
 
 // signal SkipTaskbarChanged
 
-func (v *window) ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1336,7 +1480,7 @@ func (v *window) ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId,
 
 // signal TitleChanged
 
-func (v *window) ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1358,7 +1502,7 @@ func (v *window) ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error
 
 // signal Unmapped
 
-func (v *window) ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1380,7 +1524,7 @@ func (v *window) ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error) {
 
 // signal VirtualDesktopChangeableChanged
 
-func (v *window) ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1402,7 +1546,7 @@ func (v *window) ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.Sig
 
 // signal VirtualDesktopChanged
 
-func (v *window) ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWindow) ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}

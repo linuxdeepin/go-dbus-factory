@@ -13,222 +13,310 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Manager struct {
-	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
-	manager                      // interface org.freedesktop.ModemManager1
+type Manager interface {
+	ObjectManager() object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
+	ModemManager1() manager                      // interface org.freedesktop.ModemManager1
 	proxy.Object
 }
 
-func NewManager(conn *dbus.Conn) *Manager {
-	obj := new(Manager)
-	obj.Object.Init_(conn, "org.freedesktop.ModemManager1", "/org/freedesktop/ModemManager1")
+type objectManager struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	interfaceManager                      // interface org.freedesktop.ModemManager1
+	proxy.ImplObject
+}
+
+func NewManager(conn *dbus.Conn) Manager {
+	obj := new(objectManager)
+	obj.ImplObject.Init_(conn, "org.freedesktop.ModemManager1", "/org/freedesktop/ModemManager1")
 	return obj
 }
 
-func (obj *Manager) ModemManager1() *manager {
-	return &obj.manager
+func (obj *objectManager) ObjectManager() object_manager.ObjectManager {
+	return &obj.InterfaceObjectManager
 }
 
-type manager struct{}
-
-func (v *manager) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+func (obj *objectManager) ModemManager1() manager {
+	return &obj.interfaceManager
 }
 
-func (*manager) GetInterfaceName_() string {
+type manager interface {
+	GoScanDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ScanDevices(flags dbus.Flags) error
+	GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string) *dbus.Call
+	SetLogging(flags dbus.Flags, level string) error
+}
+
+type interfaceManager struct{}
+
+func (v *interfaceManager) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceManager) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1"
 }
 
 // method ScanDevices
 
-func (v *manager) GoScanDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceManager) GoScanDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ScanDevices", flags, ch)
 }
 
-func (v *manager) ScanDevices(flags dbus.Flags) error {
+func (v *interfaceManager) ScanDevices(flags dbus.Flags) error {
 	return (<-v.GoScanDevices(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SetLogging
 
-func (v *manager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string) *dbus.Call {
+func (v *interfaceManager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLogging", flags, ch, level)
 }
 
-func (v *manager) SetLogging(flags dbus.Flags, level string) error {
+func (v *interfaceManager) SetLogging(flags dbus.Flags, level string) error {
 	return (<-v.GoSetLogging(flags, make(chan *dbus.Call, 1), level).Done).Err
 }
 
-type Modem struct {
-	modem          // interface org.freedesktop.ModemManager1.Modem
-	modemFirmware  // interface org.freedesktop.ModemManager1.Modem.Firmware
-	modemLocation  // interface org.freedesktop.ModemManager1.Modem.Location
-	modemMessaging // interface org.freedesktop.ModemManager1.Modem.Messaging
-	modem3gppUssd  // interface org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd
-	modem3gpp      // interface org.freedesktop.ModemManager1.Modem.Modem3gpp
-	modemCdma      // interface org.freedesktop.ModemManager1.Modem.ModemCdma
-	modemOma       // interface org.freedesktop.ModemManager1.Modem.Oma
-	modemSignal    // interface org.freedesktop.ModemManager1.Modem.Signal
-	modemSimple    // interface org.freedesktop.ModemManager1.Modem.Simple
-	modemTime      // interface org.freedesktop.ModemManager1.Modem.Time
-	modemVoice     // interface org.freedesktop.ModemManager1.Modem.Voice
+type Modem interface {
+	Modem() modem                 // interface org.freedesktop.ModemManager1.Modem
+	Firmware() modemFirmware      // interface org.freedesktop.ModemManager1.Modem.Firmware
+	Location() modemLocation      // interface org.freedesktop.ModemManager1.Modem.Location
+	Messaging() modemMessaging    // interface org.freedesktop.ModemManager1.Modem.Messaging
+	Modem3gppUssd() modem3gppUssd // interface org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd
+	Modem3gpp() modem3gpp         // interface org.freedesktop.ModemManager1.Modem.Modem3gpp
+	Cdma() modemCdma              // interface org.freedesktop.ModemManager1.Modem.ModemCdma
+	Oma() modemOma                // interface org.freedesktop.ModemManager1.Modem.Oma
+	Signal() modemSignal          // interface org.freedesktop.ModemManager1.Modem.Signal
+	Simple() modemSimple          // interface org.freedesktop.ModemManager1.Modem.Simple
+	Time() modemTime              // interface org.freedesktop.ModemManager1.Modem.Time
+	Voice() modemVoice            // interface org.freedesktop.ModemManager1.Modem.Voice
 	proxy.Object
 }
 
-func NewModem(conn *dbus.Conn, path dbus.ObjectPath) (*Modem, error) {
+type objectModem struct {
+	interfaceModem          // interface org.freedesktop.ModemManager1.Modem
+	interfaceModemFirmware  // interface org.freedesktop.ModemManager1.Modem.Firmware
+	interfaceModemLocation  // interface org.freedesktop.ModemManager1.Modem.Location
+	interfaceModemMessaging // interface org.freedesktop.ModemManager1.Modem.Messaging
+	interfaceModem3gppUssd  // interface org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd
+	interfaceModem3gpp      // interface org.freedesktop.ModemManager1.Modem.Modem3gpp
+	interfaceModemCdma      // interface org.freedesktop.ModemManager1.Modem.ModemCdma
+	interfaceModemOma       // interface org.freedesktop.ModemManager1.Modem.Oma
+	interfaceModemSignal    // interface org.freedesktop.ModemManager1.Modem.Signal
+	interfaceModemSimple    // interface org.freedesktop.ModemManager1.Modem.Simple
+	interfaceModemTime      // interface org.freedesktop.ModemManager1.Modem.Time
+	interfaceModemVoice     // interface org.freedesktop.ModemManager1.Modem.Voice
+	proxy.ImplObject
+}
+
+func NewModem(conn *dbus.Conn, path dbus.ObjectPath) (Modem, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Modem)
-	obj.Object.Init_(conn, "org.freedesktop.ModemManager1", path)
+	obj := new(objectModem)
+	obj.ImplObject.Init_(conn, "org.freedesktop.ModemManager1", path)
 	return obj, nil
 }
 
-func (obj *Modem) Modem() *modem {
-	return &obj.modem
+func (obj *objectModem) Modem() modem {
+	return &obj.interfaceModem
 }
 
-type modem struct{}
-
-func (v *modem) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modem interface {
+	GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call
+	Enable(flags dbus.Flags, enable bool) error
+	GoListBearers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListBearers(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	CreateBearer(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call
+	DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPath) error
+	GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reset(flags dbus.Flags) error
+	GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call, code string) *dbus.Call
+	FactoryReset(flags dbus.Flags, code string) error
+	GoSetPowerState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call
+	SetPowerState(flags dbus.Flags, state uint32) error
+	GoSetCurrentCapabilities(flags dbus.Flags, ch chan *dbus.Call, capabilities uint32) *dbus.Call
+	SetCurrentCapabilities(flags dbus.Flags, capabilities uint32) error
+	GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.Call, modes ModemModes) *dbus.Call
+	SetCurrentModes(flags dbus.Flags, modes ModemModes) error
+	GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.Call, bands []uint32) *dbus.Call
+	SetCurrentBands(flags dbus.Flags, bands []uint32) error
+	GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd string, timeout uint32) *dbus.Call
+	Command(flags dbus.Flags, cmd string, timeout uint32) (string, error)
+	ConnectStateChanged(cb func(old int32, new int32, reason uint32)) (dbusutil.SignalHandlerId, error)
+	Sim() proxy.PropObjectPath
+	Bearers() proxy.PropObjectPathArray
+	SupportedCapabilities() proxy.PropUint32Array
+	CurrentCapabilities() proxy.PropUint32
+	MaxBearers() proxy.PropUint32
+	MaxActiveBearers() proxy.PropUint32
+	Manufacturer() proxy.PropString
+	Model() proxy.PropString
+	Revision() proxy.PropString
+	DeviceIdentifier() proxy.PropString
+	Device() proxy.PropString
+	Drivers() proxy.PropStringArray
+	Plugin() proxy.PropString
+	PrimaryPort() proxy.PropString
+	Ports() PropModemPorts
+	EquipmentIdentifier() proxy.PropString
+	UnlockRequired() proxy.PropUint32
+	UnlockRetries() PropModemUnlockRetries
+	State() proxy.PropInt32
+	StateFailedReason() proxy.PropUint32
+	AccessTechnologies() proxy.PropUint32
+	SignalQuality() PropModemSignalQuality
+	OwnNumbers() proxy.PropStringArray
+	PowerState() proxy.PropUint32
+	SupportedModes() PropModemSupportedModes
+	CurrentModes() PropModemCurrentModes
+	SupportedBands() proxy.PropUint32Array
+	CurrentBands() proxy.PropUint32Array
+	SupportedIpFamilies() proxy.PropUint32
 }
 
-func (*modem) GetInterfaceName_() string {
+type interfaceModem struct{}
+
+func (v *interfaceModem) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModem) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem"
 }
 
 // method Enable
 
-func (v *modem) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *interfaceModem) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enable", flags, ch, enable)
 }
 
-func (v *modem) Enable(flags dbus.Flags, enable bool) error {
+func (v *interfaceModem) Enable(flags dbus.Flags, enable bool) error {
 	return (<-v.GoEnable(flags, make(chan *dbus.Call, 1), enable).Done).Err
 }
 
 // method ListBearers
 
-func (v *modem) GoListBearers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModem) GoListBearers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListBearers", flags, ch)
 }
 
-func (*modem) StoreListBearers(call *dbus.Call) (bearers []dbus.ObjectPath, err error) {
+func (*interfaceModem) StoreListBearers(call *dbus.Call) (bearers []dbus.ObjectPath, err error) {
 	err = call.Store(&bearers)
 	return
 }
 
-func (v *modem) ListBearers(flags dbus.Flags) (bearers []dbus.ObjectPath, err error) {
+func (v *interfaceModem) ListBearers(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreListBearers(
 		<-v.GoListBearers(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method CreateBearer
 
-func (v *modem) GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceModem) GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateBearer", flags, ch, properties)
 }
 
-func (*modem) StoreCreateBearer(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceModem) StoreCreateBearer(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *modem) CreateBearer(flags dbus.Flags, properties map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceModem) CreateBearer(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreateBearer(
 		<-v.GoCreateBearer(flags, make(chan *dbus.Call, 1), properties).Done)
 }
 
 // method DeleteBearer
 
-func (v *modem) GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
+func (v *interfaceModem) GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteBearer", flags, ch, bearer)
 }
 
-func (v *modem) DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPath) error {
+func (v *interfaceModem) DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPath) error {
 	return (<-v.GoDeleteBearer(flags, make(chan *dbus.Call, 1), bearer).Done).Err
 }
 
 // method Reset
 
-func (v *modem) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModem) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
-func (v *modem) Reset(flags dbus.Flags) error {
+func (v *interfaceModem) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method FactoryReset
 
-func (v *modem) GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call, code string) *dbus.Call {
+func (v *interfaceModem) GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call, code string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FactoryReset", flags, ch, code)
 }
 
-func (v *modem) FactoryReset(flags dbus.Flags, code string) error {
+func (v *interfaceModem) FactoryReset(flags dbus.Flags, code string) error {
 	return (<-v.GoFactoryReset(flags, make(chan *dbus.Call, 1), code).Done).Err
 }
 
 // method SetPowerState
 
-func (v *modem) GoSetPowerState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
+func (v *interfaceModem) GoSetPowerState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPowerState", flags, ch, state)
 }
 
-func (v *modem) SetPowerState(flags dbus.Flags, state uint32) error {
+func (v *interfaceModem) SetPowerState(flags dbus.Flags, state uint32) error {
 	return (<-v.GoSetPowerState(flags, make(chan *dbus.Call, 1), state).Done).Err
 }
 
 // method SetCurrentCapabilities
 
-func (v *modem) GoSetCurrentCapabilities(flags dbus.Flags, ch chan *dbus.Call, capabilities uint32) *dbus.Call {
+func (v *interfaceModem) GoSetCurrentCapabilities(flags dbus.Flags, ch chan *dbus.Call, capabilities uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentCapabilities", flags, ch, capabilities)
 }
 
-func (v *modem) SetCurrentCapabilities(flags dbus.Flags, capabilities uint32) error {
+func (v *interfaceModem) SetCurrentCapabilities(flags dbus.Flags, capabilities uint32) error {
 	return (<-v.GoSetCurrentCapabilities(flags, make(chan *dbus.Call, 1), capabilities).Done).Err
 }
 
 // method SetCurrentModes
 
-func (v *modem) GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.Call, modes ModemModes) *dbus.Call {
+func (v *interfaceModem) GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.Call, modes ModemModes) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentModes", flags, ch, modes)
 }
 
-func (v *modem) SetCurrentModes(flags dbus.Flags, modes ModemModes) error {
+func (v *interfaceModem) SetCurrentModes(flags dbus.Flags, modes ModemModes) error {
 	return (<-v.GoSetCurrentModes(flags, make(chan *dbus.Call, 1), modes).Done).Err
 }
 
 // method SetCurrentBands
 
-func (v *modem) GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.Call, bands []uint32) *dbus.Call {
+func (v *interfaceModem) GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.Call, bands []uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetCurrentBands", flags, ch, bands)
 }
 
-func (v *modem) SetCurrentBands(flags dbus.Flags, bands []uint32) error {
+func (v *interfaceModem) SetCurrentBands(flags dbus.Flags, bands []uint32) error {
 	return (<-v.GoSetCurrentBands(flags, make(chan *dbus.Call, 1), bands).Done).Err
 }
 
 // method Command
 
-func (v *modem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd string, timeout uint32) *dbus.Call {
+func (v *interfaceModem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd string, timeout uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Command", flags, ch, cmd, timeout)
 }
 
-func (*modem) StoreCommand(call *dbus.Call) (response string, err error) {
+func (*interfaceModem) StoreCommand(call *dbus.Call) (response string, err error) {
 	err = call.Store(&response)
 	return
 }
 
-func (v *modem) Command(flags dbus.Flags, cmd string, timeout uint32) (response string, err error) {
+func (v *interfaceModem) Command(flags dbus.Flags, cmd string, timeout uint32) (string, error) {
 	return v.StoreCommand(
 		<-v.GoCommand(flags, make(chan *dbus.Call, 1), cmd, timeout).Done)
 }
 
 // signal StateChanged
 
-func (v *modem) ConnectStateChanged(cb func(old int32, new int32, reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModem) ConnectStateChanged(cb func(old int32, new int32, reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -256,8 +344,8 @@ func (v *modem) ConnectStateChanged(cb func(old int32, new int32, reason uint32)
 
 // property Sim o
 
-func (v *modem) Sim() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceModem) Sim() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Sim",
 	}
@@ -265,8 +353,8 @@ func (v *modem) Sim() proxy.PropObjectPath {
 
 // property Bearers ao
 
-func (v *modem) Bearers() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceModem) Bearers() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Bearers",
 	}
@@ -274,8 +362,8 @@ func (v *modem) Bearers() proxy.PropObjectPathArray {
 
 // property SupportedCapabilities au
 
-func (v *modem) SupportedCapabilities() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceModem) SupportedCapabilities() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "SupportedCapabilities",
 	}
@@ -283,8 +371,8 @@ func (v *modem) SupportedCapabilities() proxy.PropUint32Array {
 
 // property CurrentCapabilities u
 
-func (v *modem) CurrentCapabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) CurrentCapabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "CurrentCapabilities",
 	}
@@ -292,8 +380,8 @@ func (v *modem) CurrentCapabilities() proxy.PropUint32 {
 
 // property MaxBearers u
 
-func (v *modem) MaxBearers() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) MaxBearers() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MaxBearers",
 	}
@@ -301,8 +389,8 @@ func (v *modem) MaxBearers() proxy.PropUint32 {
 
 // property MaxActiveBearers u
 
-func (v *modem) MaxActiveBearers() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) MaxActiveBearers() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MaxActiveBearers",
 	}
@@ -310,8 +398,8 @@ func (v *modem) MaxActiveBearers() proxy.PropUint32 {
 
 // property Manufacturer s
 
-func (v *modem) Manufacturer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) Manufacturer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Manufacturer",
 	}
@@ -319,8 +407,8 @@ func (v *modem) Manufacturer() proxy.PropString {
 
 // property Model s
 
-func (v *modem) Model() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) Model() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Model",
 	}
@@ -328,8 +416,8 @@ func (v *modem) Model() proxy.PropString {
 
 // property Revision s
 
-func (v *modem) Revision() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) Revision() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Revision",
 	}
@@ -337,8 +425,8 @@ func (v *modem) Revision() proxy.PropString {
 
 // property DeviceIdentifier s
 
-func (v *modem) DeviceIdentifier() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) DeviceIdentifier() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DeviceIdentifier",
 	}
@@ -346,8 +434,8 @@ func (v *modem) DeviceIdentifier() proxy.PropString {
 
 // property Device s
 
-func (v *modem) Device() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) Device() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Device",
 	}
@@ -355,8 +443,8 @@ func (v *modem) Device() proxy.PropString {
 
 // property Drivers as
 
-func (v *modem) Drivers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceModem) Drivers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Drivers",
 	}
@@ -364,8 +452,8 @@ func (v *modem) Drivers() proxy.PropStringArray {
 
 // property Plugin s
 
-func (v *modem) Plugin() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) Plugin() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Plugin",
 	}
@@ -373,32 +461,35 @@ func (v *modem) Plugin() proxy.PropString {
 
 // property PrimaryPort s
 
-func (v *modem) PrimaryPort() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) PrimaryPort() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PrimaryPort",
 	}
 }
 
-// property Ports a(su)
-
-func (v *modem) Ports() PropModemPorts {
-	return PropModemPorts{
-		Impl: v,
-	}
+type PropModemPorts interface {
+	Get(flags dbus.Flags) (value []ModemPort, err error)
+	Set(flags dbus.Flags, value []ModemPort) error
+	ConnectChanged(cb func(hasValue bool, value []ModemPort)) error
 }
 
-type PropModemPorts struct {
+type implPropModemPorts struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemPorts) Get(flags dbus.Flags) (value []ModemPort, err error) {
+func (p implPropModemPorts) Get(flags dbus.Flags) (value []ModemPort, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Ports", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemPorts) ConnectChanged(cb func(hasValue bool, value []ModemPort)) error {
+func (p implPropModemPorts) Set(flags dbus.Flags, value []ModemPort) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemPorts) ConnectChanged(cb func(hasValue bool, value []ModemPort)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -415,13 +506,22 @@ func (p PropModemPorts) ConnectChanged(cb func(hasValue bool, value []ModemPort)
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Ports", cb0)
+		p.Name, cb0)
+}
+
+// property Ports a(su)
+
+func (v *interfaceModem) Ports() PropModemPorts {
+	return &implPropModemPorts{
+		Impl: v,
+		Name: "Ports",
+	}
 }
 
 // property EquipmentIdentifier s
 
-func (v *modem) EquipmentIdentifier() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem) EquipmentIdentifier() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "EquipmentIdentifier",
 	}
@@ -429,32 +529,35 @@ func (v *modem) EquipmentIdentifier() proxy.PropString {
 
 // property UnlockRequired u
 
-func (v *modem) UnlockRequired() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) UnlockRequired() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "UnlockRequired",
 	}
 }
 
-// property UnlockRetries a{uu}
-
-func (v *modem) UnlockRetries() PropModemUnlockRetries {
-	return PropModemUnlockRetries{
-		Impl: v,
-	}
+type PropModemUnlockRetries interface {
+	Get(flags dbus.Flags) (value map[uint32]uint32, err error)
+	Set(flags dbus.Flags, value map[uint32]uint32) error
+	ConnectChanged(cb func(hasValue bool, value map[uint32]uint32)) error
 }
 
-type PropModemUnlockRetries struct {
+type implPropModemUnlockRetries struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemUnlockRetries) Get(flags dbus.Flags) (value map[uint32]uint32, err error) {
+func (p implPropModemUnlockRetries) Get(flags dbus.Flags) (value map[uint32]uint32, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"UnlockRetries", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemUnlockRetries) ConnectChanged(cb func(hasValue bool, value map[uint32]uint32)) error {
+func (p implPropModemUnlockRetries) Set(flags dbus.Flags, value map[uint32]uint32) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemUnlockRetries) ConnectChanged(cb func(hasValue bool, value map[uint32]uint32)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -471,13 +574,22 @@ func (p PropModemUnlockRetries) ConnectChanged(cb func(hasValue bool, value map[
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"UnlockRetries", cb0)
+		p.Name, cb0)
+}
+
+// property UnlockRetries a{uu}
+
+func (v *interfaceModem) UnlockRetries() PropModemUnlockRetries {
+	return &implPropModemUnlockRetries{
+		Impl: v,
+		Name: "UnlockRetries",
+	}
 }
 
 // property State i
 
-func (v *modem) State() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceModem) State() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "State",
 	}
@@ -485,8 +597,8 @@ func (v *modem) State() proxy.PropInt32 {
 
 // property StateFailedReason u
 
-func (v *modem) StateFailedReason() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) StateFailedReason() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "StateFailedReason",
 	}
@@ -494,32 +606,35 @@ func (v *modem) StateFailedReason() proxy.PropUint32 {
 
 // property AccessTechnologies u
 
-func (v *modem) AccessTechnologies() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) AccessTechnologies() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "AccessTechnologies",
 	}
 }
 
-// property SignalQuality (ub)
-
-func (v *modem) SignalQuality() PropModemSignalQuality {
-	return PropModemSignalQuality{
-		Impl: v,
-	}
+type PropModemSignalQuality interface {
+	Get(flags dbus.Flags) (value ModemSignalQuality, err error)
+	Set(flags dbus.Flags, value ModemSignalQuality) error
+	ConnectChanged(cb func(hasValue bool, value ModemSignalQuality)) error
 }
 
-type PropModemSignalQuality struct {
+type implPropModemSignalQuality struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemSignalQuality) Get(flags dbus.Flags) (value ModemSignalQuality, err error) {
+func (p implPropModemSignalQuality) Get(flags dbus.Flags) (value ModemSignalQuality, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"SignalQuality", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemSignalQuality) ConnectChanged(cb func(hasValue bool, value ModemSignalQuality)) error {
+func (p implPropModemSignalQuality) Set(flags dbus.Flags, value ModemSignalQuality) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemSignalQuality) ConnectChanged(cb func(hasValue bool, value ModemSignalQuality)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -536,13 +651,22 @@ func (p PropModemSignalQuality) ConnectChanged(cb func(hasValue bool, value Mode
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"SignalQuality", cb0)
+		p.Name, cb0)
+}
+
+// property SignalQuality (ub)
+
+func (v *interfaceModem) SignalQuality() PropModemSignalQuality {
+	return &implPropModemSignalQuality{
+		Impl: v,
+		Name: "SignalQuality",
+	}
 }
 
 // property OwnNumbers as
 
-func (v *modem) OwnNumbers() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceModem) OwnNumbers() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "OwnNumbers",
 	}
@@ -550,32 +674,35 @@ func (v *modem) OwnNumbers() proxy.PropStringArray {
 
 // property PowerState u
 
-func (v *modem) PowerState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) PowerState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "PowerState",
 	}
 }
 
-// property SupportedModes a(uu)
-
-func (v *modem) SupportedModes() PropModemSupportedModes {
-	return PropModemSupportedModes{
-		Impl: v,
-	}
+type PropModemSupportedModes interface {
+	Get(flags dbus.Flags) (value []ModemModes, err error)
+	Set(flags dbus.Flags, value []ModemModes) error
+	ConnectChanged(cb func(hasValue bool, value []ModemModes)) error
 }
 
-type PropModemSupportedModes struct {
+type implPropModemSupportedModes struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemSupportedModes) Get(flags dbus.Flags) (value []ModemModes, err error) {
+func (p implPropModemSupportedModes) Get(flags dbus.Flags) (value []ModemModes, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"SupportedModes", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemSupportedModes) ConnectChanged(cb func(hasValue bool, value []ModemModes)) error {
+func (p implPropModemSupportedModes) Set(flags dbus.Flags, value []ModemModes) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemSupportedModes) ConnectChanged(cb func(hasValue bool, value []ModemModes)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -592,28 +719,40 @@ func (p PropModemSupportedModes) ConnectChanged(cb func(hasValue bool, value []M
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"SupportedModes", cb0)
+		p.Name, cb0)
 }
 
-// property CurrentModes (uu)
+// property SupportedModes a(uu)
 
-func (v *modem) CurrentModes() PropModemCurrentModes {
-	return PropModemCurrentModes{
+func (v *interfaceModem) SupportedModes() PropModemSupportedModes {
+	return &implPropModemSupportedModes{
 		Impl: v,
+		Name: "SupportedModes",
 	}
 }
 
-type PropModemCurrentModes struct {
-	Impl proxy.Implementer
+type PropModemCurrentModes interface {
+	Get(flags dbus.Flags) (value ModemModes, err error)
+	Set(flags dbus.Flags, value ModemModes) error
+	ConnectChanged(cb func(hasValue bool, value ModemModes)) error
 }
 
-func (p PropModemCurrentModes) Get(flags dbus.Flags) (value ModemModes, err error) {
+type implPropModemCurrentModes struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropModemCurrentModes) Get(flags dbus.Flags) (value ModemModes, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"CurrentModes", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemCurrentModes) ConnectChanged(cb func(hasValue bool, value ModemModes)) error {
+func (p implPropModemCurrentModes) Set(flags dbus.Flags, value ModemModes) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemCurrentModes) ConnectChanged(cb func(hasValue bool, value ModemModes)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -630,13 +769,22 @@ func (p PropModemCurrentModes) ConnectChanged(cb func(hasValue bool, value Modem
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"CurrentModes", cb0)
+		p.Name, cb0)
+}
+
+// property CurrentModes (uu)
+
+func (v *interfaceModem) CurrentModes() PropModemCurrentModes {
+	return &implPropModemCurrentModes{
+		Impl: v,
+		Name: "CurrentModes",
+	}
 }
 
 // property SupportedBands au
 
-func (v *modem) SupportedBands() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceModem) SupportedBands() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "SupportedBands",
 	}
@@ -644,8 +792,8 @@ func (v *modem) SupportedBands() proxy.PropUint32Array {
 
 // property CurrentBands au
 
-func (v *modem) CurrentBands() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceModem) CurrentBands() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "CurrentBands",
 	}
@@ -653,117 +801,141 @@ func (v *modem) CurrentBands() proxy.PropUint32Array {
 
 // property SupportedIpFamilies u
 
-func (v *modem) SupportedIpFamilies() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem) SupportedIpFamilies() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "SupportedIpFamilies",
 	}
 }
 
-func (obj *Modem) Firmware() *modemFirmware {
-	return &obj.modemFirmware
+func (obj *objectModem) Firmware() modemFirmware {
+	return &obj.interfaceModemFirmware
 }
 
-type modemFirmware struct{}
-
-func (v *modemFirmware) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemFirmware interface {
+	GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	List(flags dbus.Flags) (string, []map[string]dbus.Variant, error)
+	GoSelect(flags dbus.Flags, ch chan *dbus.Call, uniqueid string) *dbus.Call
+	Select(flags dbus.Flags, uniqueid string) error
 }
 
-func (*modemFirmware) GetInterfaceName_() string {
+type interfaceModemFirmware struct{}
+
+func (v *interfaceModemFirmware) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemFirmware) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Firmware"
 }
 
 // method List
 
-func (v *modemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".List", flags, ch)
 }
 
-func (*modemFirmware) StoreList(call *dbus.Call) (selected string, installed []map[string]dbus.Variant, err error) {
+func (*interfaceModemFirmware) StoreList(call *dbus.Call) (selected string, installed []map[string]dbus.Variant, err error) {
 	err = call.Store(&selected, &installed)
 	return
 }
 
-func (v *modemFirmware) List(flags dbus.Flags) (selected string, installed []map[string]dbus.Variant, err error) {
+func (v *interfaceModemFirmware) List(flags dbus.Flags) (string, []map[string]dbus.Variant, error) {
 	return v.StoreList(
 		<-v.GoList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Select
 
-func (v *modemFirmware) GoSelect(flags dbus.Flags, ch chan *dbus.Call, uniqueid string) *dbus.Call {
+func (v *interfaceModemFirmware) GoSelect(flags dbus.Flags, ch chan *dbus.Call, uniqueid string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Select", flags, ch, uniqueid)
 }
 
-func (v *modemFirmware) Select(flags dbus.Flags, uniqueid string) error {
+func (v *interfaceModemFirmware) Select(flags dbus.Flags, uniqueid string) error {
 	return (<-v.GoSelect(flags, make(chan *dbus.Call, 1), uniqueid).Done).Err
 }
 
-func (obj *Modem) Location() *modemLocation {
-	return &obj.modemLocation
+func (obj *objectModem) Location() modemLocation {
+	return &obj.interfaceModemLocation
 }
 
-type modemLocation struct{}
-
-func (v *modemLocation) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemLocation interface {
+	GoSetup(flags dbus.Flags, ch chan *dbus.Call, sources uint32, signal_location bool) *dbus.Call
+	Setup(flags dbus.Flags, sources uint32, signal_location bool) error
+	GoGetLocation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetLocation(flags dbus.Flags) (map[uint32]dbus.Variant, error)
+	GoSetSuplServer(flags dbus.Flags, ch chan *dbus.Call, supl string) *dbus.Call
+	SetSuplServer(flags dbus.Flags, supl string) error
+	GoSetGpsRefreshRate(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call
+	SetGpsRefreshRate(flags dbus.Flags, rate uint32) error
+	Capabilities() proxy.PropUint32
+	Enabled() proxy.PropUint32
+	SignalsLocation() proxy.PropBool
+	Location() PropModemLocation
+	SuplServer() proxy.PropString
+	GpsRefreshRate() proxy.PropUint32
 }
 
-func (*modemLocation) GetInterfaceName_() string {
+type interfaceModemLocation struct{}
+
+func (v *interfaceModemLocation) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemLocation) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Location"
 }
 
 // method Setup
 
-func (v *modemLocation) GoSetup(flags dbus.Flags, ch chan *dbus.Call, sources uint32, signal_location bool) *dbus.Call {
+func (v *interfaceModemLocation) GoSetup(flags dbus.Flags, ch chan *dbus.Call, sources uint32, signal_location bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Setup", flags, ch, sources, signal_location)
 }
 
-func (v *modemLocation) Setup(flags dbus.Flags, sources uint32, signal_location bool) error {
+func (v *interfaceModemLocation) Setup(flags dbus.Flags, sources uint32, signal_location bool) error {
 	return (<-v.GoSetup(flags, make(chan *dbus.Call, 1), sources, signal_location).Done).Err
 }
 
 // method GetLocation
 
-func (v *modemLocation) GoGetLocation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemLocation) GoGetLocation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetLocation", flags, ch)
 }
 
-func (*modemLocation) StoreGetLocation(call *dbus.Call) (Location map[uint32]dbus.Variant, err error) {
+func (*interfaceModemLocation) StoreGetLocation(call *dbus.Call) (Location map[uint32]dbus.Variant, err error) {
 	err = call.Store(&Location)
 	return
 }
 
-func (v *modemLocation) GetLocation(flags dbus.Flags) (Location map[uint32]dbus.Variant, err error) {
+func (v *interfaceModemLocation) GetLocation(flags dbus.Flags) (map[uint32]dbus.Variant, error) {
 	return v.StoreGetLocation(
 		<-v.GoGetLocation(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method SetSuplServer
 
-func (v *modemLocation) GoSetSuplServer(flags dbus.Flags, ch chan *dbus.Call, supl string) *dbus.Call {
+func (v *interfaceModemLocation) GoSetSuplServer(flags dbus.Flags, ch chan *dbus.Call, supl string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSuplServer", flags, ch, supl)
 }
 
-func (v *modemLocation) SetSuplServer(flags dbus.Flags, supl string) error {
+func (v *interfaceModemLocation) SetSuplServer(flags dbus.Flags, supl string) error {
 	return (<-v.GoSetSuplServer(flags, make(chan *dbus.Call, 1), supl).Done).Err
 }
 
 // method SetGpsRefreshRate
 
-func (v *modemLocation) GoSetGpsRefreshRate(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
+func (v *interfaceModemLocation) GoSetGpsRefreshRate(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetGpsRefreshRate", flags, ch, rate)
 }
 
-func (v *modemLocation) SetGpsRefreshRate(flags dbus.Flags, rate uint32) error {
+func (v *interfaceModemLocation) SetGpsRefreshRate(flags dbus.Flags, rate uint32) error {
 	return (<-v.GoSetGpsRefreshRate(flags, make(chan *dbus.Call, 1), rate).Done).Err
 }
 
 // property Capabilities u
 
-func (v *modemLocation) Capabilities() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemLocation) Capabilities() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Capabilities",
 	}
@@ -771,8 +943,8 @@ func (v *modemLocation) Capabilities() proxy.PropUint32 {
 
 // property Enabled u
 
-func (v *modemLocation) Enabled() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemLocation) Enabled() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Enabled",
 	}
@@ -780,32 +952,35 @@ func (v *modemLocation) Enabled() proxy.PropUint32 {
 
 // property SignalsLocation b
 
-func (v *modemLocation) SignalsLocation() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceModemLocation) SignalsLocation() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "SignalsLocation",
 	}
 }
 
-// property Location a{uv}
-
-func (v *modemLocation) Location() PropModemLocation {
-	return PropModemLocation{
-		Impl: v,
-	}
+type PropModemLocation interface {
+	Get(flags dbus.Flags) (value map[uint32]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[uint32]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[uint32]dbus.Variant)) error
 }
 
-type PropModemLocation struct {
+type implPropModemLocation struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemLocation) Get(flags dbus.Flags) (value map[uint32]dbus.Variant, err error) {
+func (p implPropModemLocation) Get(flags dbus.Flags) (value map[uint32]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Location", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemLocation) ConnectChanged(cb func(hasValue bool, value map[uint32]dbus.Variant)) error {
+func (p implPropModemLocation) Set(flags dbus.Flags, value map[uint32]dbus.Variant) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemLocation) ConnectChanged(cb func(hasValue bool, value map[uint32]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -822,13 +997,22 @@ func (p PropModemLocation) ConnectChanged(cb func(hasValue bool, value map[uint3
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Location", cb0)
+		p.Name, cb0)
+}
+
+// property Location a{uv}
+
+func (v *interfaceModemLocation) Location() PropModemLocation {
+	return &implPropModemLocation{
+		Impl: v,
+		Name: "Location",
+	}
 }
 
 // property SuplServer s
 
-func (v *modemLocation) SuplServer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModemLocation) SuplServer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SuplServer",
 	}
@@ -836,72 +1020,86 @@ func (v *modemLocation) SuplServer() proxy.PropString {
 
 // property GpsRefreshRate u
 
-func (v *modemLocation) GpsRefreshRate() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemLocation) GpsRefreshRate() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "GpsRefreshRate",
 	}
 }
 
-func (obj *Modem) Messaging() *modemMessaging {
-	return &obj.modemMessaging
+func (obj *objectModem) Messaging() modemMessaging {
+	return &obj.interfaceModemMessaging
 }
 
-type modemMessaging struct{}
-
-func (v *modemMessaging) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemMessaging interface {
+	GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	List(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	Delete(flags dbus.Flags, path dbus.ObjectPath) error
+	GoCreate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	Create(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error)
+	ConnectAdded(cb func(path dbus.ObjectPath, received bool)) (dbusutil.SignalHandlerId, error)
+	ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Messages() proxy.PropObjectPathArray
+	SupportedStorages() proxy.PropUint32Array
+	DefaultStorage() proxy.PropUint32
 }
 
-func (*modemMessaging) GetInterfaceName_() string {
+type interfaceModemMessaging struct{}
+
+func (v *interfaceModemMessaging) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemMessaging) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Messaging"
 }
 
 // method List
 
-func (v *modemMessaging) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemMessaging) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".List", flags, ch)
 }
 
-func (*modemMessaging) StoreList(call *dbus.Call) (result []dbus.ObjectPath, err error) {
+func (*interfaceModemMessaging) StoreList(call *dbus.Call) (result []dbus.ObjectPath, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *modemMessaging) List(flags dbus.Flags) (result []dbus.ObjectPath, err error) {
+func (v *interfaceModemMessaging) List(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreList(
 		<-v.GoList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Delete
 
-func (v *modemMessaging) GoDelete(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceModemMessaging) GoDelete(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, path)
 }
 
-func (v *modemMessaging) Delete(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceModemMessaging) Delete(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method Create
 
-func (v *modemMessaging) GoCreate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceModemMessaging) GoCreate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Create", flags, ch, properties)
 }
 
-func (*modemMessaging) StoreCreate(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceModemMessaging) StoreCreate(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *modemMessaging) Create(flags dbus.Flags, properties map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceModemMessaging) Create(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreate(
 		<-v.GoCreate(flags, make(chan *dbus.Call, 1), properties).Done)
 }
 
 // signal Added
 
-func (v *modemMessaging) ConnectAdded(cb func(path dbus.ObjectPath, received bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemMessaging) ConnectAdded(cb func(path dbus.ObjectPath, received bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -928,7 +1126,7 @@ func (v *modemMessaging) ConnectAdded(cb func(path dbus.ObjectPath, received boo
 
 // signal Deleted
 
-func (v *modemMessaging) ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemMessaging) ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -954,8 +1152,8 @@ func (v *modemMessaging) ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil
 
 // property Messages ao
 
-func (v *modemMessaging) Messages() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceModemMessaging) Messages() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Messages",
 	}
@@ -963,8 +1161,8 @@ func (v *modemMessaging) Messages() proxy.PropObjectPathArray {
 
 // property SupportedStorages au
 
-func (v *modemMessaging) SupportedStorages() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceModemMessaging) SupportedStorages() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "SupportedStorages",
 	}
@@ -972,73 +1170,85 @@ func (v *modemMessaging) SupportedStorages() proxy.PropUint32Array {
 
 // property DefaultStorage u
 
-func (v *modemMessaging) DefaultStorage() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemMessaging) DefaultStorage() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "DefaultStorage",
 	}
 }
 
-func (obj *Modem) Modem3gppUssd() *modem3gppUssd {
-	return &obj.modem3gppUssd
+func (obj *objectModem) Modem3gppUssd() modem3gppUssd {
+	return &obj.interfaceModem3gppUssd
 }
 
-type modem3gppUssd struct{}
-
-func (v *modem3gppUssd) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modem3gppUssd interface {
+	GoInitiate(flags dbus.Flags, ch chan *dbus.Call, command string) *dbus.Call
+	Initiate(flags dbus.Flags, command string) (string, error)
+	GoRespond(flags dbus.Flags, ch chan *dbus.Call, response string) *dbus.Call
+	Respond(flags dbus.Flags, response string) (string, error)
+	GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Cancel(flags dbus.Flags) error
+	State() proxy.PropUint32
+	NetworkNotification() proxy.PropString
+	NetworkRequest() proxy.PropString
 }
 
-func (*modem3gppUssd) GetInterfaceName_() string {
+type interfaceModem3gppUssd struct{}
+
+func (v *interfaceModem3gppUssd) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModem3gppUssd) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd"
 }
 
 // method Initiate
 
-func (v *modem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.Call, command string) *dbus.Call {
+func (v *interfaceModem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.Call, command string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Initiate", flags, ch, command)
 }
 
-func (*modem3gppUssd) StoreInitiate(call *dbus.Call) (reply string, err error) {
+func (*interfaceModem3gppUssd) StoreInitiate(call *dbus.Call) (reply string, err error) {
 	err = call.Store(&reply)
 	return
 }
 
-func (v *modem3gppUssd) Initiate(flags dbus.Flags, command string) (reply string, err error) {
+func (v *interfaceModem3gppUssd) Initiate(flags dbus.Flags, command string) (string, error) {
 	return v.StoreInitiate(
 		<-v.GoInitiate(flags, make(chan *dbus.Call, 1), command).Done)
 }
 
 // method Respond
 
-func (v *modem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.Call, response string) *dbus.Call {
+func (v *interfaceModem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.Call, response string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Respond", flags, ch, response)
 }
 
-func (*modem3gppUssd) StoreRespond(call *dbus.Call) (reply string, err error) {
+func (*interfaceModem3gppUssd) StoreRespond(call *dbus.Call) (reply string, err error) {
 	err = call.Store(&reply)
 	return
 }
 
-func (v *modem3gppUssd) Respond(flags dbus.Flags, response string) (reply string, err error) {
+func (v *interfaceModem3gppUssd) Respond(flags dbus.Flags, response string) (string, error) {
 	return v.StoreRespond(
 		<-v.GoRespond(flags, make(chan *dbus.Call, 1), response).Done)
 }
 
 // method Cancel
 
-func (v *modem3gppUssd) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModem3gppUssd) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Cancel", flags, ch)
 }
 
-func (v *modem3gppUssd) Cancel(flags dbus.Flags) error {
+func (v *interfaceModem3gppUssd) Cancel(flags dbus.Flags) error {
 	return (<-v.GoCancel(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property State u
 
-func (v *modem3gppUssd) State() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem3gppUssd) State() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
 	}
@@ -1046,8 +1256,8 @@ func (v *modem3gppUssd) State() proxy.PropUint32 {
 
 // property NetworkNotification s
 
-func (v *modem3gppUssd) NetworkNotification() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem3gppUssd) NetworkNotification() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "NetworkNotification",
 	}
@@ -1055,57 +1265,70 @@ func (v *modem3gppUssd) NetworkNotification() proxy.PropString {
 
 // property NetworkRequest s
 
-func (v *modem3gppUssd) NetworkRequest() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem3gppUssd) NetworkRequest() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "NetworkRequest",
 	}
 }
 
-func (obj *Modem) Modem3gpp() *modem3gpp {
-	return &obj.modem3gpp
+func (obj *objectModem) Modem3gpp() modem3gpp {
+	return &obj.interfaceModem3gpp
 }
 
-type modem3gpp struct{}
-
-func (v *modem3gpp) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modem3gpp interface {
+	GoRegister(flags dbus.Flags, ch chan *dbus.Call, operator_id string) *dbus.Call
+	Register(flags dbus.Flags, operator_id string) error
+	GoScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Scan(flags dbus.Flags) ([]map[string]dbus.Variant, error)
+	Imei() proxy.PropString
+	RegistrationState() proxy.PropUint32
+	OperatorCode() proxy.PropString
+	OperatorName() proxy.PropString
+	EnabledFacilityLocks() proxy.PropUint32
+	SubscriptionState() proxy.PropUint32
 }
 
-func (*modem3gpp) GetInterfaceName_() string {
+type interfaceModem3gpp struct{}
+
+func (v *interfaceModem3gpp) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModem3gpp) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Modem3gpp"
 }
 
 // method Register
 
-func (v *modem3gpp) GoRegister(flags dbus.Flags, ch chan *dbus.Call, operator_id string) *dbus.Call {
+func (v *interfaceModem3gpp) GoRegister(flags dbus.Flags, ch chan *dbus.Call, operator_id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Register", flags, ch, operator_id)
 }
 
-func (v *modem3gpp) Register(flags dbus.Flags, operator_id string) error {
+func (v *interfaceModem3gpp) Register(flags dbus.Flags, operator_id string) error {
 	return (<-v.GoRegister(flags, make(chan *dbus.Call, 1), operator_id).Done).Err
 }
 
 // method Scan
 
-func (v *modem3gpp) GoScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModem3gpp) GoScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Scan", flags, ch)
 }
 
-func (*modem3gpp) StoreScan(call *dbus.Call) (results []map[string]dbus.Variant, err error) {
+func (*interfaceModem3gpp) StoreScan(call *dbus.Call) (results []map[string]dbus.Variant, err error) {
 	err = call.Store(&results)
 	return
 }
 
-func (v *modem3gpp) Scan(flags dbus.Flags) (results []map[string]dbus.Variant, err error) {
+func (v *interfaceModem3gpp) Scan(flags dbus.Flags) ([]map[string]dbus.Variant, error) {
 	return v.StoreScan(
 		<-v.GoScan(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // property Imei s
 
-func (v *modem3gpp) Imei() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem3gpp) Imei() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Imei",
 	}
@@ -1113,8 +1336,8 @@ func (v *modem3gpp) Imei() proxy.PropString {
 
 // property RegistrationState u
 
-func (v *modem3gpp) RegistrationState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem3gpp) RegistrationState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "RegistrationState",
 	}
@@ -1122,8 +1345,8 @@ func (v *modem3gpp) RegistrationState() proxy.PropUint32 {
 
 // property OperatorCode s
 
-func (v *modem3gpp) OperatorCode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem3gpp) OperatorCode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OperatorCode",
 	}
@@ -1131,8 +1354,8 @@ func (v *modem3gpp) OperatorCode() proxy.PropString {
 
 // property OperatorName s
 
-func (v *modem3gpp) OperatorName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModem3gpp) OperatorName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OperatorName",
 	}
@@ -1140,8 +1363,8 @@ func (v *modem3gpp) OperatorName() proxy.PropString {
 
 // property EnabledFacilityLocks u
 
-func (v *modem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "EnabledFacilityLocks",
 	}
@@ -1149,50 +1372,65 @@ func (v *modem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
 
 // property SubscriptionState u
 
-func (v *modem3gpp) SubscriptionState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModem3gpp) SubscriptionState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "SubscriptionState",
 	}
 }
 
-func (obj *Modem) Cdma() *modemCdma {
-	return &obj.modemCdma
+func (obj *objectModem) Cdma() modemCdma {
+	return &obj.interfaceModemCdma
 }
 
-type modemCdma struct{}
-
-func (v *modemCdma) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemCdma interface {
+	GoActivate(flags dbus.Flags, ch chan *dbus.Call, carrier_code string) *dbus.Call
+	Activate(flags dbus.Flags, carrier_code string) error
+	GoActivateManual(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	ActivateManual(flags dbus.Flags, properties map[string]dbus.Variant) error
+	ConnectActivationStateChanged(cb func(activation_state uint32, activation_error uint32, status_changes map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ActivationState() proxy.PropUint32
+	Meid() proxy.PropString
+	Esn() proxy.PropString
+	Sid() proxy.PropUint32
+	Nid() proxy.PropUint32
+	Cdma1xRegistrationState() proxy.PropUint32
+	EvdoRegistrationState() proxy.PropUint32
 }
 
-func (*modemCdma) GetInterfaceName_() string {
+type interfaceModemCdma struct{}
+
+func (v *interfaceModemCdma) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemCdma) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.ModemCdma"
 }
 
 // method Activate
 
-func (v *modemCdma) GoActivate(flags dbus.Flags, ch chan *dbus.Call, carrier_code string) *dbus.Call {
+func (v *interfaceModemCdma) GoActivate(flags dbus.Flags, ch chan *dbus.Call, carrier_code string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Activate", flags, ch, carrier_code)
 }
 
-func (v *modemCdma) Activate(flags dbus.Flags, carrier_code string) error {
+func (v *interfaceModemCdma) Activate(flags dbus.Flags, carrier_code string) error {
 	return (<-v.GoActivate(flags, make(chan *dbus.Call, 1), carrier_code).Done).Err
 }
 
 // method ActivateManual
 
-func (v *modemCdma) GoActivateManual(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceModemCdma) GoActivateManual(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateManual", flags, ch, properties)
 }
 
-func (v *modemCdma) ActivateManual(flags dbus.Flags, properties map[string]dbus.Variant) error {
+func (v *interfaceModemCdma) ActivateManual(flags dbus.Flags, properties map[string]dbus.Variant) error {
 	return (<-v.GoActivateManual(flags, make(chan *dbus.Call, 1), properties).Done).Err
 }
 
 // signal ActivationStateChanged
 
-func (v *modemCdma) ConnectActivationStateChanged(cb func(activation_state uint32, activation_error uint32, status_changes map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemCdma) ConnectActivationStateChanged(cb func(activation_state uint32, activation_error uint32, status_changes map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1220,8 +1458,8 @@ func (v *modemCdma) ConnectActivationStateChanged(cb func(activation_state uint3
 
 // property ActivationState u
 
-func (v *modemCdma) ActivationState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemCdma) ActivationState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ActivationState",
 	}
@@ -1229,8 +1467,8 @@ func (v *modemCdma) ActivationState() proxy.PropUint32 {
 
 // property Meid s
 
-func (v *modemCdma) Meid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModemCdma) Meid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Meid",
 	}
@@ -1238,8 +1476,8 @@ func (v *modemCdma) Meid() proxy.PropString {
 
 // property Esn s
 
-func (v *modemCdma) Esn() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceModemCdma) Esn() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Esn",
 	}
@@ -1247,8 +1485,8 @@ func (v *modemCdma) Esn() proxy.PropString {
 
 // property Sid u
 
-func (v *modemCdma) Sid() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemCdma) Sid() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Sid",
 	}
@@ -1256,8 +1494,8 @@ func (v *modemCdma) Sid() proxy.PropUint32 {
 
 // property Nid u
 
-func (v *modemCdma) Nid() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemCdma) Nid() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Nid",
 	}
@@ -1265,8 +1503,8 @@ func (v *modemCdma) Nid() proxy.PropUint32 {
 
 // property Cdma1xRegistrationState u
 
-func (v *modemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Cdma1xRegistrationState",
 	}
@@ -1274,70 +1512,86 @@ func (v *modemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
 
 // property EvdoRegistrationState u
 
-func (v *modemCdma) EvdoRegistrationState() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemCdma) EvdoRegistrationState() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "EvdoRegistrationState",
 	}
 }
 
-func (obj *Modem) Oma() *modemOma {
-	return &obj.modemOma
+func (obj *objectModem) Oma() modemOma {
+	return &obj.interfaceModemOma
 }
 
-type modemOma struct{}
-
-func (v *modemOma) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemOma interface {
+	GoSetup(flags dbus.Flags, ch chan *dbus.Call, features uint32) *dbus.Call
+	Setup(flags dbus.Flags, features uint32) error
+	GoStartClientInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_type uint32) *dbus.Call
+	StartClientInitiatedSession(flags dbus.Flags, session_type uint32) error
+	GoAcceptNetworkInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_id uint32, accept bool) *dbus.Call
+	AcceptNetworkInitiatedSession(flags dbus.Flags, session_id uint32, accept bool) error
+	GoCancelSession(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CancelSession(flags dbus.Flags) error
+	ConnectSessionStateChanged(cb func(old_session_state int32, new_session_state int32, session_state_failed_reason uint32)) (dbusutil.SignalHandlerId, error)
+	Features() proxy.PropUint32
+	PendingNetworkInitiatedSessions() PropModemOmaPendingNetworkInitiatedSessions
+	SessionType() proxy.PropUint32
+	SessionState() proxy.PropInt32
 }
 
-func (*modemOma) GetInterfaceName_() string {
+type interfaceModemOma struct{}
+
+func (v *interfaceModemOma) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemOma) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Oma"
 }
 
 // method Setup
 
-func (v *modemOma) GoSetup(flags dbus.Flags, ch chan *dbus.Call, features uint32) *dbus.Call {
+func (v *interfaceModemOma) GoSetup(flags dbus.Flags, ch chan *dbus.Call, features uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Setup", flags, ch, features)
 }
 
-func (v *modemOma) Setup(flags dbus.Flags, features uint32) error {
+func (v *interfaceModemOma) Setup(flags dbus.Flags, features uint32) error {
 	return (<-v.GoSetup(flags, make(chan *dbus.Call, 1), features).Done).Err
 }
 
 // method StartClientInitiatedSession
 
-func (v *modemOma) GoStartClientInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_type uint32) *dbus.Call {
+func (v *interfaceModemOma) GoStartClientInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_type uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartClientInitiatedSession", flags, ch, session_type)
 }
 
-func (v *modemOma) StartClientInitiatedSession(flags dbus.Flags, session_type uint32) error {
+func (v *interfaceModemOma) StartClientInitiatedSession(flags dbus.Flags, session_type uint32) error {
 	return (<-v.GoStartClientInitiatedSession(flags, make(chan *dbus.Call, 1), session_type).Done).Err
 }
 
 // method AcceptNetworkInitiatedSession
 
-func (v *modemOma) GoAcceptNetworkInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_id uint32, accept bool) *dbus.Call {
+func (v *interfaceModemOma) GoAcceptNetworkInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_id uint32, accept bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AcceptNetworkInitiatedSession", flags, ch, session_id, accept)
 }
 
-func (v *modemOma) AcceptNetworkInitiatedSession(flags dbus.Flags, session_id uint32, accept bool) error {
+func (v *interfaceModemOma) AcceptNetworkInitiatedSession(flags dbus.Flags, session_id uint32, accept bool) error {
 	return (<-v.GoAcceptNetworkInitiatedSession(flags, make(chan *dbus.Call, 1), session_id, accept).Done).Err
 }
 
 // method CancelSession
 
-func (v *modemOma) GoCancelSession(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemOma) GoCancelSession(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelSession", flags, ch)
 }
 
-func (v *modemOma) CancelSession(flags dbus.Flags) error {
+func (v *interfaceModemOma) CancelSession(flags dbus.Flags) error {
 	return (<-v.GoCancelSession(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal SessionStateChanged
 
-func (v *modemOma) ConnectSessionStateChanged(cb func(old_session_state int32, new_session_state int32, session_state_failed_reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemOma) ConnectSessionStateChanged(cb func(old_session_state int32, new_session_state int32, session_state_failed_reason uint32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1365,32 +1619,35 @@ func (v *modemOma) ConnectSessionStateChanged(cb func(old_session_state int32, n
 
 // property Features u
 
-func (v *modemOma) Features() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemOma) Features() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Features",
 	}
 }
 
-// property PendingNetworkInitiatedSessions a(uu)
-
-func (v *modemOma) PendingNetworkInitiatedSessions() PropModemOmaPendingNetworkInitiatedSessions {
-	return PropModemOmaPendingNetworkInitiatedSessions{
-		Impl: v,
-	}
+type PropModemOmaPendingNetworkInitiatedSessions interface {
+	Get(flags dbus.Flags) (value []OmaSession, err error)
+	Set(flags dbus.Flags, value []OmaSession) error
+	ConnectChanged(cb func(hasValue bool, value []OmaSession)) error
 }
 
-type PropModemOmaPendingNetworkInitiatedSessions struct {
+type implPropModemOmaPendingNetworkInitiatedSessions struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropModemOmaPendingNetworkInitiatedSessions) Get(flags dbus.Flags) (value []OmaSession, err error) {
+func (p implPropModemOmaPendingNetworkInitiatedSessions) Get(flags dbus.Flags) (value []OmaSession, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"PendingNetworkInitiatedSessions", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropModemOmaPendingNetworkInitiatedSessions) ConnectChanged(cb func(hasValue bool, value []OmaSession)) error {
+func (p implPropModemOmaPendingNetworkInitiatedSessions) Set(flags dbus.Flags, value []OmaSession) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropModemOmaPendingNetworkInitiatedSessions) ConnectChanged(cb func(hasValue bool, value []OmaSession)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1407,13 +1664,22 @@ func (p PropModemOmaPendingNetworkInitiatedSessions) ConnectChanged(cb func(hasV
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"PendingNetworkInitiatedSessions", cb0)
+		p.Name, cb0)
+}
+
+// property PendingNetworkInitiatedSessions a(uu)
+
+func (v *interfaceModemOma) PendingNetworkInitiatedSessions() PropModemOmaPendingNetworkInitiatedSessions {
+	return &implPropModemOmaPendingNetworkInitiatedSessions{
+		Impl: v,
+		Name: "PendingNetworkInitiatedSessions",
+	}
 }
 
 // property SessionType u
 
-func (v *modemOma) SessionType() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemOma) SessionType() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "SessionType",
 	}
@@ -1421,41 +1687,52 @@ func (v *modemOma) SessionType() proxy.PropUint32 {
 
 // property SessionState i
 
-func (v *modemOma) SessionState() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceModemOma) SessionState() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "SessionState",
 	}
 }
 
-func (obj *Modem) Signal() *modemSignal {
-	return &obj.modemSignal
+func (obj *objectModem) Signal() modemSignal {
+	return &obj.interfaceModemSignal
 }
 
-type modemSignal struct{}
-
-func (v *modemSignal) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemSignal interface {
+	GoSetup(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call
+	Setup(flags dbus.Flags, rate uint32) error
+	Rate() proxy.PropUint32
+	Cdma() PropMapStringVariant
+	Evdo() PropMapStringVariant
+	Gsm() PropMapStringVariant
+	Umts() PropMapStringVariant
+	Lte() PropMapStringVariant
 }
 
-func (*modemSignal) GetInterfaceName_() string {
+type interfaceModemSignal struct{}
+
+func (v *interfaceModemSignal) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemSignal) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Signal"
 }
 
 // method Setup
 
-func (v *modemSignal) GoSetup(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
+func (v *interfaceModemSignal) GoSetup(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Setup", flags, ch, rate)
 }
 
-func (v *modemSignal) Setup(flags dbus.Flags, rate uint32) error {
+func (v *interfaceModemSignal) Setup(flags dbus.Flags, rate uint32) error {
 	return (<-v.GoSetup(flags, make(chan *dbus.Call, 1), rate).Done).Err
 }
 
 // property Rate u
 
-func (v *modemSignal) Rate() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceModemSignal) Rate() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Rate",
 	}
@@ -1463,8 +1740,8 @@ func (v *modemSignal) Rate() proxy.PropUint32 {
 
 // property Cdma a{sv}
 
-func (v *modemSignal) Cdma() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemSignal) Cdma() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Cdma",
 	}
@@ -1472,8 +1749,8 @@ func (v *modemSignal) Cdma() PropMapStringVariant {
 
 // property Evdo a{sv}
 
-func (v *modemSignal) Evdo() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemSignal) Evdo() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Evdo",
 	}
@@ -1481,8 +1758,8 @@ func (v *modemSignal) Evdo() PropMapStringVariant {
 
 // property Gsm a{sv}
 
-func (v *modemSignal) Gsm() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemSignal) Gsm() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Gsm",
 	}
@@ -1490,8 +1767,8 @@ func (v *modemSignal) Gsm() PropMapStringVariant {
 
 // property Umts a{sv}
 
-func (v *modemSignal) Umts() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemSignal) Umts() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Umts",
 	}
@@ -1499,102 +1776,118 @@ func (v *modemSignal) Umts() PropMapStringVariant {
 
 // property Lte a{sv}
 
-func (v *modemSignal) Lte() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemSignal) Lte() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "Lte",
 	}
 }
 
-func (obj *Modem) Simple() *modemSimple {
-	return &obj.modemSimple
+func (obj *objectModem) Simple() modemSimple {
+	return &obj.interfaceModemSimple
 }
 
-type modemSimple struct{}
-
-func (v *modemSimple) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemSimple interface {
+	GoConnect(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	Connect(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call
+	Disconnect(flags dbus.Flags, bearer dbus.ObjectPath) error
+	GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetStatus(flags dbus.Flags) (map[string]dbus.Variant, error)
 }
 
-func (*modemSimple) GetInterfaceName_() string {
+type interfaceModemSimple struct{}
+
+func (v *interfaceModemSimple) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemSimple) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Simple"
 }
 
 // method Connect
 
-func (v *modemSimple) GoConnect(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceModemSimple) GoConnect(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch, properties)
 }
 
-func (*modemSimple) StoreConnect(call *dbus.Call) (bearer dbus.ObjectPath, err error) {
+func (*interfaceModemSimple) StoreConnect(call *dbus.Call) (bearer dbus.ObjectPath, err error) {
 	err = call.Store(&bearer)
 	return
 }
 
-func (v *modemSimple) Connect(flags dbus.Flags, properties map[string]dbus.Variant) (bearer dbus.ObjectPath, err error) {
+func (v *interfaceModemSimple) Connect(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreConnect(
 		<-v.GoConnect(flags, make(chan *dbus.Call, 1), properties).Done)
 }
 
 // method Disconnect
 
-func (v *modemSimple) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
+func (v *interfaceModemSimple) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch, bearer)
 }
 
-func (v *modemSimple) Disconnect(flags dbus.Flags, bearer dbus.ObjectPath) error {
+func (v *interfaceModemSimple) Disconnect(flags dbus.Flags, bearer dbus.ObjectPath) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1), bearer).Done).Err
 }
 
 // method GetStatus
 
-func (v *modemSimple) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemSimple) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetStatus", flags, ch)
 }
 
-func (*modemSimple) StoreGetStatus(call *dbus.Call) (properties map[string]dbus.Variant, err error) {
+func (*interfaceModemSimple) StoreGetStatus(call *dbus.Call) (properties map[string]dbus.Variant, err error) {
 	err = call.Store(&properties)
 	return
 }
 
-func (v *modemSimple) GetStatus(flags dbus.Flags) (properties map[string]dbus.Variant, err error) {
+func (v *interfaceModemSimple) GetStatus(flags dbus.Flags) (map[string]dbus.Variant, error) {
 	return v.StoreGetStatus(
 		<-v.GoGetStatus(flags, make(chan *dbus.Call, 1)).Done)
 }
 
-func (obj *Modem) Time() *modemTime {
-	return &obj.modemTime
+func (obj *objectModem) Time() modemTime {
+	return &obj.interfaceModemTime
 }
 
-type modemTime struct{}
-
-func (v *modemTime) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemTime interface {
+	GoGetNetworkTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	GetNetworkTime(flags dbus.Flags) (string, error)
+	ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.SignalHandlerId, error)
+	NetworkTimezone() PropMapStringVariant
 }
 
-func (*modemTime) GetInterfaceName_() string {
+type interfaceModemTime struct{}
+
+func (v *interfaceModemTime) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemTime) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Time"
 }
 
 // method GetNetworkTime
 
-func (v *modemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetNetworkTime", flags, ch)
 }
 
-func (*modemTime) StoreGetNetworkTime(call *dbus.Call) (time string, err error) {
+func (*interfaceModemTime) StoreGetNetworkTime(call *dbus.Call) (time string, err error) {
 	err = call.Store(&time)
 	return
 }
 
-func (v *modemTime) GetNetworkTime(flags dbus.Flags) (time string, err error) {
+func (v *interfaceModemTime) GetNetworkTime(flags dbus.Flags) (string, error) {
 	return v.StoreGetNetworkTime(
 		<-v.GoGetNetworkTime(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // signal NetworkTimeChanged
 
-func (v *modemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1620,72 +1913,84 @@ func (v *modemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.Si
 
 // property NetworkTimezone a{sv}
 
-func (v *modemTime) NetworkTimezone() PropMapStringVariant {
-	return PropMapStringVariant{
+func (v *interfaceModemTime) NetworkTimezone() PropMapStringVariant {
+	return &implPropMapStringVariant{
 		Impl: v,
 		Name: "NetworkTimezone",
 	}
 }
 
-func (obj *Modem) Voice() *modemVoice {
-	return &obj.modemVoice
+func (obj *objectModem) Voice() modemVoice {
+	return &obj.interfaceModemVoice
 }
 
-type modemVoice struct{}
-
-func (v *modemVoice) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type modemVoice interface {
+	GoListCalls(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ListCalls(flags dbus.Flags) ([]dbus.ObjectPath, error)
+	GoDeleteCall(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	DeleteCall(flags dbus.Flags, path dbus.ObjectPath) error
+	GoCreateCall(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call
+	CreateCall(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error)
+	ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	Calls() proxy.PropObjectPathArray
 }
 
-func (*modemVoice) GetInterfaceName_() string {
+type interfaceModemVoice struct{}
+
+func (v *interfaceModemVoice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceModemVoice) GetInterfaceName_() string {
 	return "org.freedesktop.ModemManager1.Modem.Voice"
 }
 
 // method ListCalls
 
-func (v *modemVoice) GoListCalls(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceModemVoice) GoListCalls(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListCalls", flags, ch)
 }
 
-func (*modemVoice) StoreListCalls(call *dbus.Call) (result []dbus.ObjectPath, err error) {
+func (*interfaceModemVoice) StoreListCalls(call *dbus.Call) (result []dbus.ObjectPath, err error) {
 	err = call.Store(&result)
 	return
 }
 
-func (v *modemVoice) ListCalls(flags dbus.Flags) (result []dbus.ObjectPath, err error) {
+func (v *interfaceModemVoice) ListCalls(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	return v.StoreListCalls(
 		<-v.GoListCalls(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method DeleteCall
 
-func (v *modemVoice) GoDeleteCall(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceModemVoice) GoDeleteCall(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteCall", flags, ch, path)
 }
 
-func (v *modemVoice) DeleteCall(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceModemVoice) DeleteCall(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoDeleteCall(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method CreateCall
 
-func (v *modemVoice) GoCreateCall(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceModemVoice) GoCreateCall(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateCall", flags, ch, properties)
 }
 
-func (*modemVoice) StoreCreateCall(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceModemVoice) StoreCreateCall(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *modemVoice) CreateCall(flags dbus.Flags, properties map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceModemVoice) CreateCall(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreateCall(
 		<-v.GoCreateCall(flags, make(chan *dbus.Call, 1), properties).Done)
 }
 
 // signal CallAdded
 
-func (v *modemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1711,7 +2016,7 @@ func (v *modemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.S
 
 // signal CallDeleted
 
-func (v *modemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceModemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1737,29 +2042,35 @@ func (v *modemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil
 
 // property Calls ao
 
-func (v *modemVoice) Calls() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceModemVoice) Calls() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Calls",
 	}
 }
 
-type PropMapStringVariant struct {
+type PropMapStringVariant interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
+}
+
+type implPropMapStringVariant struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p PropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+func (p implPropMapStringVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p PropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+func (p implPropMapStringVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p PropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implPropMapStringVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}

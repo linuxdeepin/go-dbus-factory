@@ -12,31 +12,65 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type Device struct {
+type Device interface {
 	device // interface com.deepin.daemon.Authenticate.Fingerprint.Device
 	proxy.Object
 }
 
-func NewDevice(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (*Device, error) {
+type objectDevice struct {
+	interfaceDevice // interface com.deepin.daemon.Authenticate.Fingerprint.Device
+	proxy.ImplObject
+}
+
+func NewDevice(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (Device, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Device)
-	obj.Object.Init_(conn, serviceName, path)
+	obj := new(objectDevice)
+	obj.ImplObject.Init_(conn, serviceName, path)
 	return obj, nil
 }
 
-type device struct{}
-
-func (v *device) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type device interface {
+	SetInterfaceName_(name string)
+	GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call
+	Claim(flags dbus.Flags, userId string, claimed bool) error
+	GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call
+	DeleteAllFingers(flags dbus.Flags, userId string) error
+	GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call
+	DeleteFinger(flags dbus.Flags, userId string, finger string) error
+	GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call
+	Enroll(flags dbus.Flags, finger string) error
+	GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call
+	ListFingers(flags dbus.Flags, userId string) ([]string, error)
+	GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call
+	RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error
+	GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopEnroll(flags dbus.Flags) error
+	GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopVerify(flags dbus.Flags) error
+	GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call
+	Verify(flags dbus.Flags, finger string) error
+	ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error)
+	ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error)
+	ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error)
+	Name() proxy.PropString
+	State() proxy.PropInt32
+	Type() proxy.PropInt32
+	Capability() proxy.PropInt32
 }
 
-func (v *device) SetInterfaceName_(name string) {
+type interfaceDevice struct{}
+
+func (v *interfaceDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (v *interfaceDevice) SetInterfaceName_(name string) {
 	v.GetObject_().SetExtra("customIfc", name)
 }
 
-func (v *device) GetInterfaceName_() string {
+func (v *interfaceDevice) GetInterfaceName_() string {
 	ifcName, _ := v.GetObject_().GetExtra("customIfc")
 	ifcNameStr, _ := ifcName.(string)
 	return ifcNameStr
@@ -44,103 +78,103 @@ func (v *device) GetInterfaceName_() string {
 
 // method Claim
 
-func (v *device) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+func (v *interfaceDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
 }
 
-func (v *device) Claim(flags dbus.Flags, userId string, claimed bool) error {
+func (v *interfaceDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), userId, claimed).Done).Err
 }
 
 // method DeleteAllFingers
 
-func (v *device) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *interfaceDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
 }
 
-func (v *device) DeleteAllFingers(flags dbus.Flags, userId string) error {
+func (v *interfaceDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), userId).Done).Err
 }
 
 // method DeleteFinger
 
-func (v *device) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+func (v *interfaceDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
 }
 
-func (v *device) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
+func (v *interfaceDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), userId, finger).Done).Err
 }
 
 // method Enroll
 
-func (v *device) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *interfaceDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enroll", flags, ch, finger)
 }
 
-func (v *device) Enroll(flags dbus.Flags, finger string) error {
+func (v *interfaceDevice) Enroll(flags dbus.Flags, finger string) error {
 	return (<-v.GoEnroll(flags, make(chan *dbus.Call, 1), finger).Done).Err
 }
 
 // method ListFingers
 
-func (v *device) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *interfaceDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
 }
 
-func (*device) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
+func (*interfaceDevice) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
 	err = call.Store(&fingers)
 	return
 }
 
-func (v *device) ListFingers(flags dbus.Flags, userId string) (fingers []string, err error) {
+func (v *interfaceDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
 	return v.StoreListFingers(
 		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), userId).Done)
 }
 
 // method RenameFinger
 
-func (v *device) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+func (v *interfaceDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
 }
 
-func (v *device) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
+func (v *interfaceDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	return (<-v.GoRenameFinger(flags, make(chan *dbus.Call, 1), userId, finger, newName).Done).Err
 }
 
 // method StopEnroll
 
-func (v *device) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopEnroll", flags, ch)
 }
 
-func (v *device) StopEnroll(flags dbus.Flags) error {
+func (v *interfaceDevice) StopEnroll(flags dbus.Flags) error {
 	return (<-v.GoStopEnroll(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method StopVerify
 
-func (v *device) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch)
 }
 
-func (v *device) StopVerify(flags dbus.Flags) error {
+func (v *interfaceDevice) StopVerify(flags dbus.Flags) error {
 	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Verify
 
-func (v *device) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *interfaceDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Verify", flags, ch, finger)
 }
 
-func (v *device) Verify(flags dbus.Flags, finger string) error {
+func (v *interfaceDevice) Verify(flags dbus.Flags, finger string) error {
 	return (<-v.GoVerify(flags, make(chan *dbus.Call, 1), finger).Done).Err
 }
 
 // signal EnrollStatus
 
-func (v *device) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -168,7 +202,7 @@ func (v *device) ConnectEnrollStatus(cb func(userId string, code int32, msg stri
 
 // signal VerifyStatus
 
-func (v *device) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -196,7 +230,7 @@ func (v *device) ConnectVerifyStatus(cb func(userId string, code int32, msg stri
 
 // signal Touch
 
-func (v *device) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -223,8 +257,8 @@ func (v *device) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.Si
 
 // property Name s
 
-func (v *device) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceDevice) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -232,8 +266,8 @@ func (v *device) Name() proxy.PropString {
 
 // property State i
 
-func (v *device) State() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDevice) State() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "State",
 	}
@@ -241,8 +275,8 @@ func (v *device) State() proxy.PropInt32 {
 
 // property Type i
 
-func (v *device) Type() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDevice) Type() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Type",
 	}
@@ -250,38 +284,72 @@ func (v *device) Type() proxy.PropInt32 {
 
 // property Capability i
 
-func (v *device) Capability() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceDevice) Capability() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Capability",
 	}
 }
 
-type CommonDevice struct {
+type CommonDevice interface {
 	commonDevice // interface com.deepin.daemon.Authenticate.Fingerprint.CommonDevice
 	proxy.Object
 }
 
-func NewCommonDevice(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (*CommonDevice, error) {
+type objectCommonDevice struct {
+	interfaceCommonDevice // interface com.deepin.daemon.Authenticate.Fingerprint.CommonDevice
+	proxy.ImplObject
+}
+
+func NewCommonDevice(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (CommonDevice, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(CommonDevice)
-	obj.Object.Init_(conn, serviceName, path)
+	obj := new(objectCommonDevice)
+	obj.ImplObject.Init_(conn, serviceName, path)
 	return obj, nil
 }
 
-type commonDevice struct{}
-
-func (v *commonDevice) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type commonDevice interface {
+	SetInterfaceName_(name string)
+	GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call
+	Claim(flags dbus.Flags, userId string, claimed bool) error
+	GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call
+	DeleteAllFingers(flags dbus.Flags, userId string) error
+	GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call
+	DeleteFinger(flags dbus.Flags, userId string, finger string) error
+	GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call
+	Enroll(flags dbus.Flags, username string, finger string) error
+	GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call
+	ListFingers(flags dbus.Flags, userId string) ([]string, error)
+	GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call
+	RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error
+	GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopEnroll(flags dbus.Flags) error
+	GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopVerify(flags dbus.Flags) error
+	GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call
+	Verify(flags dbus.Flags, finger string) error
+	ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error)
+	ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error)
+	ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error)
+	Name() proxy.PropString
+	State() proxy.PropInt32
+	Type() proxy.PropInt32
+	Capability() proxy.PropInt32
 }
 
-func (v *commonDevice) SetInterfaceName_(name string) {
+type interfaceCommonDevice struct{}
+
+func (v *interfaceCommonDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (v *interfaceCommonDevice) SetInterfaceName_(name string) {
 	v.GetObject_().SetExtra("customIfc", name)
 }
 
-func (v *commonDevice) GetInterfaceName_() string {
+func (v *interfaceCommonDevice) GetInterfaceName_() string {
 	ifcName, _ := v.GetObject_().GetExtra("customIfc")
 	ifcNameStr, _ := ifcName.(string)
 	return ifcNameStr
@@ -289,103 +357,103 @@ func (v *commonDevice) GetInterfaceName_() string {
 
 // method Claim
 
-func (v *commonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+func (v *interfaceCommonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
 }
 
-func (v *commonDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
+func (v *interfaceCommonDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), userId, claimed).Done).Err
 }
 
 // method DeleteAllFingers
 
-func (v *commonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *interfaceCommonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
 }
 
-func (v *commonDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
+func (v *interfaceCommonDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), userId).Done).Err
 }
 
 // method DeleteFinger
 
-func (v *commonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+func (v *interfaceCommonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
 }
 
-func (v *commonDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
+func (v *interfaceCommonDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), userId, finger).Done).Err
 }
 
 // method Enroll
 
-func (v *commonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
+func (v *interfaceCommonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enroll", flags, ch, username, finger)
 }
 
-func (v *commonDevice) Enroll(flags dbus.Flags, username string, finger string) error {
+func (v *interfaceCommonDevice) Enroll(flags dbus.Flags, username string, finger string) error {
 	return (<-v.GoEnroll(flags, make(chan *dbus.Call, 1), username, finger).Done).Err
 }
 
 // method ListFingers
 
-func (v *commonDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *interfaceCommonDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
 }
 
-func (*commonDevice) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
+func (*interfaceCommonDevice) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
 	err = call.Store(&fingers)
 	return
 }
 
-func (v *commonDevice) ListFingers(flags dbus.Flags, userId string) (fingers []string, err error) {
+func (v *interfaceCommonDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
 	return v.StoreListFingers(
 		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), userId).Done)
 }
 
 // method RenameFinger
 
-func (v *commonDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+func (v *interfaceCommonDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
 }
 
-func (v *commonDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
+func (v *interfaceCommonDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	return (<-v.GoRenameFinger(flags, make(chan *dbus.Call, 1), userId, finger, newName).Done).Err
 }
 
 // method StopEnroll
 
-func (v *commonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceCommonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopEnroll", flags, ch)
 }
 
-func (v *commonDevice) StopEnroll(flags dbus.Flags) error {
+func (v *interfaceCommonDevice) StopEnroll(flags dbus.Flags) error {
 	return (<-v.GoStopEnroll(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method StopVerify
 
-func (v *commonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceCommonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch)
 }
 
-func (v *commonDevice) StopVerify(flags dbus.Flags) error {
+func (v *interfaceCommonDevice) StopVerify(flags dbus.Flags) error {
 	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Verify
 
-func (v *commonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *interfaceCommonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Verify", flags, ch, finger)
 }
 
-func (v *commonDevice) Verify(flags dbus.Flags, finger string) error {
+func (v *interfaceCommonDevice) Verify(flags dbus.Flags, finger string) error {
 	return (<-v.GoVerify(flags, make(chan *dbus.Call, 1), finger).Done).Err
 }
 
 // signal EnrollStatus
 
-func (v *commonDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceCommonDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -413,7 +481,7 @@ func (v *commonDevice) ConnectEnrollStatus(cb func(userId string, code int32, ms
 
 // signal VerifyStatus
 
-func (v *commonDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceCommonDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -441,7 +509,7 @@ func (v *commonDevice) ConnectVerifyStatus(cb func(userId string, code int32, ms
 
 // signal Touch
 
-func (v *commonDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceCommonDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -468,8 +536,8 @@ func (v *commonDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusu
 
 // property Name s
 
-func (v *commonDevice) Name() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceCommonDevice) Name() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Name",
 	}
@@ -477,8 +545,8 @@ func (v *commonDevice) Name() proxy.PropString {
 
 // property State i
 
-func (v *commonDevice) State() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceCommonDevice) State() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "State",
 	}
@@ -486,8 +554,8 @@ func (v *commonDevice) State() proxy.PropInt32 {
 
 // property Type i
 
-func (v *commonDevice) Type() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceCommonDevice) Type() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Type",
 	}
@@ -495,8 +563,8 @@ func (v *commonDevice) Type() proxy.PropInt32 {
 
 // property Capability i
 
-func (v *commonDevice) Capability() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceCommonDevice) Capability() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "Capability",
 	}

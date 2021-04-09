@@ -9,71 +9,92 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type SensorProxy struct {
+type SensorProxy interface {
 	sensorProxy // interface net.hadess.SensorProxy
 	proxy.Object
 }
 
-func NewSensorProxy(conn *dbus.Conn) *SensorProxy {
-	obj := new(SensorProxy)
-	obj.Object.Init_(conn, "net.hadess.SensorProxy", "/net/hadess/SensorProxy")
+type objectSensorProxy struct {
+	interfaceSensorProxy // interface net.hadess.SensorProxy
+	proxy.ImplObject
+}
+
+func NewSensorProxy(conn *dbus.Conn) SensorProxy {
+	obj := new(objectSensorProxy)
+	obj.ImplObject.Init_(conn, "net.hadess.SensorProxy", "/net/hadess/SensorProxy")
 	return obj
 }
 
-type sensorProxy struct{}
-
-func (v *sensorProxy) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type sensorProxy interface {
+	GoClaimAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClaimAccelerometer(flags dbus.Flags) error
+	GoReleaseAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ReleaseAccelerometer(flags dbus.Flags) error
+	GoClaimLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ClaimLight(flags dbus.Flags) error
+	GoReleaseLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ReleaseLight(flags dbus.Flags) error
+	HasAccelerometer() proxy.PropBool
+	AccelerometerOrientation() proxy.PropString
+	HasAmbientLight() proxy.PropBool
+	LightLevelUnit() proxy.PropString
+	LightLevel() proxy.PropDouble
 }
 
-func (*sensorProxy) GetInterfaceName_() string {
+type interfaceSensorProxy struct{}
+
+func (v *interfaceSensorProxy) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceSensorProxy) GetInterfaceName_() string {
 	return "net.hadess.SensorProxy"
 }
 
 // method ClaimAccelerometer
 
-func (v *sensorProxy) GoClaimAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSensorProxy) GoClaimAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClaimAccelerometer", flags, ch)
 }
 
-func (v *sensorProxy) ClaimAccelerometer(flags dbus.Flags) error {
+func (v *interfaceSensorProxy) ClaimAccelerometer(flags dbus.Flags) error {
 	return (<-v.GoClaimAccelerometer(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ReleaseAccelerometer
 
-func (v *sensorProxy) GoReleaseAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSensorProxy) GoReleaseAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseAccelerometer", flags, ch)
 }
 
-func (v *sensorProxy) ReleaseAccelerometer(flags dbus.Flags) error {
+func (v *interfaceSensorProxy) ReleaseAccelerometer(flags dbus.Flags) error {
 	return (<-v.GoReleaseAccelerometer(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ClaimLight
 
-func (v *sensorProxy) GoClaimLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSensorProxy) GoClaimLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClaimLight", flags, ch)
 }
 
-func (v *sensorProxy) ClaimLight(flags dbus.Flags) error {
+func (v *interfaceSensorProxy) ClaimLight(flags dbus.Flags) error {
 	return (<-v.GoClaimLight(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ReleaseLight
 
-func (v *sensorProxy) GoReleaseLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceSensorProxy) GoReleaseLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseLight", flags, ch)
 }
 
-func (v *sensorProxy) ReleaseLight(flags dbus.Flags) error {
+func (v *interfaceSensorProxy) ReleaseLight(flags dbus.Flags) error {
 	return (<-v.GoReleaseLight(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // property HasAccelerometer b
 
-func (v *sensorProxy) HasAccelerometer() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSensorProxy) HasAccelerometer() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasAccelerometer",
 	}
@@ -81,8 +102,8 @@ func (v *sensorProxy) HasAccelerometer() proxy.PropBool {
 
 // property AccelerometerOrientation s
 
-func (v *sensorProxy) AccelerometerOrientation() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSensorProxy) AccelerometerOrientation() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "AccelerometerOrientation",
 	}
@@ -90,8 +111,8 @@ func (v *sensorProxy) AccelerometerOrientation() proxy.PropString {
 
 // property HasAmbientLight b
 
-func (v *sensorProxy) HasAmbientLight() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceSensorProxy) HasAmbientLight() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasAmbientLight",
 	}
@@ -99,8 +120,8 @@ func (v *sensorProxy) HasAmbientLight() proxy.PropBool {
 
 // property LightLevelUnit s
 
-func (v *sensorProxy) LightLevelUnit() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceSensorProxy) LightLevelUnit() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "LightLevelUnit",
 	}
@@ -108,8 +129,8 @@ func (v *sensorProxy) LightLevelUnit() proxy.PropString {
 
 // property LightLevel d
 
-func (v *sensorProxy) LightLevel() proxy.PropDouble {
-	return proxy.PropDouble{
+func (v *interfaceSensorProxy) LightLevel() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
 		Impl: v,
 		Name: "LightLevel",
 	}

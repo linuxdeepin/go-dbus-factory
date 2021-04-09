@@ -12,82 +12,108 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
-type WPASupplicant struct {
+type WPASupplicant interface {
 	wpaSupplicant // interface fi.w1.wpa_supplicant1
 	proxy.Object
 }
 
-func NewWPASupplicant(conn *dbus.Conn) *WPASupplicant {
-	obj := new(WPASupplicant)
-	obj.Object.Init_(conn, "fi.w1.wpa_supplicant1", "/fi/w1/wpa_supplicant1")
+type objectWPASupplicant struct {
+	interfaceWpaSupplicant // interface fi.w1.wpa_supplicant1
+	proxy.ImplObject
+}
+
+func NewWPASupplicant(conn *dbus.Conn) WPASupplicant {
+	obj := new(objectWPASupplicant)
+	obj.ImplObject.Init_(conn, "fi.w1.wpa_supplicant1", "/fi/w1/wpa_supplicant1")
 	return obj
 }
 
-type wpaSupplicant struct{}
-
-func (v *wpaSupplicant) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type wpaSupplicant interface {
+	GoCreateInterface(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	CreateInterface(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoRemoveInterface(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	RemoveInterface(flags dbus.Flags, path dbus.ObjectPath) error
+	GoGetInterface(flags dbus.Flags, ch chan *dbus.Call, ifname string) *dbus.Call
+	GetInterface(flags dbus.Flags, ifname string) (dbus.ObjectPath, error)
+	GoExpectDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ExpectDisconnect(flags dbus.Flags) error
+	ConnectSignalInterfaceAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalInterfaceRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	DebugLevel() proxy.PropString
+	DebugTimestamp() proxy.PropBool
+	DebugShowKeys() proxy.PropBool
+	Interfaces() proxy.PropObjectPathArray
+	EapMethods() proxy.PropStringArray
+	Capabilities() proxy.PropStringArray
+	WFDIEs() proxy.PropByteArray
 }
 
-func (*wpaSupplicant) GetInterfaceName_() string {
+type interfaceWpaSupplicant struct{}
+
+func (v *interfaceWpaSupplicant) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceWpaSupplicant) GetInterfaceName_() string {
 	return "fi.w1.wpa_supplicant1"
 }
 
 // method CreateInterface
 
-func (v *wpaSupplicant) GoCreateInterface(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceWpaSupplicant) GoCreateInterface(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateInterface", flags, ch, args)
 }
 
-func (*wpaSupplicant) StoreCreateInterface(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceWpaSupplicant) StoreCreateInterface(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *wpaSupplicant) CreateInterface(flags dbus.Flags, args map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceWpaSupplicant) CreateInterface(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreCreateInterface(
 		<-v.GoCreateInterface(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method RemoveInterface
 
-func (v *wpaSupplicant) GoRemoveInterface(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceWpaSupplicant) GoRemoveInterface(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveInterface", flags, ch, path)
 }
 
-func (v *wpaSupplicant) RemoveInterface(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceWpaSupplicant) RemoveInterface(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoRemoveInterface(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method GetInterface
 
-func (v *wpaSupplicant) GoGetInterface(flags dbus.Flags, ch chan *dbus.Call, ifname string) *dbus.Call {
+func (v *interfaceWpaSupplicant) GoGetInterface(flags dbus.Flags, ch chan *dbus.Call, ifname string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetInterface", flags, ch, ifname)
 }
 
-func (*wpaSupplicant) StoreGetInterface(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceWpaSupplicant) StoreGetInterface(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *wpaSupplicant) GetInterface(flags dbus.Flags, ifname string) (path dbus.ObjectPath, err error) {
+func (v *interfaceWpaSupplicant) GetInterface(flags dbus.Flags, ifname string) (dbus.ObjectPath, error) {
 	return v.StoreGetInterface(
 		<-v.GoGetInterface(flags, make(chan *dbus.Call, 1), ifname).Done)
 }
 
 // method ExpectDisconnect
 
-func (v *wpaSupplicant) GoExpectDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceWpaSupplicant) GoExpectDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ExpectDisconnect", flags, ch)
 }
 
-func (v *wpaSupplicant) ExpectDisconnect(flags dbus.Flags) error {
+func (v *interfaceWpaSupplicant) ExpectDisconnect(flags dbus.Flags) error {
 	return (<-v.GoExpectDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal InterfaceAdded
 
-func (v *wpaSupplicant) ConnectSignalInterfaceAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWpaSupplicant) ConnectSignalInterfaceAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -114,7 +140,7 @@ func (v *wpaSupplicant) ConnectSignalInterfaceAdded(cb func(path dbus.ObjectPath
 
 // signal InterfaceRemoved
 
-func (v *wpaSupplicant) ConnectSignalInterfaceRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWpaSupplicant) ConnectSignalInterfaceRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -140,7 +166,7 @@ func (v *wpaSupplicant) ConnectSignalInterfaceRemoved(cb func(path dbus.ObjectPa
 
 // signal PropertiesChanged
 
-func (v *wpaSupplicant) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceWpaSupplicant) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -166,8 +192,8 @@ func (v *wpaSupplicant) ConnectSignalPropertiesChanged(cb func(properties map[st
 
 // property DebugLevel s
 
-func (v *wpaSupplicant) DebugLevel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceWpaSupplicant) DebugLevel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DebugLevel",
 	}
@@ -175,8 +201,8 @@ func (v *wpaSupplicant) DebugLevel() proxy.PropString {
 
 // property DebugTimestamp b
 
-func (v *wpaSupplicant) DebugTimestamp() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceWpaSupplicant) DebugTimestamp() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DebugTimestamp",
 	}
@@ -184,8 +210,8 @@ func (v *wpaSupplicant) DebugTimestamp() proxy.PropBool {
 
 // property DebugShowKeys b
 
-func (v *wpaSupplicant) DebugShowKeys() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceWpaSupplicant) DebugShowKeys() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "DebugShowKeys",
 	}
@@ -193,8 +219,8 @@ func (v *wpaSupplicant) DebugShowKeys() proxy.PropBool {
 
 // property Interfaces ao
 
-func (v *wpaSupplicant) Interfaces() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceWpaSupplicant) Interfaces() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Interfaces",
 	}
@@ -202,8 +228,8 @@ func (v *wpaSupplicant) Interfaces() proxy.PropObjectPathArray {
 
 // property EapMethods as
 
-func (v *wpaSupplicant) EapMethods() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceWpaSupplicant) EapMethods() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "EapMethods",
 	}
@@ -211,8 +237,8 @@ func (v *wpaSupplicant) EapMethods() proxy.PropStringArray {
 
 // property Capabilities as
 
-func (v *wpaSupplicant) Capabilities() proxy.PropStringArray {
-	return proxy.PropStringArray{
+func (v *interfaceWpaSupplicant) Capabilities() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
 		Name: "Capabilities",
 	}
@@ -220,396 +246,629 @@ func (v *wpaSupplicant) Capabilities() proxy.PropStringArray {
 
 // property WFDIEs ay
 
-func (v *wpaSupplicant) WFDIEs() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceWpaSupplicant) WFDIEs() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "WFDIEs",
 	}
 }
 
-type Interface struct {
-	interface1         // interface fi.w1.wpa_supplicant1.Interface
-	interfaceWPS       // interface fi.w1.wpa_supplicant1.Interface.WPS
-	interfaceP2PDevice // interface fi.w1.wpa_supplicant1.Interface.P2PDevice
+type Interface interface {
+	Interface() interface1         // interface fi.w1.wpa_supplicant1.Interface
+	WPS() interfaceWPS             // interface fi.w1.wpa_supplicant1.Interface.WPS
+	P2PDevice() interfaceP2PDevice // interface fi.w1.wpa_supplicant1.Interface.P2PDevice
 	proxy.Object
 }
 
-func NewInterface(conn *dbus.Conn, path dbus.ObjectPath) (*Interface, error) {
+type objectInterface struct {
+	interfaceInterface1         // interface fi.w1.wpa_supplicant1.Interface
+	interfaceInterfaceWPS       // interface fi.w1.wpa_supplicant1.Interface.WPS
+	interfaceInterfaceP2PDevice // interface fi.w1.wpa_supplicant1.Interface.P2PDevice
+	proxy.ImplObject
+}
+
+func NewInterface(conn *dbus.Conn, path dbus.ObjectPath) (Interface, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(Interface)
-	obj.Object.Init_(conn, "fi.w1.wpa_supplicant1", path)
+	obj := new(objectInterface)
+	obj.ImplObject.Init_(conn, "fi.w1.wpa_supplicant1", path)
 	return obj, nil
 }
 
-func (obj *Interface) Interface() *interface1 {
-	return &obj.interface1
+func (obj *objectInterface) Interface() interface1 {
+	return &obj.interfaceInterface1
 }
 
-type interface1 struct{}
-
-func (v *interface1) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type interface1 interface {
+	GoScan(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	Scan(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoSignalPoll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SignalPoll(flags dbus.Flags) (map[string]dbus.Variant, error)
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	GoAddNetwork(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	AddNetwork(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoReassociate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reassociate(flags dbus.Flags) error
+	GoReattach(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reattach(flags dbus.Flags) error
+	GoReconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Reconnect(flags dbus.Flags) error
+	GoRemoveNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	RemoveNetwork(flags dbus.Flags, path dbus.ObjectPath) error
+	GoRemoveAllNetworks(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RemoveAllNetworks(flags dbus.Flags) error
+	GoSelectNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	SelectNetwork(flags dbus.Flags, path dbus.ObjectPath) error
+	GoNetworkReply(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath, field string, value string) *dbus.Call
+	NetworkReply(flags dbus.Flags, path dbus.ObjectPath, field string, value string) error
+	GoAddBlob(flags dbus.Flags, ch chan *dbus.Call, name string, data []uint8) *dbus.Call
+	AddBlob(flags dbus.Flags, name string, data []uint8) error
+	GoGetBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	GetBlob(flags dbus.Flags, name string) ([]uint8, error)
+	GoRemoveBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
+	RemoveBlob(flags dbus.Flags, name string) error
+	GoSetPKCS11EngineAndModulePath(flags dbus.Flags, ch chan *dbus.Call, pkcs11_engine_path string, pkcs11_module_path string) *dbus.Call
+	SetPKCS11EngineAndModulePath(flags dbus.Flags, pkcs11_engine_path string, pkcs11_module_path string) error
+	GoFlushBSS(flags dbus.Flags, ch chan *dbus.Call, age uint32) *dbus.Call
+	FlushBSS(flags dbus.Flags, age uint32) error
+	GoSubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SubscribeProbeReq(flags dbus.Flags) error
+	GoUnsubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	UnsubscribeProbeReq(flags dbus.Flags) error
+	GoEAPLogoff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	EAPLogoff(flags dbus.Flags) error
+	GoEAPLogon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	EAPLogon(flags dbus.Flags) error
+	GoAutoScan(flags dbus.Flags, ch chan *dbus.Call, arg string) *dbus.Call
+	AutoScan(flags dbus.Flags, arg string) error
+	GoTDLSDiscover(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call
+	TDLSDiscover(flags dbus.Flags, peer_address string) error
+	GoTDLSSetup(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call
+	TDLSSetup(flags dbus.Flags, peer_address string) error
+	GoTDLSStatus(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call
+	TDLSStatus(flags dbus.Flags, peer_address string) (string, error)
+	GoTDLSTeardown(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call
+	TDLSTeardown(flags dbus.Flags, peer_address string) error
+	GoTDLSChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	TDLSChannelSwitch(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoTDLSCancelChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call
+	TDLSCancelChannelSwitch(flags dbus.Flags, peer_address string) error
+	GoVendorElemAdd(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call
+	VendorElemAdd(flags dbus.Flags, frame_id int32, ielems []uint8) error
+	GoVendorElemGet(flags dbus.Flags, ch chan *dbus.Call, frame_id int32) *dbus.Call
+	VendorElemGet(flags dbus.Flags, frame_id int32) ([]uint8, error)
+	GoVendorElemRem(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call
+	VendorElemRem(flags dbus.Flags, frame_id int32, ielems []uint8) error
+	GoSaveConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	SaveConfig(flags dbus.Flags) error
+	GoAbortScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	AbortScan(flags dbus.Flags) error
+	ConnectScanDone(cb func(success bool)) (dbusutil.SignalHandlerId, error)
+	ConnectBSSAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectBSSRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectBlobAdded(cb func(name string)) (dbusutil.SignalHandlerId, error)
+	ConnectBlobRemoved(cb func(name string)) (dbusutil.SignalHandlerId, error)
+	ConnectNetworkAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectNetworkRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectNetworkSelected(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectProbeRequest(cb func(args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectCertification(cb func(certification map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectEAP(cb func(status string, parameter string)) (dbusutil.SignalHandlerId, error)
+	ConnectStaAuthorized(cb func(name string)) (dbusutil.SignalHandlerId, error)
+	ConnectStaDeauthorized(cb func(name string)) (dbusutil.SignalHandlerId, error)
+	ConnectStationAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectStationRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectNetworkRequest(cb func(path dbus.ObjectPath, field string, text string)) (dbusutil.SignalHandlerId, error)
+	Capabilities() MapStrVariant
+	State() proxy.PropString
+	Scanning() proxy.PropBool
+	ApScan() proxy.PropUint32
+	BSSExpireAge() proxy.PropUint32
+	BSSExpireCount() proxy.PropUint32
+	Country() proxy.PropString
+	Ifname() proxy.PropString
+	Driver() proxy.PropString
+	BridgeIfname() proxy.PropString
+	ConfigFile() proxy.PropString
+	CurrentBSS() proxy.PropObjectPath
+	CurrentNetwork() proxy.PropObjectPath
+	CurrentAuthMode() proxy.PropString
+	Blobs() PropInterfaceBlobs
+	BSSs() proxy.PropObjectPathArray
+	Networks() proxy.PropObjectPathArray
+	FastReauth() proxy.PropBool
+	ScanInterval() proxy.PropInt32
+	PKCS11EnginePath() proxy.PropString
+	PKCS11ModulePath() proxy.PropString
+	DisconnectReason() proxy.PropInt32
+	AuthStatusCode() proxy.PropInt32
+	AssocStatusCode() proxy.PropInt32
+	Stations() proxy.PropObjectPathArray
+	CtrlInterface() proxy.PropString
+	CtrlInterfaceGroup() proxy.PropString
+	EapolVersion() proxy.PropString
+	Bgscan() proxy.PropString
+	DisableScanOffload() proxy.PropString
+	OpenscEnginePath() proxy.PropString
+	OpensslCiphers() proxy.PropString
+	PcscReader() proxy.PropString
+	PcscPin() proxy.PropString
+	ExternalSim() proxy.PropString
+	DriverParam() proxy.PropString
+	Dot11RSNAConfigPMKLifetime() proxy.PropString
+	Dot11RSNAConfigPMKReauthThreshold() proxy.PropString
+	Dot11RSNAConfigSATimeout() proxy.PropString
+	UpdateConfig() proxy.PropString
+	Uuid() proxy.PropString
+	AutoUuid() proxy.PropString
+	DeviceName() proxy.PropString
+	Manufacturer() proxy.PropString
+	ModelName() proxy.PropString
+	ModelNumber() proxy.PropString
+	SerialNumber() proxy.PropString
+	DeviceType() proxy.PropString
+	OsVersion() proxy.PropString
+	ConfigMethods() proxy.PropString
+	WpsCredProcessing() proxy.PropString
+	WpsVendorExtM1() proxy.PropString
+	SecDeviceType() proxy.PropString
+	P2pListenRegClass() proxy.PropString
+	P2pListenChannel() proxy.PropString
+	P2pOperRegClass() proxy.PropString
+	P2pOperChannel() proxy.PropString
+	P2pGoIntent() proxy.PropString
+	P2pSsidPostfix() proxy.PropString
+	PersistentReconnect() proxy.PropString
+	P2pIntraBss() proxy.PropString
+	P2pGroupIdle() proxy.PropString
+	P2pGoFreqChangePolicy() proxy.PropString
+	P2pPassphraseLen() proxy.PropString
+	P2pPrefChan() proxy.PropString
+	P2pNoGoFreq() proxy.PropString
+	P2pAddCliChan() proxy.PropString
+	P2pOptimizeListenChan() proxy.PropString
+	P2pGoHt40() proxy.PropString
+	P2pGoVht() proxy.PropString
+	P2pGoHe() proxy.PropString
+	P2pDisabled() proxy.PropString
+	P2pGoCtwindow() proxy.PropString
+	P2pNoGroupIface() proxy.PropString
+	P2pIgnoreSharedFreq() proxy.PropString
+	IpAddrGo() proxy.PropString
+	IpAddrMask() proxy.PropString
+	IpAddrStart() proxy.PropString
+	IpAddrEnd() proxy.PropString
+	P2pCliProbe() proxy.PropString
+	P2pDeviceRandomMacAddr() proxy.PropString
+	P2pDevicePersistentMacAddr() proxy.PropString
+	P2pInterfaceRandomMacAddr() proxy.PropString
+	BssMaxCount() proxy.PropString
+	FilterSsids() proxy.PropString
+	FilterRssi() proxy.PropString
+	MaxNumSta() proxy.PropString
+	ApIsolate() proxy.PropString
+	DisassocLowAck() proxy.PropString
+	Hs20() proxy.PropString
+	Interworking() proxy.PropString
+	Hessid() proxy.PropString
+	AccessNetworkType() proxy.PropString
+	GoInterworking() proxy.PropString
+	GoAccessNetworkType() proxy.PropString
+	GoInternet() proxy.PropString
+	GoVenueGroup() proxy.PropString
+	GoVenueType() proxy.PropString
+	PbcInM1() proxy.PropString
+	Autoscan() proxy.PropString
+	WpsNfcDevPwId() proxy.PropString
+	WpsNfcDhPubkey() proxy.PropString
+	WpsNfcDhPrivkey() proxy.PropString
+	WpsNfcDevPw() proxy.PropString
+	ExtPasswordBackend() proxy.PropString
+	P2pGoMaxInactivity() proxy.PropString
+	AutoInterworking() proxy.PropString
+	Okc() proxy.PropString
+	Pmf() proxy.PropString
+	SaeGroups() proxy.PropString
+	DtimPeriod() proxy.PropString
+	BeaconInt() proxy.PropString
+	ApVendorElements() proxy.PropString
+	IgnoreOldScanRes() proxy.PropString
+	FreqList() proxy.PropString
+	ScanCurFreq() proxy.PropString
+	SchedScanInterval() proxy.PropString
+	SchedScanStartDelay() proxy.PropString
+	TdlsExternalControl() proxy.PropString
+	OsuDir() proxy.PropString
+	WowlanTriggers() proxy.PropString
+	P2pSearchDelay() proxy.PropString
+	MacAddr() proxy.PropString
+	RandAddrLifetime() proxy.PropString
+	PreassocMacAddr() proxy.PropString
+	KeyMgmtOffload() proxy.PropString
+	PassiveScan() proxy.PropString
+	ReassocSameBssOptim() proxy.PropString
+	WpsPriority() proxy.PropString
+	FstGroupId() proxy.PropString
+	FstPriority() proxy.PropString
+	FstLlt() proxy.PropString
+	CertInCb() proxy.PropString
+	WpaRscRelaxation() proxy.PropString
+	SchedScanPlans() proxy.PropString
+	GasAddress3() proxy.PropString
+	FtmResponder() proxy.PropString
+	FtmInitiator() proxy.PropString
+	GasRandAddrLifetime() proxy.PropString
+	GasRandMacAddr() proxy.PropString
+	DppConfigProcessing() proxy.PropString
+	ColocIntfReporting() proxy.PropString
 }
 
-func (*interface1) GetInterfaceName_() string {
+type interfaceInterface1 struct{}
+
+func (v *interfaceInterface1) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInterface1) GetInterfaceName_() string {
 	return "fi.w1.wpa_supplicant1.Interface"
 }
 
 // method Scan
 
-func (v *interface1) GoScan(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterface1) GoScan(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Scan", flags, ch, args)
 }
 
-func (v *interface1) Scan(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterface1) Scan(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoScan(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method SignalPoll
 
-func (v *interface1) GoSignalPoll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoSignalPoll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SignalPoll", flags, ch)
 }
 
-func (*interface1) StoreSignalPoll(call *dbus.Call) (args map[string]dbus.Variant, err error) {
+func (*interfaceInterface1) StoreSignalPoll(call *dbus.Call) (args map[string]dbus.Variant, err error) {
 	err = call.Store(&args)
 	return
 }
 
-func (v *interface1) SignalPoll(flags dbus.Flags) (args map[string]dbus.Variant, err error) {
+func (v *interfaceInterface1) SignalPoll(flags dbus.Flags) (map[string]dbus.Variant, error) {
 	return v.StoreSignalPoll(
 		<-v.GoSignalPoll(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method Disconnect
 
-func (v *interface1) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *interface1) Disconnect(flags dbus.Flags) error {
+func (v *interfaceInterface1) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method AddNetwork
 
-func (v *interface1) GoAddNetwork(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterface1) GoAddNetwork(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddNetwork", flags, ch, args)
 }
 
-func (*interface1) StoreAddNetwork(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceInterface1) StoreAddNetwork(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *interface1) AddNetwork(flags dbus.Flags, args map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceInterface1) AddNetwork(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreAddNetwork(
 		<-v.GoAddNetwork(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method Reassociate
 
-func (v *interface1) GoReassociate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoReassociate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reassociate", flags, ch)
 }
 
-func (v *interface1) Reassociate(flags dbus.Flags) error {
+func (v *interfaceInterface1) Reassociate(flags dbus.Flags) error {
 	return (<-v.GoReassociate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Reattach
 
-func (v *interface1) GoReattach(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoReattach(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reattach", flags, ch)
 }
 
-func (v *interface1) Reattach(flags dbus.Flags) error {
+func (v *interfaceInterface1) Reattach(flags dbus.Flags) error {
 	return (<-v.GoReattach(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Reconnect
 
-func (v *interface1) GoReconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoReconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reconnect", flags, ch)
 }
 
-func (v *interface1) Reconnect(flags dbus.Flags) error {
+func (v *interfaceInterface1) Reconnect(flags dbus.Flags) error {
 	return (<-v.GoReconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RemoveNetwork
 
-func (v *interface1) GoRemoveNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceInterface1) GoRemoveNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveNetwork", flags, ch, path)
 }
 
-func (v *interface1) RemoveNetwork(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceInterface1) RemoveNetwork(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoRemoveNetwork(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method RemoveAllNetworks
 
-func (v *interface1) GoRemoveAllNetworks(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoRemoveAllNetworks(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveAllNetworks", flags, ch)
 }
 
-func (v *interface1) RemoveAllNetworks(flags dbus.Flags) error {
+func (v *interfaceInterface1) RemoveAllNetworks(flags dbus.Flags) error {
 	return (<-v.GoRemoveAllNetworks(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method SelectNetwork
 
-func (v *interface1) GoSelectNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceInterface1) GoSelectNetwork(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SelectNetwork", flags, ch, path)
 }
 
-func (v *interface1) SelectNetwork(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceInterface1) SelectNetwork(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoSelectNetwork(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method NetworkReply
 
-func (v *interface1) GoNetworkReply(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath, field string, value string) *dbus.Call {
+func (v *interfaceInterface1) GoNetworkReply(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath, field string, value string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NetworkReply", flags, ch, path, field, value)
 }
 
-func (v *interface1) NetworkReply(flags dbus.Flags, path dbus.ObjectPath, field string, value string) error {
+func (v *interfaceInterface1) NetworkReply(flags dbus.Flags, path dbus.ObjectPath, field string, value string) error {
 	return (<-v.GoNetworkReply(flags, make(chan *dbus.Call, 1), path, field, value).Done).Err
 }
 
 // method AddBlob
 
-func (v *interface1) GoAddBlob(flags dbus.Flags, ch chan *dbus.Call, name string, data []uint8) *dbus.Call {
+func (v *interfaceInterface1) GoAddBlob(flags dbus.Flags, ch chan *dbus.Call, name string, data []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddBlob", flags, ch, name, data)
 }
 
-func (v *interface1) AddBlob(flags dbus.Flags, name string, data []uint8) error {
+func (v *interfaceInterface1) AddBlob(flags dbus.Flags, name string, data []uint8) error {
 	return (<-v.GoAddBlob(flags, make(chan *dbus.Call, 1), name, data).Done).Err
 }
 
 // method GetBlob
 
-func (v *interface1) GoGetBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceInterface1) GoGetBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetBlob", flags, ch, name)
 }
 
-func (*interface1) StoreGetBlob(call *dbus.Call) (data []uint8, err error) {
+func (*interfaceInterface1) StoreGetBlob(call *dbus.Call) (data []uint8, err error) {
 	err = call.Store(&data)
 	return
 }
 
-func (v *interface1) GetBlob(flags dbus.Flags, name string) (data []uint8, err error) {
+func (v *interfaceInterface1) GetBlob(flags dbus.Flags, name string) ([]uint8, error) {
 	return v.StoreGetBlob(
 		<-v.GoGetBlob(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
 // method RemoveBlob
 
-func (v *interface1) GoRemoveBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *interfaceInterface1) GoRemoveBlob(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveBlob", flags, ch, name)
 }
 
-func (v *interface1) RemoveBlob(flags dbus.Flags, name string) error {
+func (v *interfaceInterface1) RemoveBlob(flags dbus.Flags, name string) error {
 	return (<-v.GoRemoveBlob(flags, make(chan *dbus.Call, 1), name).Done).Err
 }
 
 // method SetPKCS11EngineAndModulePath
 
-func (v *interface1) GoSetPKCS11EngineAndModulePath(flags dbus.Flags, ch chan *dbus.Call, pkcs11_engine_path string, pkcs11_module_path string) *dbus.Call {
+func (v *interfaceInterface1) GoSetPKCS11EngineAndModulePath(flags dbus.Flags, ch chan *dbus.Call, pkcs11_engine_path string, pkcs11_module_path string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPKCS11EngineAndModulePath", flags, ch, pkcs11_engine_path, pkcs11_module_path)
 }
 
-func (v *interface1) SetPKCS11EngineAndModulePath(flags dbus.Flags, pkcs11_engine_path string, pkcs11_module_path string) error {
+func (v *interfaceInterface1) SetPKCS11EngineAndModulePath(flags dbus.Flags, pkcs11_engine_path string, pkcs11_module_path string) error {
 	return (<-v.GoSetPKCS11EngineAndModulePath(flags, make(chan *dbus.Call, 1), pkcs11_engine_path, pkcs11_module_path).Done).Err
 }
 
 // method FlushBSS
 
-func (v *interface1) GoFlushBSS(flags dbus.Flags, ch chan *dbus.Call, age uint32) *dbus.Call {
+func (v *interfaceInterface1) GoFlushBSS(flags dbus.Flags, ch chan *dbus.Call, age uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FlushBSS", flags, ch, age)
 }
 
-func (v *interface1) FlushBSS(flags dbus.Flags, age uint32) error {
+func (v *interfaceInterface1) FlushBSS(flags dbus.Flags, age uint32) error {
 	return (<-v.GoFlushBSS(flags, make(chan *dbus.Call, 1), age).Done).Err
 }
 
 // method SubscribeProbeReq
 
-func (v *interface1) GoSubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoSubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SubscribeProbeReq", flags, ch)
 }
 
-func (v *interface1) SubscribeProbeReq(flags dbus.Flags) error {
+func (v *interfaceInterface1) SubscribeProbeReq(flags dbus.Flags) error {
 	return (<-v.GoSubscribeProbeReq(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method UnsubscribeProbeReq
 
-func (v *interface1) GoUnsubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoUnsubscribeProbeReq(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnsubscribeProbeReq", flags, ch)
 }
 
-func (v *interface1) UnsubscribeProbeReq(flags dbus.Flags) error {
+func (v *interfaceInterface1) UnsubscribeProbeReq(flags dbus.Flags) error {
 	return (<-v.GoUnsubscribeProbeReq(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method EAPLogoff
 
-func (v *interface1) GoEAPLogoff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoEAPLogoff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EAPLogoff", flags, ch)
 }
 
-func (v *interface1) EAPLogoff(flags dbus.Flags) error {
+func (v *interfaceInterface1) EAPLogoff(flags dbus.Flags) error {
 	return (<-v.GoEAPLogoff(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method EAPLogon
 
-func (v *interface1) GoEAPLogon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoEAPLogon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EAPLogon", flags, ch)
 }
 
-func (v *interface1) EAPLogon(flags dbus.Flags) error {
+func (v *interfaceInterface1) EAPLogon(flags dbus.Flags) error {
 	return (<-v.GoEAPLogon(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method AutoScan
 
-func (v *interface1) GoAutoScan(flags dbus.Flags, ch chan *dbus.Call, arg string) *dbus.Call {
+func (v *interfaceInterface1) GoAutoScan(flags dbus.Flags, ch chan *dbus.Call, arg string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AutoScan", flags, ch, arg)
 }
 
-func (v *interface1) AutoScan(flags dbus.Flags, arg string) error {
+func (v *interfaceInterface1) AutoScan(flags dbus.Flags, arg string) error {
 	return (<-v.GoAutoScan(flags, make(chan *dbus.Call, 1), arg).Done).Err
 }
 
 // method TDLSDiscover
 
-func (v *interface1) GoTDLSDiscover(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSDiscover(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSDiscover", flags, ch, peer_address)
 }
 
-func (v *interface1) TDLSDiscover(flags dbus.Flags, peer_address string) error {
+func (v *interfaceInterface1) TDLSDiscover(flags dbus.Flags, peer_address string) error {
 	return (<-v.GoTDLSDiscover(flags, make(chan *dbus.Call, 1), peer_address).Done).Err
 }
 
 // method TDLSSetup
 
-func (v *interface1) GoTDLSSetup(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSSetup(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSSetup", flags, ch, peer_address)
 }
 
-func (v *interface1) TDLSSetup(flags dbus.Flags, peer_address string) error {
+func (v *interfaceInterface1) TDLSSetup(flags dbus.Flags, peer_address string) error {
 	return (<-v.GoTDLSSetup(flags, make(chan *dbus.Call, 1), peer_address).Done).Err
 }
 
 // method TDLSStatus
 
-func (v *interface1) GoTDLSStatus(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSStatus(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSStatus", flags, ch, peer_address)
 }
 
-func (*interface1) StoreTDLSStatus(call *dbus.Call) (status string, err error) {
+func (*interfaceInterface1) StoreTDLSStatus(call *dbus.Call) (status string, err error) {
 	err = call.Store(&status)
 	return
 }
 
-func (v *interface1) TDLSStatus(flags dbus.Flags, peer_address string) (status string, err error) {
+func (v *interfaceInterface1) TDLSStatus(flags dbus.Flags, peer_address string) (string, error) {
 	return v.StoreTDLSStatus(
 		<-v.GoTDLSStatus(flags, make(chan *dbus.Call, 1), peer_address).Done)
 }
 
 // method TDLSTeardown
 
-func (v *interface1) GoTDLSTeardown(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSTeardown(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSTeardown", flags, ch, peer_address)
 }
 
-func (v *interface1) TDLSTeardown(flags dbus.Flags, peer_address string) error {
+func (v *interfaceInterface1) TDLSTeardown(flags dbus.Flags, peer_address string) error {
 	return (<-v.GoTDLSTeardown(flags, make(chan *dbus.Call, 1), peer_address).Done).Err
 }
 
 // method TDLSChannelSwitch
 
-func (v *interface1) GoTDLSChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSChannelSwitch", flags, ch, args)
 }
 
-func (v *interface1) TDLSChannelSwitch(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterface1) TDLSChannelSwitch(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoTDLSChannelSwitch(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method TDLSCancelChannelSwitch
 
-func (v *interface1) GoTDLSCancelChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
+func (v *interfaceInterface1) GoTDLSCancelChannelSwitch(flags dbus.Flags, ch chan *dbus.Call, peer_address string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TDLSCancelChannelSwitch", flags, ch, peer_address)
 }
 
-func (v *interface1) TDLSCancelChannelSwitch(flags dbus.Flags, peer_address string) error {
+func (v *interfaceInterface1) TDLSCancelChannelSwitch(flags dbus.Flags, peer_address string) error {
 	return (<-v.GoTDLSCancelChannelSwitch(flags, make(chan *dbus.Call, 1), peer_address).Done).Err
 }
 
 // method VendorElemAdd
 
-func (v *interface1) GoVendorElemAdd(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call {
+func (v *interfaceInterface1) GoVendorElemAdd(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".VendorElemAdd", flags, ch, frame_id, ielems)
 }
 
-func (v *interface1) VendorElemAdd(flags dbus.Flags, frame_id int32, ielems []uint8) error {
+func (v *interfaceInterface1) VendorElemAdd(flags dbus.Flags, frame_id int32, ielems []uint8) error {
 	return (<-v.GoVendorElemAdd(flags, make(chan *dbus.Call, 1), frame_id, ielems).Done).Err
 }
 
 // method VendorElemGet
 
-func (v *interface1) GoVendorElemGet(flags dbus.Flags, ch chan *dbus.Call, frame_id int32) *dbus.Call {
+func (v *interfaceInterface1) GoVendorElemGet(flags dbus.Flags, ch chan *dbus.Call, frame_id int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".VendorElemGet", flags, ch, frame_id)
 }
 
-func (*interface1) StoreVendorElemGet(call *dbus.Call) (ielems []uint8, err error) {
+func (*interfaceInterface1) StoreVendorElemGet(call *dbus.Call) (ielems []uint8, err error) {
 	err = call.Store(&ielems)
 	return
 }
 
-func (v *interface1) VendorElemGet(flags dbus.Flags, frame_id int32) (ielems []uint8, err error) {
+func (v *interfaceInterface1) VendorElemGet(flags dbus.Flags, frame_id int32) ([]uint8, error) {
 	return v.StoreVendorElemGet(
 		<-v.GoVendorElemGet(flags, make(chan *dbus.Call, 1), frame_id).Done)
 }
 
 // method VendorElemRem
 
-func (v *interface1) GoVendorElemRem(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call {
+func (v *interfaceInterface1) GoVendorElemRem(flags dbus.Flags, ch chan *dbus.Call, frame_id int32, ielems []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".VendorElemRem", flags, ch, frame_id, ielems)
 }
 
-func (v *interface1) VendorElemRem(flags dbus.Flags, frame_id int32, ielems []uint8) error {
+func (v *interfaceInterface1) VendorElemRem(flags dbus.Flags, frame_id int32, ielems []uint8) error {
 	return (<-v.GoVendorElemRem(flags, make(chan *dbus.Call, 1), frame_id, ielems).Done).Err
 }
 
 // method SaveConfig
 
-func (v *interface1) GoSaveConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoSaveConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SaveConfig", flags, ch)
 }
 
-func (v *interface1) SaveConfig(flags dbus.Flags) error {
+func (v *interfaceInterface1) SaveConfig(flags dbus.Flags) error {
 	return (<-v.GoSaveConfig(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method AbortScan
 
-func (v *interface1) GoAbortScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterface1) GoAbortScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AbortScan", flags, ch)
 }
 
-func (v *interface1) AbortScan(flags dbus.Flags) error {
+func (v *interfaceInterface1) AbortScan(flags dbus.Flags) error {
 	return (<-v.GoAbortScan(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal ScanDone
 
-func (v *interface1) ConnectScanDone(cb func(success bool)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectScanDone(cb func(success bool)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -635,7 +894,7 @@ func (v *interface1) ConnectScanDone(cb func(success bool)) (dbusutil.SignalHand
 
 // signal BSSAdded
 
-func (v *interface1) ConnectBSSAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectBSSAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -662,7 +921,7 @@ func (v *interface1) ConnectBSSAdded(cb func(path dbus.ObjectPath, properties ma
 
 // signal BSSRemoved
 
-func (v *interface1) ConnectBSSRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectBSSRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -688,7 +947,7 @@ func (v *interface1) ConnectBSSRemoved(cb func(path dbus.ObjectPath)) (dbusutil.
 
 // signal BlobAdded
 
-func (v *interface1) ConnectBlobAdded(cb func(name string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectBlobAdded(cb func(name string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -714,7 +973,7 @@ func (v *interface1) ConnectBlobAdded(cb func(name string)) (dbusutil.SignalHand
 
 // signal BlobRemoved
 
-func (v *interface1) ConnectBlobRemoved(cb func(name string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectBlobRemoved(cb func(name string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -740,7 +999,7 @@ func (v *interface1) ConnectBlobRemoved(cb func(name string)) (dbusutil.SignalHa
 
 // signal NetworkAdded
 
-func (v *interface1) ConnectNetworkAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectNetworkAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -767,7 +1026,7 @@ func (v *interface1) ConnectNetworkAdded(cb func(path dbus.ObjectPath, propertie
 
 // signal NetworkRemoved
 
-func (v *interface1) ConnectNetworkRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectNetworkRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -793,7 +1052,7 @@ func (v *interface1) ConnectNetworkRemoved(cb func(path dbus.ObjectPath)) (dbusu
 
 // signal NetworkSelected
 
-func (v *interface1) ConnectNetworkSelected(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectNetworkSelected(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -819,7 +1078,7 @@ func (v *interface1) ConnectNetworkSelected(cb func(path dbus.ObjectPath)) (dbus
 
 // signal PropertiesChanged
 
-func (v *interface1) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -845,7 +1104,7 @@ func (v *interface1) ConnectSignalPropertiesChanged(cb func(properties map[strin
 
 // signal ProbeRequest
 
-func (v *interface1) ConnectProbeRequest(cb func(args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectProbeRequest(cb func(args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -871,7 +1130,7 @@ func (v *interface1) ConnectProbeRequest(cb func(args map[string]dbus.Variant)) 
 
 // signal Certification
 
-func (v *interface1) ConnectCertification(cb func(certification map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectCertification(cb func(certification map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -897,7 +1156,7 @@ func (v *interface1) ConnectCertification(cb func(certification map[string]dbus.
 
 // signal EAP
 
-func (v *interface1) ConnectEAP(cb func(status string, parameter string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectEAP(cb func(status string, parameter string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -924,7 +1183,7 @@ func (v *interface1) ConnectEAP(cb func(status string, parameter string)) (dbusu
 
 // signal StaAuthorized
 
-func (v *interface1) ConnectStaAuthorized(cb func(name string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectStaAuthorized(cb func(name string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -950,7 +1209,7 @@ func (v *interface1) ConnectStaAuthorized(cb func(name string)) (dbusutil.Signal
 
 // signal StaDeauthorized
 
-func (v *interface1) ConnectStaDeauthorized(cb func(name string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectStaDeauthorized(cb func(name string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -976,7 +1235,7 @@ func (v *interface1) ConnectStaDeauthorized(cb func(name string)) (dbusutil.Sign
 
 // signal StationAdded
 
-func (v *interface1) ConnectStationAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectStationAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1003,7 +1262,7 @@ func (v *interface1) ConnectStationAdded(cb func(path dbus.ObjectPath, propertie
 
 // signal StationRemoved
 
-func (v *interface1) ConnectStationRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectStationRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1029,7 +1288,7 @@ func (v *interface1) ConnectStationRemoved(cb func(path dbus.ObjectPath)) (dbusu
 
 // signal NetworkRequest
 
-func (v *interface1) ConnectNetworkRequest(cb func(path dbus.ObjectPath, field string, text string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterface1) ConnectNetworkRequest(cb func(path dbus.ObjectPath, field string, text string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -1057,8 +1316,8 @@ func (v *interface1) ConnectNetworkRequest(cb func(path dbus.ObjectPath, field s
 
 // property Capabilities a{sv}
 
-func (v *interface1) Capabilities() MapStrVariant {
-	return MapStrVariant{
+func (v *interfaceInterface1) Capabilities() MapStrVariant {
+	return &implMapStrVariant{
 		Impl: v,
 		Name: "Capabilities",
 	}
@@ -1066,8 +1325,8 @@ func (v *interface1) Capabilities() MapStrVariant {
 
 // property State s
 
-func (v *interface1) State() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) State() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "State",
 	}
@@ -1075,8 +1334,8 @@ func (v *interface1) State() proxy.PropString {
 
 // property Scanning b
 
-func (v *interface1) Scanning() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInterface1) Scanning() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Scanning",
 	}
@@ -1084,8 +1343,8 @@ func (v *interface1) Scanning() proxy.PropBool {
 
 // property ApScan u
 
-func (v *interface1) ApScan() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInterface1) ApScan() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "ApScan",
 	}
@@ -1093,8 +1352,8 @@ func (v *interface1) ApScan() proxy.PropUint32 {
 
 // property BSSExpireAge u
 
-func (v *interface1) BSSExpireAge() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInterface1) BSSExpireAge() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "BSSExpireAge",
 	}
@@ -1102,8 +1361,8 @@ func (v *interface1) BSSExpireAge() proxy.PropUint32 {
 
 // property BSSExpireCount u
 
-func (v *interface1) BSSExpireCount() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceInterface1) BSSExpireCount() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "BSSExpireCount",
 	}
@@ -1111,8 +1370,8 @@ func (v *interface1) BSSExpireCount() proxy.PropUint32 {
 
 // property Country s
 
-func (v *interface1) Country() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Country() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Country",
 	}
@@ -1120,8 +1379,8 @@ func (v *interface1) Country() proxy.PropString {
 
 // property Ifname s
 
-func (v *interface1) Ifname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Ifname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Ifname",
 	}
@@ -1129,8 +1388,8 @@ func (v *interface1) Ifname() proxy.PropString {
 
 // property Driver s
 
-func (v *interface1) Driver() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Driver() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Driver",
 	}
@@ -1138,8 +1397,8 @@ func (v *interface1) Driver() proxy.PropString {
 
 // property BridgeIfname s
 
-func (v *interface1) BridgeIfname() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) BridgeIfname() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BridgeIfname",
 	}
@@ -1147,8 +1406,8 @@ func (v *interface1) BridgeIfname() proxy.PropString {
 
 // property ConfigFile s
 
-func (v *interface1) ConfigFile() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ConfigFile() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ConfigFile",
 	}
@@ -1156,8 +1415,8 @@ func (v *interface1) ConfigFile() proxy.PropString {
 
 // property CurrentBSS o
 
-func (v *interface1) CurrentBSS() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceInterface1) CurrentBSS() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "CurrentBSS",
 	}
@@ -1165,8 +1424,8 @@ func (v *interface1) CurrentBSS() proxy.PropObjectPath {
 
 // property CurrentNetwork o
 
-func (v *interface1) CurrentNetwork() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceInterface1) CurrentNetwork() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "CurrentNetwork",
 	}
@@ -1174,32 +1433,35 @@ func (v *interface1) CurrentNetwork() proxy.PropObjectPath {
 
 // property CurrentAuthMode s
 
-func (v *interface1) CurrentAuthMode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) CurrentAuthMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CurrentAuthMode",
 	}
 }
 
-// property Blobs a{say}
-
-func (v *interface1) Blobs() PropInterfaceBlobs {
-	return PropInterfaceBlobs{
-		Impl: v,
-	}
+type PropInterfaceBlobs interface {
+	Get(flags dbus.Flags) (value map[string][]byte, err error)
+	Set(flags dbus.Flags, value map[string][]byte) error
+	ConnectChanged(cb func(hasValue bool, value map[string][]byte)) error
 }
 
-type PropInterfaceBlobs struct {
+type implPropInterfaceBlobs struct {
 	Impl proxy.Implementer
+	Name string
 }
 
-func (p PropInterfaceBlobs) Get(flags dbus.Flags) (value map[string][]byte, err error) {
+func (p implPropInterfaceBlobs) Get(flags dbus.Flags) (value map[string][]byte, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		"Blobs", &value)
+		p.Name, &value)
 	return
 }
 
-func (p PropInterfaceBlobs) ConnectChanged(cb func(hasValue bool, value map[string][]byte)) error {
+func (p implPropInterfaceBlobs) Set(flags dbus.Flags, value map[string][]byte) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropInterfaceBlobs) ConnectChanged(cb func(hasValue bool, value map[string][]byte)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
@@ -1216,13 +1478,22 @@ func (p PropInterfaceBlobs) ConnectChanged(cb func(hasValue bool, value map[stri
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		"Blobs", cb0)
+		p.Name, cb0)
+}
+
+// property Blobs a{say}
+
+func (v *interfaceInterface1) Blobs() PropInterfaceBlobs {
+	return &implPropInterfaceBlobs{
+		Impl: v,
+		Name: "Blobs",
+	}
 }
 
 // property BSSs ao
 
-func (v *interface1) BSSs() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInterface1) BSSs() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "BSSs",
 	}
@@ -1230,8 +1501,8 @@ func (v *interface1) BSSs() proxy.PropObjectPathArray {
 
 // property Networks ao
 
-func (v *interface1) Networks() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInterface1) Networks() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Networks",
 	}
@@ -1239,8 +1510,8 @@ func (v *interface1) Networks() proxy.PropObjectPathArray {
 
 // property FastReauth b
 
-func (v *interface1) FastReauth() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInterface1) FastReauth() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "FastReauth",
 	}
@@ -1248,8 +1519,8 @@ func (v *interface1) FastReauth() proxy.PropBool {
 
 // property ScanInterval i
 
-func (v *interface1) ScanInterval() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInterface1) ScanInterval() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "ScanInterval",
 	}
@@ -1257,8 +1528,8 @@ func (v *interface1) ScanInterval() proxy.PropInt32 {
 
 // property PKCS11EnginePath s
 
-func (v *interface1) PKCS11EnginePath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PKCS11EnginePath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PKCS11EnginePath",
 	}
@@ -1266,8 +1537,8 @@ func (v *interface1) PKCS11EnginePath() proxy.PropString {
 
 // property PKCS11ModulePath s
 
-func (v *interface1) PKCS11ModulePath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PKCS11ModulePath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PKCS11ModulePath",
 	}
@@ -1275,8 +1546,8 @@ func (v *interface1) PKCS11ModulePath() proxy.PropString {
 
 // property DisconnectReason i
 
-func (v *interface1) DisconnectReason() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInterface1) DisconnectReason() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "DisconnectReason",
 	}
@@ -1284,8 +1555,8 @@ func (v *interface1) DisconnectReason() proxy.PropInt32 {
 
 // property AuthStatusCode i
 
-func (v *interface1) AuthStatusCode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInterface1) AuthStatusCode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "AuthStatusCode",
 	}
@@ -1293,8 +1564,8 @@ func (v *interface1) AuthStatusCode() proxy.PropInt32 {
 
 // property AssocStatusCode i
 
-func (v *interface1) AssocStatusCode() proxy.PropInt32 {
-	return proxy.PropInt32{
+func (v *interfaceInterface1) AssocStatusCode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
 		Name: "AssocStatusCode",
 	}
@@ -1302,8 +1573,8 @@ func (v *interface1) AssocStatusCode() proxy.PropInt32 {
 
 // property Stations ao
 
-func (v *interface1) Stations() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInterface1) Stations() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Stations",
 	}
@@ -1311,8 +1582,8 @@ func (v *interface1) Stations() proxy.PropObjectPathArray {
 
 // property CtrlInterface s
 
-func (v *interface1) CtrlInterface() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) CtrlInterface() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CtrlInterface",
 	}
@@ -1320,8 +1591,8 @@ func (v *interface1) CtrlInterface() proxy.PropString {
 
 // property CtrlInterfaceGroup s
 
-func (v *interface1) CtrlInterfaceGroup() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) CtrlInterfaceGroup() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CtrlInterfaceGroup",
 	}
@@ -1329,8 +1600,8 @@ func (v *interface1) CtrlInterfaceGroup() proxy.PropString {
 
 // property EapolVersion s
 
-func (v *interface1) EapolVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) EapolVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "EapolVersion",
 	}
@@ -1338,8 +1609,8 @@ func (v *interface1) EapolVersion() proxy.PropString {
 
 // property Bgscan s
 
-func (v *interface1) Bgscan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Bgscan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Bgscan",
 	}
@@ -1347,8 +1618,8 @@ func (v *interface1) Bgscan() proxy.PropString {
 
 // property DisableScanOffload s
 
-func (v *interface1) DisableScanOffload() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DisableScanOffload() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DisableScanOffload",
 	}
@@ -1356,8 +1627,8 @@ func (v *interface1) DisableScanOffload() proxy.PropString {
 
 // property OpenscEnginePath s
 
-func (v *interface1) OpenscEnginePath() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) OpenscEnginePath() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OpenscEnginePath",
 	}
@@ -1365,8 +1636,8 @@ func (v *interface1) OpenscEnginePath() proxy.PropString {
 
 // property OpensslCiphers s
 
-func (v *interface1) OpensslCiphers() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) OpensslCiphers() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OpensslCiphers",
 	}
@@ -1374,8 +1645,8 @@ func (v *interface1) OpensslCiphers() proxy.PropString {
 
 // property PcscReader s
 
-func (v *interface1) PcscReader() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PcscReader() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PcscReader",
 	}
@@ -1383,8 +1654,8 @@ func (v *interface1) PcscReader() proxy.PropString {
 
 // property PcscPin s
 
-func (v *interface1) PcscPin() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PcscPin() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PcscPin",
 	}
@@ -1392,8 +1663,8 @@ func (v *interface1) PcscPin() proxy.PropString {
 
 // property ExternalSim s
 
-func (v *interface1) ExternalSim() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ExternalSim() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ExternalSim",
 	}
@@ -1401,8 +1672,8 @@ func (v *interface1) ExternalSim() proxy.PropString {
 
 // property DriverParam s
 
-func (v *interface1) DriverParam() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DriverParam() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DriverParam",
 	}
@@ -1410,8 +1681,8 @@ func (v *interface1) DriverParam() proxy.PropString {
 
 // property Dot11RSNAConfigPMKLifetime s
 
-func (v *interface1) Dot11RSNAConfigPMKLifetime() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Dot11RSNAConfigPMKLifetime() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Dot11RSNAConfigPMKLifetime",
 	}
@@ -1419,8 +1690,8 @@ func (v *interface1) Dot11RSNAConfigPMKLifetime() proxy.PropString {
 
 // property Dot11RSNAConfigPMKReauthThreshold s
 
-func (v *interface1) Dot11RSNAConfigPMKReauthThreshold() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Dot11RSNAConfigPMKReauthThreshold() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Dot11RSNAConfigPMKReauthThreshold",
 	}
@@ -1428,8 +1699,8 @@ func (v *interface1) Dot11RSNAConfigPMKReauthThreshold() proxy.PropString {
 
 // property Dot11RSNAConfigSATimeout s
 
-func (v *interface1) Dot11RSNAConfigSATimeout() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Dot11RSNAConfigSATimeout() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Dot11RSNAConfigSATimeout",
 	}
@@ -1437,8 +1708,8 @@ func (v *interface1) Dot11RSNAConfigSATimeout() proxy.PropString {
 
 // property UpdateConfig s
 
-func (v *interface1) UpdateConfig() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) UpdateConfig() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "UpdateConfig",
 	}
@@ -1446,8 +1717,8 @@ func (v *interface1) UpdateConfig() proxy.PropString {
 
 // property Uuid s
 
-func (v *interface1) Uuid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Uuid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Uuid",
 	}
@@ -1455,8 +1726,8 @@ func (v *interface1) Uuid() proxy.PropString {
 
 // property AutoUuid s
 
-func (v *interface1) AutoUuid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) AutoUuid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "AutoUuid",
 	}
@@ -1464,8 +1735,8 @@ func (v *interface1) AutoUuid() proxy.PropString {
 
 // property DeviceName s
 
-func (v *interface1) DeviceName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DeviceName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DeviceName",
 	}
@@ -1473,8 +1744,8 @@ func (v *interface1) DeviceName() proxy.PropString {
 
 // property Manufacturer s
 
-func (v *interface1) Manufacturer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Manufacturer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Manufacturer",
 	}
@@ -1482,8 +1753,8 @@ func (v *interface1) Manufacturer() proxy.PropString {
 
 // property ModelName s
 
-func (v *interface1) ModelName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ModelName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ModelName",
 	}
@@ -1491,8 +1762,8 @@ func (v *interface1) ModelName() proxy.PropString {
 
 // property ModelNumber s
 
-func (v *interface1) ModelNumber() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ModelNumber() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ModelNumber",
 	}
@@ -1500,8 +1771,8 @@ func (v *interface1) ModelNumber() proxy.PropString {
 
 // property SerialNumber s
 
-func (v *interface1) SerialNumber() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SerialNumber() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SerialNumber",
 	}
@@ -1509,8 +1780,8 @@ func (v *interface1) SerialNumber() proxy.PropString {
 
 // property DeviceType s
 
-func (v *interface1) DeviceType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DeviceType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DeviceType",
 	}
@@ -1518,8 +1789,8 @@ func (v *interface1) DeviceType() proxy.PropString {
 
 // property OsVersion s
 
-func (v *interface1) OsVersion() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) OsVersion() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OsVersion",
 	}
@@ -1527,8 +1798,8 @@ func (v *interface1) OsVersion() proxy.PropString {
 
 // property ConfigMethods s
 
-func (v *interface1) ConfigMethods() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ConfigMethods() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ConfigMethods",
 	}
@@ -1536,8 +1807,8 @@ func (v *interface1) ConfigMethods() proxy.PropString {
 
 // property WpsCredProcessing s
 
-func (v *interface1) WpsCredProcessing() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsCredProcessing() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsCredProcessing",
 	}
@@ -1545,8 +1816,8 @@ func (v *interface1) WpsCredProcessing() proxy.PropString {
 
 // property WpsVendorExtM1 s
 
-func (v *interface1) WpsVendorExtM1() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsVendorExtM1() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsVendorExtM1",
 	}
@@ -1554,8 +1825,8 @@ func (v *interface1) WpsVendorExtM1() proxy.PropString {
 
 // property SecDeviceType s
 
-func (v *interface1) SecDeviceType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SecDeviceType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SecDeviceType",
 	}
@@ -1563,8 +1834,8 @@ func (v *interface1) SecDeviceType() proxy.PropString {
 
 // property P2pListenRegClass s
 
-func (v *interface1) P2pListenRegClass() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pListenRegClass() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pListenRegClass",
 	}
@@ -1572,8 +1843,8 @@ func (v *interface1) P2pListenRegClass() proxy.PropString {
 
 // property P2pListenChannel s
 
-func (v *interface1) P2pListenChannel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pListenChannel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pListenChannel",
 	}
@@ -1581,8 +1852,8 @@ func (v *interface1) P2pListenChannel() proxy.PropString {
 
 // property P2pOperRegClass s
 
-func (v *interface1) P2pOperRegClass() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pOperRegClass() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pOperRegClass",
 	}
@@ -1590,8 +1861,8 @@ func (v *interface1) P2pOperRegClass() proxy.PropString {
 
 // property P2pOperChannel s
 
-func (v *interface1) P2pOperChannel() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pOperChannel() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pOperChannel",
 	}
@@ -1599,8 +1870,8 @@ func (v *interface1) P2pOperChannel() proxy.PropString {
 
 // property P2pGoIntent s
 
-func (v *interface1) P2pGoIntent() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoIntent() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoIntent",
 	}
@@ -1608,8 +1879,8 @@ func (v *interface1) P2pGoIntent() proxy.PropString {
 
 // property P2pSsidPostfix s
 
-func (v *interface1) P2pSsidPostfix() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pSsidPostfix() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pSsidPostfix",
 	}
@@ -1617,8 +1888,8 @@ func (v *interface1) P2pSsidPostfix() proxy.PropString {
 
 // property PersistentReconnect s
 
-func (v *interface1) PersistentReconnect() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PersistentReconnect() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PersistentReconnect",
 	}
@@ -1626,8 +1897,8 @@ func (v *interface1) PersistentReconnect() proxy.PropString {
 
 // property P2pIntraBss s
 
-func (v *interface1) P2pIntraBss() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pIntraBss() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pIntraBss",
 	}
@@ -1635,8 +1906,8 @@ func (v *interface1) P2pIntraBss() proxy.PropString {
 
 // property P2pGroupIdle s
 
-func (v *interface1) P2pGroupIdle() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGroupIdle() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGroupIdle",
 	}
@@ -1644,8 +1915,8 @@ func (v *interface1) P2pGroupIdle() proxy.PropString {
 
 // property P2pGoFreqChangePolicy s
 
-func (v *interface1) P2pGoFreqChangePolicy() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoFreqChangePolicy() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoFreqChangePolicy",
 	}
@@ -1653,8 +1924,8 @@ func (v *interface1) P2pGoFreqChangePolicy() proxy.PropString {
 
 // property P2pPassphraseLen s
 
-func (v *interface1) P2pPassphraseLen() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pPassphraseLen() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pPassphraseLen",
 	}
@@ -1662,8 +1933,8 @@ func (v *interface1) P2pPassphraseLen() proxy.PropString {
 
 // property P2pPrefChan s
 
-func (v *interface1) P2pPrefChan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pPrefChan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pPrefChan",
 	}
@@ -1671,8 +1942,8 @@ func (v *interface1) P2pPrefChan() proxy.PropString {
 
 // property P2pNoGoFreq s
 
-func (v *interface1) P2pNoGoFreq() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pNoGoFreq() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pNoGoFreq",
 	}
@@ -1680,8 +1951,8 @@ func (v *interface1) P2pNoGoFreq() proxy.PropString {
 
 // property P2pAddCliChan s
 
-func (v *interface1) P2pAddCliChan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pAddCliChan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pAddCliChan",
 	}
@@ -1689,8 +1960,8 @@ func (v *interface1) P2pAddCliChan() proxy.PropString {
 
 // property P2pOptimizeListenChan s
 
-func (v *interface1) P2pOptimizeListenChan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pOptimizeListenChan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pOptimizeListenChan",
 	}
@@ -1698,8 +1969,8 @@ func (v *interface1) P2pOptimizeListenChan() proxy.PropString {
 
 // property P2pGoHt40 s
 
-func (v *interface1) P2pGoHt40() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoHt40() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoHt40",
 	}
@@ -1707,8 +1978,8 @@ func (v *interface1) P2pGoHt40() proxy.PropString {
 
 // property P2pGoVht s
 
-func (v *interface1) P2pGoVht() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoVht() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoVht",
 	}
@@ -1716,8 +1987,8 @@ func (v *interface1) P2pGoVht() proxy.PropString {
 
 // property P2pGoHe s
 
-func (v *interface1) P2pGoHe() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoHe() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoHe",
 	}
@@ -1725,8 +1996,8 @@ func (v *interface1) P2pGoHe() proxy.PropString {
 
 // property P2pDisabled s
 
-func (v *interface1) P2pDisabled() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pDisabled() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pDisabled",
 	}
@@ -1734,8 +2005,8 @@ func (v *interface1) P2pDisabled() proxy.PropString {
 
 // property P2pGoCtwindow s
 
-func (v *interface1) P2pGoCtwindow() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoCtwindow() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoCtwindow",
 	}
@@ -1743,8 +2014,8 @@ func (v *interface1) P2pGoCtwindow() proxy.PropString {
 
 // property P2pNoGroupIface s
 
-func (v *interface1) P2pNoGroupIface() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pNoGroupIface() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pNoGroupIface",
 	}
@@ -1752,8 +2023,8 @@ func (v *interface1) P2pNoGroupIface() proxy.PropString {
 
 // property P2pIgnoreSharedFreq s
 
-func (v *interface1) P2pIgnoreSharedFreq() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pIgnoreSharedFreq() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pIgnoreSharedFreq",
 	}
@@ -1761,8 +2032,8 @@ func (v *interface1) P2pIgnoreSharedFreq() proxy.PropString {
 
 // property IpAddrGo s
 
-func (v *interface1) IpAddrGo() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) IpAddrGo() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IpAddrGo",
 	}
@@ -1770,8 +2041,8 @@ func (v *interface1) IpAddrGo() proxy.PropString {
 
 // property IpAddrMask s
 
-func (v *interface1) IpAddrMask() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) IpAddrMask() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IpAddrMask",
 	}
@@ -1779,8 +2050,8 @@ func (v *interface1) IpAddrMask() proxy.PropString {
 
 // property IpAddrStart s
 
-func (v *interface1) IpAddrStart() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) IpAddrStart() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IpAddrStart",
 	}
@@ -1788,8 +2059,8 @@ func (v *interface1) IpAddrStart() proxy.PropString {
 
 // property IpAddrEnd s
 
-func (v *interface1) IpAddrEnd() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) IpAddrEnd() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IpAddrEnd",
 	}
@@ -1797,8 +2068,8 @@ func (v *interface1) IpAddrEnd() proxy.PropString {
 
 // property P2pCliProbe s
 
-func (v *interface1) P2pCliProbe() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pCliProbe() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pCliProbe",
 	}
@@ -1806,8 +2077,8 @@ func (v *interface1) P2pCliProbe() proxy.PropString {
 
 // property P2pDeviceRandomMacAddr s
 
-func (v *interface1) P2pDeviceRandomMacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pDeviceRandomMacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pDeviceRandomMacAddr",
 	}
@@ -1815,8 +2086,8 @@ func (v *interface1) P2pDeviceRandomMacAddr() proxy.PropString {
 
 // property P2pDevicePersistentMacAddr s
 
-func (v *interface1) P2pDevicePersistentMacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pDevicePersistentMacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pDevicePersistentMacAddr",
 	}
@@ -1824,8 +2095,8 @@ func (v *interface1) P2pDevicePersistentMacAddr() proxy.PropString {
 
 // property P2pInterfaceRandomMacAddr s
 
-func (v *interface1) P2pInterfaceRandomMacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pInterfaceRandomMacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pInterfaceRandomMacAddr",
 	}
@@ -1833,8 +2104,8 @@ func (v *interface1) P2pInterfaceRandomMacAddr() proxy.PropString {
 
 // property BssMaxCount s
 
-func (v *interface1) BssMaxCount() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) BssMaxCount() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BssMaxCount",
 	}
@@ -1842,8 +2113,8 @@ func (v *interface1) BssMaxCount() proxy.PropString {
 
 // property FilterSsids s
 
-func (v *interface1) FilterSsids() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FilterSsids() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FilterSsids",
 	}
@@ -1851,8 +2122,8 @@ func (v *interface1) FilterSsids() proxy.PropString {
 
 // property FilterRssi s
 
-func (v *interface1) FilterRssi() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FilterRssi() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FilterRssi",
 	}
@@ -1860,8 +2131,8 @@ func (v *interface1) FilterRssi() proxy.PropString {
 
 // property MaxNumSta s
 
-func (v *interface1) MaxNumSta() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) MaxNumSta() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "MaxNumSta",
 	}
@@ -1869,8 +2140,8 @@ func (v *interface1) MaxNumSta() proxy.PropString {
 
 // property ApIsolate s
 
-func (v *interface1) ApIsolate() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ApIsolate() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ApIsolate",
 	}
@@ -1878,8 +2149,8 @@ func (v *interface1) ApIsolate() proxy.PropString {
 
 // property DisassocLowAck s
 
-func (v *interface1) DisassocLowAck() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DisassocLowAck() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DisassocLowAck",
 	}
@@ -1887,8 +2158,8 @@ func (v *interface1) DisassocLowAck() proxy.PropString {
 
 // property Hs20 s
 
-func (v *interface1) Hs20() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Hs20() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Hs20",
 	}
@@ -1896,8 +2167,8 @@ func (v *interface1) Hs20() proxy.PropString {
 
 // property Interworking s
 
-func (v *interface1) Interworking() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Interworking() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Interworking",
 	}
@@ -1905,8 +2176,8 @@ func (v *interface1) Interworking() proxy.PropString {
 
 // property Hessid s
 
-func (v *interface1) Hessid() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Hessid() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Hessid",
 	}
@@ -1914,8 +2185,8 @@ func (v *interface1) Hessid() proxy.PropString {
 
 // property AccessNetworkType s
 
-func (v *interface1) AccessNetworkType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) AccessNetworkType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "AccessNetworkType",
 	}
@@ -1923,8 +2194,8 @@ func (v *interface1) AccessNetworkType() proxy.PropString {
 
 // property GoInterworking s
 
-func (v *interface1) GoInterworking() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GoInterworking() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GoInterworking",
 	}
@@ -1932,8 +2203,8 @@ func (v *interface1) GoInterworking() proxy.PropString {
 
 // property GoAccessNetworkType s
 
-func (v *interface1) GoAccessNetworkType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GoAccessNetworkType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GoAccessNetworkType",
 	}
@@ -1941,8 +2212,8 @@ func (v *interface1) GoAccessNetworkType() proxy.PropString {
 
 // property GoInternet s
 
-func (v *interface1) GoInternet() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GoInternet() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GoInternet",
 	}
@@ -1950,8 +2221,8 @@ func (v *interface1) GoInternet() proxy.PropString {
 
 // property GoVenueGroup s
 
-func (v *interface1) GoVenueGroup() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GoVenueGroup() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GoVenueGroup",
 	}
@@ -1959,8 +2230,8 @@ func (v *interface1) GoVenueGroup() proxy.PropString {
 
 // property GoVenueType s
 
-func (v *interface1) GoVenueType() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GoVenueType() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GoVenueType",
 	}
@@ -1968,8 +2239,8 @@ func (v *interface1) GoVenueType() proxy.PropString {
 
 // property PbcInM1 s
 
-func (v *interface1) PbcInM1() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PbcInM1() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PbcInM1",
 	}
@@ -1977,8 +2248,8 @@ func (v *interface1) PbcInM1() proxy.PropString {
 
 // property Autoscan s
 
-func (v *interface1) Autoscan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Autoscan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Autoscan",
 	}
@@ -1986,8 +2257,8 @@ func (v *interface1) Autoscan() proxy.PropString {
 
 // property WpsNfcDevPwId s
 
-func (v *interface1) WpsNfcDevPwId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsNfcDevPwId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsNfcDevPwId",
 	}
@@ -1995,8 +2266,8 @@ func (v *interface1) WpsNfcDevPwId() proxy.PropString {
 
 // property WpsNfcDhPubkey s
 
-func (v *interface1) WpsNfcDhPubkey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsNfcDhPubkey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsNfcDhPubkey",
 	}
@@ -2004,8 +2275,8 @@ func (v *interface1) WpsNfcDhPubkey() proxy.PropString {
 
 // property WpsNfcDhPrivkey s
 
-func (v *interface1) WpsNfcDhPrivkey() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsNfcDhPrivkey() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsNfcDhPrivkey",
 	}
@@ -2013,8 +2284,8 @@ func (v *interface1) WpsNfcDhPrivkey() proxy.PropString {
 
 // property WpsNfcDevPw s
 
-func (v *interface1) WpsNfcDevPw() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsNfcDevPw() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsNfcDevPw",
 	}
@@ -2022,8 +2293,8 @@ func (v *interface1) WpsNfcDevPw() proxy.PropString {
 
 // property ExtPasswordBackend s
 
-func (v *interface1) ExtPasswordBackend() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ExtPasswordBackend() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ExtPasswordBackend",
 	}
@@ -2031,8 +2302,8 @@ func (v *interface1) ExtPasswordBackend() proxy.PropString {
 
 // property P2pGoMaxInactivity s
 
-func (v *interface1) P2pGoMaxInactivity() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pGoMaxInactivity() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pGoMaxInactivity",
 	}
@@ -2040,8 +2311,8 @@ func (v *interface1) P2pGoMaxInactivity() proxy.PropString {
 
 // property AutoInterworking s
 
-func (v *interface1) AutoInterworking() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) AutoInterworking() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "AutoInterworking",
 	}
@@ -2049,8 +2320,8 @@ func (v *interface1) AutoInterworking() proxy.PropString {
 
 // property Okc s
 
-func (v *interface1) Okc() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Okc() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Okc",
 	}
@@ -2058,8 +2329,8 @@ func (v *interface1) Okc() proxy.PropString {
 
 // property Pmf s
 
-func (v *interface1) Pmf() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) Pmf() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Pmf",
 	}
@@ -2067,8 +2338,8 @@ func (v *interface1) Pmf() proxy.PropString {
 
 // property SaeGroups s
 
-func (v *interface1) SaeGroups() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SaeGroups() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SaeGroups",
 	}
@@ -2076,8 +2347,8 @@ func (v *interface1) SaeGroups() proxy.PropString {
 
 // property DtimPeriod s
 
-func (v *interface1) DtimPeriod() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DtimPeriod() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DtimPeriod",
 	}
@@ -2085,8 +2356,8 @@ func (v *interface1) DtimPeriod() proxy.PropString {
 
 // property BeaconInt s
 
-func (v *interface1) BeaconInt() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) BeaconInt() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "BeaconInt",
 	}
@@ -2094,8 +2365,8 @@ func (v *interface1) BeaconInt() proxy.PropString {
 
 // property ApVendorElements s
 
-func (v *interface1) ApVendorElements() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ApVendorElements() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ApVendorElements",
 	}
@@ -2103,8 +2374,8 @@ func (v *interface1) ApVendorElements() proxy.PropString {
 
 // property IgnoreOldScanRes s
 
-func (v *interface1) IgnoreOldScanRes() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) IgnoreOldScanRes() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "IgnoreOldScanRes",
 	}
@@ -2112,8 +2383,8 @@ func (v *interface1) IgnoreOldScanRes() proxy.PropString {
 
 // property FreqList s
 
-func (v *interface1) FreqList() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FreqList() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FreqList",
 	}
@@ -2121,8 +2392,8 @@ func (v *interface1) FreqList() proxy.PropString {
 
 // property ScanCurFreq s
 
-func (v *interface1) ScanCurFreq() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ScanCurFreq() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ScanCurFreq",
 	}
@@ -2130,8 +2401,8 @@ func (v *interface1) ScanCurFreq() proxy.PropString {
 
 // property SchedScanInterval s
 
-func (v *interface1) SchedScanInterval() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SchedScanInterval() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SchedScanInterval",
 	}
@@ -2139,8 +2410,8 @@ func (v *interface1) SchedScanInterval() proxy.PropString {
 
 // property SchedScanStartDelay s
 
-func (v *interface1) SchedScanStartDelay() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SchedScanStartDelay() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SchedScanStartDelay",
 	}
@@ -2148,8 +2419,8 @@ func (v *interface1) SchedScanStartDelay() proxy.PropString {
 
 // property TdlsExternalControl s
 
-func (v *interface1) TdlsExternalControl() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) TdlsExternalControl() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "TdlsExternalControl",
 	}
@@ -2157,8 +2428,8 @@ func (v *interface1) TdlsExternalControl() proxy.PropString {
 
 // property OsuDir s
 
-func (v *interface1) OsuDir() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) OsuDir() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "OsuDir",
 	}
@@ -2166,8 +2437,8 @@ func (v *interface1) OsuDir() proxy.PropString {
 
 // property WowlanTriggers s
 
-func (v *interface1) WowlanTriggers() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WowlanTriggers() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WowlanTriggers",
 	}
@@ -2175,8 +2446,8 @@ func (v *interface1) WowlanTriggers() proxy.PropString {
 
 // property P2pSearchDelay s
 
-func (v *interface1) P2pSearchDelay() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) P2pSearchDelay() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "P2pSearchDelay",
 	}
@@ -2184,8 +2455,8 @@ func (v *interface1) P2pSearchDelay() proxy.PropString {
 
 // property MacAddr s
 
-func (v *interface1) MacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) MacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "MacAddr",
 	}
@@ -2193,8 +2464,8 @@ func (v *interface1) MacAddr() proxy.PropString {
 
 // property RandAddrLifetime s
 
-func (v *interface1) RandAddrLifetime() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) RandAddrLifetime() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "RandAddrLifetime",
 	}
@@ -2202,8 +2473,8 @@ func (v *interface1) RandAddrLifetime() proxy.PropString {
 
 // property PreassocMacAddr s
 
-func (v *interface1) PreassocMacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PreassocMacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PreassocMacAddr",
 	}
@@ -2211,8 +2482,8 @@ func (v *interface1) PreassocMacAddr() proxy.PropString {
 
 // property KeyMgmtOffload s
 
-func (v *interface1) KeyMgmtOffload() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) KeyMgmtOffload() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "KeyMgmtOffload",
 	}
@@ -2220,8 +2491,8 @@ func (v *interface1) KeyMgmtOffload() proxy.PropString {
 
 // property PassiveScan s
 
-func (v *interface1) PassiveScan() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) PassiveScan() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "PassiveScan",
 	}
@@ -2229,8 +2500,8 @@ func (v *interface1) PassiveScan() proxy.PropString {
 
 // property ReassocSameBssOptim s
 
-func (v *interface1) ReassocSameBssOptim() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ReassocSameBssOptim() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ReassocSameBssOptim",
 	}
@@ -2238,8 +2509,8 @@ func (v *interface1) ReassocSameBssOptim() proxy.PropString {
 
 // property WpsPriority s
 
-func (v *interface1) WpsPriority() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpsPriority() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpsPriority",
 	}
@@ -2247,8 +2518,8 @@ func (v *interface1) WpsPriority() proxy.PropString {
 
 // property FstGroupId s
 
-func (v *interface1) FstGroupId() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FstGroupId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FstGroupId",
 	}
@@ -2256,8 +2527,8 @@ func (v *interface1) FstGroupId() proxy.PropString {
 
 // property FstPriority s
 
-func (v *interface1) FstPriority() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FstPriority() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FstPriority",
 	}
@@ -2265,8 +2536,8 @@ func (v *interface1) FstPriority() proxy.PropString {
 
 // property FstLlt s
 
-func (v *interface1) FstLlt() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FstLlt() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FstLlt",
 	}
@@ -2274,8 +2545,8 @@ func (v *interface1) FstLlt() proxy.PropString {
 
 // property CertInCb s
 
-func (v *interface1) CertInCb() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) CertInCb() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "CertInCb",
 	}
@@ -2283,8 +2554,8 @@ func (v *interface1) CertInCb() proxy.PropString {
 
 // property WpaRscRelaxation s
 
-func (v *interface1) WpaRscRelaxation() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) WpaRscRelaxation() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "WpaRscRelaxation",
 	}
@@ -2292,8 +2563,8 @@ func (v *interface1) WpaRscRelaxation() proxy.PropString {
 
 // property SchedScanPlans s
 
-func (v *interface1) SchedScanPlans() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) SchedScanPlans() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SchedScanPlans",
 	}
@@ -2301,8 +2572,8 @@ func (v *interface1) SchedScanPlans() proxy.PropString {
 
 // property GasAddress3 s
 
-func (v *interface1) GasAddress3() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GasAddress3() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GasAddress3",
 	}
@@ -2310,8 +2581,8 @@ func (v *interface1) GasAddress3() proxy.PropString {
 
 // property FtmResponder s
 
-func (v *interface1) FtmResponder() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FtmResponder() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FtmResponder",
 	}
@@ -2319,8 +2590,8 @@ func (v *interface1) FtmResponder() proxy.PropString {
 
 // property FtmInitiator s
 
-func (v *interface1) FtmInitiator() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) FtmInitiator() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "FtmInitiator",
 	}
@@ -2328,8 +2599,8 @@ func (v *interface1) FtmInitiator() proxy.PropString {
 
 // property GasRandAddrLifetime s
 
-func (v *interface1) GasRandAddrLifetime() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GasRandAddrLifetime() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GasRandAddrLifetime",
 	}
@@ -2337,8 +2608,8 @@ func (v *interface1) GasRandAddrLifetime() proxy.PropString {
 
 // property GasRandMacAddr s
 
-func (v *interface1) GasRandMacAddr() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) GasRandMacAddr() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "GasRandMacAddr",
 	}
@@ -2346,8 +2617,8 @@ func (v *interface1) GasRandMacAddr() proxy.PropString {
 
 // property DppConfigProcessing s
 
-func (v *interface1) DppConfigProcessing() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) DppConfigProcessing() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DppConfigProcessing",
 	}
@@ -2355,56 +2626,74 @@ func (v *interface1) DppConfigProcessing() proxy.PropString {
 
 // property ColocIntfReporting s
 
-func (v *interface1) ColocIntfReporting() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterface1) ColocIntfReporting() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ColocIntfReporting",
 	}
 }
 
-func (obj *Interface) WPS() *interfaceWPS {
-	return &obj.interfaceWPS
+func (obj *objectInterface) WPS() interfaceWPS {
+	return &obj.interfaceInterfaceWPS
 }
 
-type interfaceWPS struct{}
-
-func (v *interfaceWPS) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type interfaceWPS interface {
+	GoStart(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	Start(flags dbus.Flags, args map[string]dbus.Variant) (map[string]dbus.Variant, error)
+	GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Cancel(flags dbus.Flags) error
+	ConnectEvent(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectCredentials(cb func(credentials map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ProcessCredentials() proxy.PropBool
+	ConfigMethods() proxy.PropString
+	DeviceName() proxy.PropString
+	Manufacturer() proxy.PropString
+	ModelName() proxy.PropString
+	ModelNumber() proxy.PropString
+	SerialNumber() proxy.PropString
+	DeviceType() proxy.PropByteArray
 }
 
-func (*interfaceWPS) GetInterfaceName_() string {
+type interfaceInterfaceWPS struct{}
+
+func (v *interfaceInterfaceWPS) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInterfaceWPS) GetInterfaceName_() string {
 	return "fi.w1.wpa_supplicant1.Interface.WPS"
 }
 
 // method Start
 
-func (v *interfaceWPS) GoStart(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceWPS) GoStart(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Start", flags, ch, args)
 }
 
-func (*interfaceWPS) StoreStart(call *dbus.Call) (output map[string]dbus.Variant, err error) {
+func (*interfaceInterfaceWPS) StoreStart(call *dbus.Call) (output map[string]dbus.Variant, err error) {
 	err = call.Store(&output)
 	return
 }
 
-func (v *interfaceWPS) Start(flags dbus.Flags, args map[string]dbus.Variant) (output map[string]dbus.Variant, err error) {
+func (v *interfaceInterfaceWPS) Start(flags dbus.Flags, args map[string]dbus.Variant) (map[string]dbus.Variant, error) {
 	return v.StoreStart(
 		<-v.GoStart(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method Cancel
 
-func (v *interfaceWPS) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceWPS) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Cancel", flags, ch)
 }
 
-func (v *interfaceWPS) Cancel(flags dbus.Flags) error {
+func (v *interfaceInterfaceWPS) Cancel(flags dbus.Flags) error {
 	return (<-v.GoCancel(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal Event
 
-func (v *interfaceWPS) ConnectEvent(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceWPS) ConnectEvent(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2431,7 +2720,7 @@ func (v *interfaceWPS) ConnectEvent(cb func(name string, args map[string]dbus.Va
 
 // signal Credentials
 
-func (v *interfaceWPS) ConnectCredentials(cb func(credentials map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceWPS) ConnectCredentials(cb func(credentials map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2457,7 +2746,7 @@ func (v *interfaceWPS) ConnectCredentials(cb func(credentials map[string]dbus.Va
 
 // signal PropertiesChanged
 
-func (v *interfaceWPS) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceWPS) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2483,8 +2772,8 @@ func (v *interfaceWPS) ConnectSignalPropertiesChanged(cb func(properties map[str
 
 // property ProcessCredentials b
 
-func (v *interfaceWPS) ProcessCredentials() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceInterfaceWPS) ProcessCredentials() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ProcessCredentials",
 	}
@@ -2492,8 +2781,8 @@ func (v *interfaceWPS) ProcessCredentials() proxy.PropBool {
 
 // property ConfigMethods s
 
-func (v *interfaceWPS) ConfigMethods() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) ConfigMethods() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ConfigMethods",
 	}
@@ -2501,8 +2790,8 @@ func (v *interfaceWPS) ConfigMethods() proxy.PropString {
 
 // property DeviceName s
 
-func (v *interfaceWPS) DeviceName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) DeviceName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "DeviceName",
 	}
@@ -2510,8 +2799,8 @@ func (v *interfaceWPS) DeviceName() proxy.PropString {
 
 // property Manufacturer s
 
-func (v *interfaceWPS) Manufacturer() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) Manufacturer() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Manufacturer",
 	}
@@ -2519,8 +2808,8 @@ func (v *interfaceWPS) Manufacturer() proxy.PropString {
 
 // property ModelName s
 
-func (v *interfaceWPS) ModelName() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) ModelName() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ModelName",
 	}
@@ -2528,8 +2817,8 @@ func (v *interfaceWPS) ModelName() proxy.PropString {
 
 // property ModelNumber s
 
-func (v *interfaceWPS) ModelNumber() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) ModelNumber() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "ModelNumber",
 	}
@@ -2537,8 +2826,8 @@ func (v *interfaceWPS) ModelNumber() proxy.PropString {
 
 // property SerialNumber s
 
-func (v *interfaceWPS) SerialNumber() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceWPS) SerialNumber() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "SerialNumber",
 	}
@@ -2546,298 +2835,381 @@ func (v *interfaceWPS) SerialNumber() proxy.PropString {
 
 // property DeviceType ay
 
-func (v *interfaceWPS) DeviceType() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceInterfaceWPS) DeviceType() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "DeviceType",
 	}
 }
 
-func (obj *Interface) P2PDevice() *interfaceP2PDevice {
-	return &obj.interfaceP2PDevice
+func (obj *objectInterface) P2PDevice() interfaceP2PDevice {
+	return &obj.interfaceInterfaceP2PDevice
 }
 
-type interfaceP2PDevice struct{}
-
-func (v *interfaceP2PDevice) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type interfaceP2PDevice interface {
+	GoFind(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	Find(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoStopFind(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	StopFind(flags dbus.Flags) error
+	GoListen(flags dbus.Flags, ch chan *dbus.Call, timeout int32) *dbus.Call
+	Listen(flags dbus.Flags, timeout int32) error
+	GoExtendedListen(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	ExtendedListen(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoPresenceRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	PresenceRequest(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoProvisionDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath, config_method string) *dbus.Call
+	ProvisionDiscoveryRequest(flags dbus.Flags, peer dbus.ObjectPath, config_method string) error
+	GoConnect(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	Connect(flags dbus.Flags, args map[string]dbus.Variant) (string, error)
+	GoGroupAdd(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	GroupAdd(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Cancel(flags dbus.Flags) error
+	GoInvite(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	Invite(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Disconnect(flags dbus.Flags) error
+	GoRejectPeer(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath) *dbus.Call
+	RejectPeer(flags dbus.Flags, peer dbus.ObjectPath) error
+	GoRemoveClient(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	RemoveClient(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoFlush(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	Flush(flags dbus.Flags) error
+	GoAddService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	AddService(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoDeleteService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	DeleteService(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoFlushService(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	FlushService(flags dbus.Flags) error
+	GoServiceDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	ServiceDiscoveryRequest(flags dbus.Flags, args map[string]dbus.Variant) (uint64, error)
+	GoServiceDiscoveryResponse(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	ServiceDiscoveryResponse(flags dbus.Flags, args map[string]dbus.Variant) error
+	GoServiceDiscoveryCancelRequest(flags dbus.Flags, ch chan *dbus.Call, args uint64) *dbus.Call
+	ServiceDiscoveryCancelRequest(flags dbus.Flags, args uint64) error
+	GoServiceUpdate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	ServiceUpdate(flags dbus.Flags) error
+	GoServiceDiscoveryExternal(flags dbus.Flags, ch chan *dbus.Call, arg int32) *dbus.Call
+	ServiceDiscoveryExternal(flags dbus.Flags, arg int32) error
+	GoAddPersistentGroup(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call
+	AddPersistentGroup(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error)
+	GoRemovePersistentGroup(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
+	RemovePersistentGroup(flags dbus.Flags, path dbus.ObjectPath) error
+	GoRemoveAllPersistentGroups(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	RemoveAllPersistentGroups(flags dbus.Flags) error
+	ConnectDeviceFound(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceFoundProperties(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceLost(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectFindStopped(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryRequestDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryResponseDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryRequestEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryResponseEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryPBCRequest(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryPBCResponse(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectProvisionDiscoveryFailure(cb func(peer_object dbus.ObjectPath, status int32)) (dbusutil.SignalHandlerId, error)
+	ConnectGroupStarted(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectGroupFormationFailure(cb func(reason string)) (dbusutil.SignalHandlerId, error)
+	ConnectGONegotiationSuccess(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectGONegotiationFailure(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectGONegotiationRequest(cb func(path dbus.ObjectPath, dev_passwd_id uint16, device_go_intent uint8)) (dbusutil.SignalHandlerId, error)
+	ConnectInvitationResult(cb func(invite_result map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectGroupFinished(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectServiceDiscoveryRequest(cb func(sd_request map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectServiceDiscoveryResponse(cb func(sd_response map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectPersistentGroupAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectPersistentGroupRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error)
+	ConnectWpsFailed(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	ConnectInvitationReceived(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	P2PDeviceConfig() MapStrVariant
+	Peers() proxy.PropObjectPathArray
+	Role() proxy.PropString
+	Group() proxy.PropObjectPath
+	PeerGO() proxy.PropObjectPath
+	PersistentGroups() proxy.PropObjectPathArray
 }
 
-func (*interfaceP2PDevice) GetInterfaceName_() string {
+type interfaceInterfaceP2PDevice struct{}
+
+func (v *interfaceInterfaceP2PDevice) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceInterfaceP2PDevice) GetInterfaceName_() string {
 	return "fi.w1.wpa_supplicant1.Interface.P2PDevice"
 }
 
 // method Find
 
-func (v *interfaceP2PDevice) GoFind(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoFind(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Find", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) Find(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) Find(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoFind(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method StopFind
 
-func (v *interfaceP2PDevice) GoStopFind(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoStopFind(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopFind", flags, ch)
 }
 
-func (v *interfaceP2PDevice) StopFind(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) StopFind(flags dbus.Flags) error {
 	return (<-v.GoStopFind(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Listen
 
-func (v *interfaceP2PDevice) GoListen(flags dbus.Flags, ch chan *dbus.Call, timeout int32) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoListen(flags dbus.Flags, ch chan *dbus.Call, timeout int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Listen", flags, ch, timeout)
 }
 
-func (v *interfaceP2PDevice) Listen(flags dbus.Flags, timeout int32) error {
+func (v *interfaceInterfaceP2PDevice) Listen(flags dbus.Flags, timeout int32) error {
 	return (<-v.GoListen(flags, make(chan *dbus.Call, 1), timeout).Done).Err
 }
 
 // method ExtendedListen
 
-func (v *interfaceP2PDevice) GoExtendedListen(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoExtendedListen(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ExtendedListen", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) ExtendedListen(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) ExtendedListen(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoExtendedListen(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method PresenceRequest
 
-func (v *interfaceP2PDevice) GoPresenceRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoPresenceRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresenceRequest", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) PresenceRequest(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) PresenceRequest(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoPresenceRequest(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method ProvisionDiscoveryRequest
 
-func (v *interfaceP2PDevice) GoProvisionDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath, config_method string) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoProvisionDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath, config_method string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ProvisionDiscoveryRequest", flags, ch, peer, config_method)
 }
 
-func (v *interfaceP2PDevice) ProvisionDiscoveryRequest(flags dbus.Flags, peer dbus.ObjectPath, config_method string) error {
+func (v *interfaceInterfaceP2PDevice) ProvisionDiscoveryRequest(flags dbus.Flags, peer dbus.ObjectPath, config_method string) error {
 	return (<-v.GoProvisionDiscoveryRequest(flags, make(chan *dbus.Call, 1), peer, config_method).Done).Err
 }
 
 // method Connect
 
-func (v *interfaceP2PDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch, args)
 }
 
-func (*interfaceP2PDevice) StoreConnect(call *dbus.Call) (generated_pin string, err error) {
+func (*interfaceInterfaceP2PDevice) StoreConnect(call *dbus.Call) (generated_pin string, err error) {
 	err = call.Store(&generated_pin)
 	return
 }
 
-func (v *interfaceP2PDevice) Connect(flags dbus.Flags, args map[string]dbus.Variant) (generated_pin string, err error) {
+func (v *interfaceInterfaceP2PDevice) Connect(flags dbus.Flags, args map[string]dbus.Variant) (string, error) {
 	return v.StoreConnect(
 		<-v.GoConnect(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method GroupAdd
 
-func (v *interfaceP2PDevice) GoGroupAdd(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoGroupAdd(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GroupAdd", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) GroupAdd(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) GroupAdd(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoGroupAdd(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method Cancel
 
-func (v *interfaceP2PDevice) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Cancel", flags, ch)
 }
 
-func (v *interfaceP2PDevice) Cancel(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) Cancel(flags dbus.Flags) error {
 	return (<-v.GoCancel(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method Invite
 
-func (v *interfaceP2PDevice) GoInvite(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoInvite(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Invite", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) Invite(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) Invite(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoInvite(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method Disconnect
 
-func (v *interfaceP2PDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
-func (v *interfaceP2PDevice) Disconnect(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method RejectPeer
 
-func (v *interfaceP2PDevice) GoRejectPeer(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoRejectPeer(flags dbus.Flags, ch chan *dbus.Call, peer dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RejectPeer", flags, ch, peer)
 }
 
-func (v *interfaceP2PDevice) RejectPeer(flags dbus.Flags, peer dbus.ObjectPath) error {
+func (v *interfaceInterfaceP2PDevice) RejectPeer(flags dbus.Flags, peer dbus.ObjectPath) error {
 	return (<-v.GoRejectPeer(flags, make(chan *dbus.Call, 1), peer).Done).Err
 }
 
 // method RemoveClient
 
-func (v *interfaceP2PDevice) GoRemoveClient(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoRemoveClient(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveClient", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) RemoveClient(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) RemoveClient(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoRemoveClient(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method Flush
 
-func (v *interfaceP2PDevice) GoFlush(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoFlush(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Flush", flags, ch)
 }
 
-func (v *interfaceP2PDevice) Flush(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) Flush(flags dbus.Flags) error {
 	return (<-v.GoFlush(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method AddService
 
-func (v *interfaceP2PDevice) GoAddService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoAddService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddService", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) AddService(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) AddService(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoAddService(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method DeleteService
 
-func (v *interfaceP2PDevice) GoDeleteService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoDeleteService(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteService", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) DeleteService(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) DeleteService(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoDeleteService(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method FlushService
 
-func (v *interfaceP2PDevice) GoFlushService(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoFlushService(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FlushService", flags, ch)
 }
 
-func (v *interfaceP2PDevice) FlushService(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) FlushService(flags dbus.Flags) error {
 	return (<-v.GoFlushService(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ServiceDiscoveryRequest
 
-func (v *interfaceP2PDevice) GoServiceDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoServiceDiscoveryRequest(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ServiceDiscoveryRequest", flags, ch, args)
 }
 
-func (*interfaceP2PDevice) StoreServiceDiscoveryRequest(call *dbus.Call) (ref uint64, err error) {
+func (*interfaceInterfaceP2PDevice) StoreServiceDiscoveryRequest(call *dbus.Call) (ref uint64, err error) {
 	err = call.Store(&ref)
 	return
 }
 
-func (v *interfaceP2PDevice) ServiceDiscoveryRequest(flags dbus.Flags, args map[string]dbus.Variant) (ref uint64, err error) {
+func (v *interfaceInterfaceP2PDevice) ServiceDiscoveryRequest(flags dbus.Flags, args map[string]dbus.Variant) (uint64, error) {
 	return v.StoreServiceDiscoveryRequest(
 		<-v.GoServiceDiscoveryRequest(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method ServiceDiscoveryResponse
 
-func (v *interfaceP2PDevice) GoServiceDiscoveryResponse(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoServiceDiscoveryResponse(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ServiceDiscoveryResponse", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) ServiceDiscoveryResponse(flags dbus.Flags, args map[string]dbus.Variant) error {
+func (v *interfaceInterfaceP2PDevice) ServiceDiscoveryResponse(flags dbus.Flags, args map[string]dbus.Variant) error {
 	return (<-v.GoServiceDiscoveryResponse(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method ServiceDiscoveryCancelRequest
 
-func (v *interfaceP2PDevice) GoServiceDiscoveryCancelRequest(flags dbus.Flags, ch chan *dbus.Call, args uint64) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoServiceDiscoveryCancelRequest(flags dbus.Flags, ch chan *dbus.Call, args uint64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ServiceDiscoveryCancelRequest", flags, ch, args)
 }
 
-func (v *interfaceP2PDevice) ServiceDiscoveryCancelRequest(flags dbus.Flags, args uint64) error {
+func (v *interfaceInterfaceP2PDevice) ServiceDiscoveryCancelRequest(flags dbus.Flags, args uint64) error {
 	return (<-v.GoServiceDiscoveryCancelRequest(flags, make(chan *dbus.Call, 1), args).Done).Err
 }
 
 // method ServiceUpdate
 
-func (v *interfaceP2PDevice) GoServiceUpdate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoServiceUpdate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ServiceUpdate", flags, ch)
 }
 
-func (v *interfaceP2PDevice) ServiceUpdate(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) ServiceUpdate(flags dbus.Flags) error {
 	return (<-v.GoServiceUpdate(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ServiceDiscoveryExternal
 
-func (v *interfaceP2PDevice) GoServiceDiscoveryExternal(flags dbus.Flags, ch chan *dbus.Call, arg int32) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoServiceDiscoveryExternal(flags dbus.Flags, ch chan *dbus.Call, arg int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ServiceDiscoveryExternal", flags, ch, arg)
 }
 
-func (v *interfaceP2PDevice) ServiceDiscoveryExternal(flags dbus.Flags, arg int32) error {
+func (v *interfaceInterfaceP2PDevice) ServiceDiscoveryExternal(flags dbus.Flags, arg int32) error {
 	return (<-v.GoServiceDiscoveryExternal(flags, make(chan *dbus.Call, 1), arg).Done).Err
 }
 
 // method AddPersistentGroup
 
-func (v *interfaceP2PDevice) GoAddPersistentGroup(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoAddPersistentGroup(flags dbus.Flags, ch chan *dbus.Call, args map[string]dbus.Variant) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddPersistentGroup", flags, ch, args)
 }
 
-func (*interfaceP2PDevice) StoreAddPersistentGroup(call *dbus.Call) (path dbus.ObjectPath, err error) {
+func (*interfaceInterfaceP2PDevice) StoreAddPersistentGroup(call *dbus.Call) (path dbus.ObjectPath, err error) {
 	err = call.Store(&path)
 	return
 }
 
-func (v *interfaceP2PDevice) AddPersistentGroup(flags dbus.Flags, args map[string]dbus.Variant) (path dbus.ObjectPath, err error) {
+func (v *interfaceInterfaceP2PDevice) AddPersistentGroup(flags dbus.Flags, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	return v.StoreAddPersistentGroup(
 		<-v.GoAddPersistentGroup(flags, make(chan *dbus.Call, 1), args).Done)
 }
 
 // method RemovePersistentGroup
 
-func (v *interfaceP2PDevice) GoRemovePersistentGroup(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoRemovePersistentGroup(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemovePersistentGroup", flags, ch, path)
 }
 
-func (v *interfaceP2PDevice) RemovePersistentGroup(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *interfaceInterfaceP2PDevice) RemovePersistentGroup(flags dbus.Flags, path dbus.ObjectPath) error {
 	return (<-v.GoRemovePersistentGroup(flags, make(chan *dbus.Call, 1), path).Done).Err
 }
 
 // method RemoveAllPersistentGroups
 
-func (v *interfaceP2PDevice) GoRemoveAllPersistentGroups(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *interfaceInterfaceP2PDevice) GoRemoveAllPersistentGroups(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveAllPersistentGroups", flags, ch)
 }
 
-func (v *interfaceP2PDevice) RemoveAllPersistentGroups(flags dbus.Flags) error {
+func (v *interfaceInterfaceP2PDevice) RemoveAllPersistentGroups(flags dbus.Flags) error {
 	return (<-v.GoRemoveAllPersistentGroups(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // signal DeviceFound
 
-func (v *interfaceP2PDevice) ConnectDeviceFound(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectDeviceFound(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2863,7 +3235,7 @@ func (v *interfaceP2PDevice) ConnectDeviceFound(cb func(path dbus.ObjectPath)) (
 
 // signal DeviceFoundProperties
 
-func (v *interfaceP2PDevice) ConnectDeviceFoundProperties(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectDeviceFoundProperties(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2890,7 +3262,7 @@ func (v *interfaceP2PDevice) ConnectDeviceFoundProperties(cb func(path dbus.Obje
 
 // signal DeviceLost
 
-func (v *interfaceP2PDevice) ConnectDeviceLost(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectDeviceLost(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2916,7 +3288,7 @@ func (v *interfaceP2PDevice) ConnectDeviceLost(cb func(path dbus.ObjectPath)) (d
 
 // signal FindStopped
 
-func (v *interfaceP2PDevice) ConnectFindStopped(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectFindStopped(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2938,7 +3310,7 @@ func (v *interfaceP2PDevice) ConnectFindStopped(cb func()) (dbusutil.SignalHandl
 
 // signal ProvisionDiscoveryRequestDisplayPin
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryRequestDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryRequestDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2965,7 +3337,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryRequestDisplayPin(cb func(
 
 // signal ProvisionDiscoveryResponseDisplayPin
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryResponseDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryResponseDisplayPin(cb func(peer_object dbus.ObjectPath, pin string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -2992,7 +3364,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryResponseDisplayPin(cb func
 
 // signal ProvisionDiscoveryRequestEnterPin
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryRequestEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryRequestEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3018,7 +3390,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryRequestEnterPin(cb func(pe
 
 // signal ProvisionDiscoveryResponseEnterPin
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryResponseEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryResponseEnterPin(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3044,7 +3416,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryResponseEnterPin(cb func(p
 
 // signal ProvisionDiscoveryPBCRequest
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryPBCRequest(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryPBCRequest(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3070,7 +3442,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryPBCRequest(cb func(peer_ob
 
 // signal ProvisionDiscoveryPBCResponse
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryPBCResponse(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryPBCResponse(cb func(peer_object dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3096,7 +3468,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryPBCResponse(cb func(peer_o
 
 // signal ProvisionDiscoveryFailure
 
-func (v *interfaceP2PDevice) ConnectProvisionDiscoveryFailure(cb func(peer_object dbus.ObjectPath, status int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectProvisionDiscoveryFailure(cb func(peer_object dbus.ObjectPath, status int32)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3123,7 +3495,7 @@ func (v *interfaceP2PDevice) ConnectProvisionDiscoveryFailure(cb func(peer_objec
 
 // signal GroupStarted
 
-func (v *interfaceP2PDevice) ConnectGroupStarted(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGroupStarted(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3149,7 +3521,7 @@ func (v *interfaceP2PDevice) ConnectGroupStarted(cb func(properties map[string]d
 
 // signal GroupFormationFailure
 
-func (v *interfaceP2PDevice) ConnectGroupFormationFailure(cb func(reason string)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGroupFormationFailure(cb func(reason string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3175,7 +3547,7 @@ func (v *interfaceP2PDevice) ConnectGroupFormationFailure(cb func(reason string)
 
 // signal GONegotiationSuccess
 
-func (v *interfaceP2PDevice) ConnectGONegotiationSuccess(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGONegotiationSuccess(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3201,7 +3573,7 @@ func (v *interfaceP2PDevice) ConnectGONegotiationSuccess(cb func(properties map[
 
 // signal GONegotiationFailure
 
-func (v *interfaceP2PDevice) ConnectGONegotiationFailure(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGONegotiationFailure(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3227,7 +3599,7 @@ func (v *interfaceP2PDevice) ConnectGONegotiationFailure(cb func(properties map[
 
 // signal GONegotiationRequest
 
-func (v *interfaceP2PDevice) ConnectGONegotiationRequest(cb func(path dbus.ObjectPath, dev_passwd_id uint16, device_go_intent uint8)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGONegotiationRequest(cb func(path dbus.ObjectPath, dev_passwd_id uint16, device_go_intent uint8)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3255,7 +3627,7 @@ func (v *interfaceP2PDevice) ConnectGONegotiationRequest(cb func(path dbus.Objec
 
 // signal InvitationResult
 
-func (v *interfaceP2PDevice) ConnectInvitationResult(cb func(invite_result map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectInvitationResult(cb func(invite_result map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3281,7 +3653,7 @@ func (v *interfaceP2PDevice) ConnectInvitationResult(cb func(invite_result map[s
 
 // signal GroupFinished
 
-func (v *interfaceP2PDevice) ConnectGroupFinished(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectGroupFinished(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3307,7 +3679,7 @@ func (v *interfaceP2PDevice) ConnectGroupFinished(cb func(properties map[string]
 
 // signal ServiceDiscoveryRequest
 
-func (v *interfaceP2PDevice) ConnectServiceDiscoveryRequest(cb func(sd_request map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectServiceDiscoveryRequest(cb func(sd_request map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3333,7 +3705,7 @@ func (v *interfaceP2PDevice) ConnectServiceDiscoveryRequest(cb func(sd_request m
 
 // signal ServiceDiscoveryResponse
 
-func (v *interfaceP2PDevice) ConnectServiceDiscoveryResponse(cb func(sd_response map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectServiceDiscoveryResponse(cb func(sd_response map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3359,7 +3731,7 @@ func (v *interfaceP2PDevice) ConnectServiceDiscoveryResponse(cb func(sd_response
 
 // signal PersistentGroupAdded
 
-func (v *interfaceP2PDevice) ConnectPersistentGroupAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectPersistentGroupAdded(cb func(path dbus.ObjectPath, properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3386,7 +3758,7 @@ func (v *interfaceP2PDevice) ConnectPersistentGroupAdded(cb func(path dbus.Objec
 
 // signal PersistentGroupRemoved
 
-func (v *interfaceP2PDevice) ConnectPersistentGroupRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectPersistentGroupRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3412,7 +3784,7 @@ func (v *interfaceP2PDevice) ConnectPersistentGroupRemoved(cb func(path dbus.Obj
 
 // signal WpsFailed
 
-func (v *interfaceP2PDevice) ConnectWpsFailed(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectWpsFailed(cb func(name string, args map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3439,7 +3811,7 @@ func (v *interfaceP2PDevice) ConnectWpsFailed(cb func(name string, args map[stri
 
 // signal InvitationReceived
 
-func (v *interfaceP2PDevice) ConnectInvitationReceived(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceInterfaceP2PDevice) ConnectInvitationReceived(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3465,8 +3837,8 @@ func (v *interfaceP2PDevice) ConnectInvitationReceived(cb func(properties map[st
 
 // property P2PDeviceConfig a{sv}
 
-func (v *interfaceP2PDevice) P2PDeviceConfig() MapStrVariant {
-	return MapStrVariant{
+func (v *interfaceInterfaceP2PDevice) P2PDeviceConfig() MapStrVariant {
+	return &implMapStrVariant{
 		Impl: v,
 		Name: "P2PDeviceConfig",
 	}
@@ -3474,8 +3846,8 @@ func (v *interfaceP2PDevice) P2PDeviceConfig() MapStrVariant {
 
 // property Peers ao
 
-func (v *interfaceP2PDevice) Peers() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInterfaceP2PDevice) Peers() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "Peers",
 	}
@@ -3483,8 +3855,8 @@ func (v *interfaceP2PDevice) Peers() proxy.PropObjectPathArray {
 
 // property Role s
 
-func (v *interfaceP2PDevice) Role() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceInterfaceP2PDevice) Role() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Role",
 	}
@@ -3492,8 +3864,8 @@ func (v *interfaceP2PDevice) Role() proxy.PropString {
 
 // property Group o
 
-func (v *interfaceP2PDevice) Group() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceInterfaceP2PDevice) Group() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Group",
 	}
@@ -3501,8 +3873,8 @@ func (v *interfaceP2PDevice) Group() proxy.PropObjectPath {
 
 // property PeerGO o
 
-func (v *interfaceP2PDevice) PeerGO() proxy.PropObjectPath {
-	return proxy.PropObjectPath{
+func (v *interfaceInterfaceP2PDevice) PeerGO() proxy.PropObjectPath {
+	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "PeerGO",
 	}
@@ -3510,40 +3882,61 @@ func (v *interfaceP2PDevice) PeerGO() proxy.PropObjectPath {
 
 // property PersistentGroups ao
 
-func (v *interfaceP2PDevice) PersistentGroups() proxy.PropObjectPathArray {
-	return proxy.PropObjectPathArray{
+func (v *interfaceInterfaceP2PDevice) PersistentGroups() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
 		Impl: v,
 		Name: "PersistentGroups",
 	}
 }
 
-type BSS struct {
+type BSS interface {
 	bss // interface fi.w1.wpa_supplicant1.BSS
 	proxy.Object
 }
 
-func NewBSS(conn *dbus.Conn, path dbus.ObjectPath) (*BSS, error) {
+type objectBSS struct {
+	interfaceBss // interface fi.w1.wpa_supplicant1.BSS
+	proxy.ImplObject
+}
+
+func NewBSS(conn *dbus.Conn, path dbus.ObjectPath) (BSS, error) {
 	if !path.IsValid() {
 		return nil, errors.New("path is invalid")
 	}
-	obj := new(BSS)
-	obj.Object.Init_(conn, "fi.w1.wpa_supplicant1", path)
+	obj := new(objectBSS)
+	obj.ImplObject.Init_(conn, "fi.w1.wpa_supplicant1", path)
 	return obj, nil
 }
 
-type bss struct{}
-
-func (v *bss) GetObject_() *proxy.Object {
-	return (*proxy.Object)(unsafe.Pointer(v))
+type bss interface {
+	ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error)
+	SSID() proxy.PropByteArray
+	BSSID() proxy.PropByteArray
+	Privacy() proxy.PropBool
+	Mode() proxy.PropString
+	Signal() proxy.PropInt16
+	Frequency() proxy.PropUint16
+	Rates() proxy.PropUint32Array
+	WPA() MapStrVariant
+	RSN() MapStrVariant
+	WPS() MapStrVariant
+	IEs() proxy.PropByteArray
+	Age() proxy.PropUint32
 }
 
-func (*bss) GetInterfaceName_() string {
+type interfaceBss struct{}
+
+func (v *interfaceBss) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBss) GetInterfaceName_() string {
 	return "fi.w1.wpa_supplicant1.BSS"
 }
 
 // signal PropertiesChanged
 
-func (v *bss) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *interfaceBss) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -3569,8 +3962,8 @@ func (v *bss) ConnectSignalPropertiesChanged(cb func(properties map[string]dbus.
 
 // property SSID ay
 
-func (v *bss) SSID() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceBss) SSID() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "SSID",
 	}
@@ -3578,8 +3971,8 @@ func (v *bss) SSID() proxy.PropByteArray {
 
 // property BSSID ay
 
-func (v *bss) BSSID() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceBss) BSSID() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "BSSID",
 	}
@@ -3587,8 +3980,8 @@ func (v *bss) BSSID() proxy.PropByteArray {
 
 // property Privacy b
 
-func (v *bss) Privacy() proxy.PropBool {
-	return proxy.PropBool{
+func (v *interfaceBss) Privacy() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Privacy",
 	}
@@ -3596,8 +3989,8 @@ func (v *bss) Privacy() proxy.PropBool {
 
 // property Mode s
 
-func (v *bss) Mode() proxy.PropString {
-	return proxy.PropString{
+func (v *interfaceBss) Mode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Mode",
 	}
@@ -3605,8 +3998,8 @@ func (v *bss) Mode() proxy.PropString {
 
 // property Signal n
 
-func (v *bss) Signal() proxy.PropInt16 {
-	return proxy.PropInt16{
+func (v *interfaceBss) Signal() proxy.PropInt16 {
+	return &proxy.ImplPropInt16{
 		Impl: v,
 		Name: "Signal",
 	}
@@ -3614,8 +4007,8 @@ func (v *bss) Signal() proxy.PropInt16 {
 
 // property Frequency q
 
-func (v *bss) Frequency() proxy.PropUint16 {
-	return proxy.PropUint16{
+func (v *interfaceBss) Frequency() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
 		Impl: v,
 		Name: "Frequency",
 	}
@@ -3623,8 +4016,8 @@ func (v *bss) Frequency() proxy.PropUint16 {
 
 // property Rates au
 
-func (v *bss) Rates() proxy.PropUint32Array {
-	return proxy.PropUint32Array{
+func (v *interfaceBss) Rates() proxy.PropUint32Array {
+	return &proxy.ImplPropUint32Array{
 		Impl: v,
 		Name: "Rates",
 	}
@@ -3632,8 +4025,8 @@ func (v *bss) Rates() proxy.PropUint32Array {
 
 // property WPA a{sv}
 
-func (v *bss) WPA() MapStrVariant {
-	return MapStrVariant{
+func (v *interfaceBss) WPA() MapStrVariant {
+	return &implMapStrVariant{
 		Impl: v,
 		Name: "WPA",
 	}
@@ -3641,8 +4034,8 @@ func (v *bss) WPA() MapStrVariant {
 
 // property RSN a{sv}
 
-func (v *bss) RSN() MapStrVariant {
-	return MapStrVariant{
+func (v *interfaceBss) RSN() MapStrVariant {
+	return &implMapStrVariant{
 		Impl: v,
 		Name: "RSN",
 	}
@@ -3650,8 +4043,8 @@ func (v *bss) RSN() MapStrVariant {
 
 // property WPS a{sv}
 
-func (v *bss) WPS() MapStrVariant {
-	return MapStrVariant{
+func (v *interfaceBss) WPS() MapStrVariant {
+	return &implMapStrVariant{
 		Impl: v,
 		Name: "WPS",
 	}
@@ -3659,8 +4052,8 @@ func (v *bss) WPS() MapStrVariant {
 
 // property IEs ay
 
-func (v *bss) IEs() proxy.PropByteArray {
-	return proxy.PropByteArray{
+func (v *interfaceBss) IEs() proxy.PropByteArray {
+	return &proxy.ImplPropByteArray{
 		Impl: v,
 		Name: "IEs",
 	}
@@ -3668,29 +4061,35 @@ func (v *bss) IEs() proxy.PropByteArray {
 
 // property Age u
 
-func (v *bss) Age() proxy.PropUint32 {
-	return proxy.PropUint32{
+func (v *interfaceBss) Age() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "Age",
 	}
 }
 
-type MapStrVariant struct {
+type MapStrVariant interface {
+	Get(flags dbus.Flags) (value map[string]dbus.Variant, err error)
+	Set(flags dbus.Flags, value map[string]dbus.Variant) error
+	ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error
+}
+
+type implMapStrVariant struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p MapStrVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
+func (p implMapStrVariant) Get(flags dbus.Flags) (value map[string]dbus.Variant, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p MapStrVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
+func (p implMapStrVariant) Set(flags dbus.Flags, value map[string]dbus.Variant) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p MapStrVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
+func (p implMapStrVariant) ConnectChanged(cb func(hasValue bool, value map[string]dbus.Variant)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
