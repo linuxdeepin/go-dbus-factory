@@ -9,21 +9,27 @@ import (
 )
 
 const propCode = `
-type Prop{{.Type}} struct {
+type Prop{{.Type}} interface {
+	Get(flags dbus.Flags) (value {{.GoType}}, err error)
+	Set(flags dbus.Flags, value {{.GoType}}) error
+	ConnectChanged(cb func(hasValue bool, value {{.GoType}})) error
+}
+
+type ImplProp{{.Type}} struct {
 	Impl Implementer
 	Name string
 }
 
-func (p Prop{{.Type}}) Get(flags dbus.Flags) (value {{.GoType}}, err error) {
+func (p ImplProp{{.Type}}) Get(flags dbus.Flags) (value {{.GoType}}, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, &value)
 	return
 }
 
-func (p Prop{{.Type}}) Set(flags dbus.Flags, value {{.GoType}}) error {
+func (p ImplProp{{.Type}}) Set(flags dbus.Flags, value {{.GoType}}) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p Prop{{.Type}}) ConnectChanged(cb func(hasValue bool, value {{.GoType}})) error {
+func (p ImplProp{{.Type}}) ConnectChanged(cb func(hasValue bool, value {{.GoType}})) error {
 	if cb == nil {
 		return errNilCallback
 	}
@@ -38,6 +44,36 @@ func (p Prop{{.Type}}) ConnectChanged(cb func(hasValue bool, value {{.GoType}}))
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(), p.Name, cb0)
+}
+
+type MockProp{{.Type}} struct {
+	mock.Mock
+}
+
+func (p *MockProp{{.Type}}) Get(flags dbus.Flags) (value {{.GoType}}, err error) {
+	args := p.Called(flags)
+
+	var ok bool
+	value, ok = args.Get(0).({{.GoType}})
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
+	}
+
+	err = args.Error(1)
+
+	return
+}
+
+func (p *MockProp{{.Type}}) Set(flags dbus.Flags, value {{.GoType}}) error {
+	args := p.Called(flags, value)
+
+	return args.Error(0)
+}
+
+func (p *MockProp{{.Type}}) ConnectChanged(cb func(hasValue bool, value {{.GoType}})) error {
+	args := p.Called(cb)
+
+	return args.Error(0)
 }
 `
 
@@ -91,7 +127,9 @@ func main() {
 
 	fmt.Println(`package proxy`)
 	fmt.Println(`import "errors"`)
-	fmt.Println(`import "github.com/godbus/dbus`)
+	fmt.Println(`import "fmt"`)
+	fmt.Println(`import "github.com/godbus/dbus"`)
+	fmt.Println(`import "github.com/stretchr/testify/mock"`)
 	fmt.Println(``)
 	fmt.Println(`var errNilCallback = errors.New("nil callback")`)
 
