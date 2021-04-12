@@ -32,6 +32,16 @@ func (v *ukey) GetObject_() *proxy.Object {
 	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
+func (v *ukey) SetInterfaceName_(name string) {
+	v.GetObject_().SetExtra("customIfc", name)
+}
+
+func (v *ukey) GetInterfaceName_() string {
+	ifcName, _ := v.GetObject_().GetExtra("customIfc")
+	ifcNameStr, _ := ifcName.(string)
+	return ifcNameStr
+}
+
 // method SetPin
 
 func (v *ukey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, username string, id string, pin string) *dbus.Call {
