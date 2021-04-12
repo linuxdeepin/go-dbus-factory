@@ -7,7 +7,7 @@
       "Interfaces": [
         {
           "Name": "com.deepin.daemon.Authenticate.Fingerprint.Device",
-          "NoGetInterfaceName": true,
+          "CustomInterfaceName": true,
           "Type": "device",
           "Accessor": "Device"
         }
@@ -19,7 +19,7 @@
       "Interfaces": [
         {
           "Name": "com.deepin.daemon.Authenticate.Fingerprint.CommonDevice",
-          "NoGetInterfaceName": true,
+          "CustomInterfaceName": true,
           "Type": "commonDevice",
           "Accessor": "CommonDevice"
         }

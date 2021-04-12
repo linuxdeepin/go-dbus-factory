@@ -33,6 +33,16 @@ func (v *device) GetObject_() *proxy.Object {
 	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
+func (v *device) SetInterfaceName_(name string) {
+	v.GetObject_().SetExtra("customIfc", name)
+}
+
+func (v *device) GetInterfaceName_() string {
+	ifcName, _ := v.GetObject_().GetExtra("customIfc")
+	ifcNameStr, _ := ifcName.(string)
+	return ifcNameStr
+}
+
 // method Claim
 
 func (v *device) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
@@ -266,6 +276,16 @@ type commonDevice struct{}
 
 func (v *commonDevice) GetObject_() *proxy.Object {
 	return (*proxy.Object)(unsafe.Pointer(v))
+}
+
+func (v *commonDevice) SetInterfaceName_(name string) {
+	v.GetObject_().SetExtra("customIfc", name)
+}
+
+func (v *commonDevice) GetInterfaceName_() string {
+	ifcName, _ := v.GetObject_().GetExtra("customIfc")
+	ifcNameStr, _ := ifcName.(string)
+	return ifcNameStr
 }
 
 // method Claim
