@@ -208,10 +208,24 @@ func writeImplementerMethods(sb *SourceBody, ifc *introspect.Interface, ifcCfg *
 	sb.Pn("    return (*proxy.Object)(unsafe.Pointer(v))")
 	sb.Pn("}\n")
 
-	if !ifcCfg.NoGetInterfaceName {
-		sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
-		sb.Pn("    return %q", ifc.Name)
+	if ifcCfg.CustomInterfaceName {
+		sb.Pn("func (v *%s) SetInterfaceName_(name string) {", ifcCfg.Type)
+		sb.Pn(`    v.GetObject_().SetExtra("customIfc", name)`)
 		sb.Pn("}\n")
+	}
+
+	if !ifcCfg.NoGetInterfaceName {
+		if ifcCfg.CustomInterfaceName {
+			sb.Pn("func (v *%s) GetInterfaceName_() string {", ifcCfg.Type)
+			sb.Pn(`    ifcName, _ := v.GetObject_().GetExtra("customIfc")`)
+			sb.Pn("    ifcNameStr, _ := ifcName.(string)")
+			sb.Pn("    return ifcNameStr")
+			sb.Pn("}\n")
+		} else {
+			sb.Pn("func (*%s) GetInterfaceName_() string {", ifcCfg.Type)
+			sb.Pn("    return %q", ifc.Name)
+			sb.Pn("}\n")
+		}
 	}
 }
 

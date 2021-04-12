@@ -128,12 +128,13 @@ func (oc *ObjectConfig) getInterface(name string) *InterfaceConfig {
 }
 
 type InterfaceConfig struct {
-	Name        string
-	Type        string
-	Accessor    string
-	Fixes       map[string]json.RawMessage
-	TypeDefined bool
-	NoGetInterfaceName bool
+	Name                string
+	Type                string
+	Accessor            string
+	Fixes               map[string]json.RawMessage
+	TypeDefined         bool
+	CustomInterfaceName bool
+	NoGetInterfaceName  bool
 
 	MethodFixes map[string]ArgFixes
 	PropFixes   map[string]*PropertyFix
