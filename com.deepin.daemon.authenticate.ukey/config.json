@@ -1,0 +1,17 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "UKey",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.UKey.Device",
+          "CustomInterfaceName": true,
+          "Type": "ukey",
+          "Accessor": "UKey"
+        }
+      ]
+    }
+  ]
+}
