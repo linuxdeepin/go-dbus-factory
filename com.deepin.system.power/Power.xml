@@ -19,6 +19,9 @@
         </signal>
         <signal name="LidClosed"></signal>
         <signal name="LidOpened"></signal>
+        <signal name="PowerActionCode">
+            <arg name="actionCode" type="i"></arg>
+        </signal>
         <property name="PowerSavingModeAuto" type="b" access="readwrite"></property>
         <property name="OnBattery" type="b" access="read"></property>
         <property name="HasLidSwitch" type="b" access="read"></property>
