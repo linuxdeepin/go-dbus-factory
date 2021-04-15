@@ -231,6 +231,32 @@ func (v *power) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal PowerActionCode
+
+func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "PowerActionCode", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".PowerActionCode",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var actionCode int32
+		err := dbus.Store(sig.Body, &actionCode)
+		if err == nil {
+			cb(actionCode)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // property PowerSavingModeAuto b
 
 func (v *power) PowerSavingModeAuto() proxy.PropBool {
