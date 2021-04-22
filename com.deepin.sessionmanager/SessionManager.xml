@@ -44,6 +44,9 @@
           <property name="CurrentUid" type="s" access="read"></property>
           <property name="Stage" type="i" access="read"></property>
           <property name="CurrentSessionPath" type="o" access="read"></property>
+          <method name="SetBatteryWarnLevel">
+               <arg name="level" type="i" direction="in"></arg>
+        </method>
      </interface>
      <interface name="org.freedesktop.DBus.Introspectable">
           <method name="Enable">
