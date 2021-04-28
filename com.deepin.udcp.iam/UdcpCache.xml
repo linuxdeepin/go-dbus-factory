@@ -5,6 +5,10 @@
         <method name="GetUserIdList">
             <arg name="uIdList" type="au" direction="out"></arg>
         </method>
+        <method name="GetUserGroups">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="groups" type="as" direction="out"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
