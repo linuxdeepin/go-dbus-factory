@@ -1,33 +1,36 @@
-<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"\n\t "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
 	<interface name="com.deepin.daemon.Authenticate.UKey.Device">
+		<method name="GetPINLength">
+			<arg name="uuid" type="s" direction="in"></arg>
+			<arg name="length" type="i" direction="out"></arg>
+		</method>
 		<method name="SetPin">
-			<arg name="username" type="s" direction="in"></arg>
-			<arg name="id" type="s" direction="in"></arg>
+			<arg name="uuid" type="s" direction="in"></arg>
+			<arg name="gid" type="s" direction="in"></arg>
 			<arg name="pin" type="s" direction="in"></arg>
 		</method>
 		<method name="SetSessionPath">
-			<arg name="username" type="s" direction="in"></arg>
-			<arg name="id" type="s" direction="in"></arg>
+			<arg name="uuid" type="s" direction="in"></arg>
+			<arg name="gid" type="s" direction="in"></arg>
 			<arg name="path" type="s" direction="in"></arg>
 		</method>
 		<method name="StopVerify">
-			<arg name="username" type="s" direction="in"></arg>
-			<arg name="id" type="s" direction="in"></arg>
+			<arg name="uuid" type="s" direction="in"></arg>
+			<arg name="gid" type="s" direction="in"></arg>
 		</method>
 		<method name="Verify">
-			<arg name="username" type="s" direction="in"></arg>
-			<arg name="id" type="s" direction="in"></arg>
+			<arg name="uuid" type="s" direction="in"></arg>
+			<arg name="gid" type="s" direction="in"></arg>
 		</method>
 		<signal name="VerifyResult">
 			<arg name="id" type="s"></arg>
 			<arg name="msg" type="s"></arg>
 		</signal>
+		<property name="Name" type="s" access="read"></property>
 		<property name="State" type="i" access="read"></property>
 		<property name="Type" type="i" access="read"></property>
 		<property name="Capability" type="i" access="read"></property>
-		<property name="Name" type="s" access="read"></property>
 	</interface>
 	<interface name="org.freedesktop.DBus.Introspectable">
 		<method name="Introspect">
