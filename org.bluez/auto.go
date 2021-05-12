@@ -578,6 +578,7 @@ type device interface {
 	GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	CancelPairing(flags dbus.Flags) error
 	Address() proxy.PropString
+	AddressType() proxy.PropString
 	Name() proxy.PropString
 	Alias() proxy.PropString
 	Class() proxy.PropUint32
@@ -674,6 +675,15 @@ func (v *interfaceDevice) Address() proxy.PropString {
 	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Address",
+	}
+}
+
+// property AddressType s
+
+func (v *interfaceDevice) AddressType() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "AddressType",
 	}
 }
 
