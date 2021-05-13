@@ -18,6 +18,7 @@ Package: golang-github-linuxdeepin-go-dbus-factory-dev
 Architecture: all
 Depends:
  golang-dlib-dev,
+ golang-github-stretchr-testify-dev,
  ${misc:Depends},
  ${shlibs:Depends},
 Description: mirrored from https://cr.deepin.io/#/admin/projects/go-dbus-factory
