@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.FaceVerify",
+  "Objects": [
+    {
+      "Type": "FaceVerify",
+      "Path": "/com/deepin/daemon/FaceVerify",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.FaceVerify",
+          "Type": "faceVerify"
+        }
+      ]
+    }
+  ]
+}
