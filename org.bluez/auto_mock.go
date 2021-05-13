@@ -271,19 +271,6 @@ func (v *mockInterfaceAdapter) Address() proxy.PropString {
 	return ret0
 }
 
-// property AddressType s
-
-func (v *mockInterfaceDevice) AddressType() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
 // property Name s
 
 func (v *mockInterfaceAdapter) Name() proxy.PropString {
@@ -716,6 +703,19 @@ func (v *mockInterfaceDevice) CancelPairing(flags dbus.Flags) error {
 // property Address s
 
 func (v *mockInterfaceDevice) Address() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property AddressType s
+
+func (v *mockInterfaceDevice) AddressType() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

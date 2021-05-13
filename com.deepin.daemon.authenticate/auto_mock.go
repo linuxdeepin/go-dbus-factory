@@ -424,6 +424,30 @@ func (v *mockInterfaceUkey) ConstructVerification(flags dbus.Flags, serviceName 
 	return ret0, mockArgs.Error(1)
 }
 
+// method GetPINLength
+
+func (v *mockInterfaceUkey) GoGetPINLength(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string, useDefaultDevice bool) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, username, useDefaultDevice)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceUkey) GetPINLength(flags dbus.Flags, serviceName string, username string, useDefaultDevice bool) (int32, error) {
+	mockArgs := v.Called(flags, serviceName, username, useDefaultDevice)
+
+	ret0, ok := mockArgs.Get(0).(int32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
 // method SetDefaultDevice
 
 func (v *mockInterfaceUkey) GoSetDefaultDevice(flags dbus.Flags, ch chan *dbus.Call, device string) *dbus.Call {

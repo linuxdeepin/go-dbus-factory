@@ -22,10 +22,10 @@ type mockInterfaceUkey struct {
 func (v *mockInterfaceUkey) SetInterfaceName_(string) {
 }
 
-// method SetPin
+// method GetPINLength
 
-func (v *mockInterfaceUkey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, username string, id string, pin string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, username, id, pin)
+func (v *mockInterfaceUkey) GoGetPINLength(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uuid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -35,16 +35,40 @@ func (v *mockInterfaceUkey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, usern
 	return ret
 }
 
-func (v *mockInterfaceUkey) SetPin(flags dbus.Flags, username string, id string, pin string) error {
-	mockArgs := v.Called(flags, username, id, pin)
+func (v *mockInterfaceUkey) GetPINLength(flags dbus.Flags, uuid string) (int32, error) {
+	mockArgs := v.Called(flags, uuid)
+
+	ret0, ok := mockArgs.Get(0).(int32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method SetPin
+
+func (v *mockInterfaceUkey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, uuid string, gid string, pin string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uuid, gid, pin)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceUkey) SetPin(flags dbus.Flags, uuid string, gid string, pin string) error {
+	mockArgs := v.Called(flags, uuid, gid, pin)
 
 	return mockArgs.Error(0)
 }
 
 // method SetSessionPath
 
-func (v *mockInterfaceUkey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, username string, id string, path string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, username, id, path)
+func (v *mockInterfaceUkey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Call, uuid string, gid string, path string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uuid, gid, path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -54,16 +78,16 @@ func (v *mockInterfaceUkey) GoSetSessionPath(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceUkey) SetSessionPath(flags dbus.Flags, username string, id string, path string) error {
-	mockArgs := v.Called(flags, username, id, path)
+func (v *mockInterfaceUkey) SetSessionPath(flags dbus.Flags, uuid string, gid string, path string) error {
+	mockArgs := v.Called(flags, uuid, gid, path)
 
 	return mockArgs.Error(0)
 }
 
 // method StopVerify
 
-func (v *mockInterfaceUkey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, username, id)
+func (v *mockInterfaceUkey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, uuid string, gid string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uuid, gid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -73,16 +97,16 @@ func (v *mockInterfaceUkey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, u
 	return ret
 }
 
-func (v *mockInterfaceUkey) StopVerify(flags dbus.Flags, username string, id string) error {
-	mockArgs := v.Called(flags, username, id)
+func (v *mockInterfaceUkey) StopVerify(flags dbus.Flags, uuid string, gid string) error {
+	mockArgs := v.Called(flags, uuid, gid)
 
 	return mockArgs.Error(0)
 }
 
 // method Verify
 
-func (v *mockInterfaceUkey) GoVerify(flags dbus.Flags, ch chan *dbus.Call, username string, id string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, username, id)
+func (v *mockInterfaceUkey) GoVerify(flags dbus.Flags, ch chan *dbus.Call, uuid string, gid string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uuid, gid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -92,8 +116,8 @@ func (v *mockInterfaceUkey) GoVerify(flags dbus.Flags, ch chan *dbus.Call, usern
 	return ret
 }
 
-func (v *mockInterfaceUkey) Verify(flags dbus.Flags, username string, id string) error {
-	mockArgs := v.Called(flags, username, id)
+func (v *mockInterfaceUkey) Verify(flags dbus.Flags, uuid string, gid string) error {
+	mockArgs := v.Called(flags, uuid, gid)
 
 	return mockArgs.Error(0)
 }
@@ -109,6 +133,19 @@ func (v *mockInterfaceUkey) ConnectVerifyResult(cb func(id string, msg string)) 
 	}
 
 	return ret0, mockArgs.Error(1)
+}
+
+// property Name s
+
+func (v *mockInterfaceUkey) Name() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
 }
 
 // property State i
@@ -143,19 +180,6 @@ func (v *mockInterfaceUkey) Capability() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Name s
-
-func (v *mockInterfaceUkey) Name() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
