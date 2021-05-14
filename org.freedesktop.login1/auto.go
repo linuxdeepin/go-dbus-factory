@@ -1,10 +1,12 @@
 package login1
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *manager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId s
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoGetSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetSession", flags, ch, sessionId)
+}
+
 func (*manager) StoreGetSession(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
 	err = call.Store(&sessionPath)
 	return
@@ -50,10 +56,29 @@ func (v *manager) GetSession(flags dbus.Flags, sessionId string) (sessionPath db
 		<-v.GoGetSession(flags, make(chan *dbus.Call, 1), sessionId).Done)
 }
 
+func (v *manager) GetSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) (sessionPath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetSession(call)
+}
+
 // method GetSessionByPID
 
 func (v *manager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSessionByPID", flags, ch, pid)
+}
+
+func (v *manager) GoGetSessionByPIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetSessionByPID", flags, ch, pid)
 }
 
 func (*manager) StoreGetSessionByPID(call *dbus.Call) (sessionPath dbus.ObjectPath, err error) {
@@ -66,10 +91,29 @@ func (v *manager) GetSessionByPID(flags dbus.Flags, pid uint32) (sessionPath dbu
 		<-v.GoGetSessionByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
+func (v *manager) GetSessionByPIDWithTimeout(timeout time.Duration, flags dbus.Flags, pid uint32) (sessionPath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetSessionByPIDWithContext(ctx, flags, make(chan *dbus.Call, 1), pid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetSessionByPID(call)
+}
+
 // method GetUser
 
 func (v *manager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUser", flags, ch, uid)
+}
+
+func (v *manager) GoGetUserWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUser", flags, ch, uid)
 }
 
 func (*manager) StoreGetUser(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
@@ -82,10 +126,29 @@ func (v *manager) GetUser(flags dbus.Flags, uid uint32) (userPath dbus.ObjectPat
 		<-v.GoGetUser(flags, make(chan *dbus.Call, 1), uid).Done)
 }
 
+func (v *manager) GetUserWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32) (userPath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUserWithContext(ctx, flags, make(chan *dbus.Call, 1), uid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUser(call)
+}
+
 // method GetUserByPID
 
 func (v *manager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUserByPID", flags, ch, pid)
+}
+
+func (v *manager) GoGetUserByPIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUserByPID", flags, ch, pid)
 }
 
 func (*manager) StoreGetUserByPID(call *dbus.Call) (userPath dbus.ObjectPath, err error) {
@@ -98,10 +161,29 @@ func (v *manager) GetUserByPID(flags dbus.Flags, pid uint32) (userPath dbus.Obje
 		<-v.GoGetUserByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
+func (v *manager) GetUserByPIDWithTimeout(timeout time.Duration, flags dbus.Flags, pid uint32) (userPath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUserByPIDWithContext(ctx, flags, make(chan *dbus.Call, 1), pid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUserByPID(call)
+}
+
 // method GetSeat
 
 func (v *manager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSeat", flags, ch, seatId)
+}
+
+func (v *manager) GoGetSeatWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetSeat", flags, ch, seatId)
 }
 
 func (*manager) StoreGetSeat(call *dbus.Call) (seatPath dbus.ObjectPath, err error) {
@@ -114,10 +196,29 @@ func (v *manager) GetSeat(flags dbus.Flags, seatId string) (seatPath dbus.Object
 		<-v.GoGetSeat(flags, make(chan *dbus.Call, 1), seatId).Done)
 }
 
+func (v *manager) GetSeatWithTimeout(timeout time.Duration, flags dbus.Flags, seatId string) (seatPath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetSeatWithContext(ctx, flags, make(chan *dbus.Call, 1), seatId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetSeat(call)
+}
+
 // method ListSessions
 
 func (v *manager) GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListSessions", flags, ch)
+}
+
+func (v *manager) GoListSessionsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListSessions", flags, ch)
 }
 
 func (*manager) StoreListSessions(call *dbus.Call) (sessionList []SessionDetail, err error) {
@@ -130,10 +231,29 @@ func (v *manager) ListSessions(flags dbus.Flags) (sessionList []SessionDetail, e
 		<-v.GoListSessions(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListSessionsWithTimeout(timeout time.Duration, flags dbus.Flags) (sessionList []SessionDetail, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListSessionsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListSessions(call)
+}
+
 // method ListUsers
 
 func (v *manager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUsers", flags, ch)
+}
+
+func (v *manager) GoListUsersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUsers", flags, ch)
 }
 
 func (*manager) StoreListUsers(call *dbus.Call) (userList []UserDetail, err error) {
@@ -146,10 +266,29 @@ func (v *manager) ListUsers(flags dbus.Flags) (userList []UserDetail, err error)
 		<-v.GoListUsers(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListUsersWithTimeout(timeout time.Duration, flags dbus.Flags) (userList []UserDetail, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUsersWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUsers(call)
+}
+
 // method ListSeats
 
 func (v *manager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListSeats", flags, ch)
+}
+
+func (v *manager) GoListSeatsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListSeats", flags, ch)
 }
 
 func (*manager) StoreListSeats(call *dbus.Call) (seatList []SeatInfo, err error) {
@@ -162,10 +301,29 @@ func (v *manager) ListSeats(flags dbus.Flags) (seatList []SeatInfo, err error) {
 		<-v.GoListSeats(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListSeatsWithTimeout(timeout time.Duration, flags dbus.Flags) (seatList []SeatInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListSeatsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListSeats(call)
+}
+
 // method ListInhibitors
 
 func (v *manager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListInhibitors", flags, ch)
+}
+
+func (v *manager) GoListInhibitorsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListInhibitors", flags, ch)
 }
 
 func (*manager) StoreListInhibitors(call *dbus.Call) (inhibitorList []InhibitorInfo, err error) {
@@ -178,10 +336,29 @@ func (v *manager) ListInhibitors(flags dbus.Flags) (inhibitorList []InhibitorInf
 		<-v.GoListInhibitors(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListInhibitorsWithTimeout(timeout time.Duration, flags dbus.Flags) (inhibitorList []InhibitorInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListInhibitorsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListInhibitors(call)
+}
+
 // method CreateSession
 
 func (v *manager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateSession", flags, ch, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
+}
+
+func (v *manager) GoCreateSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CreateSession", flags, ch, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 }
 
 func (*manager) StoreCreateSession(call *dbus.Call) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
@@ -194,14 +371,44 @@ func (v *manager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, servic
 		<-v.GoCreateSession(flags, make(chan *dbus.Call, 1), uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties).Done)
 }
 
+func (v *manager) CreateSessionWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (sessionId string, sessionPath dbus.ObjectPath, runtimePath string, fifoFd dbus.UnixFD, uid0 uint32, seatId0 string, vtnr0 uint32, existing bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCreateSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCreateSession(call)
+}
+
 // method ReleaseSession
 
 func (v *manager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoReleaseSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReleaseSession", flags, ch, sessionId)
+}
+
 func (v *manager) ReleaseSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoReleaseSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *manager) ReleaseSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReleaseSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ActivateSession
@@ -210,8 +417,23 @@ func (v *manager) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessio
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoActivateSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
+}
+
 func (v *manager) ActivateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoActivateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *manager) ActivateSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ActivateSessionOnSeat
@@ -220,8 +442,23 @@ func (v *manager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSessionOnSeat", flags, ch, sessionId, seatId)
 }
 
+func (v *manager) GoActivateSessionOnSeatWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ActivateSessionOnSeat", flags, ch, sessionId, seatId)
+}
+
 func (v *manager) ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error {
 	return (<-v.GoActivateSessionOnSeat(flags, make(chan *dbus.Call, 1), sessionId, seatId).Done).Err
+}
+
+func (v *manager) ActivateSessionOnSeatWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string, seatId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateSessionOnSeatWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId, seatId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method LockSession
@@ -230,8 +467,23 @@ func (v *manager) GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoLockSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LockSession", flags, ch, sessionId)
+}
+
 func (v *manager) LockSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoLockSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *manager) LockSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLockSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnlockSession
@@ -240,8 +492,23 @@ func (v *manager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionI
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnlockSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoUnlockSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnlockSession", flags, ch, sessionId)
+}
+
 func (v *manager) UnlockSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoUnlockSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *manager) UnlockSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnlockSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method LockSessions
@@ -250,8 +517,23 @@ func (v *manager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockSessions", flags, ch)
 }
 
+func (v *manager) GoLockSessionsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LockSessions", flags, ch)
+}
+
 func (v *manager) LockSessions(flags dbus.Flags) error {
 	return (<-v.GoLockSessions(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) LockSessionsWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLockSessionsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnlockSessions
@@ -260,8 +542,23 @@ func (v *manager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnlockSessions", flags, ch)
 }
 
+func (v *manager) GoUnlockSessionsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnlockSessions", flags, ch)
+}
+
 func (v *manager) UnlockSessions(flags dbus.Flags) error {
 	return (<-v.GoUnlockSessions(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) UnlockSessionsWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnlockSessionsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method KillSession
@@ -270,8 +567,23 @@ func (v *manager) GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillSession", flags, ch, sessionId, who, signo)
 }
 
+func (v *manager) GoKillSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".KillSession", flags, ch, sessionId, who, signo)
+}
+
 func (v *manager) KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error {
 	return (<-v.GoKillSession(flags, make(chan *dbus.Call, 1), sessionId, who, signo).Done).Err
+}
+
+func (v *manager) KillSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string, who string, signo int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId, who, signo).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method KillUser
@@ -280,8 +592,23 @@ func (v *manager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, s
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillUser", flags, ch, uid, signo)
 }
 
+func (v *manager) GoKillUserWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".KillUser", flags, ch, uid, signo)
+}
+
 func (v *manager) KillUser(flags dbus.Flags, uid uint32, signo int32) error {
 	return (<-v.GoKillUser(flags, make(chan *dbus.Call, 1), uid, signo).Done).Err
+}
+
+func (v *manager) KillUserWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32, signo int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillUserWithContext(ctx, flags, make(chan *dbus.Call, 1), uid, signo).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method TerminateSession
@@ -290,8 +617,23 @@ func (v *manager) GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessi
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateSession", flags, ch, sessionId)
 }
 
+func (v *manager) GoTerminateSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TerminateSession", flags, ch, sessionId)
+}
+
 func (v *manager) TerminateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoTerminateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *manager) TerminateSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method TerminateUser
@@ -300,8 +642,23 @@ func (v *manager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateUser", flags, ch, uid)
 }
 
+func (v *manager) GoTerminateUserWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TerminateUser", flags, ch, uid)
+}
+
 func (v *manager) TerminateUser(flags dbus.Flags, uid uint32) error {
 	return (<-v.GoTerminateUser(flags, make(chan *dbus.Call, 1), uid).Done).Err
+}
+
+func (v *manager) TerminateUserWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateUserWithContext(ctx, flags, make(chan *dbus.Call, 1), uid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method TerminateSeat
@@ -310,8 +667,23 @@ func (v *manager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId s
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TerminateSeat", flags, ch, seatId)
 }
 
+func (v *manager) GoTerminateSeatWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TerminateSeat", flags, ch, seatId)
+}
+
 func (v *manager) TerminateSeat(flags dbus.Flags, seatId string) error {
 	return (<-v.GoTerminateSeat(flags, make(chan *dbus.Call, 1), seatId).Done).Err
+}
+
+func (v *manager) TerminateSeatWithTimeout(timeout time.Duration, flags dbus.Flags, seatId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateSeatWithContext(ctx, flags, make(chan *dbus.Call, 1), seatId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetUserLinger
@@ -320,8 +692,23 @@ func (v *manager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUserLinger", flags, ch, uid, linger, interactive)
 }
 
+func (v *manager) GoSetUserLingerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetUserLinger", flags, ch, uid, linger, interactive)
+}
+
 func (v *manager) SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
 	return (<-v.GoSetUserLinger(flags, make(chan *dbus.Call, 1), uid, linger, interactive).Done).Err
+}
+
+func (v *manager) SetUserLingerWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetUserLingerWithContext(ctx, flags, make(chan *dbus.Call, 1), uid, linger, interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method AttachDevice
@@ -330,8 +717,23 @@ func (v *manager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId st
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachDevice", flags, ch, seatId, sysfs, interactive)
 }
 
+func (v *manager) GoAttachDeviceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AttachDevice", flags, ch, seatId, sysfs, interactive)
+}
+
 func (v *manager) AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
 	return (<-v.GoAttachDevice(flags, make(chan *dbus.Call, 1), seatId, sysfs, interactive).Done).Err
+}
+
+func (v *manager) AttachDeviceWithTimeout(timeout time.Duration, flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAttachDeviceWithContext(ctx, flags, make(chan *dbus.Call, 1), seatId, sysfs, interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method FlushDevices
@@ -340,8 +742,23 @@ func (v *manager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interacti
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".FlushDevices", flags, ch, interactive)
 }
 
+func (v *manager) GoFlushDevicesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".FlushDevices", flags, ch, interactive)
+}
+
 func (v *manager) FlushDevices(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoFlushDevices(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) FlushDevicesWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoFlushDevicesWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PowerOff
@@ -350,8 +767,23 @@ func (v *manager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive b
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch, interactive)
 }
 
+func (v *manager) GoPowerOffWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PowerOff", flags, ch, interactive)
+}
+
 func (v *manager) PowerOff(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) PowerOffWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPowerOffWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Reboot
@@ -360,8 +792,23 @@ func (v *manager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive boo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reboot", flags, ch, interactive)
 }
 
+func (v *manager) GoRebootWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reboot", flags, ch, interactive)
+}
+
 func (v *manager) Reboot(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoReboot(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) RebootWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRebootWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Suspend
@@ -370,8 +817,23 @@ func (v *manager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Suspend", flags, ch, interactive)
 }
 
+func (v *manager) GoSuspendWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Suspend", flags, ch, interactive)
+}
+
 func (v *manager) Suspend(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) SuspendWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSuspendWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Hibernate
@@ -380,8 +842,23 @@ func (v *manager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hibernate", flags, ch, interactive)
 }
 
+func (v *manager) GoHibernateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Hibernate", flags, ch, interactive)
+}
+
 func (v *manager) Hibernate(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoHibernate(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) HibernateWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHibernateWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method HybridSleep
@@ -390,14 +867,33 @@ func (v *manager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactiv
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HybridSleep", flags, ch, interactive)
 }
 
+func (v *manager) GoHybridSleepWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".HybridSleep", flags, ch, interactive)
+}
+
 func (v *manager) HybridSleep(flags dbus.Flags, interactive bool) error {
 	return (<-v.GoHybridSleep(flags, make(chan *dbus.Call, 1), interactive).Done).Err
+}
+
+func (v *manager) HybridSleepWithTimeout(timeout time.Duration, flags dbus.Flags, interactive bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHybridSleepWithContext(ctx, flags, make(chan *dbus.Call, 1), interactive).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method CanPowerOff
 
 func (v *manager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanPowerOff", flags, ch)
+}
+
+func (v *manager) GoCanPowerOffWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanPowerOff", flags, ch)
 }
 
 func (*manager) StoreCanPowerOff(call *dbus.Call) (result string, err error) {
@@ -410,10 +906,29 @@ func (v *manager) CanPowerOff(flags dbus.Flags) (result string, err error) {
 		<-v.GoCanPowerOff(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanPowerOffWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanPowerOffWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanPowerOff(call)
+}
+
 // method CanReboot
 
 func (v *manager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanReboot", flags, ch)
+}
+
+func (v *manager) GoCanRebootWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanReboot", flags, ch)
 }
 
 func (*manager) StoreCanReboot(call *dbus.Call) (result string, err error) {
@@ -426,10 +941,29 @@ func (v *manager) CanReboot(flags dbus.Flags) (result string, err error) {
 		<-v.GoCanReboot(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanRebootWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanRebootWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanReboot(call)
+}
+
 // method CanSuspend
 
 func (v *manager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanSuspend", flags, ch)
+}
+
+func (v *manager) GoCanSuspendWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanSuspend", flags, ch)
 }
 
 func (*manager) StoreCanSuspend(call *dbus.Call) (result string, err error) {
@@ -442,10 +976,29 @@ func (v *manager) CanSuspend(flags dbus.Flags) (result string, err error) {
 		<-v.GoCanSuspend(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanSuspendWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanSuspendWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanSuspend(call)
+}
+
 // method CanHibernate
 
 func (v *manager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanHibernate", flags, ch)
+}
+
+func (v *manager) GoCanHibernateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanHibernate", flags, ch)
 }
 
 func (*manager) StoreCanHibernate(call *dbus.Call) (result string, err error) {
@@ -458,10 +1011,29 @@ func (v *manager) CanHibernate(flags dbus.Flags) (result string, err error) {
 		<-v.GoCanHibernate(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanHibernateWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanHibernateWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanHibernate(call)
+}
+
 // method CanHybridSleep
 
 func (v *manager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanHybridSleep", flags, ch)
+}
+
+func (v *manager) GoCanHybridSleepWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanHybridSleep", flags, ch)
 }
 
 func (*manager) StoreCanHybridSleep(call *dbus.Call) (result string, err error) {
@@ -474,20 +1046,54 @@ func (v *manager) CanHybridSleep(flags dbus.Flags) (result string, err error) {
 		<-v.GoCanHybridSleep(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanHybridSleepWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanHybridSleepWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanHybridSleep(call)
+}
+
 // method ScheduleShutdown
 
 func (v *manager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ScheduleShutdown", flags, ch, type0, usec)
 }
 
+func (v *manager) GoScheduleShutdownWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ScheduleShutdown", flags, ch, type0, usec)
+}
+
 func (v *manager) ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error {
 	return (<-v.GoScheduleShutdown(flags, make(chan *dbus.Call, 1), type0, usec).Done).Err
+}
+
+func (v *manager) ScheduleShutdownWithTimeout(timeout time.Duration, flags dbus.Flags, type0 string, usec uint64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoScheduleShutdownWithContext(ctx, flags, make(chan *dbus.Call, 1), type0, usec).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method CancelScheduledShutdown
 
 func (v *manager) GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelScheduledShutdown", flags, ch)
+}
+
+func (v *manager) GoCancelScheduledShutdownWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CancelScheduledShutdown", flags, ch)
 }
 
 func (*manager) StoreCancelScheduledShutdown(call *dbus.Call) (cancelled bool, err error) {
@@ -500,10 +1106,29 @@ func (v *manager) CancelScheduledShutdown(flags dbus.Flags) (cancelled bool, err
 		<-v.GoCancelScheduledShutdown(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CancelScheduledShutdownWithTimeout(timeout time.Duration, flags dbus.Flags) (cancelled bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCancelScheduledShutdownWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCancelScheduledShutdown(call)
+}
+
 // method Inhibit
 
 func (v *manager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Inhibit", flags, ch, what, who, why, mode)
+}
+
+func (v *manager) GoInhibitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Inhibit", flags, ch, what, who, why, mode)
 }
 
 func (*manager) StoreInhibit(call *dbus.Call) (pipeFd dbus.UnixFD, err error) {
@@ -516,10 +1141,29 @@ func (v *manager) Inhibit(flags dbus.Flags, what string, who string, why string,
 		<-v.GoInhibit(flags, make(chan *dbus.Call, 1), what, who, why, mode).Done)
 }
 
+func (v *manager) InhibitWithTimeout(timeout time.Duration, flags dbus.Flags, what string, who string, why string, mode string) (pipeFd dbus.UnixFD, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoInhibitWithContext(ctx, flags, make(chan *dbus.Call, 1), what, who, why, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreInhibit(call)
+}
+
 // method CanRebootToFirmwareSetup
 
 func (v *manager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanRebootToFirmwareSetup", flags, ch)
+}
+
+func (v *manager) GoCanRebootToFirmwareSetupWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanRebootToFirmwareSetup", flags, ch)
 }
 
 func (*manager) StoreCanRebootToFirmwareSetup(call *dbus.Call) (result string, err error) {
@@ -532,14 +1176,44 @@ func (v *manager) CanRebootToFirmwareSetup(flags dbus.Flags) (result string, err
 		<-v.GoCanRebootToFirmwareSetup(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) CanRebootToFirmwareSetupWithTimeout(timeout time.Duration, flags dbus.Flags) (result string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanRebootToFirmwareSetupWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanRebootToFirmwareSetup(call)
+}
+
 // method SetRebootToFirmwareSetup
 
 func (v *manager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRebootToFirmwareSetup", flags, ch, enable)
 }
 
+func (v *manager) GoSetRebootToFirmwareSetupWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetRebootToFirmwareSetup", flags, ch, enable)
+}
+
 func (v *manager) SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error {
 	return (<-v.GoSetRebootToFirmwareSetup(flags, make(chan *dbus.Call, 1), enable).Done).Err
+}
+
+func (v *manager) SetRebootToFirmwareSetupWithTimeout(timeout time.Duration, flags dbus.Flags, enable bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetRebootToFirmwareSetupWithContext(ctx, flags, make(chan *dbus.Call, 1), enable).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetWallMessage
@@ -548,8 +1222,23 @@ func (v *manager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMes
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetWallMessage", flags, ch, wallMessage, enable)
 }
 
+func (v *manager) GoSetWallMessageWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetWallMessage", flags, ch, wallMessage, enable)
+}
+
 func (v *manager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error {
 	return (<-v.GoSetWallMessage(flags, make(chan *dbus.Call, 1), wallMessage, enable).Done).Err
+}
+
+func (v *manager) SetWallMessageWithTimeout(timeout time.Duration, flags dbus.Flags, wallMessage string, enable bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetWallMessageWithContext(ctx, flags, make(chan *dbus.Call, 1), wallMessage, enable).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal SessionNew
@@ -1113,8 +1802,23 @@ func (v *seat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
+func (v *seat) GoTerminateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Terminate", flags, ch)
+}
+
 func (v *seat) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *seat) TerminateWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ActivateSession
@@ -1123,8 +1827,23 @@ func (v *seat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
 }
 
+func (v *seat) GoActivateSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ActivateSession", flags, ch, sessionId)
+}
+
 func (v *seat) ActivateSession(flags dbus.Flags, sessionId string) error {
 	return (<-v.GoActivateSession(flags, make(chan *dbus.Call, 1), sessionId).Done).Err
+}
+
+func (v *seat) ActivateSessionWithTimeout(timeout time.Duration, flags dbus.Flags, sessionId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), sessionId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SwitchTo
@@ -1133,8 +1852,23 @@ func (v *seat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *db
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchTo", flags, ch, vtnr)
 }
 
+func (v *seat) GoSwitchToWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SwitchTo", flags, ch, vtnr)
+}
+
 func (v *seat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
 	return (<-v.GoSwitchTo(flags, make(chan *dbus.Call, 1), vtnr).Done).Err
+}
+
+func (v *seat) SwitchToWithTimeout(timeout time.Duration, flags dbus.Flags, vtnr uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSwitchToWithContext(ctx, flags, make(chan *dbus.Call, 1), vtnr).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SwitchToNext
@@ -1143,8 +1877,23 @@ func (v *seat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchToNext", flags, ch)
 }
 
+func (v *seat) GoSwitchToNextWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SwitchToNext", flags, ch)
+}
+
 func (v *seat) SwitchToNext(flags dbus.Flags) error {
 	return (<-v.GoSwitchToNext(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *seat) SwitchToNextWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSwitchToNextWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SwitchToPrevious
@@ -1153,8 +1902,23 @@ func (v *seat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Ca
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchToPrevious", flags, ch)
 }
 
+func (v *seat) GoSwitchToPreviousWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SwitchToPrevious", flags, ch)
+}
+
 func (v *seat) SwitchToPrevious(flags dbus.Flags) error {
 	return (<-v.GoSwitchToPrevious(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *seat) SwitchToPreviousWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSwitchToPreviousWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Id s
@@ -1268,8 +2032,23 @@ func (v *session) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
+func (v *session) GoTerminateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Terminate", flags, ch)
+}
+
 func (v *session) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) TerminateWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Activate
@@ -1278,8 +2057,23 @@ func (v *session) GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Activate", flags, ch)
 }
 
+func (v *session) GoActivateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Activate", flags, ch)
+}
+
 func (v *session) Activate(flags dbus.Flags) error {
 	return (<-v.GoActivate(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) ActivateWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Lock
@@ -1288,8 +2082,23 @@ func (v *session) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Lock", flags, ch)
 }
 
+func (v *session) GoLockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Lock", flags, ch)
+}
+
 func (v *session) Lock(flags dbus.Flags) error {
 	return (<-v.GoLock(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) LockWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLockWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Unlock
@@ -1298,8 +2107,23 @@ func (v *session) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unlock", flags, ch)
 }
 
+func (v *session) GoUnlockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Unlock", flags, ch)
+}
+
 func (v *session) Unlock(flags dbus.Flags) error {
 	return (<-v.GoUnlock(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) UnlockWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnlockWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetIdleHint
@@ -1308,8 +2132,23 @@ func (v *session) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool)
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetIdleHint", flags, ch, idle)
 }
 
+func (v *session) GoSetIdleHintWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetIdleHint", flags, ch, idle)
+}
+
 func (v *session) SetIdleHint(flags dbus.Flags, idle bool) error {
 	return (<-v.GoSetIdleHint(flags, make(chan *dbus.Call, 1), idle).Done).Err
+}
+
+func (v *session) SetIdleHintWithTimeout(timeout time.Duration, flags dbus.Flags, idle bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetIdleHintWithContext(ctx, flags, make(chan *dbus.Call, 1), idle).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetLockedHint
@@ -1318,8 +2157,23 @@ func (v *session) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked b
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLockedHint", flags, ch, locked)
 }
 
+func (v *session) GoSetLockedHintWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetLockedHint", flags, ch, locked)
+}
+
 func (v *session) SetLockedHint(flags dbus.Flags, locked bool) error {
 	return (<-v.GoSetLockedHint(flags, make(chan *dbus.Call, 1), locked).Done).Err
+}
+
+func (v *session) SetLockedHintWithTimeout(timeout time.Duration, flags dbus.Flags, locked bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetLockedHintWithContext(ctx, flags, make(chan *dbus.Call, 1), locked).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Kill
@@ -1328,8 +2182,23 @@ func (v *session) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, who, signo)
 }
 
+func (v *session) GoKillWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Kill", flags, ch, who, signo)
+}
+
 func (v *session) Kill(flags dbus.Flags, who string, signo int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), who, signo).Done).Err
+}
+
+func (v *session) KillWithTimeout(timeout time.Duration, flags dbus.Flags, who string, signo int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillWithContext(ctx, flags, make(chan *dbus.Call, 1), who, signo).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method TakeControl
@@ -1338,8 +2207,23 @@ func (v *session) GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TakeControl", flags, ch, force)
 }
 
+func (v *session) GoTakeControlWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TakeControl", flags, ch, force)
+}
+
 func (v *session) TakeControl(flags dbus.Flags, force bool) error {
 	return (<-v.GoTakeControl(flags, make(chan *dbus.Call, 1), force).Done).Err
+}
+
+func (v *session) TakeControlWithTimeout(timeout time.Duration, flags dbus.Flags, force bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTakeControlWithContext(ctx, flags, make(chan *dbus.Call, 1), force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ReleaseControl
@@ -1348,14 +2232,33 @@ func (v *session) GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseControl", flags, ch)
 }
 
+func (v *session) GoReleaseControlWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReleaseControl", flags, ch)
+}
+
 func (v *session) ReleaseControl(flags dbus.Flags) error {
 	return (<-v.GoReleaseControl(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) ReleaseControlWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReleaseControlWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method TakeDevice
 
 func (v *session) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TakeDevice", flags, ch, major, minor)
+}
+
+func (v *session) GoTakeDeviceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TakeDevice", flags, ch, major, minor)
 }
 
 func (*session) StoreTakeDevice(call *dbus.Call) (fd dbus.UnixFD, inactive bool, err error) {
@@ -1368,14 +2271,44 @@ func (v *session) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (fd d
 		<-v.GoTakeDevice(flags, make(chan *dbus.Call, 1), major, minor).Done)
 }
 
+func (v *session) TakeDeviceWithTimeout(timeout time.Duration, flags dbus.Flags, major uint32, minor uint32) (fd dbus.UnixFD, inactive bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTakeDeviceWithContext(ctx, flags, make(chan *dbus.Call, 1), major, minor).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreTakeDevice(call)
+}
+
 // method ReleaseDevice
 
 func (v *session) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseDevice", flags, ch, major, minor)
 }
 
+func (v *session) GoReleaseDeviceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReleaseDevice", flags, ch, major, minor)
+}
+
 func (v *session) ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error {
 	return (<-v.GoReleaseDevice(flags, make(chan *dbus.Call, 1), major, minor).Done).Err
+}
+
+func (v *session) ReleaseDeviceWithTimeout(timeout time.Duration, flags dbus.Flags, major uint32, minor uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReleaseDeviceWithContext(ctx, flags, make(chan *dbus.Call, 1), major, minor).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PauseDeviceComplete
@@ -1384,8 +2317,23 @@ func (v *session) GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, ma
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PauseDeviceComplete", flags, ch, major, minor)
 }
 
+func (v *session) GoPauseDeviceCompleteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PauseDeviceComplete", flags, ch, major, minor)
+}
+
 func (v *session) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error {
 	return (<-v.GoPauseDeviceComplete(flags, make(chan *dbus.Call, 1), major, minor).Done).Err
+}
+
+func (v *session) PauseDeviceCompleteWithTimeout(timeout time.Duration, flags dbus.Flags, major uint32, minor uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPauseDeviceCompleteWithContext(ctx, flags, make(chan *dbus.Call, 1), major, minor).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal PauseDevice
@@ -1801,8 +2749,23 @@ func (v *user) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Terminate", flags, ch)
 }
 
+func (v *user) GoTerminateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Terminate", flags, ch)
+}
+
 func (v *user) Terminate(flags dbus.Flags) error {
 	return (<-v.GoTerminate(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *user) TerminateWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTerminateWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Kill
@@ -1811,8 +2774,23 @@ func (v *user) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.C
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, signo)
 }
 
+func (v *user) GoKillWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Kill", flags, ch, signo)
+}
+
 func (v *user) Kill(flags dbus.Flags, signo int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), signo).Done).Err
+}
+
+func (v *user) KillWithTimeout(timeout time.Duration, flags dbus.Flags, signo int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillWithContext(ctx, flags, make(chan *dbus.Call, 1), signo).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property UID u

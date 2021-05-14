@@ -1,10 +1,12 @@
 package osd
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,21 @@ func (v *osd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ShowOSD", flags, ch, osd)
 }
 
+func (v *osd) GoShowOSDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ShowOSD", flags, ch, osd)
+}
+
 func (v *osd) ShowOSD(flags dbus.Flags, osd string) error {
 	return (<-v.GoShowOSD(flags, make(chan *dbus.Call, 1), osd).Done).Err
+}
+
+func (v *osd) ShowOSDWithTimeout(timeout time.Duration, flags dbus.Flags, osd string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoShowOSDWithContext(ctx, flags, make(chan *dbus.Call, 1), osd).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }

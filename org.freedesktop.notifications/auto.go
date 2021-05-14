@@ -1,10 +1,12 @@
 package notifications
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *notifications) GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetCapabilities", flags, ch)
 }
 
+func (v *notifications) GoGetCapabilitiesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetCapabilities", flags, ch)
+}
+
 func (*notifications) StoreGetCapabilities(call *dbus.Call) (capabilities []string, err error) {
 	err = call.Store(&capabilities)
 	return
@@ -50,10 +56,29 @@ func (v *notifications) GetCapabilities(flags dbus.Flags) (capabilities []string
 		<-v.GoGetCapabilities(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *notifications) GetCapabilitiesWithTimeout(timeout time.Duration, flags dbus.Flags) (capabilities []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetCapabilitiesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetCapabilities(call)
+}
+
 // method Notify
 
 func (v *notifications) GoNotify(flags dbus.Flags, ch chan *dbus.Call, app_name string, replaces_id uint32, app_icon string, summary string, body string, actions []string, hints map[string]dbus.Variant, expire_timeout int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Notify", flags, ch, app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout)
+}
+
+func (v *notifications) GoNotifyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, app_name string, replaces_id uint32, app_icon string, summary string, body string, actions []string, hints map[string]dbus.Variant, expire_timeout int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Notify", flags, ch, app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout)
 }
 
 func (*notifications) StoreNotify(call *dbus.Call) (id uint32, err error) {
@@ -66,20 +91,54 @@ func (v *notifications) Notify(flags dbus.Flags, app_name string, replaces_id ui
 		<-v.GoNotify(flags, make(chan *dbus.Call, 1), app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout).Done)
 }
 
+func (v *notifications) NotifyWithTimeout(timeout time.Duration, flags dbus.Flags, app_name string, replaces_id uint32, app_icon string, summary string, body string, actions []string, hints map[string]dbus.Variant, expire_timeout int32) (id uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoNotifyWithContext(ctx, flags, make(chan *dbus.Call, 1), app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreNotify(call)
+}
+
 // method CloseNotification
 
 func (v *notifications) GoCloseNotification(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CloseNotification", flags, ch, id)
 }
 
+func (v *notifications) GoCloseNotificationWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CloseNotification", flags, ch, id)
+}
+
 func (v *notifications) CloseNotification(flags dbus.Flags, id uint32) error {
 	return (<-v.GoCloseNotification(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+func (v *notifications) CloseNotificationWithTimeout(timeout time.Duration, flags dbus.Flags, id uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCloseNotificationWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetServerInformation
 
 func (v *notifications) GoGetServerInformation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetServerInformation", flags, ch)
+}
+
+func (v *notifications) GoGetServerInformationWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetServerInformation", flags, ch)
 }
 
 func (*notifications) StoreGetServerInformation(call *dbus.Call) (name string, vendor string, version string, spec_version string, err error) {
@@ -90,6 +149,21 @@ func (*notifications) StoreGetServerInformation(call *dbus.Call) (name string, v
 func (v *notifications) GetServerInformation(flags dbus.Flags) (name string, vendor string, version string, spec_version string, err error) {
 	return v.StoreGetServerInformation(
 		<-v.GoGetServerInformation(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+func (v *notifications) GetServerInformationWithTimeout(timeout time.Duration, flags dbus.Flags) (name string, vendor string, version string, spec_version string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetServerInformationWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetServerInformation(call)
 }
 
 // signal NotificationClosed

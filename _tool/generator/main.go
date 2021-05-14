@@ -37,6 +37,8 @@ func main() {
 	sf.AddGoImport("errors")
 	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
+	sf.AddGoImport("time")
+	sf.AddGoImport("context")
 	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
@@ -101,7 +103,7 @@ func main() {
 			for _, prop := range ifc.Properties {
 				var methodSameName bool
 				for _, method := range ifc.Methods {
-					if method.Name == prop.Name {
+					if strings.Title(method.Name) == strings.Title(prop.Name) {
 						methodSameName = true
 						break
 					}
@@ -216,6 +218,17 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 	// sb.Pn("// in %#v", inArgs)
 	// sb.Pn("// out %#v", outArgs)
 
+	ctxArgName := "ctx"
+	timeoutArgName := "timeout"
+
+	for _, arg := range inArgs {
+		if arg.Name == ctxArgName {
+			ctxArgName = ctxArgName + "_1"
+		} else if arg.Name == timeoutArgName {
+			timeoutArgName = timeoutArgName + "_1"
+		}
+	}
+
 	argFixes := ifcCfg.getMethodFix(method.Name)
 	// check and warn
 	for _, arg := range args {
@@ -232,6 +245,13 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 		ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes))
 	sb.Pn("    return v.GetObject_().Go_(v.GetInterfaceName_()+\".%s\", flags, ch %s)",
 		method.Name, getArgsName(inArgs, false))
+	sb.Pn("}\n")
+
+	// GoXXXWithContext
+	sb.Pn("func (v *%s) Go%sWithContext(%s context.Context, flags dbus.Flags, ch chan *dbus.Call %s) *dbus.Call {",
+		ifcCfg.Type, methodName, ctxArgName, getArgsProto(inArgs, false, argFixes))
+	sb.Pn("    return v.GetObject_().GoWithContext_(%s, v.GetInterfaceName_()+\".%s\", flags, ch %s)",
+		ctxArgName, method.Name, getArgsName(inArgs, false))
 	sb.Pn("}\n")
 
 	// StoreXXX
@@ -254,9 +274,42 @@ func writeMethod(sb *SourceBody, method introspect.Method, ifcCfg *InterfaceConf
 		sb.Pn("func (v *%s) %s(flags dbus.Flags %s) (%s, err error) {",
 			ifcCfg.Type, methodName, getArgsProto(inArgs, false, argFixes),
 			getArgsProto(outArgs, true, argFixes))
-		sb.Pn("return v.Store%s(", method.Name)
+		sb.Pn("return v.Store%s(", methodName)
 		sb.Pn("<-v.Go%s(flags, make(chan *dbus.Call, 1) %s).Done)",
 			methodName, getArgsName(inArgs, false))
+		sb.Pn("}\n")
+	}
+
+	// CallWithTimeout
+	if len(outArgs) == 0 {
+		sb.Pn("func (v *%s) %sWithTimeout(%s time.Duration, flags dbus.Flags %s) error {",
+			ifcCfg.Type, methodName, timeoutArgName, getArgsProto(inArgs, false, argFixes))
+		sb.Pn("ctx, cancel := context.WithTimeout(context.Background(), %s)", timeoutArgName)
+		sb.Pn("defer cancel()")
+		sb.Pn("call := <-v.Go%sWithContext(ctx, flags, make(chan *dbus.Call, 1) %s).Done",
+			methodName, getArgsName(inArgs, false))
+		sb.Pn("if call.Err == nil && ctx.Err() != nil {")
+		sb.Pn("return ctx.Err()")
+		sb.Pn("}\n")
+		sb.Pn("return call.Err")
+		sb.Pn("}\n")
+	} else {
+		sb.Pn("func (v *%s) %sWithTimeout(%s time.Duration, flags dbus.Flags %s) (%s, err error) {",
+			ifcCfg.Type, methodName, timeoutArgName, getArgsProto(inArgs, false, argFixes),
+			getArgsProto(outArgs, true, argFixes))
+		sb.Pn("ctx, cancel := context.WithTimeout(context.Background(), %s)", timeoutArgName)
+		sb.Pn("defer cancel()")
+		sb.Pn("call := <-v.Go%sWithContext(ctx, flags, make(chan *dbus.Call, 1) %s).Done",
+			methodName, getArgsName(inArgs, false))
+		sb.Pn("if call.Err == nil && ctx.Err() != nil {")
+		sb.Pn("err =ctx.Err()")
+		sb.Pn("return")
+		sb.Pn("} else if call.Err != nil {")
+		sb.Pn("err = call.Err")
+		sb.Pn("return")
+		sb.Pn("}\n")
+
+		sb.Pn("return v.Store%s(call)", methodName)
 		sb.Pn("}\n")
 	}
 }

@@ -1,10 +1,12 @@
 package power
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *power) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetBatteries", flags, ch)
 }
 
+func (v *power) GoGetBatteriesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetBatteries", flags, ch)
+}
+
 func (*power) StoreGetBatteries(call *dbus.Call) (batteries []dbus.ObjectPath, err error) {
 	err = call.Store(&batteries)
 	return
@@ -50,14 +56,44 @@ func (v *power) GetBatteries(flags dbus.Flags) (batteries []dbus.ObjectPath, err
 		<-v.GoGetBatteries(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *power) GetBatteriesWithTimeout(timeout time.Duration, flags dbus.Flags) (batteries []dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetBatteriesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetBatteries(call)
+}
+
 // method Refresh
 
 func (v *power) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Refresh", flags, ch)
 }
 
+func (v *power) GoRefreshWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Refresh", flags, ch)
+}
+
 func (v *power) Refresh(flags dbus.Flags) error {
 	return (<-v.GoRefresh(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *power) RefreshWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefreshWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RefreshBatteries
@@ -66,8 +102,23 @@ func (v *power) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshBatteries", flags, ch)
 }
 
+func (v *power) GoRefreshBatteriesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RefreshBatteries", flags, ch)
+}
+
 func (v *power) RefreshBatteries(flags dbus.Flags) error {
 	return (<-v.GoRefreshBatteries(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *power) RefreshBatteriesWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefreshBatteriesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RefreshMains
@@ -76,8 +127,23 @@ func (v *power) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshMains", flags, ch)
 }
 
+func (v *power) GoRefreshMainsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RefreshMains", flags, ch)
+}
+
 func (v *power) RefreshMains(flags dbus.Flags) error {
 	return (<-v.GoRefreshMains(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *power) RefreshMainsWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefreshMainsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal BatteryDisplayUpdate

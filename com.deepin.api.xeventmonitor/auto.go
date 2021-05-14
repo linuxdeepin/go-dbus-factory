@@ -1,10 +1,12 @@
 package xeventmonitor
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *xEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterArea", flags, ch, x1, y1, x2, y2, flag)
 }
 
+func (v *xEventMonitor) GoRegisterAreaWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RegisterArea", flags, ch, x1, y1, x2, y2, flag)
+}
+
 func (*xEventMonitor) StoreRegisterArea(call *dbus.Call) (id string, err error) {
 	err = call.Store(&id)
 	return
@@ -50,10 +56,29 @@ func (v *xEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 in
 		<-v.GoRegisterArea(flags, make(chan *dbus.Call, 1), x1, y1, x2, y2, flag).Done)
 }
 
+func (v *xEventMonitor) RegisterAreaWithTimeout(timeout time.Duration, flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (id string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRegisterAreaWithContext(ctx, flags, make(chan *dbus.Call, 1), x1, y1, x2, y2, flag).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRegisterArea(call)
+}
+
 // method RegisterAreas
 
 func (v *xEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterAreas", flags, ch, areas, flag)
+}
+
+func (v *xEventMonitor) GoRegisterAreasWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RegisterAreas", flags, ch, areas, flag)
 }
 
 func (*xEventMonitor) StoreRegisterAreas(call *dbus.Call) (id string, err error) {
@@ -66,10 +91,29 @@ func (v *xEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange,
 		<-v.GoRegisterAreas(flags, make(chan *dbus.Call, 1), areas, flag).Done)
 }
 
+func (v *xEventMonitor) RegisterAreasWithTimeout(timeout time.Duration, flags dbus.Flags, areas []CoordinateRange, flag int32) (id string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRegisterAreasWithContext(ctx, flags, make(chan *dbus.Call, 1), areas, flag).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRegisterAreas(call)
+}
+
 // method RegisterFullScreen
 
 func (v *xEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RegisterFullScreen", flags, ch)
+}
+
+func (v *xEventMonitor) GoRegisterFullScreenWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RegisterFullScreen", flags, ch)
 }
 
 func (*xEventMonitor) StoreRegisterFullScreen(call *dbus.Call) (id string, err error) {
@@ -82,10 +126,29 @@ func (v *xEventMonitor) RegisterFullScreen(flags dbus.Flags) (id string, err err
 		<-v.GoRegisterFullScreen(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *xEventMonitor) RegisterFullScreenWithTimeout(timeout time.Duration, flags dbus.Flags) (id string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRegisterFullScreenWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRegisterFullScreen(call)
+}
+
 // method UnregisterArea
 
 func (v *xEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnregisterArea", flags, ch, id)
+}
+
+func (v *xEventMonitor) GoUnregisterAreaWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnregisterArea", flags, ch, id)
 }
 
 func (*xEventMonitor) StoreUnregisterArea(call *dbus.Call) (ok bool, err error) {
@@ -96,6 +159,21 @@ func (*xEventMonitor) StoreUnregisterArea(call *dbus.Call) (ok bool, err error) 
 func (v *xEventMonitor) UnregisterArea(flags dbus.Flags, id string) (ok bool, err error) {
 	return v.StoreUnregisterArea(
 		<-v.GoUnregisterArea(flags, make(chan *dbus.Call, 1), id).Done)
+}
+
+func (v *xEventMonitor) UnregisterAreaWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (ok bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnregisterAreaWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreUnregisterArea(call)
 }
 
 // signal CancelAllArea

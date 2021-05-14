@@ -1,10 +1,12 @@
 package inputdevices
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *keyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, optio
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddLayoutOption", flags, ch, option)
 }
 
+func (v *keyboard) GoAddLayoutOptionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AddLayoutOption", flags, ch, option)
+}
+
 func (v *keyboard) AddLayoutOption(flags dbus.Flags, option string) error {
 	return (<-v.GoAddLayoutOption(flags, make(chan *dbus.Call, 1), option).Done).Err
+}
+
+func (v *keyboard) AddLayoutOptionWithTimeout(timeout time.Duration, flags dbus.Flags, option string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAddLayoutOptionWithContext(ctx, flags, make(chan *dbus.Call, 1), option).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method AddUserLayout
@@ -50,8 +67,23 @@ func (v *keyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddUserLayout", flags, ch, layout)
 }
 
+func (v *keyboard) GoAddUserLayoutWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AddUserLayout", flags, ch, layout)
+}
+
 func (v *keyboard) AddUserLayout(flags dbus.Flags, layout string) error {
 	return (<-v.GoAddUserLayout(flags, make(chan *dbus.Call, 1), layout).Done).Err
+}
+
+func (v *keyboard) AddUserLayoutWithTimeout(timeout time.Duration, flags dbus.Flags, layout string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAddUserLayoutWithContext(ctx, flags, make(chan *dbus.Call, 1), layout).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ClearLayoutOption
@@ -60,8 +92,23 @@ func (v *keyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *db
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearLayoutOption", flags, ch)
 }
 
+func (v *keyboard) GoClearLayoutOptionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ClearLayoutOption", flags, ch)
+}
+
 func (v *keyboard) ClearLayoutOption(flags dbus.Flags) error {
 	return (<-v.GoClearLayoutOption(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *keyboard) ClearLayoutOptionWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoClearLayoutOptionWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteLayoutOption
@@ -70,8 +117,23 @@ func (v *keyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, op
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteLayoutOption", flags, ch, option)
 }
 
+func (v *keyboard) GoDeleteLayoutOptionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteLayoutOption", flags, ch, option)
+}
+
 func (v *keyboard) DeleteLayoutOption(flags dbus.Flags, option string) error {
 	return (<-v.GoDeleteLayoutOption(flags, make(chan *dbus.Call, 1), option).Done).Err
+}
+
+func (v *keyboard) DeleteLayoutOptionWithTimeout(timeout time.Duration, flags dbus.Flags, option string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteLayoutOptionWithContext(ctx, flags, make(chan *dbus.Call, 1), option).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteUserLayout
@@ -80,14 +142,33 @@ func (v *keyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteUserLayout", flags, ch, layout)
 }
 
+func (v *keyboard) GoDeleteUserLayoutWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteUserLayout", flags, ch, layout)
+}
+
 func (v *keyboard) DeleteUserLayout(flags dbus.Flags, layout string) error {
 	return (<-v.GoDeleteUserLayout(flags, make(chan *dbus.Call, 1), layout).Done).Err
+}
+
+func (v *keyboard) DeleteUserLayoutWithTimeout(timeout time.Duration, flags dbus.Flags, layout string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteUserLayoutWithContext(ctx, flags, make(chan *dbus.Call, 1), layout).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetLayoutDesc
 
 func (v *keyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetLayoutDesc", flags, ch, layout)
+}
+
+func (v *keyboard) GoGetLayoutDescWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetLayoutDesc", flags, ch, layout)
 }
 
 func (*keyboard) StoreGetLayoutDesc(call *dbus.Call) (description string, err error) {
@@ -100,10 +181,29 @@ func (v *keyboard) GetLayoutDesc(flags dbus.Flags, layout string) (description s
 		<-v.GoGetLayoutDesc(flags, make(chan *dbus.Call, 1), layout).Done)
 }
 
+func (v *keyboard) GetLayoutDescWithTimeout(timeout time.Duration, flags dbus.Flags, layout string) (description string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetLayoutDescWithContext(ctx, flags, make(chan *dbus.Call, 1), layout).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetLayoutDesc(call)
+}
+
 // method LayoutList
 
 func (v *keyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LayoutList", flags, ch)
+}
+
+func (v *keyboard) GoLayoutListWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LayoutList", flags, ch)
 }
 
 func (*keyboard) StoreLayoutList(call *dbus.Call) (layout_list map[string]string, err error) {
@@ -116,14 +216,44 @@ func (v *keyboard) LayoutList(flags dbus.Flags) (layout_list map[string]string, 
 		<-v.GoLayoutList(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *keyboard) LayoutListWithTimeout(timeout time.Duration, flags dbus.Flags) (layout_list map[string]string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLayoutListWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLayoutList(call)
+}
+
 // method Reset
 
 func (v *keyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
+func (v *keyboard) GoResetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reset", flags, ch)
+}
+
 func (v *keyboard) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *keyboard) ResetWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property UserOptionList as
@@ -225,8 +355,23 @@ func (v *touchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
+func (v *touchPad) GoResetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reset", flags, ch)
+}
+
 func (v *touchPad) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *touchPad) ResetWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property EdgeScroll b

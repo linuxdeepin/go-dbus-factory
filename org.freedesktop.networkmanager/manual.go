@@ -17,3 +17,7 @@ type DeviceStateReason struct {
 	State  uint32
 	Reason uint32
 }
+
+func (obj *AccessPoint) AccessPoint() *accessPoint {
+	return &obj.accessPoint
+}

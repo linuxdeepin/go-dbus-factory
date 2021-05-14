@@ -1,11 +1,13 @@
 package wfd
 
+import "context"
 import "errors"
 import "fmt"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -26,6 +28,10 @@ func NewWfd(conn *dbus.Conn) *Wfd {
 	return obj
 }
 
+func (obj *Wfd) Wfd() *wfd {
+	return &obj.wfd
+}
+
 type wfd struct{}
 
 func (v *wfd) GetObject_() *proxy.Object {
@@ -42,8 +48,23 @@ func (v *wfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Shutdown", flags, ch)
 }
 
+func (v *wfd) GoShutdownWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Shutdown", flags, ch)
+}
+
 func (v *wfd) Shutdown(flags dbus.Flags) error {
 	return (<-v.GoShutdown(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *wfd) ShutdownWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoShutdownWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 type Sink struct {
@@ -76,6 +97,10 @@ func (v *sink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string,
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartSession", flags, ch, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 }
 
+func (v *sink) GoStartSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartSession", flags, ch, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+}
+
 func (*sink) StoreStartSession(call *dbus.Call) (arg7 dbus.ObjectPath, err error) {
 	err = call.Store(&arg7)
 	return
@@ -84,6 +109,21 @@ func (*sink) StoreStartSession(call *dbus.Call) (arg7 dbus.ObjectPath, err error
 func (v *sink) StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (arg7 dbus.ObjectPath, err error) {
 	return v.StoreStartSession(
 		<-v.GoStartSession(flags, make(chan *dbus.Call, 1), arg0, arg1, arg2, arg3, arg4, arg5, arg6).Done)
+}
+
+func (v *sink) StartSessionWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (arg7 dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1, arg2, arg3, arg4, arg5, arg6).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStartSession(call)
 }
 
 // property Session o
@@ -134,8 +174,23 @@ func (v *session) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Resume", flags, ch)
 }
 
+func (v *session) GoResumeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Resume", flags, ch)
+}
+
 func (v *session) Resume(flags dbus.Flags) error {
 	return (<-v.GoResume(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) ResumeWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResumeWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Pause
@@ -144,8 +199,23 @@ func (v *session) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pause", flags, ch)
 }
 
+func (v *session) GoPauseWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Pause", flags, ch)
+}
+
 func (v *session) Pause(flags dbus.Flags) error {
 	return (<-v.GoPause(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) PauseWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPauseWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Teardown
@@ -154,8 +224,23 @@ func (v *session) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Teardown", flags, ch)
 }
 
+func (v *session) GoTeardownWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Teardown", flags, ch)
+}
+
 func (v *session) Teardown(flags dbus.Flags) error {
 	return (<-v.GoTeardown(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) TeardownWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTeardownWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Sink o

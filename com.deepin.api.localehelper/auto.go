@@ -1,10 +1,12 @@
 package localehelper
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *localeHelper) GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, lo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GenerateLocale", flags, ch, locale)
 }
 
+func (v *localeHelper) GoGenerateLocaleWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GenerateLocale", flags, ch, locale)
+}
+
 func (v *localeHelper) GenerateLocale(flags dbus.Flags, locale string) error {
 	return (<-v.GoGenerateLocale(flags, make(chan *dbus.Call, 1), locale).Done).Err
+}
+
+func (v *localeHelper) GenerateLocaleWithTimeout(timeout time.Duration, flags dbus.Flags, locale string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGenerateLocaleWithContext(ctx, flags, make(chan *dbus.Call, 1), locale).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetLocale
@@ -50,8 +67,23 @@ func (v *localeHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLocale", flags, ch, locale)
 }
 
+func (v *localeHelper) GoSetLocaleWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetLocale", flags, ch, locale)
+}
+
 func (v *localeHelper) SetLocale(flags dbus.Flags, locale string) error {
 	return (<-v.GoSetLocale(flags, make(chan *dbus.Call, 1), locale).Done).Err
+}
+
+func (v *localeHelper) SetLocaleWithTimeout(timeout time.Duration, flags dbus.Flags, locale string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetLocaleWithContext(ctx, flags, make(chan *dbus.Call, 1), locale).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal Success

@@ -1,10 +1,12 @@
 package fingerprint
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -39,8 +41,23 @@ func (v *device) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, cl
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
 }
 
+func (v *device) GoClaimWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
+}
+
 func (v *device) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), userId, claimed).Done).Err
+}
+
+func (v *device) ClaimWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, claimed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoClaimWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, claimed).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteAllFingers
@@ -49,8 +66,23 @@ func (v *device) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
 }
 
+func (v *device) GoDeleteAllFingersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
+}
+
 func (v *device) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), userId).Done).Err
+}
+
+func (v *device) DeleteAllFingersWithTimeout(timeout time.Duration, flags dbus.Flags, userId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteAllFingersWithContext(ctx, flags, make(chan *dbus.Call, 1), userId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteFinger
@@ -59,8 +91,23 @@ func (v *device) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId str
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
 }
 
+func (v *device) GoDeleteFingerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
+}
+
 func (v *device) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), userId, finger).Done).Err
+}
+
+func (v *device) DeleteFingerWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteFingerWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Enroll
@@ -69,14 +116,33 @@ func (v *device) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enroll", flags, ch, finger)
 }
 
+func (v *device) GoEnrollWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Enroll", flags, ch, finger)
+}
+
 func (v *device) Enroll(flags dbus.Flags, finger string) error {
 	return (<-v.GoEnroll(flags, make(chan *dbus.Call, 1), finger).Done).Err
+}
+
+func (v *device) EnrollWithTimeout(timeout time.Duration, flags dbus.Flags, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoEnrollWithContext(ctx, flags, make(chan *dbus.Call, 1), finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ListFingers
 
 func (v *device) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
+}
+
+func (v *device) GoListFingersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
 }
 
 func (*device) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
@@ -89,14 +155,44 @@ func (v *device) ListFingers(flags dbus.Flags, userId string) (fingers []string,
 		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), userId).Done)
 }
 
+func (v *device) ListFingersWithTimeout(timeout time.Duration, flags dbus.Flags, userId string) (fingers []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListFingersWithContext(ctx, flags, make(chan *dbus.Call, 1), userId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListFingers(call)
+}
+
 // method RenameFinger
 
 func (v *device) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
 }
 
+func (v *device) GoRenameFingerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
+}
+
 func (v *device) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	return (<-v.GoRenameFinger(flags, make(chan *dbus.Call, 1), userId, finger, newName).Done).Err
+}
+
+func (v *device) RenameFingerWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, finger string, newName string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRenameFingerWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, finger, newName).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StopEnroll
@@ -105,8 +201,23 @@ func (v *device) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopEnroll", flags, ch)
 }
 
+func (v *device) GoStopEnrollWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StopEnroll", flags, ch)
+}
+
 func (v *device) StopEnroll(flags dbus.Flags) error {
 	return (<-v.GoStopEnroll(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *device) StopEnrollWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopEnrollWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StopVerify
@@ -115,8 +226,23 @@ func (v *device) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch)
 }
 
+func (v *device) GoStopVerifyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StopVerify", flags, ch)
+}
+
 func (v *device) StopVerify(flags dbus.Flags) error {
 	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *device) StopVerifyWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopVerifyWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Verify
@@ -125,8 +251,23 @@ func (v *device) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Verify", flags, ch, finger)
 }
 
+func (v *device) GoVerifyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Verify", flags, ch, finger)
+}
+
 func (v *device) Verify(flags dbus.Flags, finger string) error {
 	return (<-v.GoVerify(flags, make(chan *dbus.Call, 1), finger).Done).Err
+}
+
+func (v *device) VerifyWithTimeout(timeout time.Duration, flags dbus.Flags, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoVerifyWithContext(ctx, flags, make(chan *dbus.Call, 1), finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal EnrollStatus
@@ -274,8 +415,23 @@ func (v *commonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId stri
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
 }
 
+func (v *commonDevice) GoClaimWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Claim", flags, ch, userId, claimed)
+}
+
 func (v *commonDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	return (<-v.GoClaim(flags, make(chan *dbus.Call, 1), userId, claimed).Done).Err
+}
+
+func (v *commonDevice) ClaimWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, claimed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoClaimWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, claimed).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteAllFingers
@@ -284,8 +440,23 @@ func (v *commonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
 }
 
+func (v *commonDevice) GoDeleteAllFingersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteAllFingers", flags, ch, userId)
+}
+
 func (v *commonDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	return (<-v.GoDeleteAllFingers(flags, make(chan *dbus.Call, 1), userId).Done).Err
+}
+
+func (v *commonDevice) DeleteAllFingersWithTimeout(timeout time.Duration, flags dbus.Flags, userId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteAllFingersWithContext(ctx, flags, make(chan *dbus.Call, 1), userId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteFinger
@@ -294,8 +465,23 @@ func (v *commonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, user
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
 }
 
+func (v *commonDevice) GoDeleteFingerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteFinger", flags, ch, userId, finger)
+}
+
 func (v *commonDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	return (<-v.GoDeleteFinger(flags, make(chan *dbus.Call, 1), userId, finger).Done).Err
+}
+
+func (v *commonDevice) DeleteFingerWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteFingerWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Enroll
@@ -304,14 +490,33 @@ func (v *commonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username s
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enroll", flags, ch, username, finger)
 }
 
+func (v *commonDevice) GoEnrollWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Enroll", flags, ch, username, finger)
+}
+
 func (v *commonDevice) Enroll(flags dbus.Flags, username string, finger string) error {
 	return (<-v.GoEnroll(flags, make(chan *dbus.Call, 1), username, finger).Done).Err
+}
+
+func (v *commonDevice) EnrollWithTimeout(timeout time.Duration, flags dbus.Flags, username string, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoEnrollWithContext(ctx, flags, make(chan *dbus.Call, 1), username, finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ListFingers
 
 func (v *commonDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
+}
+
+func (v *commonDevice) GoListFingersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListFingers", flags, ch, userId)
 }
 
 func (*commonDevice) StoreListFingers(call *dbus.Call) (fingers []string, err error) {
@@ -324,14 +529,44 @@ func (v *commonDevice) ListFingers(flags dbus.Flags, userId string) (fingers []s
 		<-v.GoListFingers(flags, make(chan *dbus.Call, 1), userId).Done)
 }
 
+func (v *commonDevice) ListFingersWithTimeout(timeout time.Duration, flags dbus.Flags, userId string) (fingers []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListFingersWithContext(ctx, flags, make(chan *dbus.Call, 1), userId).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListFingers(call)
+}
+
 // method RenameFinger
 
 func (v *commonDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
 }
 
+func (v *commonDevice) GoRenameFingerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RenameFinger", flags, ch, userId, finger, newName)
+}
+
 func (v *commonDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	return (<-v.GoRenameFinger(flags, make(chan *dbus.Call, 1), userId, finger, newName).Done).Err
+}
+
+func (v *commonDevice) RenameFingerWithTimeout(timeout time.Duration, flags dbus.Flags, userId string, finger string, newName string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRenameFingerWithContext(ctx, flags, make(chan *dbus.Call, 1), userId, finger, newName).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StopEnroll
@@ -340,8 +575,23 @@ func (v *commonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopEnroll", flags, ch)
 }
 
+func (v *commonDevice) GoStopEnrollWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StopEnroll", flags, ch)
+}
+
 func (v *commonDevice) StopEnroll(flags dbus.Flags) error {
 	return (<-v.GoStopEnroll(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *commonDevice) StopEnrollWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopEnrollWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StopVerify
@@ -350,8 +600,23 @@ func (v *commonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopVerify", flags, ch)
 }
 
+func (v *commonDevice) GoStopVerifyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StopVerify", flags, ch)
+}
+
 func (v *commonDevice) StopVerify(flags dbus.Flags) error {
 	return (<-v.GoStopVerify(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *commonDevice) StopVerifyWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopVerifyWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Verify
@@ -360,8 +625,23 @@ func (v *commonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger str
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Verify", flags, ch, finger)
 }
 
+func (v *commonDevice) GoVerifyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Verify", flags, ch, finger)
+}
+
 func (v *commonDevice) Verify(flags dbus.Flags, finger string) error {
 	return (<-v.GoVerify(flags, make(chan *dbus.Call, 1), finger).Done).Err
+}
+
+func (v *commonDevice) VerifyWithTimeout(timeout time.Duration, flags dbus.Flags, finger string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoVerifyWithContext(ctx, flags, make(chan *dbus.Call, 1), finger).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal EnrollStatus

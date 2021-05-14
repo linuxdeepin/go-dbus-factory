@@ -1,10 +1,12 @@
 package secrets
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *service) GoOpenSession(flags dbus.Flags, ch chan *dbus.Call, algorithm 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenSession", flags, ch, algorithm, input)
 }
 
+func (v *service) GoOpenSessionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, algorithm string, input dbus.Variant) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".OpenSession", flags, ch, algorithm, input)
+}
+
 func (*service) StoreOpenSession(call *dbus.Call) (output dbus.Variant, result dbus.ObjectPath, err error) {
 	err = call.Store(&output, &result)
 	return
@@ -50,10 +56,29 @@ func (v *service) OpenSession(flags dbus.Flags, algorithm string, input dbus.Var
 		<-v.GoOpenSession(flags, make(chan *dbus.Call, 1), algorithm, input).Done)
 }
 
+func (v *service) OpenSessionWithTimeout(timeout time.Duration, flags dbus.Flags, algorithm string, input dbus.Variant) (output dbus.Variant, result dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoOpenSessionWithContext(ctx, flags, make(chan *dbus.Call, 1), algorithm, input).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreOpenSession(call)
+}
+
 // method CreateCollection
 
 func (v *service) GoCreateCollection(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant, alias string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateCollection", flags, ch, properties, alias)
+}
+
+func (v *service) GoCreateCollectionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant, alias string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CreateCollection", flags, ch, properties, alias)
 }
 
 func (*service) StoreCreateCollection(call *dbus.Call) (collection dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
@@ -66,10 +91,29 @@ func (v *service) CreateCollection(flags dbus.Flags, properties map[string]dbus.
 		<-v.GoCreateCollection(flags, make(chan *dbus.Call, 1), properties, alias).Done)
 }
 
+func (v *service) CreateCollectionWithTimeout(timeout time.Duration, flags dbus.Flags, properties map[string]dbus.Variant, alias string) (collection dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCreateCollectionWithContext(ctx, flags, make(chan *dbus.Call, 1), properties, alias).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCreateCollection(call)
+}
+
 // method SearchItems
 
 func (v *service) GoSearchItems(flags dbus.Flags, ch chan *dbus.Call, attributes map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SearchItems", flags, ch, attributes)
+}
+
+func (v *service) GoSearchItemsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, attributes map[string]string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SearchItems", flags, ch, attributes)
 }
 
 func (*service) StoreSearchItems(call *dbus.Call) (unlocked []dbus.ObjectPath, locked []dbus.ObjectPath, err error) {
@@ -82,10 +126,29 @@ func (v *service) SearchItems(flags dbus.Flags, attributes map[string]string) (u
 		<-v.GoSearchItems(flags, make(chan *dbus.Call, 1), attributes).Done)
 }
 
+func (v *service) SearchItemsWithTimeout(timeout time.Duration, flags dbus.Flags, attributes map[string]string) (unlocked []dbus.ObjectPath, locked []dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSearchItemsWithContext(ctx, flags, make(chan *dbus.Call, 1), attributes).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreSearchItems(call)
+}
+
 // method Unlock
 
 func (v *service) GoUnlock(flags dbus.Flags, ch chan *dbus.Call, objects []dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unlock", flags, ch, objects)
+}
+
+func (v *service) GoUnlockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, objects []dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Unlock", flags, ch, objects)
 }
 
 func (*service) StoreUnlock(call *dbus.Call) (unlocked []dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
@@ -98,10 +161,29 @@ func (v *service) Unlock(flags dbus.Flags, objects []dbus.ObjectPath) (unlocked 
 		<-v.GoUnlock(flags, make(chan *dbus.Call, 1), objects).Done)
 }
 
+func (v *service) UnlockWithTimeout(timeout time.Duration, flags dbus.Flags, objects []dbus.ObjectPath) (unlocked []dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnlockWithContext(ctx, flags, make(chan *dbus.Call, 1), objects).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreUnlock(call)
+}
+
 // method Lock
 
 func (v *service) GoLock(flags dbus.Flags, ch chan *dbus.Call, objects []dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Lock", flags, ch, objects)
+}
+
+func (v *service) GoLockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, objects []dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Lock", flags, ch, objects)
 }
 
 func (*service) StoreLock(call *dbus.Call) (locked []dbus.ObjectPath, Prompt dbus.ObjectPath, err error) {
@@ -114,20 +196,54 @@ func (v *service) Lock(flags dbus.Flags, objects []dbus.ObjectPath) (locked []db
 		<-v.GoLock(flags, make(chan *dbus.Call, 1), objects).Done)
 }
 
+func (v *service) LockWithTimeout(timeout time.Duration, flags dbus.Flags, objects []dbus.ObjectPath) (locked []dbus.ObjectPath, Prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLockWithContext(ctx, flags, make(chan *dbus.Call, 1), objects).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLock(call)
+}
+
 // method LockService
 
 func (v *service) GoLockService(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LockService", flags, ch)
 }
 
+func (v *service) GoLockServiceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LockService", flags, ch)
+}
+
 func (v *service) LockService(flags dbus.Flags) error {
 	return (<-v.GoLockService(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *service) LockServiceWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLockServiceWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ChangeLock
 
 func (v *service) GoChangeLock(flags dbus.Flags, ch chan *dbus.Call, collection dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ChangeLock", flags, ch, collection)
+}
+
+func (v *service) GoChangeLockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, collection dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ChangeLock", flags, ch, collection)
 }
 
 func (*service) StoreChangeLock(call *dbus.Call) (prompt dbus.ObjectPath, err error) {
@@ -140,10 +256,29 @@ func (v *service) ChangeLock(flags dbus.Flags, collection dbus.ObjectPath) (prom
 		<-v.GoChangeLock(flags, make(chan *dbus.Call, 1), collection).Done)
 }
 
+func (v *service) ChangeLockWithTimeout(timeout time.Duration, flags dbus.Flags, collection dbus.ObjectPath) (prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoChangeLockWithContext(ctx, flags, make(chan *dbus.Call, 1), collection).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreChangeLock(call)
+}
+
 // method GetSecrets
 
 func (v *service) GoGetSecrets(flags dbus.Flags, ch chan *dbus.Call, items []dbus.ObjectPath, session dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSecrets", flags, ch, items, session)
+}
+
+func (v *service) GoGetSecretsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, items []dbus.ObjectPath, session dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetSecrets", flags, ch, items, session)
 }
 
 func (*service) StoreGetSecrets(call *dbus.Call) (secrets map[dbus.ObjectPath]Secret, err error) {
@@ -156,10 +291,29 @@ func (v *service) GetSecrets(flags dbus.Flags, items []dbus.ObjectPath, session 
 		<-v.GoGetSecrets(flags, make(chan *dbus.Call, 1), items, session).Done)
 }
 
+func (v *service) GetSecretsWithTimeout(timeout time.Duration, flags dbus.Flags, items []dbus.ObjectPath, session dbus.ObjectPath) (secrets map[dbus.ObjectPath]Secret, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetSecretsWithContext(ctx, flags, make(chan *dbus.Call, 1), items, session).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetSecrets(call)
+}
+
 // method ReadAlias
 
 func (v *service) GoReadAlias(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReadAlias", flags, ch, name)
+}
+
+func (v *service) GoReadAliasWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReadAlias", flags, ch, name)
 }
 
 func (*service) StoreReadAlias(call *dbus.Call) (collection dbus.ObjectPath, err error) {
@@ -172,14 +326,44 @@ func (v *service) ReadAlias(flags dbus.Flags, name string) (collection dbus.Obje
 		<-v.GoReadAlias(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
+func (v *service) ReadAliasWithTimeout(timeout time.Duration, flags dbus.Flags, name string) (collection dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReadAliasWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReadAlias(call)
+}
+
 // method SetAlias
 
 func (v *service) GoSetAlias(flags dbus.Flags, ch chan *dbus.Call, name string, collection dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAlias", flags, ch, name, collection)
 }
 
+func (v *service) GoSetAliasWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, collection dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetAlias", flags, ch, name, collection)
+}
+
 func (v *service) SetAlias(flags dbus.Flags, name string, collection dbus.ObjectPath) error {
 	return (<-v.GoSetAlias(flags, make(chan *dbus.Call, 1), name, collection).Done).Err
+}
+
+func (v *service) SetAliasWithTimeout(timeout time.Duration, flags dbus.Flags, name string, collection dbus.ObjectPath) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetAliasWithContext(ctx, flags, make(chan *dbus.Call, 1), name, collection).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal CollectionCreated
@@ -299,6 +483,10 @@ func (v *collection) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch)
 }
 
+func (v *collection) GoDeleteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Delete", flags, ch)
+}
+
 func (*collection) StoreDelete(call *dbus.Call) (prompt dbus.ObjectPath, err error) {
 	err = call.Store(&prompt)
 	return
@@ -309,10 +497,29 @@ func (v *collection) Delete(flags dbus.Flags) (prompt dbus.ObjectPath, err error
 		<-v.GoDelete(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *collection) DeleteWithTimeout(timeout time.Duration, flags dbus.Flags) (prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreDelete(call)
+}
+
 // method SearchItems
 
 func (v *collection) GoSearchItems(flags dbus.Flags, ch chan *dbus.Call, attributes map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SearchItems", flags, ch, attributes)
+}
+
+func (v *collection) GoSearchItemsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, attributes map[string]string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SearchItems", flags, ch, attributes)
 }
 
 func (*collection) StoreSearchItems(call *dbus.Call) (results []dbus.ObjectPath, err error) {
@@ -325,10 +532,29 @@ func (v *collection) SearchItems(flags dbus.Flags, attributes map[string]string)
 		<-v.GoSearchItems(flags, make(chan *dbus.Call, 1), attributes).Done)
 }
 
+func (v *collection) SearchItemsWithTimeout(timeout time.Duration, flags dbus.Flags, attributes map[string]string) (results []dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSearchItemsWithContext(ctx, flags, make(chan *dbus.Call, 1), attributes).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreSearchItems(call)
+}
+
 // method CreateItem
 
 func (v *collection) GoCreateItem(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant, secret Secret, replace bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CreateItem", flags, ch, properties, secret, replace)
+}
+
+func (v *collection) GoCreateItemWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant, secret Secret, replace bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CreateItem", flags, ch, properties, secret, replace)
 }
 
 func (*collection) StoreCreateItem(call *dbus.Call) (item dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
@@ -339,6 +565,21 @@ func (*collection) StoreCreateItem(call *dbus.Call) (item dbus.ObjectPath, promp
 func (v *collection) CreateItem(flags dbus.Flags, properties map[string]dbus.Variant, secret Secret, replace bool) (item dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
 	return v.StoreCreateItem(
 		<-v.GoCreateItem(flags, make(chan *dbus.Call, 1), properties, secret, replace).Done)
+}
+
+func (v *collection) CreateItemWithTimeout(timeout time.Duration, flags dbus.Flags, properties map[string]dbus.Variant, secret Secret, replace bool) (item dbus.ObjectPath, prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCreateItemWithContext(ctx, flags, make(chan *dbus.Call, 1), properties, secret, replace).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCreateItem(call)
 }
 
 // signal ItemCreated
@@ -494,6 +735,10 @@ func (v *item) GoDelete(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch)
 }
 
+func (v *item) GoDeleteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Delete", flags, ch)
+}
+
 func (*item) StoreDelete(call *dbus.Call) (Prompt dbus.ObjectPath, err error) {
 	err = call.Store(&Prompt)
 	return
@@ -504,10 +749,29 @@ func (v *item) Delete(flags dbus.Flags) (Prompt dbus.ObjectPath, err error) {
 		<-v.GoDelete(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *item) DeleteWithTimeout(timeout time.Duration, flags dbus.Flags) (Prompt dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreDelete(call)
+}
+
 // method GetSecret
 
 func (v *item) GoGetSecret(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetSecret", flags, ch, session)
+}
+
+func (v *item) GoGetSecretWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetSecret", flags, ch, session)
 }
 
 func (*item) StoreGetSecret(call *dbus.Call) (secret Secret, err error) {
@@ -520,14 +784,44 @@ func (v *item) GetSecret(flags dbus.Flags, session dbus.ObjectPath) (secret Secr
 		<-v.GoGetSecret(flags, make(chan *dbus.Call, 1), session).Done)
 }
 
+func (v *item) GetSecretWithTimeout(timeout time.Duration, flags dbus.Flags, session dbus.ObjectPath) (secret Secret, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetSecretWithContext(ctx, flags, make(chan *dbus.Call, 1), session).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetSecret(call)
+}
+
 // method SetSecret
 
 func (v *item) GoSetSecret(flags dbus.Flags, ch chan *dbus.Call, secret Secret) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSecret", flags, ch, secret)
 }
 
+func (v *item) GoSetSecretWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, secret Secret) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetSecret", flags, ch, secret)
+}
+
 func (v *item) SetSecret(flags dbus.Flags, secret Secret) error {
 	return (<-v.GoSetSecret(flags, make(chan *dbus.Call, 1), secret).Done).Err
+}
+
+func (v *item) SetSecretWithTimeout(timeout time.Duration, flags dbus.Flags, secret Secret) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetSecretWithContext(ctx, flags, make(chan *dbus.Call, 1), secret).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Locked b
@@ -647,8 +941,23 @@ func (v *session) GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Close", flags, ch)
 }
 
+func (v *session) GoCloseWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Close", flags, ch)
+}
+
 func (v *session) Close(flags dbus.Flags) error {
 	return (<-v.GoClose(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *session) CloseWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCloseWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 type Prompt struct {
@@ -681,8 +990,23 @@ func (v *prompt) GoPrompt(flags dbus.Flags, ch chan *dbus.Call, window_id string
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Prompt", flags, ch, window_id)
 }
 
+func (v *prompt) GoPromptWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, window_id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Prompt", flags, ch, window_id)
+}
+
 func (v *prompt) Prompt(flags dbus.Flags, window_id string) error {
 	return (<-v.GoPrompt(flags, make(chan *dbus.Call, 1), window_id).Done).Err
+}
+
+func (v *prompt) PromptWithTimeout(timeout time.Duration, flags dbus.Flags, window_id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPromptWithContext(ctx, flags, make(chan *dbus.Call, 1), window_id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Dismiss
@@ -691,8 +1015,23 @@ func (v *prompt) GoDismiss(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Dismiss", flags, ch)
 }
 
+func (v *prompt) GoDismissWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Dismiss", flags, ch)
+}
+
 func (v *prompt) Dismiss(flags dbus.Flags) error {
 	return (<-v.GoDismiss(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *prompt) DismissWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDismissWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal Completed

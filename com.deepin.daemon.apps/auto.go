@@ -1,10 +1,12 @@
 package apps
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -86,6 +88,10 @@ func (v *launchedRecorder) GoGetNew(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetNew", flags, ch)
 }
 
+func (v *launchedRecorder) GoGetNewWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetNew", flags, ch)
+}
+
 func (*launchedRecorder) StoreGetNew(call *dbus.Call) (newApps map[string][]string, err error) {
 	err = call.Store(&newApps)
 	return
@@ -96,14 +102,44 @@ func (v *launchedRecorder) GetNew(flags dbus.Flags) (newApps map[string][]string
 		<-v.GoGetNew(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *launchedRecorder) GetNewWithTimeout(timeout time.Duration, flags dbus.Flags) (newApps map[string][]string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetNewWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetNew(call)
+}
+
 // method MarkLaunched
 
 func (v *launchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MarkLaunched", flags, ch, desktopFile)
 }
 
+func (v *launchedRecorder) GoMarkLaunchedWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MarkLaunched", flags, ch, desktopFile)
+}
+
 func (v *launchedRecorder) MarkLaunched(flags dbus.Flags, desktopFile string) error {
 	return (<-v.GoMarkLaunched(flags, make(chan *dbus.Call, 1), desktopFile).Done).Err
+}
+
+func (v *launchedRecorder) MarkLaunchedWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFile string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMarkLaunchedWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFile).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UninstallHints
@@ -112,8 +148,23 @@ func (v *launchedRecorder) GoUninstallHints(flags dbus.Flags, ch chan *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UninstallHints", flags, ch, desktopFiles)
 }
 
+func (v *launchedRecorder) GoUninstallHintsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFiles []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UninstallHints", flags, ch, desktopFiles)
+}
+
 func (v *launchedRecorder) UninstallHints(flags dbus.Flags, desktopFiles []string) error {
 	return (<-v.GoUninstallHints(flags, make(chan *dbus.Call, 1), desktopFiles).Done).Err
+}
+
+func (v *launchedRecorder) UninstallHintsWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFiles []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUninstallHintsWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFiles).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method WatchDirs
@@ -122,8 +173,23 @@ func (v *launchedRecorder) GoWatchDirs(flags dbus.Flags, ch chan *dbus.Call, dir
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".WatchDirs", flags, ch, dirs)
 }
 
+func (v *launchedRecorder) GoWatchDirsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, dirs []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".WatchDirs", flags, ch, dirs)
+}
+
 func (v *launchedRecorder) WatchDirs(flags dbus.Flags, dirs []string) error {
 	return (<-v.GoWatchDirs(flags, make(chan *dbus.Call, 1), dirs).Done).Err
+}
+
+func (v *launchedRecorder) WatchDirsWithTimeout(timeout time.Duration, flags dbus.Flags, dirs []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoWatchDirsWithContext(ctx, flags, make(chan *dbus.Call, 1), dirs).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal Launched

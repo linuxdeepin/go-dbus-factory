@@ -1,10 +1,12 @@
 package cursorhelper
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,21 @@ func (v *cursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Set", flags, ch, name)
 }
 
+func (v *cursorHelper) GoSetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Set", flags, ch, name)
+}
+
 func (v *cursorHelper) Set(flags dbus.Flags, name string) error {
 	return (<-v.GoSet(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *cursorHelper) SetWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }

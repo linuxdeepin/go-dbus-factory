@@ -1,10 +1,12 @@
 package launcher
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *launcher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllItemInfos", flags, ch)
 }
 
+func (v *launcher) GoGetAllItemInfosWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetAllItemInfos", flags, ch)
+}
+
 func (*launcher) StoreGetAllItemInfos(call *dbus.Call) (itemInfoList []ItemInfo, err error) {
 	err = call.Store(&itemInfoList)
 	return
@@ -50,10 +56,29 @@ func (v *launcher) GetAllItemInfos(flags dbus.Flags) (itemInfoList []ItemInfo, e
 		<-v.GoGetAllItemInfos(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *launcher) GetAllItemInfosWithTimeout(timeout time.Duration, flags dbus.Flags) (itemInfoList []ItemInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetAllItemInfosWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetAllItemInfos(call)
+}
+
 // method GetAllNewInstalledApps
 
 func (v *launcher) GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAllNewInstalledApps", flags, ch)
+}
+
+func (v *launcher) GoGetAllNewInstalledAppsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetAllNewInstalledApps", flags, ch)
 }
 
 func (*launcher) StoreGetAllNewInstalledApps(call *dbus.Call) (apps []string, err error) {
@@ -66,10 +91,29 @@ func (v *launcher) GetAllNewInstalledApps(flags dbus.Flags) (apps []string, err 
 		<-v.GoGetAllNewInstalledApps(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *launcher) GetAllNewInstalledAppsWithTimeout(timeout time.Duration, flags dbus.Flags) (apps []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetAllNewInstalledAppsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetAllNewInstalledApps(call)
+}
+
 // method GetDisableScaling
 
 func (v *launcher) GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDisableScaling", flags, ch, id)
+}
+
+func (v *launcher) GoGetDisableScalingWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetDisableScaling", flags, ch, id)
 }
 
 func (*launcher) StoreGetDisableScaling(call *dbus.Call) (value bool, err error) {
@@ -82,10 +126,29 @@ func (v *launcher) GetDisableScaling(flags dbus.Flags, id string) (value bool, e
 		<-v.GoGetDisableScaling(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) GetDisableScalingWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (value bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetDisableScalingWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetDisableScaling(call)
+}
+
 // method GetItemInfo
 
 func (v *launcher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetItemInfo", flags, ch, id)
+}
+
+func (v *launcher) GoGetItemInfoWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetItemInfo", flags, ch, id)
 }
 
 func (*launcher) StoreGetItemInfo(call *dbus.Call) (itemInfo ItemInfo, err error) {
@@ -98,10 +161,29 @@ func (v *launcher) GetItemInfo(flags dbus.Flags, id string) (itemInfo ItemInfo, 
 		<-v.GoGetItemInfo(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) GetItemInfoWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (itemInfo ItemInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetItemInfoWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetItemInfo(call)
+}
+
 // method GetUseProxy
 
 func (v *launcher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUseProxy", flags, ch, id)
+}
+
+func (v *launcher) GoGetUseProxyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUseProxy", flags, ch, id)
 }
 
 func (*launcher) StoreGetUseProxy(call *dbus.Call) (value bool, err error) {
@@ -114,10 +196,29 @@ func (v *launcher) GetUseProxy(flags dbus.Flags, id string) (value bool, err err
 		<-v.GoGetUseProxy(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) GetUseProxyWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (value bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUseProxyWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUseProxy(call)
+}
+
 // method IsItemOnDesktop
 
 func (v *launcher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsItemOnDesktop", flags, ch, id)
+}
+
+func (v *launcher) GoIsItemOnDesktopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".IsItemOnDesktop", flags, ch, id)
 }
 
 func (*launcher) StoreIsItemOnDesktop(call *dbus.Call) (result bool, err error) {
@@ -130,20 +231,54 @@ func (v *launcher) IsItemOnDesktop(flags dbus.Flags, id string) (result bool, er
 		<-v.GoIsItemOnDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) IsItemOnDesktopWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (result bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoIsItemOnDesktopWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreIsItemOnDesktop(call)
+}
+
 // method MarkLaunched
 
 func (v *launcher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MarkLaunched", flags, ch, id)
 }
 
+func (v *launcher) GoMarkLaunchedWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MarkLaunched", flags, ch, id)
+}
+
 func (v *launcher) MarkLaunched(flags dbus.Flags, id string) error {
 	return (<-v.GoMarkLaunched(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+func (v *launcher) MarkLaunchedWithTimeout(timeout time.Duration, flags dbus.Flags, id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMarkLaunchedWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RequestRemoveFromDesktop
 
 func (v *launcher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestRemoveFromDesktop", flags, ch, id)
+}
+
+func (v *launcher) GoRequestRemoveFromDesktopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestRemoveFromDesktop", flags, ch, id)
 }
 
 func (*launcher) StoreRequestRemoveFromDesktop(call *dbus.Call) (ok bool, err error) {
@@ -156,10 +291,29 @@ func (v *launcher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (ok boo
 		<-v.GoRequestRemoveFromDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) RequestRemoveFromDesktopWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (ok bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestRemoveFromDesktopWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRequestRemoveFromDesktop(call)
+}
+
 // method RequestSendToDesktop
 
 func (v *launcher) GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestSendToDesktop", flags, ch, id)
+}
+
+func (v *launcher) GoRequestSendToDesktopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestSendToDesktop", flags, ch, id)
 }
 
 func (*launcher) StoreRequestSendToDesktop(call *dbus.Call) (ok bool, err error) {
@@ -172,14 +326,44 @@ func (v *launcher) RequestSendToDesktop(flags dbus.Flags, id string) (ok bool, e
 		<-v.GoRequestSendToDesktop(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *launcher) RequestSendToDesktopWithTimeout(timeout time.Duration, flags dbus.Flags, id string) (ok bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestSendToDesktopWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRequestSendToDesktop(call)
+}
+
 // method RequestUninstall
 
 func (v *launcher) GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUninstall", flags, ch, id, purge)
 }
 
+func (v *launcher) GoRequestUninstallWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestUninstall", flags, ch, id, purge)
+}
+
 func (v *launcher) RequestUninstall(flags dbus.Flags, id string, purge bool) error {
 	return (<-v.GoRequestUninstall(flags, make(chan *dbus.Call, 1), id, purge).Done).Err
+}
+
+func (v *launcher) RequestUninstallWithTimeout(timeout time.Duration, flags dbus.Flags, id string, purge bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestUninstallWithContext(ctx, flags, make(chan *dbus.Call, 1), id, purge).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Search
@@ -188,8 +372,23 @@ func (v *launcher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Search", flags, ch, key)
 }
 
+func (v *launcher) GoSearchWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Search", flags, ch, key)
+}
+
 func (v *launcher) Search(flags dbus.Flags, key string) error {
 	return (<-v.GoSearch(flags, make(chan *dbus.Call, 1), key).Done).Err
+}
+
+func (v *launcher) SearchWithTimeout(timeout time.Duration, flags dbus.Flags, key string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSearchWithContext(ctx, flags, make(chan *dbus.Call, 1), key).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetDisableScaling
@@ -198,8 +397,23 @@ func (v *launcher) GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDisableScaling", flags, ch, id, value)
 }
 
+func (v *launcher) GoSetDisableScalingWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetDisableScaling", flags, ch, id, value)
+}
+
 func (v *launcher) SetDisableScaling(flags dbus.Flags, id string, value bool) error {
 	return (<-v.GoSetDisableScaling(flags, make(chan *dbus.Call, 1), id, value).Done).Err
+}
+
+func (v *launcher) SetDisableScalingWithTimeout(timeout time.Duration, flags dbus.Flags, id string, value bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetDisableScalingWithContext(ctx, flags, make(chan *dbus.Call, 1), id, value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetUseProxy
@@ -208,8 +422,23 @@ func (v *launcher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUseProxy", flags, ch, id, value)
 }
 
+func (v *launcher) GoSetUseProxyWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetUseProxy", flags, ch, id, value)
+}
+
 func (v *launcher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
 	return (<-v.GoSetUseProxy(flags, make(chan *dbus.Call, 1), id, value).Done).Err
+}
+
+func (v *launcher) SetUseProxyWithTimeout(timeout time.Duration, flags dbus.Flags, id string, value bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetUseProxyWithContext(ctx, flags, make(chan *dbus.Call, 1), id, value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal SearchDone

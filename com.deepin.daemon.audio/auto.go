@@ -1,10 +1,12 @@
 package audio
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *audio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name stri
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultSink", flags, ch, name)
 }
 
+func (v *audio) GoSetDefaultSinkWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetDefaultSink", flags, ch, name)
+}
+
 func (v *audio) SetDefaultSink(flags dbus.Flags, name string) error {
 	return (<-v.GoSetDefaultSink(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *audio) SetDefaultSinkWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetDefaultSinkWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetDefaultSource
@@ -50,8 +67,23 @@ func (v *audio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name st
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultSource", flags, ch, name)
 }
 
+func (v *audio) GoSetDefaultSourceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetDefaultSource", flags, ch, name)
+}
+
 func (v *audio) SetDefaultSource(flags dbus.Flags, name string) error {
 	return (<-v.GoSetDefaultSource(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *audio) SetDefaultSourceWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetDefaultSourceWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPort
@@ -60,8 +92,23 @@ func (v *audio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, p
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, cardId, portName, direction)
 }
 
+func (v *audio) GoSetPortWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPort", flags, ch, cardId, portName, direction)
+}
+
 func (v *audio) SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), cardId, portName, direction).Done).Err
+}
+
+func (v *audio) SetPortWithTimeout(timeout time.Duration, flags dbus.Flags, cardId uint32, portName string, direction int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPortWithContext(ctx, flags, make(chan *dbus.Call, 1), cardId, portName, direction).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property MaxUIVolume d
@@ -139,6 +186,10 @@ func (v *sink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetMeter", flags, ch)
 }
 
+func (v *sink) GoGetMeterWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetMeter", flags, ch)
+}
+
 func (*sink) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
 	err = call.Store(&meter)
 	return
@@ -149,14 +200,44 @@ func (v *sink) GetMeter(flags dbus.Flags) (meter dbus.ObjectPath, err error) {
 		<-v.GoGetMeter(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *sink) GetMeterWithTimeout(timeout time.Duration, flags dbus.Flags) (meter dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetMeterWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetMeter(call)
+}
+
 // method SetBalance
 
 func (v *sink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
+func (v *sink) GoSetBalanceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
+}
+
 func (v *sink) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *sink) SetBalanceWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetBalanceWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetFade
@@ -165,8 +246,23 @@ func (v *sink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
+func (v *sink) GoSetFadeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetFade", flags, ch, value)
+}
+
 func (v *sink) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *sink) SetFadeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetFadeWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetMute
@@ -175,8 +271,23 @@ func (v *sink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
+func (v *sink) GoSetMuteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetMute", flags, ch, value)
+}
+
 func (v *sink) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *sink) SetMuteWithTimeout(timeout time.Duration, flags dbus.Flags, value bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetMuteWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPort
@@ -185,8 +296,23 @@ func (v *sink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbu
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, name)
 }
 
+func (v *sink) GoSetPortWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPort", flags, ch, name)
+}
+
 func (v *sink) SetPort(flags dbus.Flags, name string) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *sink) SetPortWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPortWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetVolume
@@ -195,8 +321,23 @@ func (v *sink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
+func (v *sink) GoSetVolumeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
+}
+
 func (v *sink) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *sink) SetVolumeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetVolumeWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property SupportBalance b
@@ -337,6 +478,10 @@ func (v *source) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetMeter", flags, ch)
 }
 
+func (v *source) GoGetMeterWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetMeter", flags, ch)
+}
+
 func (*source) StoreGetMeter(call *dbus.Call) (meter dbus.ObjectPath, err error) {
 	err = call.Store(&meter)
 	return
@@ -347,14 +492,44 @@ func (v *source) GetMeter(flags dbus.Flags) (meter dbus.ObjectPath, err error) {
 		<-v.GoGetMeter(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *source) GetMeterWithTimeout(timeout time.Duration, flags dbus.Flags) (meter dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetMeterWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetMeter(call)
+}
+
 // method SetBalance
 
 func (v *source) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
+func (v *source) GoSetBalanceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
+}
+
 func (v *source) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *source) SetBalanceWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetBalanceWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetFade
@@ -363,8 +538,23 @@ func (v *source) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
+func (v *source) GoSetFadeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetFade", flags, ch, value)
+}
+
 func (v *source) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *source) SetFadeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetFadeWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetMute
@@ -373,8 +563,23 @@ func (v *source) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *db
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
+func (v *source) GoSetMuteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetMute", flags, ch, value)
+}
+
 func (v *source) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *source) SetMuteWithTimeout(timeout time.Duration, flags dbus.Flags, value bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetMuteWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPort
@@ -383,8 +588,23 @@ func (v *source) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPort", flags, ch, name)
 }
 
+func (v *source) GoSetPortWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPort", flags, ch, name)
+}
+
 func (v *source) SetPort(flags dbus.Flags, name string) error {
 	return (<-v.GoSetPort(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *source) SetPortWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPortWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetVolume
@@ -393,8 +613,23 @@ func (v *source) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
+func (v *source) GoSetVolumeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
+}
+
 func (v *source) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *source) SetVolumeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetVolumeWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Mute b
@@ -535,8 +770,23 @@ func (v *sinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value flo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
 }
 
+func (v *sinkInput) GoSetBalanceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetBalance", flags, ch, value, isPlay)
+}
+
 func (v *sinkInput) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetBalance(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *sinkInput) SetBalanceWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetBalanceWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetFade
@@ -545,8 +795,23 @@ func (v *sinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float6
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFade", flags, ch, value)
 }
 
+func (v *sinkInput) GoSetFadeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetFade", flags, ch, value)
+}
+
 func (v *sinkInput) SetFade(flags dbus.Flags, value float64) error {
 	return (<-v.GoSetFade(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *sinkInput) SetFadeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetFadeWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetMute
@@ -555,8 +820,23 @@ func (v *sinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMute", flags, ch, value)
 }
 
+func (v *sinkInput) GoSetMuteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetMute", flags, ch, value)
+}
+
 func (v *sinkInput) SetMute(flags dbus.Flags, value bool) error {
 	return (<-v.GoSetMute(flags, make(chan *dbus.Call, 1), value).Done).Err
+}
+
+func (v *sinkInput) SetMuteWithTimeout(timeout time.Duration, flags dbus.Flags, value bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetMuteWithContext(ctx, flags, make(chan *dbus.Call, 1), value).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetVolume
@@ -565,8 +845,23 @@ func (v *sinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value floa
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
 }
 
+func (v *sinkInput) GoSetVolumeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetVolume", flags, ch, value, isPlay)
+}
+
 func (v *sinkInput) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	return (<-v.GoSetVolume(flags, make(chan *dbus.Call, 1), value, isPlay).Done).Err
+}
+
+func (v *sinkInput) SetVolumeWithTimeout(timeout time.Duration, flags dbus.Flags, value float64, isPlay bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetVolumeWithContext(ctx, flags, make(chan *dbus.Call, 1), value, isPlay).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Volume d

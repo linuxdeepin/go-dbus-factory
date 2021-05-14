@@ -1,10 +1,12 @@
 package kwin
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *compositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".suspend", flags, ch)
 }
 
+func (v *compositing) GoSuspendWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".suspend", flags, ch)
+}
+
 func (v *compositing) Suspend(flags dbus.Flags) error {
 	return (<-v.GoSuspend(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *compositing) SuspendWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSuspendWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method resume
@@ -50,8 +67,23 @@ func (v *compositing) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".resume", flags, ch)
 }
 
+func (v *compositing) GoResumeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".resume", flags, ch)
+}
+
 func (v *compositing) Resume(flags dbus.Flags) error {
 	return (<-v.GoResume(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *compositing) ResumeWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResumeWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal compositingToggled

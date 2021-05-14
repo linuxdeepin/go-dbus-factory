@@ -1,10 +1,12 @@
 package mediaplayer2
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -25,6 +27,10 @@ func NewMediaPlayer(conn *dbus.Conn, serviceName string) *MediaPlayer {
 	return obj
 }
 
+func (obj *MediaPlayer) MediaPlayer2() *mediaPlayer {
+	return &obj.mediaPlayer
+}
+
 type mediaPlayer struct{}
 
 func (v *mediaPlayer) GetObject_() *proxy.Object {
@@ -41,8 +47,23 @@ func (v *mediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Quit", flags, ch)
 }
 
+func (v *mediaPlayer) GoQuitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Quit", flags, ch)
+}
+
 func (v *mediaPlayer) Quit(flags dbus.Flags) error {
 	return (<-v.GoQuit(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *mediaPlayer) QuitWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoQuitWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Raise
@@ -51,8 +72,23 @@ func (v *mediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Raise", flags, ch)
 }
 
+func (v *mediaPlayer) GoRaiseWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Raise", flags, ch)
+}
+
 func (v *mediaPlayer) Raise(flags dbus.Flags) error {
 	return (<-v.GoRaise(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *mediaPlayer) RaiseWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRaiseWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property CanQuit b
@@ -91,6 +127,10 @@ func (v *mediaPlayer) Identity() proxy.PropString {
 	}
 }
 
+func (obj *MediaPlayer) Player() *player {
+	return &obj.player
+}
+
 type player struct{}
 
 func (v *player) GetObject_() *proxy.Object {
@@ -107,8 +147,23 @@ func (v *player) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Next", flags, ch)
 }
 
+func (v *player) GoNextWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Next", flags, ch)
+}
+
 func (v *player) Next(flags dbus.Flags) error {
 	return (<-v.GoNext(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) NextWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoNextWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Pause
@@ -117,8 +172,23 @@ func (v *player) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Pause", flags, ch)
 }
 
+func (v *player) GoPauseWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Pause", flags, ch)
+}
+
 func (v *player) Pause(flags dbus.Flags) error {
 	return (<-v.GoPause(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) PauseWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPauseWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Play
@@ -127,8 +197,23 @@ func (v *player) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Play", flags, ch)
 }
 
+func (v *player) GoPlayWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Play", flags, ch)
+}
+
 func (v *player) Play(flags dbus.Flags) error {
 	return (<-v.GoPlay(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) PlayWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPlayWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PlayPause
@@ -137,8 +222,23 @@ func (v *player) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PlayPause", flags, ch)
 }
 
+func (v *player) GoPlayPauseWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PlayPause", flags, ch)
+}
+
 func (v *player) PlayPause(flags dbus.Flags) error {
 	return (<-v.GoPlayPause(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) PlayPauseWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPlayPauseWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Previous
@@ -147,8 +247,23 @@ func (v *player) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Previous", flags, ch)
 }
 
+func (v *player) GoPreviousWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Previous", flags, ch)
+}
+
 func (v *player) Previous(flags dbus.Flags) error {
 	return (<-v.GoPrevious(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) PreviousWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPreviousWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Seek
@@ -157,8 +272,23 @@ func (v *player) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbu
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Seek", flags, ch, Offset)
 }
 
+func (v *player) GoSeekWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Seek", flags, ch, Offset)
+}
+
 func (v *player) Seek(flags dbus.Flags, Offset int64) error {
 	return (<-v.GoSeek(flags, make(chan *dbus.Call, 1), Offset).Done).Err
+}
+
+func (v *player) SeekWithTimeout(timeout time.Duration, flags dbus.Flags, Offset int64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSeekWithContext(ctx, flags, make(chan *dbus.Call, 1), Offset).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPosition
@@ -167,8 +297,23 @@ func (v *player) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbu
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPosition", flags, ch, TrackId, Position)
 }
 
+func (v *player) GoSetPositionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPosition", flags, ch, TrackId, Position)
+}
+
 func (v *player) SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
 	return (<-v.GoSetPosition(flags, make(chan *dbus.Call, 1), TrackId, Position).Done).Err
+}
+
+func (v *player) SetPositionWithTimeout(timeout time.Duration, flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPositionWithContext(ctx, flags, make(chan *dbus.Call, 1), TrackId, Position).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Stop
@@ -177,8 +322,23 @@ func (v *player) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch)
 }
 
+func (v *player) GoStopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Stop", flags, ch)
+}
+
 func (v *player) Stop(flags dbus.Flags) error {
 	return (<-v.GoStop(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *player) StopWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal Seeked

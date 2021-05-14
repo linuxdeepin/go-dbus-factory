@@ -1,10 +1,12 @@
 package dbus
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *dbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Hello", flags, ch)
 }
 
+func (v *dbusIfc) GoHelloWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Hello", flags, ch)
+}
+
 func (*dbusIfc) StoreHello(call *dbus.Call) (arg0 string, err error) {
 	err = call.Store(&arg0)
 	return
@@ -50,10 +56,29 @@ func (v *dbusIfc) Hello(flags dbus.Flags) (arg0 string, err error) {
 		<-v.GoHello(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *dbusIfc) HelloWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHelloWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreHello(call)
+}
+
 // method RequestName
 
 func (v *dbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestName", flags, ch, arg0, arg1)
+}
+
+func (v *dbusIfc) GoRequestNameWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestName", flags, ch, arg0, arg1)
 }
 
 func (*dbusIfc) StoreRequestName(call *dbus.Call) (arg2 uint32, err error) {
@@ -66,10 +91,29 @@ func (v *dbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (arg2 
 		<-v.GoRequestName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
 }
 
+func (v *dbusIfc) RequestNameWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 uint32) (arg2 uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestNameWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRequestName(call)
+}
+
 // method ReleaseName
 
 func (v *dbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReleaseName", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoReleaseNameWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReleaseName", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreReleaseName(call *dbus.Call) (arg1 uint32, err error) {
@@ -82,10 +126,29 @@ func (v *dbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (arg1 uint32, err e
 		<-v.GoReleaseName(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) ReleaseNameWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReleaseNameWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReleaseName(call)
+}
+
 // method StartServiceByName
 
 func (v *dbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartServiceByName", flags, ch, arg0, arg1)
+}
+
+func (v *dbusIfc) GoStartServiceByNameWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartServiceByName", flags, ch, arg0, arg1)
 }
 
 func (*dbusIfc) StoreStartServiceByName(call *dbus.Call) (arg2 uint32, err error) {
@@ -98,20 +161,54 @@ func (v *dbusIfc) StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32)
 		<-v.GoStartServiceByName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done)
 }
 
+func (v *dbusIfc) StartServiceByNameWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 uint32) (arg2 uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartServiceByNameWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStartServiceByName(call)
+}
+
 // method UpdateActivationEnvironment
 
 func (v *dbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UpdateActivationEnvironment", flags, ch, arg0)
 }
 
+func (v *dbusIfc) GoUpdateActivationEnvironmentWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UpdateActivationEnvironment", flags, ch, arg0)
+}
+
 func (v *dbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error {
 	return (<-v.GoUpdateActivationEnvironment(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *dbusIfc) UpdateActivationEnvironmentWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 map[string]string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUpdateActivationEnvironmentWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method NameHasOwner
 
 func (v *dbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NameHasOwner", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoNameHasOwnerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".NameHasOwner", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreNameHasOwner(call *dbus.Call) (arg1 bool, err error) {
@@ -124,10 +221,29 @@ func (v *dbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (arg1 bool, err er
 		<-v.GoNameHasOwner(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) NameHasOwnerWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoNameHasOwnerWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreNameHasOwner(call)
+}
+
 // method ListNames
 
 func (v *dbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListNames", flags, ch)
+}
+
+func (v *dbusIfc) GoListNamesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListNames", flags, ch)
 }
 
 func (*dbusIfc) StoreListNames(call *dbus.Call) (arg0 []string, err error) {
@@ -140,10 +256,29 @@ func (v *dbusIfc) ListNames(flags dbus.Flags) (arg0 []string, err error) {
 		<-v.GoListNames(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *dbusIfc) ListNamesWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListNamesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListNames(call)
+}
+
 // method ListActivatableNames
 
 func (v *dbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListActivatableNames", flags, ch)
+}
+
+func (v *dbusIfc) GoListActivatableNamesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListActivatableNames", flags, ch)
 }
 
 func (*dbusIfc) StoreListActivatableNames(call *dbus.Call) (arg0 []string, err error) {
@@ -156,14 +291,44 @@ func (v *dbusIfc) ListActivatableNames(flags dbus.Flags) (arg0 []string, err err
 		<-v.GoListActivatableNames(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *dbusIfc) ListActivatableNamesWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListActivatableNamesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListActivatableNames(call)
+}
+
 // method AddMatch
 
 func (v *dbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddMatch", flags, ch, arg0)
 }
 
+func (v *dbusIfc) GoAddMatchWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AddMatch", flags, ch, arg0)
+}
+
 func (v *dbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoAddMatch(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *dbusIfc) AddMatchWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAddMatchWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RemoveMatch
@@ -172,14 +337,33 @@ func (v *dbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 strin
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveMatch", flags, ch, arg0)
 }
 
+func (v *dbusIfc) GoRemoveMatchWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RemoveMatch", flags, ch, arg0)
+}
+
 func (v *dbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoRemoveMatch(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *dbusIfc) RemoveMatchWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRemoveMatchWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetNameOwner
 
 func (v *dbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetNameOwner", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetNameOwnerWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetNameOwner", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetNameOwner(call *dbus.Call) (arg1 string, err error) {
@@ -192,10 +376,29 @@ func (v *dbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (arg1 string, err 
 		<-v.GoGetNameOwner(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) GetNameOwnerWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetNameOwnerWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetNameOwner(call)
+}
+
 // method ListQueuedOwners
 
 func (v *dbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListQueuedOwners", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoListQueuedOwnersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListQueuedOwners", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreListQueuedOwners(call *dbus.Call) (arg1 []string, err error) {
@@ -208,10 +411,29 @@ func (v *dbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) (arg1 []string
 		<-v.GoListQueuedOwners(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) ListQueuedOwnersWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListQueuedOwnersWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListQueuedOwners(call)
+}
+
 // method GetConnectionUnixUser
 
 func (v *dbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionUnixUser", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetConnectionUnixUserWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetConnectionUnixUser", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetConnectionUnixUser(call *dbus.Call) (arg1 uint32, err error) {
@@ -224,10 +446,29 @@ func (v *dbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 string) (arg1 uin
 		<-v.GoGetConnectionUnixUser(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) GetConnectionUnixUserWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetConnectionUnixUserWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetConnectionUnixUser(call)
+}
+
 // method GetConnectionUnixProcessID
 
 func (v *dbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionUnixProcessID", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetConnectionUnixProcessIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetConnectionUnixProcessID", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetConnectionUnixProcessID(call *dbus.Call) (arg1 uint32, err error) {
@@ -240,10 +481,29 @@ func (v *dbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (arg
 		<-v.GoGetConnectionUnixProcessID(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) GetConnectionUnixProcessIDWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetConnectionUnixProcessIDWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetConnectionUnixProcessID(call)
+}
+
 // method GetAdtAuditSessionData
 
 func (v *dbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAdtAuditSessionData", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetAdtAuditSessionDataWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetAdtAuditSessionData", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetAdtAuditSessionData(call *dbus.Call) (arg1 []uint8, err error) {
@@ -256,10 +516,29 @@ func (v *dbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 string) (arg1 []
 		<-v.GoGetAdtAuditSessionData(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) GetAdtAuditSessionDataWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 []uint8, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetAdtAuditSessionDataWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetAdtAuditSessionData(call)
+}
+
 // method GetConnectionSELinuxSecurityContext
 
 func (v *dbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionSELinuxSecurityContext", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetConnectionSELinuxSecurityContextWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetConnectionSELinuxSecurityContext", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetConnectionSELinuxSecurityContext(call *dbus.Call) (arg1 []uint8, err error) {
@@ -272,20 +551,54 @@ func (v *dbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 str
 		<-v.GoGetConnectionSELinuxSecurityContext(flags, make(chan *dbus.Call, 1), arg0).Done)
 }
 
+func (v *dbusIfc) GetConnectionSELinuxSecurityContextWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 []uint8, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetConnectionSELinuxSecurityContextWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetConnectionSELinuxSecurityContext(call)
+}
+
 // method ReloadConfig
 
 func (v *dbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadConfig", flags, ch)
 }
 
+func (v *dbusIfc) GoReloadConfigWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadConfig", flags, ch)
+}
+
 func (v *dbusIfc) ReloadConfig(flags dbus.Flags) error {
 	return (<-v.GoReloadConfig(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *dbusIfc) ReloadConfigWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadConfigWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetId
 
 func (v *dbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetId", flags, ch)
+}
+
+func (v *dbusIfc) GoGetIdWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetId", flags, ch)
 }
 
 func (*dbusIfc) StoreGetId(call *dbus.Call) (arg0 string, err error) {
@@ -298,10 +611,29 @@ func (v *dbusIfc) GetId(flags dbus.Flags) (arg0 string, err error) {
 		<-v.GoGetId(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *dbusIfc) GetIdWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetIdWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetId(call)
+}
+
 // method GetConnectionCredentials
 
 func (v *dbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetConnectionCredentials", flags, ch, arg0)
+}
+
+func (v *dbusIfc) GoGetConnectionCredentialsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetConnectionCredentials", flags, ch, arg0)
 }
 
 func (*dbusIfc) StoreGetConnectionCredentials(call *dbus.Call) (arg1 map[string]dbus.Variant, err error) {
@@ -312,6 +644,21 @@ func (*dbusIfc) StoreGetConnectionCredentials(call *dbus.Call) (arg1 map[string]
 func (v *dbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 string) (arg1 map[string]dbus.Variant, err error) {
 	return v.StoreGetConnectionCredentials(
 		<-v.GoGetConnectionCredentials(flags, make(chan *dbus.Call, 1), arg0).Done)
+}
+
+func (v *dbusIfc) GetConnectionCredentialsWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) (arg1 map[string]dbus.Variant, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetConnectionCredentialsWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetConnectionCredentials(call)
 }
 
 // signal NameOwnerChanged

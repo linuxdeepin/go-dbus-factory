@@ -1,10 +1,12 @@
 package geoclue2
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *manager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetClient", flags, ch)
 }
 
+func (v *manager) GoGetClientWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetClient", flags, ch)
+}
+
 func (*manager) StoreGetClient(call *dbus.Call) (client dbus.ObjectPath, err error) {
 	err = call.Store(&client)
 	return
@@ -50,14 +56,44 @@ func (v *manager) GetClient(flags dbus.Flags) (client dbus.ObjectPath, err error
 		<-v.GoGetClient(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) GetClientWithTimeout(timeout time.Duration, flags dbus.Flags) (client dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetClientWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetClient(call)
+}
+
 // method AddAgent
 
 func (v *manager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddAgent", flags, ch, id)
 }
 
+func (v *manager) GoAddAgentWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AddAgent", flags, ch, id)
+}
+
 func (v *manager) AddAgent(flags dbus.Flags, id string) error {
 	return (<-v.GoAddAgent(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+func (v *manager) AddAgentWithTimeout(timeout time.Duration, flags dbus.Flags, id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAddAgentWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property InUse b
@@ -108,8 +144,23 @@ func (v *client) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Start", flags, ch)
 }
 
+func (v *client) GoStartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Start", flags, ch)
+}
+
 func (v *client) Start(flags dbus.Flags) error {
 	return (<-v.GoStart(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *client) StartWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Stop
@@ -118,8 +169,23 @@ func (v *client) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch)
 }
 
+func (v *client) GoStopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Stop", flags, ch)
+}
+
 func (v *client) Stop(flags dbus.Flags) error {
 	return (<-v.GoStop(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *client) StopWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal LocationUpdated

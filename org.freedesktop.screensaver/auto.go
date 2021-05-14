@@ -1,10 +1,12 @@
 package screensaver
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *screenSaver) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, name strin
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Inhibit", flags, ch, name, reason)
 }
 
+func (v *screenSaver) GoInhibitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, reason string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Inhibit", flags, ch, name, reason)
+}
+
 func (*screenSaver) StoreInhibit(call *dbus.Call) (cookie uint32, err error) {
 	err = call.Store(&cookie)
 	return
@@ -50,14 +56,44 @@ func (v *screenSaver) Inhibit(flags dbus.Flags, name string, reason string) (coo
 		<-v.GoInhibit(flags, make(chan *dbus.Call, 1), name, reason).Done)
 }
 
+func (v *screenSaver) InhibitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, reason string) (cookie uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoInhibitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, reason).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreInhibit(call)
+}
+
 // method SetTimeout
 
 func (v *screenSaver) GoSetTimeout(flags dbus.Flags, ch chan *dbus.Call, seconds uint32, interval uint32, blank bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetTimeout", flags, ch, seconds, interval, blank)
 }
 
+func (v *screenSaver) GoSetTimeoutWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, seconds uint32, interval uint32, blank bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetTimeout", flags, ch, seconds, interval, blank)
+}
+
 func (v *screenSaver) SetTimeout(flags dbus.Flags, seconds uint32, interval uint32, blank bool) error {
 	return (<-v.GoSetTimeout(flags, make(chan *dbus.Call, 1), seconds, interval, blank).Done).Err
+}
+
+func (v *screenSaver) SetTimeoutWithTimeout(timeout time.Duration, flags dbus.Flags, seconds uint32, interval uint32, blank bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetTimeoutWithContext(ctx, flags, make(chan *dbus.Call, 1), seconds, interval, blank).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SimulateUserActivity
@@ -66,8 +102,23 @@ func (v *screenSaver) GoSimulateUserActivity(flags dbus.Flags, ch chan *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SimulateUserActivity", flags, ch)
 }
 
+func (v *screenSaver) GoSimulateUserActivityWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SimulateUserActivity", flags, ch)
+}
+
 func (v *screenSaver) SimulateUserActivity(flags dbus.Flags) error {
 	return (<-v.GoSimulateUserActivity(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *screenSaver) SimulateUserActivityWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSimulateUserActivityWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnInhibit
@@ -76,8 +127,23 @@ func (v *screenSaver) GoUnInhibit(flags dbus.Flags, ch chan *dbus.Call, cookie u
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnInhibit", flags, ch, cookie)
 }
 
+func (v *screenSaver) GoUnInhibitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, cookie uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnInhibit", flags, ch, cookie)
+}
+
 func (v *screenSaver) UnInhibit(flags dbus.Flags, cookie uint32) error {
 	return (<-v.GoUnInhibit(flags, make(chan *dbus.Call, 1), cookie).Done).Err
+}
+
+func (v *screenSaver) UnInhibitWithTimeout(timeout time.Duration, flags dbus.Flags, cookie uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnInhibitWithContext(ctx, flags, make(chan *dbus.Call, 1), cookie).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal IdleOn

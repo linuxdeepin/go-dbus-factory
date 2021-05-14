@@ -1,10 +1,12 @@
 package systemd1
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *manager) GoGetUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnit", flags, ch, name)
 }
 
+func (v *manager) GoGetUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnit", flags, ch, name)
+}
+
 func (*manager) StoreGetUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
 	err = call.Store(&unit)
 	return
@@ -50,10 +56,29 @@ func (v *manager) GetUnit(flags dbus.Flags, name string) (unit dbus.ObjectPath, 
 		<-v.GoGetUnit(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
+func (v *manager) GetUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnit(call)
+}
+
 // method GetUnitByPID
 
 func (v *manager) GoGetUnitByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByPID", flags, ch, pid)
+}
+
+func (v *manager) GoGetUnitByPIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitByPID", flags, ch, pid)
 }
 
 func (*manager) StoreGetUnitByPID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
@@ -66,10 +91,29 @@ func (v *manager) GetUnitByPID(flags dbus.Flags, pid uint32) (unit dbus.ObjectPa
 		<-v.GoGetUnitByPID(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
+func (v *manager) GetUnitByPIDWithTimeout(timeout time.Duration, flags dbus.Flags, pid uint32) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitByPIDWithContext(ctx, flags, make(chan *dbus.Call, 1), pid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitByPID(call)
+}
+
 // method GetUnitByInvocationID
 
 func (v *manager) GoGetUnitByInvocationID(flags dbus.Flags, ch chan *dbus.Call, invocationID []uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByInvocationID", flags, ch, invocationID)
+}
+
+func (v *manager) GoGetUnitByInvocationIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, invocationID []uint8) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitByInvocationID", flags, ch, invocationID)
 }
 
 func (*manager) StoreGetUnitByInvocationID(call *dbus.Call) (unit dbus.ObjectPath, err error) {
@@ -82,10 +126,29 @@ func (v *manager) GetUnitByInvocationID(flags dbus.Flags, invocationID []uint8) 
 		<-v.GoGetUnitByInvocationID(flags, make(chan *dbus.Call, 1), invocationID).Done)
 }
 
+func (v *manager) GetUnitByInvocationIDWithTimeout(timeout time.Duration, flags dbus.Flags, invocationID []uint8) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitByInvocationIDWithContext(ctx, flags, make(chan *dbus.Call, 1), invocationID).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitByInvocationID(call)
+}
+
 // method GetUnitByControlGroup
 
 func (v *manager) GoGetUnitByControlGroup(flags dbus.Flags, ch chan *dbus.Call, ctrlGroup string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitByControlGroup", flags, ch, ctrlGroup)
+}
+
+func (v *manager) GoGetUnitByControlGroupWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, ctrlGroup string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitByControlGroup", flags, ch, ctrlGroup)
 }
 
 func (*manager) StoreGetUnitByControlGroup(call *dbus.Call) (unit dbus.ObjectPath, err error) {
@@ -98,10 +161,29 @@ func (v *manager) GetUnitByControlGroup(flags dbus.Flags, ctrlGroup string) (uni
 		<-v.GoGetUnitByControlGroup(flags, make(chan *dbus.Call, 1), ctrlGroup).Done)
 }
 
+func (v *manager) GetUnitByControlGroupWithTimeout(timeout time.Duration, flags dbus.Flags, ctrlGroup string) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitByControlGroupWithContext(ctx, flags, make(chan *dbus.Call, 1), ctrlGroup).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitByControlGroup(call)
+}
+
 // method LoadUnit
 
 func (v *manager) GoLoadUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LoadUnit", flags, ch, name)
+}
+
+func (v *manager) GoLoadUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LoadUnit", flags, ch, name)
 }
 
 func (*manager) StoreLoadUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
@@ -114,10 +196,29 @@ func (v *manager) LoadUnit(flags dbus.Flags, name string) (unit dbus.ObjectPath,
 		<-v.GoLoadUnit(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
+func (v *manager) LoadUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLoadUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLoadUnit(call)
+}
+
 // method StartUnit
 
 func (v *manager) GoStartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoStartUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreStartUnit(call *dbus.Call) (unit dbus.ObjectPath, err error) {
@@ -130,10 +231,29 @@ func (v *manager) StartUnit(flags dbus.Flags, name string, mode string) (unit db
 		<-v.GoStartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) StartUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (unit dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStartUnit(call)
+}
+
 // method StartUnitReplace
 
 func (v *manager) GoStartUnitReplace(flags dbus.Flags, ch chan *dbus.Call, oldUnit string, newUnit string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartUnitReplace", flags, ch, oldUnit, newUnit, mode)
+}
+
+func (v *manager) GoStartUnitReplaceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, oldUnit string, newUnit string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartUnitReplace", flags, ch, oldUnit, newUnit, mode)
 }
 
 func (*manager) StoreStartUnitReplace(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -146,10 +266,29 @@ func (v *manager) StartUnitReplace(flags dbus.Flags, oldUnit string, newUnit str
 		<-v.GoStartUnitReplace(flags, make(chan *dbus.Call, 1), oldUnit, newUnit, mode).Done)
 }
 
+func (v *manager) StartUnitReplaceWithTimeout(timeout time.Duration, flags dbus.Flags, oldUnit string, newUnit string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartUnitReplaceWithContext(ctx, flags, make(chan *dbus.Call, 1), oldUnit, newUnit, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStartUnitReplace(call)
+}
+
 // method StopUnit
 
 func (v *manager) GoStopUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StopUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoStopUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StopUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreStopUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -162,10 +301,29 @@ func (v *manager) StopUnit(flags dbus.Flags, name string, mode string) (job dbus
 		<-v.GoStopUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) StopUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStopUnit(call)
+}
+
 // method ReloadUnit
 
 func (v *manager) GoReloadUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoReloadUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreReloadUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -178,10 +336,29 @@ func (v *manager) ReloadUnit(flags dbus.Flags, name string, mode string) (job db
 		<-v.GoReloadUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) ReloadUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReloadUnit(call)
+}
+
 // method RestartUnit
 
 func (v *manager) GoRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RestartUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoRestartUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RestartUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -194,10 +371,29 @@ func (v *manager) RestartUnit(flags dbus.Flags, name string, mode string) (job d
 		<-v.GoRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) RestartUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRestartUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRestartUnit(call)
+}
+
 // method TryRestartUnit
 
 func (v *manager) GoTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TryRestartUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoTryRestartUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TryRestartUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -210,10 +406,29 @@ func (v *manager) TryRestartUnit(flags dbus.Flags, name string, mode string) (jo
 		<-v.GoTryRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) TryRestartUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTryRestartUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreTryRestartUnit(call)
+}
+
 // method ReloadOrRestartUnit
 
 func (v *manager) GoReloadOrRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrRestartUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoReloadOrRestartUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadOrRestartUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreReloadOrRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -226,10 +441,29 @@ func (v *manager) ReloadOrRestartUnit(flags dbus.Flags, name string, mode string
 		<-v.GoReloadOrRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) ReloadOrRestartUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadOrRestartUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReloadOrRestartUnit(call)
+}
+
 // method ReloadOrTryRestartUnit
 
 func (v *manager) GoReloadOrTryRestartUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrTryRestartUnit", flags, ch, name, mode)
+}
+
+func (v *manager) GoReloadOrTryRestartUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadOrTryRestartUnit", flags, ch, name, mode)
 }
 
 func (*manager) StoreReloadOrTryRestartUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -242,14 +476,44 @@ func (v *manager) ReloadOrTryRestartUnit(flags dbus.Flags, name string, mode str
 		<-v.GoReloadOrTryRestartUnit(flags, make(chan *dbus.Call, 1), name, mode).Done)
 }
 
+func (v *manager) ReloadOrTryRestartUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadOrTryRestartUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReloadOrTryRestartUnit(call)
+}
+
 // method KillUnit
 
 func (v *manager) GoKillUnit(flags dbus.Flags, ch chan *dbus.Call, name string, who string, signal int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KillUnit", flags, ch, name, who, signal)
 }
 
+func (v *manager) GoKillUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, who string, signal int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".KillUnit", flags, ch, name, who, signal)
+}
+
 func (v *manager) KillUnit(flags dbus.Flags, name string, who string, signal int32) error {
 	return (<-v.GoKillUnit(flags, make(chan *dbus.Call, 1), name, who, signal).Done).Err
+}
+
+func (v *manager) KillUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, who string, signal int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, who, signal).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ResetFailedUnit
@@ -258,8 +522,23 @@ func (v *manager) GoResetFailedUnit(flags dbus.Flags, ch chan *dbus.Call, name s
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailedUnit", flags, ch, name)
 }
 
+func (v *manager) GoResetFailedUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ResetFailedUnit", flags, ch, name)
+}
+
 func (v *manager) ResetFailedUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoResetFailedUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *manager) ResetFailedUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetFailedUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetUnitProperties
@@ -268,8 +547,23 @@ func (v *manager) GoSetUnitProperties(flags dbus.Flags, ch chan *dbus.Call, name
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetUnitProperties", flags, ch, name, runtime, properties)
 }
 
+func (v *manager) GoSetUnitPropertiesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool, properties []Property) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetUnitProperties", flags, ch, name, runtime, properties)
+}
+
 func (v *manager) SetUnitProperties(flags dbus.Flags, name string, runtime bool, properties []Property) error {
 	return (<-v.GoSetUnitProperties(flags, make(chan *dbus.Call, 1), name, runtime, properties).Done).Err
+}
+
+func (v *manager) SetUnitPropertiesWithTimeout(timeout time.Duration, flags dbus.Flags, name string, runtime bool, properties []Property) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetUnitPropertiesWithContext(ctx, flags, make(chan *dbus.Call, 1), name, runtime, properties).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RefUnit
@@ -278,8 +572,23 @@ func (v *manager) GoRefUnit(flags dbus.Flags, ch chan *dbus.Call, name string) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefUnit", flags, ch, name)
 }
 
+func (v *manager) GoRefUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RefUnit", flags, ch, name)
+}
+
 func (v *manager) RefUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoRefUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *manager) RefUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnrefUnit
@@ -288,14 +597,33 @@ func (v *manager) GoUnrefUnit(flags dbus.Flags, ch chan *dbus.Call, name string)
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnrefUnit", flags, ch, name)
 }
 
+func (v *manager) GoUnrefUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnrefUnit", flags, ch, name)
+}
+
 func (v *manager) UnrefUnit(flags dbus.Flags, name string) error {
 	return (<-v.GoUnrefUnit(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *manager) UnrefUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnrefUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StartTransientUnit
 
 func (v *manager) GoStartTransientUnit(flags dbus.Flags, ch chan *dbus.Call, name string, mode string, properties []Property, aux []PropertyCollection) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartTransientUnit", flags, ch, name, mode, properties, aux)
+}
+
+func (v *manager) GoStartTransientUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, mode string, properties []Property, aux []PropertyCollection) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartTransientUnit", flags, ch, name, mode, properties, aux)
 }
 
 func (*manager) StoreStartTransientUnit(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -308,10 +636,29 @@ func (v *manager) StartTransientUnit(flags dbus.Flags, name string, mode string,
 		<-v.GoStartTransientUnit(flags, make(chan *dbus.Call, 1), name, mode, properties, aux).Done)
 }
 
+func (v *manager) StartTransientUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, mode string, properties []Property, aux []PropertyCollection) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartTransientUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, mode, properties, aux).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStartTransientUnit(call)
+}
+
 // method GetUnitProcesses
 
 func (v *manager) GoGetUnitProcesses(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitProcesses", flags, ch, name)
+}
+
+func (v *manager) GoGetUnitProcessesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitProcesses", flags, ch, name)
 }
 
 func (*manager) StoreGetUnitProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
@@ -324,14 +671,44 @@ func (v *manager) GetUnitProcesses(flags dbus.Flags, name string) (processes []U
 		<-v.GoGetUnitProcesses(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
+func (v *manager) GetUnitProcessesWithTimeout(timeout time.Duration, flags dbus.Flags, name string) (processes []UnitProcess, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitProcessesWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitProcesses(call)
+}
+
 // method AttachProcessesToUnit
 
 func (v *manager) GoAttachProcessesToUnit(flags dbus.Flags, ch chan *dbus.Call, name string, path string, pids []uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachProcessesToUnit", flags, ch, name, path, pids)
 }
 
+func (v *manager) GoAttachProcessesToUnitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, path string, pids []uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AttachProcessesToUnit", flags, ch, name, path, pids)
+}
+
 func (v *manager) AttachProcessesToUnit(flags dbus.Flags, name string, path string, pids []uint32) error {
 	return (<-v.GoAttachProcessesToUnit(flags, make(chan *dbus.Call, 1), name, path, pids).Done).Err
+}
+
+func (v *manager) AttachProcessesToUnitWithTimeout(timeout time.Duration, flags dbus.Flags, name string, path string, pids []uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAttachProcessesToUnitWithContext(ctx, flags, make(chan *dbus.Call, 1), name, path, pids).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method AbandonScope
@@ -340,14 +717,33 @@ func (v *manager) GoAbandonScope(flags dbus.Flags, ch chan *dbus.Call, name stri
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AbandonScope", flags, ch, name)
 }
 
+func (v *manager) GoAbandonScopeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AbandonScope", flags, ch, name)
+}
+
 func (v *manager) AbandonScope(flags dbus.Flags, name string) error {
 	return (<-v.GoAbandonScope(flags, make(chan *dbus.Call, 1), name).Done).Err
+}
+
+func (v *manager) AbandonScopeWithTimeout(timeout time.Duration, flags dbus.Flags, name string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAbandonScopeWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetJob
 
 func (v *manager) GoGetJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJob", flags, ch, id)
+}
+
+func (v *manager) GoGetJobWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetJob", flags, ch, id)
 }
 
 func (*manager) StoreGetJob(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -360,10 +756,29 @@ func (v *manager) GetJob(flags dbus.Flags, id uint32) (job dbus.ObjectPath, err 
 		<-v.GoGetJob(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *manager) GetJobWithTimeout(timeout time.Duration, flags dbus.Flags, id uint32) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetJobWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetJob(call)
+}
+
 // method GetJobAfter
 
 func (v *manager) GoGetJobAfter(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJobAfter", flags, ch, id)
+}
+
+func (v *manager) GoGetJobAfterWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetJobAfter", flags, ch, id)
 }
 
 func (*manager) StoreGetJobAfter(call *dbus.Call) (jobs []JobInfo, err error) {
@@ -376,10 +791,29 @@ func (v *manager) GetJobAfter(flags dbus.Flags, id uint32) (jobs []JobInfo, err 
 		<-v.GoGetJobAfter(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *manager) GetJobAfterWithTimeout(timeout time.Duration, flags dbus.Flags, id uint32) (jobs []JobInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetJobAfterWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetJobAfter(call)
+}
+
 // method GetJobBefore
 
 func (v *manager) GoGetJobBefore(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetJobBefore", flags, ch, id)
+}
+
+func (v *manager) GoGetJobBeforeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetJobBefore", flags, ch, id)
 }
 
 func (*manager) StoreGetJobBefore(call *dbus.Call) (jobs []JobInfo, err error) {
@@ -392,14 +826,44 @@ func (v *manager) GetJobBefore(flags dbus.Flags, id uint32) (jobs []JobInfo, err
 		<-v.GoGetJobBefore(flags, make(chan *dbus.Call, 1), id).Done)
 }
 
+func (v *manager) GetJobBeforeWithTimeout(timeout time.Duration, flags dbus.Flags, id uint32) (jobs []JobInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetJobBeforeWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetJobBefore(call)
+}
+
 // method CancelJob
 
 func (v *manager) GoCancelJob(flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelJob", flags, ch, id)
 }
 
+func (v *manager) GoCancelJobWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, id uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CancelJob", flags, ch, id)
+}
+
 func (v *manager) CancelJob(flags dbus.Flags, id uint32) error {
 	return (<-v.GoCancelJob(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+func (v *manager) CancelJobWithTimeout(timeout time.Duration, flags dbus.Flags, id uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCancelJobWithContext(ctx, flags, make(chan *dbus.Call, 1), id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ClearJobs
@@ -408,8 +872,23 @@ func (v *manager) GoClearJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ClearJobs", flags, ch)
 }
 
+func (v *manager) GoClearJobsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ClearJobs", flags, ch)
+}
+
 func (v *manager) ClearJobs(flags dbus.Flags) error {
 	return (<-v.GoClearJobs(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) ClearJobsWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoClearJobsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ResetFailed
@@ -418,14 +897,33 @@ func (v *manager) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailed", flags, ch)
 }
 
+func (v *manager) GoResetFailedWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ResetFailed", flags, ch)
+}
+
 func (v *manager) ResetFailed(flags dbus.Flags) error {
 	return (<-v.GoResetFailed(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) ResetFailedWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetFailedWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ListUnits
 
 func (v *manager) GoListUnits(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnits", flags, ch)
+}
+
+func (v *manager) GoListUnitsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnits", flags, ch)
 }
 
 func (*manager) StoreListUnits(call *dbus.Call) (units []UnitInfo, err error) {
@@ -438,10 +936,29 @@ func (v *manager) ListUnits(flags dbus.Flags) (units []UnitInfo, err error) {
 		<-v.GoListUnits(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListUnitsWithTimeout(timeout time.Duration, flags dbus.Flags) (units []UnitInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnits(call)
+}
+
 // method ListUnitsFiltered
 
 func (v *manager) GoListUnitsFiltered(flags dbus.Flags, ch chan *dbus.Call, states []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsFiltered", flags, ch, states)
+}
+
+func (v *manager) GoListUnitsFilteredWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, states []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnitsFiltered", flags, ch, states)
 }
 
 func (*manager) StoreListUnitsFiltered(call *dbus.Call) (units []UnitInfo, err error) {
@@ -454,10 +971,29 @@ func (v *manager) ListUnitsFiltered(flags dbus.Flags, states []string) (units []
 		<-v.GoListUnitsFiltered(flags, make(chan *dbus.Call, 1), states).Done)
 }
 
+func (v *manager) ListUnitsFilteredWithTimeout(timeout time.Duration, flags dbus.Flags, states []string) (units []UnitInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitsFilteredWithContext(ctx, flags, make(chan *dbus.Call, 1), states).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnitsFiltered(call)
+}
+
 // method ListUnitsByPatterns
 
 func (v *manager) GoListUnitsByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsByPatterns", flags, ch, states, patterns)
+}
+
+func (v *manager) GoListUnitsByPatternsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnitsByPatterns", flags, ch, states, patterns)
 }
 
 func (*manager) StoreListUnitsByPatterns(call *dbus.Call) (units []UnitInfo, err error) {
@@ -470,10 +1006,29 @@ func (v *manager) ListUnitsByPatterns(flags dbus.Flags, states []string, pattern
 		<-v.GoListUnitsByPatterns(flags, make(chan *dbus.Call, 1), states, patterns).Done)
 }
 
+func (v *manager) ListUnitsByPatternsWithTimeout(timeout time.Duration, flags dbus.Flags, states []string, patterns []string) (units []UnitInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitsByPatternsWithContext(ctx, flags, make(chan *dbus.Call, 1), states, patterns).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnitsByPatterns(call)
+}
+
 // method ListUnitsByNames
 
 func (v *manager) GoListUnitsByNames(flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitsByNames", flags, ch, names)
+}
+
+func (v *manager) GoListUnitsByNamesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnitsByNames", flags, ch, names)
 }
 
 func (*manager) StoreListUnitsByNames(call *dbus.Call) (units []UnitInfo, err error) {
@@ -486,10 +1041,29 @@ func (v *manager) ListUnitsByNames(flags dbus.Flags, names []string) (units []Un
 		<-v.GoListUnitsByNames(flags, make(chan *dbus.Call, 1), names).Done)
 }
 
+func (v *manager) ListUnitsByNamesWithTimeout(timeout time.Duration, flags dbus.Flags, names []string) (units []UnitInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitsByNamesWithContext(ctx, flags, make(chan *dbus.Call, 1), names).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnitsByNames(call)
+}
+
 // method ListJobs
 
 func (v *manager) GoListJobs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListJobs", flags, ch)
+}
+
+func (v *manager) GoListJobsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListJobs", flags, ch)
 }
 
 func (*manager) StoreListJobs(call *dbus.Call) (jobs []JobInfo, err error) {
@@ -502,14 +1076,44 @@ func (v *manager) ListJobs(flags dbus.Flags) (jobs []JobInfo, err error) {
 		<-v.GoListJobs(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListJobsWithTimeout(timeout time.Duration, flags dbus.Flags) (jobs []JobInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListJobsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListJobs(call)
+}
+
 // method Subscribe
 
 func (v *manager) GoSubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Subscribe", flags, ch)
 }
 
+func (v *manager) GoSubscribeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Subscribe", flags, ch)
+}
+
 func (v *manager) Subscribe(flags dbus.Flags) error {
 	return (<-v.GoSubscribe(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) SubscribeWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSubscribeWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Unsubscribe
@@ -518,14 +1122,33 @@ func (v *manager) GoUnsubscribe(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unsubscribe", flags, ch)
 }
 
+func (v *manager) GoUnsubscribeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Unsubscribe", flags, ch)
+}
+
 func (v *manager) Unsubscribe(flags dbus.Flags) error {
 	return (<-v.GoUnsubscribe(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) UnsubscribeWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnsubscribeWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Dump
 
 func (v *manager) GoDump(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Dump", flags, ch)
+}
+
+func (v *manager) GoDumpWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Dump", flags, ch)
 }
 
 func (*manager) StoreDump(call *dbus.Call) (arg0 string, err error) {
@@ -538,10 +1161,29 @@ func (v *manager) Dump(flags dbus.Flags) (arg0 string, err error) {
 		<-v.GoDump(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) DumpWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDumpWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreDump(call)
+}
+
 // method DumpByFileDescriptor
 
 func (v *manager) GoDumpByFileDescriptor(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DumpByFileDescriptor", flags, ch)
+}
+
+func (v *manager) GoDumpByFileDescriptorWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DumpByFileDescriptor", flags, ch)
 }
 
 func (*manager) StoreDumpByFileDescriptor(call *dbus.Call) (fd dbus.UnixFD, err error) {
@@ -554,14 +1196,44 @@ func (v *manager) DumpByFileDescriptor(flags dbus.Flags) (fd dbus.UnixFD, err er
 		<-v.GoDumpByFileDescriptor(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) DumpByFileDescriptorWithTimeout(timeout time.Duration, flags dbus.Flags) (fd dbus.UnixFD, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDumpByFileDescriptorWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreDumpByFileDescriptor(call)
+}
+
 // method Reload
 
 func (v *manager) GoReload(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch)
 }
 
+func (v *manager) GoReloadWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reload", flags, ch)
+}
+
 func (v *manager) Reload(flags dbus.Flags) error {
 	return (<-v.GoReload(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) ReloadWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Reexecute
@@ -570,8 +1242,23 @@ func (v *manager) GoReexecute(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reexecute", flags, ch)
 }
 
+func (v *manager) GoReexecuteWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reexecute", flags, ch)
+}
+
 func (v *manager) Reexecute(flags dbus.Flags) error {
 	return (<-v.GoReexecute(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) ReexecuteWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReexecuteWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Exit
@@ -580,8 +1267,23 @@ func (v *manager) GoExit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Exit", flags, ch)
 }
 
+func (v *manager) GoExitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Exit", flags, ch)
+}
+
 func (v *manager) Exit(flags dbus.Flags) error {
 	return (<-v.GoExit(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) ExitWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoExitWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Reboot
@@ -590,8 +1292,23 @@ func (v *manager) GoReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reboot", flags, ch)
 }
 
+func (v *manager) GoRebootWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reboot", flags, ch)
+}
+
 func (v *manager) Reboot(flags dbus.Flags) error {
 	return (<-v.GoReboot(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) RebootWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRebootWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PowerOff
@@ -600,8 +1317,23 @@ func (v *manager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PowerOff", flags, ch)
 }
 
+func (v *manager) GoPowerOffWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PowerOff", flags, ch)
+}
+
 func (v *manager) PowerOff(flags dbus.Flags) error {
 	return (<-v.GoPowerOff(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) PowerOffWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPowerOffWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Halt
@@ -610,8 +1342,23 @@ func (v *manager) GoHalt(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Halt", flags, ch)
 }
 
+func (v *manager) GoHaltWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Halt", flags, ch)
+}
+
 func (v *manager) Halt(flags dbus.Flags) error {
 	return (<-v.GoHalt(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) HaltWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHaltWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method KExec
@@ -620,8 +1367,23 @@ func (v *manager) GoKExec(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".KExec", flags, ch)
 }
 
+func (v *manager) GoKExecWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".KExec", flags, ch)
+}
+
 func (v *manager) KExec(flags dbus.Flags) error {
 	return (<-v.GoKExec(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *manager) KExecWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKExecWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SwitchRoot
@@ -630,8 +1392,23 @@ func (v *manager) GoSwitchRoot(flags dbus.Flags, ch chan *dbus.Call, newRoot str
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchRoot", flags, ch, newRoot, init)
 }
 
+func (v *manager) GoSwitchRootWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, newRoot string, init string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SwitchRoot", flags, ch, newRoot, init)
+}
+
 func (v *manager) SwitchRoot(flags dbus.Flags, newRoot string, init string) error {
 	return (<-v.GoSwitchRoot(flags, make(chan *dbus.Call, 1), newRoot, init).Done).Err
+}
+
+func (v *manager) SwitchRootWithTimeout(timeout time.Duration, flags dbus.Flags, newRoot string, init string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSwitchRootWithContext(ctx, flags, make(chan *dbus.Call, 1), newRoot, init).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetEnvironment
@@ -640,8 +1417,23 @@ func (v *manager) GoSetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names [
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetEnvironment", flags, ch, names)
 }
 
+func (v *manager) GoSetEnvironmentWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetEnvironment", flags, ch, names)
+}
+
 func (v *manager) SetEnvironment(flags dbus.Flags, names []string) error {
 	return (<-v.GoSetEnvironment(flags, make(chan *dbus.Call, 1), names).Done).Err
+}
+
+func (v *manager) SetEnvironmentWithTimeout(timeout time.Duration, flags dbus.Flags, names []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetEnvironmentWithContext(ctx, flags, make(chan *dbus.Call, 1), names).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnsetEnvironment
@@ -650,8 +1442,23 @@ func (v *manager) GoUnsetEnvironment(flags dbus.Flags, ch chan *dbus.Call, names
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnsetEnvironment", flags, ch, names)
 }
 
+func (v *manager) GoUnsetEnvironmentWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, names []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnsetEnvironment", flags, ch, names)
+}
+
 func (v *manager) UnsetEnvironment(flags dbus.Flags, names []string) error {
 	return (<-v.GoUnsetEnvironment(flags, make(chan *dbus.Call, 1), names).Done).Err
+}
+
+func (v *manager) UnsetEnvironmentWithTimeout(timeout time.Duration, flags dbus.Flags, names []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnsetEnvironmentWithContext(ctx, flags, make(chan *dbus.Call, 1), names).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method UnsetAndSetEnvironment
@@ -660,14 +1467,33 @@ func (v *manager) GoUnsetAndSetEnvironment(flags dbus.Flags, ch chan *dbus.Call,
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnsetAndSetEnvironment", flags, ch, unset, set)
 }
 
+func (v *manager) GoUnsetAndSetEnvironmentWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, unset []string, set []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnsetAndSetEnvironment", flags, ch, unset, set)
+}
+
 func (v *manager) UnsetAndSetEnvironment(flags dbus.Flags, unset []string, set []string) error {
 	return (<-v.GoUnsetAndSetEnvironment(flags, make(chan *dbus.Call, 1), unset, set).Done).Err
+}
+
+func (v *manager) UnsetAndSetEnvironmentWithTimeout(timeout time.Duration, flags dbus.Flags, unset []string, set []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnsetAndSetEnvironmentWithContext(ctx, flags, make(chan *dbus.Call, 1), unset, set).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ListUnitFiles
 
 func (v *manager) GoListUnitFiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitFiles", flags, ch)
+}
+
+func (v *manager) GoListUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnitFiles", flags, ch)
 }
 
 func (*manager) StoreListUnitFiles(call *dbus.Call) (files []UnitFile, err error) {
@@ -680,10 +1506,29 @@ func (v *manager) ListUnitFiles(flags dbus.Flags) (files []UnitFile, err error) 
 		<-v.GoListUnitFiles(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) ListUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags) (files []UnitFile, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnitFiles(call)
+}
+
 // method ListUnitFilesByPatterns
 
 func (v *manager) GoListUnitFilesByPatterns(flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListUnitFilesByPatterns", flags, ch, states, patterns)
+}
+
+func (v *manager) GoListUnitFilesByPatternsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, states []string, patterns []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListUnitFilesByPatterns", flags, ch, states, patterns)
 }
 
 func (*manager) StoreListUnitFilesByPatterns(call *dbus.Call) (files []UnitFile, err error) {
@@ -696,10 +1541,29 @@ func (v *manager) ListUnitFilesByPatterns(flags dbus.Flags, states []string, pat
 		<-v.GoListUnitFilesByPatterns(flags, make(chan *dbus.Call, 1), states, patterns).Done)
 }
 
+func (v *manager) ListUnitFilesByPatternsWithTimeout(timeout time.Duration, flags dbus.Flags, states []string, patterns []string) (files []UnitFile, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListUnitFilesByPatternsWithContext(ctx, flags, make(chan *dbus.Call, 1), states, patterns).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListUnitFilesByPatterns(call)
+}
+
 // method GetUnitFileState
 
 func (v *manager) GoGetUnitFileState(flags dbus.Flags, ch chan *dbus.Call, unit string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitFileState", flags, ch, unit)
+}
+
+func (v *manager) GoGetUnitFileStateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, unit string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitFileState", flags, ch, unit)
 }
 
 func (*manager) StoreGetUnitFileState(call *dbus.Call) (state string, err error) {
@@ -712,10 +1576,29 @@ func (v *manager) GetUnitFileState(flags dbus.Flags, unit string) (state string,
 		<-v.GoGetUnitFileState(flags, make(chan *dbus.Call, 1), unit).Done)
 }
 
+func (v *manager) GetUnitFileStateWithTimeout(timeout time.Duration, flags dbus.Flags, unit string) (state string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitFileStateWithContext(ctx, flags, make(chan *dbus.Call, 1), unit).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitFileState(call)
+}
+
 // method EnableUnitFiles
 
 func (v *manager) GoEnableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableUnitFiles", flags, ch, files, runtime, force)
+}
+
+func (v *manager) GoEnableUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".EnableUnitFiles", flags, ch, files, runtime, force)
 }
 
 func (*manager) StoreEnableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
@@ -728,10 +1611,29 @@ func (v *manager) EnableUnitFiles(flags dbus.Flags, files []string, runtime bool
 		<-v.GoEnableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
+func (v *manager) EnableUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoEnableUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreEnableUnitFiles(call)
+}
+
 // method DisableUnitFiles
 
 func (v *manager) GoDisableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisableUnitFiles", flags, ch, files, runtime)
+}
+
+func (v *manager) GoDisableUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DisableUnitFiles", flags, ch, files, runtime)
 }
 
 func (*manager) StoreDisableUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -744,10 +1646,29 @@ func (v *manager) DisableUnitFiles(flags dbus.Flags, files []string, runtime boo
 		<-v.GoDisableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime).Done)
 }
 
+func (v *manager) DisableUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDisableUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreDisableUnitFiles(call)
+}
+
 // method ReenableUnitFiles
 
 func (v *manager) GoReenableUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReenableUnitFiles", flags, ch, files, runtime, force)
+}
+
+func (v *manager) GoReenableUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReenableUnitFiles", flags, ch, files, runtime, force)
 }
 
 func (*manager) StoreReenableUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
@@ -760,10 +1681,29 @@ func (v *manager) ReenableUnitFiles(flags dbus.Flags, files []string, runtime bo
 		<-v.GoReenableUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
+func (v *manager) ReenableUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReenableUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReenableUnitFiles(call)
+}
+
 // method LinkUnitFiles
 
 func (v *manager) GoLinkUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LinkUnitFiles", flags, ch, files, runtime, force)
+}
+
+func (v *manager) GoLinkUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LinkUnitFiles", flags, ch, files, runtime, force)
 }
 
 func (*manager) StoreLinkUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -776,10 +1716,29 @@ func (v *manager) LinkUnitFiles(flags dbus.Flags, files []string, runtime bool, 
 		<-v.GoLinkUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
+func (v *manager) LinkUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLinkUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLinkUnitFiles(call)
+}
+
 // method PresetUnitFiles
 
 func (v *manager) GoPresetUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetUnitFiles", flags, ch, files, runtime, force)
+}
+
+func (v *manager) GoPresetUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PresetUnitFiles", flags, ch, files, runtime, force)
 }
 
 func (*manager) StorePresetUnitFiles(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
@@ -792,10 +1751,29 @@ func (v *manager) PresetUnitFiles(flags dbus.Flags, files []string, runtime bool
 		<-v.GoPresetUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
+func (v *manager) PresetUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPresetUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StorePresetUnitFiles(call)
+}
+
 // method PresetUnitFilesWithMode
 
 func (v *manager) GoPresetUnitFilesWithMode(flags dbus.Flags, ch chan *dbus.Call, files []string, mode string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetUnitFilesWithMode", flags, ch, files, mode, runtime, force)
+}
+
+func (v *manager) GoPresetUnitFilesWithModeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, mode string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PresetUnitFilesWithMode", flags, ch, files, mode, runtime, force)
 }
 
 func (*manager) StorePresetUnitFilesWithMode(call *dbus.Call) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
@@ -808,10 +1786,29 @@ func (v *manager) PresetUnitFilesWithMode(flags dbus.Flags, files []string, mode
 		<-v.GoPresetUnitFilesWithMode(flags, make(chan *dbus.Call, 1), files, mode, runtime, force).Done)
 }
 
+func (v *manager) PresetUnitFilesWithModeWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, mode string, runtime bool, force bool) (carriesInstallInfo bool, changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPresetUnitFilesWithModeWithContext(ctx, flags, make(chan *dbus.Call, 1), files, mode, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StorePresetUnitFilesWithMode(call)
+}
+
 // method MaskUnitFiles
 
 func (v *manager) GoMaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MaskUnitFiles", flags, ch, files, runtime, force)
+}
+
+func (v *manager) GoMaskUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MaskUnitFiles", flags, ch, files, runtime, force)
 }
 
 func (*manager) StoreMaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -824,10 +1821,29 @@ func (v *manager) MaskUnitFiles(flags dbus.Flags, files []string, runtime bool, 
 		<-v.GoMaskUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime, force).Done)
 }
 
+func (v *manager) MaskUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMaskUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreMaskUnitFiles(call)
+}
+
 // method UnmaskUnitFiles
 
 func (v *manager) GoUnmaskUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnmaskUnitFiles", flags, ch, files, runtime)
+}
+
+func (v *manager) GoUnmaskUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, runtime bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".UnmaskUnitFiles", flags, ch, files, runtime)
 }
 
 func (*manager) StoreUnmaskUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -840,10 +1856,29 @@ func (v *manager) UnmaskUnitFiles(flags dbus.Flags, files []string, runtime bool
 		<-v.GoUnmaskUnitFiles(flags, make(chan *dbus.Call, 1), files, runtime).Done)
 }
 
+func (v *manager) UnmaskUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, runtime bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnmaskUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, runtime).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreUnmaskUnitFiles(call)
+}
+
 // method RevertUnitFiles
 
 func (v *manager) GoRevertUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RevertUnitFiles", flags, ch, files)
+}
+
+func (v *manager) GoRevertUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RevertUnitFiles", flags, ch, files)
 }
 
 func (*manager) StoreRevertUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -856,10 +1891,29 @@ func (v *manager) RevertUnitFiles(flags dbus.Flags, files []string) (changes []U
 		<-v.GoRevertUnitFiles(flags, make(chan *dbus.Call, 1), files).Done)
 }
 
+func (v *manager) RevertUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRevertUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRevertUnitFiles(call)
+}
+
 // method SetDefaultTarget
 
 func (v *manager) GoSetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call, name string, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetDefaultTarget", flags, ch, name, force)
+}
+
+func (v *manager) GoSetDefaultTargetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetDefaultTarget", flags, ch, name, force)
 }
 
 func (*manager) StoreSetDefaultTarget(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -872,10 +1926,29 @@ func (v *manager) SetDefaultTarget(flags dbus.Flags, name string, force bool) (c
 		<-v.GoSetDefaultTarget(flags, make(chan *dbus.Call, 1), name, force).Done)
 }
 
+func (v *manager) SetDefaultTargetWithTimeout(timeout time.Duration, flags dbus.Flags, name string, force bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetDefaultTargetWithContext(ctx, flags, make(chan *dbus.Call, 1), name, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreSetDefaultTarget(call)
+}
+
 // method GetDefaultTarget
 
 func (v *manager) GoGetDefaultTarget(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDefaultTarget", flags, ch)
+}
+
+func (v *manager) GoGetDefaultTargetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetDefaultTarget", flags, ch)
 }
 
 func (*manager) StoreGetDefaultTarget(call *dbus.Call) (name string, err error) {
@@ -888,10 +1961,29 @@ func (v *manager) GetDefaultTarget(flags dbus.Flags) (name string, err error) {
 		<-v.GoGetDefaultTarget(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *manager) GetDefaultTargetWithTimeout(timeout time.Duration, flags dbus.Flags) (name string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetDefaultTargetWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetDefaultTarget(call)
+}
+
 // method PresetAllUnitFiles
 
 func (v *manager) GoPresetAllUnitFiles(flags dbus.Flags, ch chan *dbus.Call, mode string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresetAllUnitFiles", flags, ch, mode, runtime, force)
+}
+
+func (v *manager) GoPresetAllUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PresetAllUnitFiles", flags, ch, mode, runtime, force)
 }
 
 func (*manager) StorePresetAllUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -904,10 +1996,29 @@ func (v *manager) PresetAllUnitFiles(flags dbus.Flags, mode string, runtime bool
 		<-v.GoPresetAllUnitFiles(flags, make(chan *dbus.Call, 1), mode, runtime, force).Done)
 }
 
+func (v *manager) PresetAllUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, mode string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPresetAllUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), mode, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StorePresetAllUnitFiles(call)
+}
+
 // method AddDependencyUnitFiles
 
 func (v *manager) GoAddDependencyUnitFiles(flags dbus.Flags, ch chan *dbus.Call, files []string, target string, type0 string, runtime bool, force bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AddDependencyUnitFiles", flags, ch, files, target, type0, runtime, force)
+}
+
+func (v *manager) GoAddDependencyUnitFilesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, files []string, target string, type0 string, runtime bool, force bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AddDependencyUnitFiles", flags, ch, files, target, type0, runtime, force)
 }
 
 func (*manager) StoreAddDependencyUnitFiles(call *dbus.Call) (changes []UnitFileChange, err error) {
@@ -920,10 +2031,29 @@ func (v *manager) AddDependencyUnitFiles(flags dbus.Flags, files []string, targe
 		<-v.GoAddDependencyUnitFiles(flags, make(chan *dbus.Call, 1), files, target, type0, runtime, force).Done)
 }
 
+func (v *manager) AddDependencyUnitFilesWithTimeout(timeout time.Duration, flags dbus.Flags, files []string, target string, type0 string, runtime bool, force bool) (changes []UnitFileChange, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAddDependencyUnitFilesWithContext(ctx, flags, make(chan *dbus.Call, 1), files, target, type0, runtime, force).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreAddDependencyUnitFiles(call)
+}
+
 // method GetUnitFileLinks
 
 func (v *manager) GoGetUnitFileLinks(flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetUnitFileLinks", flags, ch, name, runtime)
+}
+
+func (v *manager) GoGetUnitFileLinksWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string, runtime bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetUnitFileLinks", flags, ch, name, runtime)
 }
 
 func (*manager) StoreGetUnitFileLinks(call *dbus.Call) (links []string, err error) {
@@ -936,20 +2066,54 @@ func (v *manager) GetUnitFileLinks(flags dbus.Flags, name string, runtime bool) 
 		<-v.GoGetUnitFileLinks(flags, make(chan *dbus.Call, 1), name, runtime).Done)
 }
 
+func (v *manager) GetUnitFileLinksWithTimeout(timeout time.Duration, flags dbus.Flags, name string, runtime bool) (links []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetUnitFileLinksWithContext(ctx, flags, make(chan *dbus.Call, 1), name, runtime).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetUnitFileLinks(call)
+}
+
 // method SetExitCode
 
 func (v *manager) GoSetExitCode(flags dbus.Flags, ch chan *dbus.Call, exitCode uint8) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetExitCode", flags, ch, exitCode)
 }
 
+func (v *manager) GoSetExitCodeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, exitCode uint8) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetExitCode", flags, ch, exitCode)
+}
+
 func (v *manager) SetExitCode(flags dbus.Flags, exitCode uint8) error {
 	return (<-v.GoSetExitCode(flags, make(chan *dbus.Call, 1), exitCode).Done).Err
+}
+
+func (v *manager) SetExitCodeWithTimeout(timeout time.Duration, flags dbus.Flags, exitCode uint8) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetExitCodeWithContext(ctx, flags, make(chan *dbus.Call, 1), exitCode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method LookupDynamicUserByName
 
 func (v *manager) GoLookupDynamicUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LookupDynamicUserByName", flags, ch, name)
+}
+
+func (v *manager) GoLookupDynamicUserByNameWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LookupDynamicUserByName", flags, ch, name)
 }
 
 func (*manager) StoreLookupDynamicUserByName(call *dbus.Call) (user uint32, err error) {
@@ -962,10 +2126,29 @@ func (v *manager) LookupDynamicUserByName(flags dbus.Flags, name string) (user u
 		<-v.GoLookupDynamicUserByName(flags, make(chan *dbus.Call, 1), name).Done)
 }
 
+func (v *manager) LookupDynamicUserByNameWithTimeout(timeout time.Duration, flags dbus.Flags, name string) (user uint32, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLookupDynamicUserByNameWithContext(ctx, flags, make(chan *dbus.Call, 1), name).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLookupDynamicUserByName(call)
+}
+
 // method LookupDynamicUserByUID
 
 func (v *manager) GoLookupDynamicUserByUID(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".LookupDynamicUserByUID", flags, ch, uid)
+}
+
+func (v *manager) GoLookupDynamicUserByUIDWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".LookupDynamicUserByUID", flags, ch, uid)
 }
 
 func (*manager) StoreLookupDynamicUserByUID(call *dbus.Call) (user string, err error) {
@@ -978,10 +2161,29 @@ func (v *manager) LookupDynamicUserByUID(flags dbus.Flags, uid uint32) (user str
 		<-v.GoLookupDynamicUserByUID(flags, make(chan *dbus.Call, 1), uid).Done)
 }
 
+func (v *manager) LookupDynamicUserByUIDWithTimeout(timeout time.Duration, flags dbus.Flags, uid uint32) (user string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoLookupDynamicUserByUIDWithContext(ctx, flags, make(chan *dbus.Call, 1), uid).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreLookupDynamicUserByUID(call)
+}
+
 // method GetDynamicUsers
 
 func (v *manager) GoGetDynamicUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetDynamicUsers", flags, ch)
+}
+
+func (v *manager) GoGetDynamicUsersWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetDynamicUsers", flags, ch)
 }
 
 func (*manager) StoreGetDynamicUsers(call *dbus.Call) (users []DynamicUser, err error) {
@@ -992,6 +2194,21 @@ func (*manager) StoreGetDynamicUsers(call *dbus.Call) (users []DynamicUser, err 
 func (v *manager) GetDynamicUsers(flags dbus.Flags) (users []DynamicUser, err error) {
 	return v.StoreGetDynamicUsers(
 		<-v.GoGetDynamicUsers(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+func (v *manager) GetDynamicUsersWithTimeout(timeout time.Duration, flags dbus.Flags) (users []DynamicUser, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetDynamicUsersWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetDynamicUsers(call)
 }
 
 // signal UnitNew
@@ -2164,6 +3381,10 @@ func (v *unit) GoStart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Start", flags, ch, mode)
 }
 
+func (v *unit) GoStartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Start", flags, ch, mode)
+}
+
 func (*unit) StoreStart(call *dbus.Call) (job dbus.ObjectPath, err error) {
 	err = call.Store(&job)
 	return
@@ -2174,10 +3395,29 @@ func (v *unit) Start(flags dbus.Flags, mode string) (job dbus.ObjectPath, err er
 		<-v.GoStart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) StartWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStart(call)
+}
+
 // method Stop
 
 func (v *unit) GoStop(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Stop", flags, ch, mode)
+}
+
+func (v *unit) GoStopWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Stop", flags, ch, mode)
 }
 
 func (*unit) StoreStop(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2190,10 +3430,29 @@ func (v *unit) Stop(flags dbus.Flags, mode string) (job dbus.ObjectPath, err err
 		<-v.GoStop(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) StopWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStopWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreStop(call)
+}
+
 // method Reload
 
 func (v *unit) GoReload(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reload", flags, ch, mode)
+}
+
+func (v *unit) GoReloadWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reload", flags, ch, mode)
 }
 
 func (*unit) StoreReload(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2206,10 +3465,29 @@ func (v *unit) Reload(flags dbus.Flags, mode string) (job dbus.ObjectPath, err e
 		<-v.GoReload(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) ReloadWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReload(call)
+}
+
 // method Restart
 
 func (v *unit) GoRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Restart", flags, ch, mode)
+}
+
+func (v *unit) GoRestartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Restart", flags, ch, mode)
 }
 
 func (*unit) StoreRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2222,10 +3500,29 @@ func (v *unit) Restart(flags dbus.Flags, mode string) (job dbus.ObjectPath, err 
 		<-v.GoRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) RestartWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRestartWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRestart(call)
+}
+
 // method TryRestart
 
 func (v *unit) GoTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".TryRestart", flags, ch, mode)
+}
+
+func (v *unit) GoTryRestartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".TryRestart", flags, ch, mode)
 }
 
 func (*unit) StoreTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2238,10 +3535,29 @@ func (v *unit) TryRestart(flags dbus.Flags, mode string) (job dbus.ObjectPath, e
 		<-v.GoTryRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) TryRestartWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoTryRestartWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreTryRestart(call)
+}
+
 // method ReloadOrRestart
 
 func (v *unit) GoReloadOrRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrRestart", flags, ch, mode)
+}
+
+func (v *unit) GoReloadOrRestartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadOrRestart", flags, ch, mode)
 }
 
 func (*unit) StoreReloadOrRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2254,10 +3570,29 @@ func (v *unit) ReloadOrRestart(flags dbus.Flags, mode string) (job dbus.ObjectPa
 		<-v.GoReloadOrRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) ReloadOrRestartWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadOrRestartWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReloadOrRestart(call)
+}
+
 // method ReloadOrTryRestart
 
 func (v *unit) GoReloadOrTryRestart(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ReloadOrTryRestart", flags, ch, mode)
+}
+
+func (v *unit) GoReloadOrTryRestartWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ReloadOrTryRestart", flags, ch, mode)
 }
 
 func (*unit) StoreReloadOrTryRestart(call *dbus.Call) (job dbus.ObjectPath, err error) {
@@ -2270,14 +3605,44 @@ func (v *unit) ReloadOrTryRestart(flags dbus.Flags, mode string) (job dbus.Objec
 		<-v.GoReloadOrTryRestart(flags, make(chan *dbus.Call, 1), mode).Done)
 }
 
+func (v *unit) ReloadOrTryRestartWithTimeout(timeout time.Duration, flags dbus.Flags, mode string) (job dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoReloadOrTryRestartWithContext(ctx, flags, make(chan *dbus.Call, 1), mode).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreReloadOrTryRestart(call)
+}
+
 // method Kill
 
 func (v *unit) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signal int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Kill", flags, ch, who, signal)
 }
 
+func (v *unit) GoKillWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, who string, signal int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Kill", flags, ch, who, signal)
+}
+
 func (v *unit) Kill(flags dbus.Flags, who string, signal int32) error {
 	return (<-v.GoKill(flags, make(chan *dbus.Call, 1), who, signal).Done).Err
+}
+
+func (v *unit) KillWithTimeout(timeout time.Duration, flags dbus.Flags, who string, signal int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoKillWithContext(ctx, flags, make(chan *dbus.Call, 1), who, signal).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ResetFailed
@@ -2286,8 +3651,23 @@ func (v *unit) GoResetFailed(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetFailed", flags, ch)
 }
 
+func (v *unit) GoResetFailedWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ResetFailed", flags, ch)
+}
+
 func (v *unit) ResetFailed(flags dbus.Flags) error {
 	return (<-v.GoResetFailed(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *unit) ResetFailedWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetFailedWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetProperties
@@ -2296,8 +3676,23 @@ func (v *unit) GoSetProperties(flags dbus.Flags, ch chan *dbus.Call, runtime boo
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProperties", flags, ch, runtime, properties)
 }
 
+func (v *unit) GoSetPropertiesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, runtime bool, properties []Property) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetProperties", flags, ch, runtime, properties)
+}
+
 func (v *unit) SetProperties(flags dbus.Flags, runtime bool, properties []Property) error {
 	return (<-v.GoSetProperties(flags, make(chan *dbus.Call, 1), runtime, properties).Done).Err
+}
+
+func (v *unit) SetPropertiesWithTimeout(timeout time.Duration, flags dbus.Flags, runtime bool, properties []Property) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPropertiesWithContext(ctx, flags, make(chan *dbus.Call, 1), runtime, properties).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Ref
@@ -2306,8 +3701,23 @@ func (v *unit) GoRef(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Ref", flags, ch)
 }
 
+func (v *unit) GoRefWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Ref", flags, ch)
+}
+
 func (v *unit) Ref(flags dbus.Flags) error {
 	return (<-v.GoRef(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *unit) RefWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Unref
@@ -2316,8 +3726,23 @@ func (v *unit) GoUnref(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unref", flags, ch)
 }
 
+func (v *unit) GoUnrefWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Unref", flags, ch)
+}
+
 func (v *unit) Unref(flags dbus.Flags) error {
 	return (<-v.GoUnref(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *unit) UnrefWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnrefWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Id s
@@ -3203,6 +4628,10 @@ func (v *service) GoGetProcesses(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProcesses", flags, ch)
 }
 
+func (v *service) GoGetProcessesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetProcesses", flags, ch)
+}
+
 func (*service) StoreGetProcesses(call *dbus.Call) (processes []UnitProcess, err error) {
 	err = call.Store(&processes)
 	return
@@ -3213,14 +4642,44 @@ func (v *service) GetProcesses(flags dbus.Flags) (processes []UnitProcess, err e
 		<-v.GoGetProcesses(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *service) GetProcessesWithTimeout(timeout time.Duration, flags dbus.Flags) (processes []UnitProcess, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetProcessesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetProcesses(call)
+}
+
 // method AttachProcesses
 
 func (v *service) GoAttachProcesses(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 []uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AttachProcesses", flags, ch, arg0, arg1)
 }
 
+func (v *service) GoAttachProcessesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 []uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AttachProcesses", flags, ch, arg0, arg1)
+}
+
 func (v *service) AttachProcesses(flags dbus.Flags, arg0 string, arg1 []uint32) error {
 	return (<-v.GoAttachProcesses(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *service) AttachProcessesWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 []uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAttachProcessesWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Type s

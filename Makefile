@@ -2,6 +2,7 @@ PREFIX = /usr
 GOSITE_DIR = ${PREFIX}/share/gocode
 GOPKG_PERFIX = github.com/linuxdeepin/go-dbus-factory
 SRC_DIR=${DESTDIR}${GOSITE_DIR}/src/${GOPKG_PERFIX}
+export GO111MODULE=off
 
 all: build
 

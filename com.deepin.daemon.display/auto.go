@@ -1,10 +1,12 @@
 package display
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *display) GoApplyChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ApplyChanges", flags, ch)
 }
 
+func (v *display) GoApplyChangesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ApplyChanges", flags, ch)
+}
+
 func (v *display) ApplyChanges(flags dbus.Flags) error {
 	return (<-v.GoApplyChanges(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *display) ApplyChangesWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoApplyChangesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method AssociateTouch
@@ -50,8 +67,23 @@ func (v *display) GoAssociateTouch(flags dbus.Flags, ch chan *dbus.Call, arg0 st
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".AssociateTouch", flags, ch, arg0, arg1)
 }
 
+func (v *display) GoAssociateTouchWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".AssociateTouch", flags, ch, arg0, arg1)
+}
+
 func (v *display) AssociateTouch(flags dbus.Flags, arg0 string, arg1 string) error {
 	return (<-v.GoAssociateTouch(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *display) AssociateTouchWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoAssociateTouchWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ChangeBrightness
@@ -60,8 +92,23 @@ func (v *display) GoChangeBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ChangeBrightness", flags, ch, arg0)
 }
 
+func (v *display) GoChangeBrightnessWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ChangeBrightness", flags, ch, arg0)
+}
+
 func (v *display) ChangeBrightness(flags dbus.Flags, arg0 bool) error {
 	return (<-v.GoChangeBrightness(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *display) ChangeBrightnessWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoChangeBrightnessWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method DeleteCustomMode
@@ -70,14 +117,33 @@ func (v *display) GoDeleteCustomMode(flags dbus.Flags, ch chan *dbus.Call, arg0 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteCustomMode", flags, ch, arg0)
 }
 
+func (v *display) GoDeleteCustomModeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".DeleteCustomMode", flags, ch, arg0)
+}
+
 func (v *display) DeleteCustomMode(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoDeleteCustomMode(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *display) DeleteCustomModeWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDeleteCustomModeWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetBrightness
 
 func (v *display) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetBrightness", flags, ch)
+}
+
+func (v *display) GoGetBrightnessWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetBrightness", flags, ch)
 }
 
 func (*display) StoreGetBrightness(call *dbus.Call) (arg0 map[string]float64, err error) {
@@ -90,10 +156,29 @@ func (v *display) GetBrightness(flags dbus.Flags) (arg0 map[string]float64, err 
 		<-v.GoGetBrightness(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *display) GetBrightnessWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 map[string]float64, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetBrightnessWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetBrightness(call)
+}
+
 // method ListOutputNames
 
 func (v *display) GoListOutputNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListOutputNames", flags, ch)
+}
+
+func (v *display) GoListOutputNamesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListOutputNames", flags, ch)
 }
 
 func (*display) StoreListOutputNames(call *dbus.Call) (arg0 []string, err error) {
@@ -106,10 +191,29 @@ func (v *display) ListOutputNames(flags dbus.Flags) (arg0 []string, err error) {
 		<-v.GoListOutputNames(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *display) ListOutputNamesWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListOutputNamesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListOutputNames(call)
+}
+
 // method ListOutputsCommonModes
 
 func (v *display) GoListOutputsCommonModes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ListOutputsCommonModes", flags, ch)
+}
+
+func (v *display) GoListOutputsCommonModesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ListOutputsCommonModes", flags, ch)
 }
 
 func (*display) StoreListOutputsCommonModes(call *dbus.Call) (arg0 []ModeInfo, err error) {
@@ -122,14 +226,44 @@ func (v *display) ListOutputsCommonModes(flags dbus.Flags) (arg0 []ModeInfo, err
 		<-v.GoListOutputsCommonModes(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *display) ListOutputsCommonModesWithTimeout(timeout time.Duration, flags dbus.Flags) (arg0 []ModeInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoListOutputsCommonModesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreListOutputsCommonModes(call)
+}
+
 // method ModifyConfigName
 
 func (v *display) GoModifyConfigName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ModifyConfigName", flags, ch, arg0, arg1)
 }
 
+func (v *display) GoModifyConfigNameWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ModifyConfigName", flags, ch, arg0, arg1)
+}
+
 func (v *display) ModifyConfigName(flags dbus.Flags, arg0 string, arg1 string) error {
 	return (<-v.GoModifyConfigName(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *display) ModifyConfigNameWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoModifyConfigNameWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RefreshBrightness
@@ -138,8 +272,23 @@ func (v *display) GoRefreshBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RefreshBrightness", flags, ch)
 }
 
+func (v *display) GoRefreshBrightnessWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RefreshBrightness", flags, ch)
+}
+
 func (v *display) RefreshBrightness(flags dbus.Flags) error {
 	return (<-v.GoRefreshBrightness(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *display) RefreshBrightnessWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRefreshBrightnessWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Reset
@@ -148,8 +297,23 @@ func (v *display) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
+func (v *display) GoResetWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Reset", flags, ch)
+}
+
 func (v *display) Reset(flags dbus.Flags) error {
 	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *display) ResetWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ResetChanges
@@ -158,8 +322,23 @@ func (v *display) GoResetChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetChanges", flags, ch)
 }
 
+func (v *display) GoResetChangesWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ResetChanges", flags, ch)
+}
+
 func (v *display) ResetChanges(flags dbus.Flags) error {
 	return (<-v.GoResetChanges(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *display) ResetChangesWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoResetChangesWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Save
@@ -168,8 +347,23 @@ func (v *display) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Save", flags, ch)
 }
 
+func (v *display) GoSaveWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Save", flags, ch)
+}
+
 func (v *display) Save(flags dbus.Flags) error {
 	return (<-v.GoSave(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *display) SaveWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSaveWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetAndSaveBrightness
@@ -178,8 +372,23 @@ func (v *display) GoSetAndSaveBrightness(flags dbus.Flags, ch chan *dbus.Call, a
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetAndSaveBrightness", flags, ch, arg0, arg1)
 }
 
+func (v *display) GoSetAndSaveBrightnessWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetAndSaveBrightness", flags, ch, arg0, arg1)
+}
+
 func (v *display) SetAndSaveBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
 	return (<-v.GoSetAndSaveBrightness(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *display) SetAndSaveBrightnessWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetAndSaveBrightnessWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetBrightness
@@ -188,8 +397,23 @@ func (v *display) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 str
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetBrightness", flags, ch, arg0, arg1)
 }
 
+func (v *display) GoSetBrightnessWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetBrightness", flags, ch, arg0, arg1)
+}
+
 func (v *display) SetBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
 	return (<-v.GoSetBrightness(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *display) SetBrightnessWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetBrightnessWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPrimary
@@ -198,8 +422,23 @@ func (v *display) GoSetPrimary(flags dbus.Flags, ch chan *dbus.Call, arg0 string
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPrimary", flags, ch, arg0)
 }
 
+func (v *display) GoSetPrimaryWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPrimary", flags, ch, arg0)
+}
+
 func (v *display) SetPrimary(flags dbus.Flags, arg0 string) error {
 	return (<-v.GoSetPrimary(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *display) SetPrimaryWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPrimaryWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SwitchMode
@@ -208,8 +447,23 @@ func (v *display) GoSwitchMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint8,
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SwitchMode", flags, ch, arg0, arg1)
 }
 
+func (v *display) GoSwitchModeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 uint8, arg1 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SwitchMode", flags, ch, arg0, arg1)
+}
+
 func (v *display) SwitchMode(flags dbus.Flags, arg0 uint8, arg1 string) error {
 	return (<-v.GoSwitchMode(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *display) SwitchModeWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 uint8, arg1 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSwitchModeWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property HasChanged b
@@ -437,8 +691,23 @@ func (v *monitor) GoEnable(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbu
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Enable", flags, ch, arg0)
 }
 
+func (v *monitor) GoEnableWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Enable", flags, ch, arg0)
+}
+
 func (v *monitor) Enable(flags dbus.Flags, arg0 bool) error {
 	return (<-v.GoEnable(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *monitor) EnableWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoEnableWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetMode
@@ -447,8 +716,23 @@ func (v *monitor) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMode", flags, ch, arg0)
 }
 
+func (v *monitor) GoSetModeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetMode", flags, ch, arg0)
+}
+
 func (v *monitor) SetMode(flags dbus.Flags, arg0 uint32) error {
 	return (<-v.GoSetMode(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *monitor) SetModeWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetModeWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetModeBySize
@@ -457,8 +741,23 @@ func (v *monitor) GoSetModeBySize(flags dbus.Flags, ch chan *dbus.Call, arg0 uin
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetModeBySize", flags, ch, arg0, arg1)
 }
 
+func (v *monitor) GoSetModeBySizeWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 uint16, arg1 uint16) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetModeBySize", flags, ch, arg0, arg1)
+}
+
 func (v *monitor) SetModeBySize(flags dbus.Flags, arg0 uint16, arg1 uint16) error {
 	return (<-v.GoSetModeBySize(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *monitor) SetModeBySizeWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 uint16, arg1 uint16) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetModeBySizeWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetPosition
@@ -467,8 +766,23 @@ func (v *monitor) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, arg0 int16
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPosition", flags, ch, arg0, arg1)
 }
 
+func (v *monitor) GoSetPositionWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 int16, arg1 int16) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetPosition", flags, ch, arg0, arg1)
+}
+
 func (v *monitor) SetPosition(flags dbus.Flags, arg0 int16, arg1 int16) error {
 	return (<-v.GoSetPosition(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *monitor) SetPositionWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 int16, arg1 int16) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetPositionWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetReflect
@@ -477,8 +791,23 @@ func (v *monitor) GoSetReflect(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetReflect", flags, ch, arg0)
 }
 
+func (v *monitor) GoSetReflectWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetReflect", flags, ch, arg0)
+}
+
 func (v *monitor) SetReflect(flags dbus.Flags, arg0 uint16) error {
 	return (<-v.GoSetReflect(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *monitor) SetReflectWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 uint16) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetReflectWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetRefreshRate
@@ -487,8 +816,23 @@ func (v *monitor) GoSetRefreshRate(flags dbus.Flags, ch chan *dbus.Call, arg0 fl
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRefreshRate", flags, ch, arg0)
 }
 
+func (v *monitor) GoSetRefreshRateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 float64) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetRefreshRate", flags, ch, arg0)
+}
+
 func (v *monitor) SetRefreshRate(flags dbus.Flags, arg0 float64) error {
 	return (<-v.GoSetRefreshRate(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *monitor) SetRefreshRateWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 float64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetRefreshRateWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method SetRotation
@@ -497,8 +841,23 @@ func (v *monitor) GoSetRotation(flags dbus.Flags, ch chan *dbus.Call, arg0 uint1
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetRotation", flags, ch, arg0)
 }
 
+func (v *monitor) GoSetRotationWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetRotation", flags, ch, arg0)
+}
+
 func (v *monitor) SetRotation(flags dbus.Flags, arg0 uint16) error {
 	return (<-v.GoSetRotation(flags, make(chan *dbus.Call, 1), arg0).Done).Err
+}
+
+func (v *monitor) SetRotationWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 uint16) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetRotationWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Name s

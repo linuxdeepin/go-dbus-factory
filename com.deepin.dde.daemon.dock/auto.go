@@ -1,10 +1,12 @@
 package dock
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,8 +42,23 @@ func (v *dock) GoActivateWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ActivateWindow", flags, ch, win)
 }
 
+func (v *dock) GoActivateWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ActivateWindow", flags, ch, win)
+}
+
 func (v *dock) ActivateWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoActivateWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) ActivateWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method CancelPreviewWindow
@@ -50,8 +67,23 @@ func (v *dock) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CancelPreviewWindow", flags, ch)
 }
 
+func (v *dock) GoCancelPreviewWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CancelPreviewWindow", flags, ch)
+}
+
 func (v *dock) CancelPreviewWindow(flags dbus.Flags) error {
 	return (<-v.GoCancelPreviewWindow(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *dock) CancelPreviewWindowWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCancelPreviewWindowWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method CloseWindow
@@ -60,14 +92,33 @@ func (v *dock) GoCloseWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CloseWindow", flags, ch, win)
 }
 
+func (v *dock) GoCloseWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CloseWindow", flags, ch, win)
+}
+
 func (v *dock) CloseWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoCloseWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) CloseWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCloseWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method GetEntryIDs
 
 func (v *dock) GoGetEntryIDs(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetEntryIDs", flags, ch)
+}
+
+func (v *dock) GoGetEntryIDsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".GetEntryIDs", flags, ch)
 }
 
 func (*dock) StoreGetEntryIDs(call *dbus.Call) (list []string, err error) {
@@ -80,10 +131,29 @@ func (v *dock) GetEntryIDs(flags dbus.Flags) (list []string, err error) {
 		<-v.GoGetEntryIDs(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *dock) GetEntryIDsWithTimeout(timeout time.Duration, flags dbus.Flags) (list []string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoGetEntryIDsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreGetEntryIDs(call)
+}
+
 // method IsDocked
 
 func (v *dock) GoIsDocked(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsDocked", flags, ch, desktopFile)
+}
+
+func (v *dock) GoIsDockedWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".IsDocked", flags, ch, desktopFile)
 }
 
 func (*dock) StoreIsDocked(call *dbus.Call) (value bool, err error) {
@@ -96,10 +166,29 @@ func (v *dock) IsDocked(flags dbus.Flags, desktopFile string) (value bool, err e
 		<-v.GoIsDocked(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
+func (v *dock) IsDockedWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFile string) (value bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoIsDockedWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFile).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreIsDocked(call)
+}
+
 // method IsOnDock
 
 func (v *dock) GoIsOnDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsOnDock", flags, ch, desktopFile)
+}
+
+func (v *dock) GoIsOnDockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".IsOnDock", flags, ch, desktopFile)
 }
 
 func (*dock) StoreIsOnDock(call *dbus.Call) (value bool, err error) {
@@ -112,14 +201,44 @@ func (v *dock) IsOnDock(flags dbus.Flags, desktopFile string) (value bool, err e
 		<-v.GoIsOnDock(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
+func (v *dock) IsOnDockWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFile string) (value bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoIsOnDockWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFile).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreIsOnDock(call)
+}
+
 // method MakeWindowAbove
 
 func (v *dock) GoMakeWindowAbove(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MakeWindowAbove", flags, ch, win)
 }
 
+func (v *dock) GoMakeWindowAboveWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MakeWindowAbove", flags, ch, win)
+}
+
 func (v *dock) MakeWindowAbove(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMakeWindowAbove(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) MakeWindowAboveWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMakeWindowAboveWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method MaximizeWindow
@@ -128,8 +247,23 @@ func (v *dock) GoMaximizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MaximizeWindow", flags, ch, win)
 }
 
+func (v *dock) GoMaximizeWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MaximizeWindow", flags, ch, win)
+}
+
 func (v *dock) MaximizeWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMaximizeWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) MaximizeWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMaximizeWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method MinimizeWindow
@@ -138,8 +272,23 @@ func (v *dock) GoMinimizeWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MinimizeWindow", flags, ch, win)
 }
 
+func (v *dock) GoMinimizeWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MinimizeWindow", flags, ch, win)
+}
+
 func (v *dock) MinimizeWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMinimizeWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) MinimizeWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMinimizeWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method MoveEntry
@@ -148,8 +297,23 @@ func (v *dock) GoMoveEntry(flags dbus.Flags, ch chan *dbus.Call, index int32, ne
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MoveEntry", flags, ch, index, newIndex)
 }
 
+func (v *dock) GoMoveEntryWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, index int32, newIndex int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MoveEntry", flags, ch, index, newIndex)
+}
+
 func (v *dock) MoveEntry(flags dbus.Flags, index int32, newIndex int32) error {
 	return (<-v.GoMoveEntry(flags, make(chan *dbus.Call, 1), index, newIndex).Done).Err
+}
+
+func (v *dock) MoveEntryWithTimeout(timeout time.Duration, flags dbus.Flags, index int32, newIndex int32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMoveEntryWithContext(ctx, flags, make(chan *dbus.Call, 1), index, newIndex).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method MoveWindow
@@ -158,8 +322,23 @@ func (v *dock) GoMoveWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32) *d
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MoveWindow", flags, ch, win)
 }
 
+func (v *dock) GoMoveWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".MoveWindow", flags, ch, win)
+}
+
 func (v *dock) MoveWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoMoveWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) MoveWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoMoveWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PreviewWindow
@@ -168,14 +347,33 @@ func (v *dock) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, win uint32)
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PreviewWindow", flags, ch, win)
 }
 
+func (v *dock) GoPreviewWindowWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PreviewWindow", flags, ch, win)
+}
+
 func (v *dock) PreviewWindow(flags dbus.Flags, win uint32) error {
 	return (<-v.GoPreviewWindow(flags, make(chan *dbus.Call, 1), win).Done).Err
+}
+
+func (v *dock) PreviewWindowWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPreviewWindowWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method QueryWindowIdentifyMethod
 
 func (v *dock) GoQueryWindowIdentifyMethod(flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".QueryWindowIdentifyMethod", flags, ch, win)
+}
+
+func (v *dock) GoQueryWindowIdentifyMethodWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, win uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".QueryWindowIdentifyMethod", flags, ch, win)
 }
 
 func (*dock) StoreQueryWindowIdentifyMethod(call *dbus.Call) (identifyMethod string, err error) {
@@ -188,10 +386,29 @@ func (v *dock) QueryWindowIdentifyMethod(flags dbus.Flags, win uint32) (identify
 		<-v.GoQueryWindowIdentifyMethod(flags, make(chan *dbus.Call, 1), win).Done)
 }
 
+func (v *dock) QueryWindowIdentifyMethodWithTimeout(timeout time.Duration, flags dbus.Flags, win uint32) (identifyMethod string, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoQueryWindowIdentifyMethodWithContext(ctx, flags, make(chan *dbus.Call, 1), win).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreQueryWindowIdentifyMethod(call)
+}
+
 // method RequestDock
 
 func (v *dock) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string, index int32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDock", flags, ch, desktopFile, index)
+}
+
+func (v *dock) GoRequestDockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFile string, index int32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestDock", flags, ch, desktopFile, index)
 }
 
 func (*dock) StoreRequestDock(call *dbus.Call) (ok bool, err error) {
@@ -204,10 +421,29 @@ func (v *dock) RequestDock(flags dbus.Flags, desktopFile string, index int32) (o
 		<-v.GoRequestDock(flags, make(chan *dbus.Call, 1), desktopFile, index).Done)
 }
 
+func (v *dock) RequestDockWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFile string, index int32) (ok bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestDockWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFile, index).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRequestDock(call)
+}
+
 // method RequestUndock
 
 func (v *dock) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUndock", flags, ch, desktopFile)
+}
+
+func (v *dock) GoRequestUndockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestUndock", flags, ch, desktopFile)
 }
 
 func (*dock) StoreRequestUndock(call *dbus.Call) (ok bool, err error) {
@@ -220,14 +456,44 @@ func (v *dock) RequestUndock(flags dbus.Flags, desktopFile string) (ok bool, err
 		<-v.GoRequestUndock(flags, make(chan *dbus.Call, 1), desktopFile).Done)
 }
 
+func (v *dock) RequestUndockWithTimeout(timeout time.Duration, flags dbus.Flags, desktopFile string) (ok bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestUndockWithContext(ctx, flags, make(chan *dbus.Call, 1), desktopFile).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreRequestUndock(call)
+}
+
 // method SetFrontendWindowRect
 
 func (v *dock) GoSetFrontendWindowRect(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32, width uint32, height uint32) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetFrontendWindowRect", flags, ch, x, y, width, height)
 }
 
+func (v *dock) GoSetFrontendWindowRectWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, x int32, y int32, width uint32, height uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".SetFrontendWindowRect", flags, ch, x, y, width, height)
+}
+
 func (v *dock) SetFrontendWindowRect(flags dbus.Flags, x int32, y int32, width uint32, height uint32) error {
 	return (<-v.GoSetFrontendWindowRect(flags, make(chan *dbus.Call, 1), x, y, width, height).Done).Err
+}
+
+func (v *dock) SetFrontendWindowRectWithTimeout(timeout time.Duration, flags dbus.Flags, x int32, y int32, width uint32, height uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoSetFrontendWindowRectWithContext(ctx, flags, make(chan *dbus.Call, 1), x, y, width, height).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal ServiceRestarted
@@ -454,8 +720,23 @@ func (v *entry) GoActivate(flags dbus.Flags, ch chan *dbus.Call, timestamp uint3
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Activate", flags, ch, timestamp)
 }
 
+func (v *entry) GoActivateWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Activate", flags, ch, timestamp)
+}
+
 func (v *entry) Activate(flags dbus.Flags, timestamp uint32) error {
 	return (<-v.GoActivate(flags, make(chan *dbus.Call, 1), timestamp).Done).Err
+}
+
+func (v *entry) ActivateWithTimeout(timeout time.Duration, flags dbus.Flags, timestamp uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoActivateWithContext(ctx, flags, make(chan *dbus.Call, 1), timestamp).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Check
@@ -464,8 +745,23 @@ func (v *entry) GoCheck(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Check", flags, ch)
 }
 
+func (v *entry) GoCheckWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Check", flags, ch)
+}
+
 func (v *entry) Check(flags dbus.Flags) error {
 	return (<-v.GoCheck(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *entry) CheckWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCheckWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ForceQuit
@@ -474,8 +770,23 @@ func (v *entry) GoForceQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ForceQuit", flags, ch)
 }
 
+func (v *entry) GoForceQuitWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ForceQuit", flags, ch)
+}
+
 func (v *entry) ForceQuit(flags dbus.Flags) error {
 	return (<-v.GoForceQuit(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *entry) ForceQuitWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoForceQuitWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method HandleDragDrop
@@ -484,8 +795,23 @@ func (v *entry) GoHandleDragDrop(flags dbus.Flags, ch chan *dbus.Call, timestamp
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HandleDragDrop", flags, ch, timestamp, files)
 }
 
+func (v *entry) GoHandleDragDropWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, files []string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".HandleDragDrop", flags, ch, timestamp, files)
+}
+
 func (v *entry) HandleDragDrop(flags dbus.Flags, timestamp uint32, files []string) error {
 	return (<-v.GoHandleDragDrop(flags, make(chan *dbus.Call, 1), timestamp, files).Done).Err
+}
+
+func (v *entry) HandleDragDropWithTimeout(timeout time.Duration, flags dbus.Flags, timestamp uint32, files []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHandleDragDropWithContext(ctx, flags, make(chan *dbus.Call, 1), timestamp, files).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method HandleMenuItem
@@ -494,8 +820,23 @@ func (v *entry) GoHandleMenuItem(flags dbus.Flags, ch chan *dbus.Call, timestamp
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".HandleMenuItem", flags, ch, timestamp, id)
 }
 
+func (v *entry) GoHandleMenuItemWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, timestamp uint32, id string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".HandleMenuItem", flags, ch, timestamp, id)
+}
+
 func (v *entry) HandleMenuItem(flags dbus.Flags, timestamp uint32, id string) error {
 	return (<-v.GoHandleMenuItem(flags, make(chan *dbus.Call, 1), timestamp, id).Done).Err
+}
+
+func (v *entry) HandleMenuItemWithTimeout(timeout time.Duration, flags dbus.Flags, timestamp uint32, id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoHandleMenuItemWithContext(ctx, flags, make(chan *dbus.Call, 1), timestamp, id).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method NewInstance
@@ -504,8 +845,23 @@ func (v *entry) GoNewInstance(flags dbus.Flags, ch chan *dbus.Call, timestamp ui
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".NewInstance", flags, ch, timestamp)
 }
 
+func (v *entry) GoNewInstanceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, timestamp uint32) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".NewInstance", flags, ch, timestamp)
+}
+
 func (v *entry) NewInstance(flags dbus.Flags, timestamp uint32) error {
 	return (<-v.GoNewInstance(flags, make(chan *dbus.Call, 1), timestamp).Done).Err
+}
+
+func (v *entry) NewInstanceWithTimeout(timeout time.Duration, flags dbus.Flags, timestamp uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoNewInstanceWithContext(ctx, flags, make(chan *dbus.Call, 1), timestamp).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method PresentWindows
@@ -514,8 +870,23 @@ func (v *entry) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".PresentWindows", flags, ch)
 }
 
+func (v *entry) GoPresentWindowsWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".PresentWindows", flags, ch)
+}
+
 func (v *entry) PresentWindows(flags dbus.Flags) error {
 	return (<-v.GoPresentWindows(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *entry) PresentWindowsWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPresentWindowsWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RequestDock
@@ -524,8 +895,23 @@ func (v *entry) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestDock", flags, ch)
 }
 
+func (v *entry) GoRequestDockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestDock", flags, ch)
+}
+
 func (v *entry) RequestDock(flags dbus.Flags) error {
 	return (<-v.GoRequestDock(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *entry) RequestDockWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestDockWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method RequestUndock
@@ -534,8 +920,23 @@ func (v *entry) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestUndock", flags, ch)
 }
 
+func (v *entry) GoRequestUndockWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".RequestUndock", flags, ch)
+}
+
 func (v *entry) RequestUndock(flags dbus.Flags) error {
 	return (<-v.GoRequestUndock(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *entry) RequestUndockWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoRequestUndockWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property Name s

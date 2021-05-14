@@ -1,10 +1,12 @@
 package network
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *network) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIfa
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableDevice", flags, ch, pathOrIface, enabled)
 }
 
+func (v *network) GoEnableDeviceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".EnableDevice", flags, ch, pathOrIface, enabled)
+}
+
 func (*network) StoreEnableDevice(call *dbus.Call) (cpath dbus.ObjectPath, err error) {
 	err = call.Store(&cpath)
 	return
@@ -50,10 +56,29 @@ func (v *network) EnableDevice(flags dbus.Flags, pathOrIface string, enabled boo
 		<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done)
 }
 
+func (v *network) EnableDeviceWithTimeout(timeout time.Duration, flags dbus.Flags, pathOrIface string, enabled bool) (cpath dbus.ObjectPath, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoEnableDeviceWithContext(ctx, flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreEnableDevice(call)
+}
+
 // method IsDeviceEnabled
 
 func (v *network) GoIsDeviceEnabled(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsDeviceEnabled", flags, ch, pathOrIface)
+}
+
+func (v *network) GoIsDeviceEnabledWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pathOrIface string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".IsDeviceEnabled", flags, ch, pathOrIface)
 }
 
 func (*network) StoreIsDeviceEnabled(call *dbus.Call) (enabled bool, err error) {
@@ -66,20 +91,54 @@ func (v *network) IsDeviceEnabled(flags dbus.Flags, pathOrIface string) (enabled
 		<-v.GoIsDeviceEnabled(flags, make(chan *dbus.Call, 1), pathOrIface).Done)
 }
 
+func (v *network) IsDeviceEnabledWithTimeout(timeout time.Duration, flags dbus.Flags, pathOrIface string) (enabled bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoIsDeviceEnabledWithContext(ctx, flags, make(chan *dbus.Call, 1), pathOrIface).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreIsDeviceEnabled(call)
+}
+
 // method Ping
 
 func (v *network) GoPing(flags dbus.Flags, ch chan *dbus.Call, host string) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Ping", flags, ch, host)
 }
 
+func (v *network) GoPingWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, host string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Ping", flags, ch, host)
+}
+
 func (v *network) Ping(flags dbus.Flags, host string) error {
 	return (<-v.GoPing(flags, make(chan *dbus.Call, 1), host).Done).Err
+}
+
+func (v *network) PingWithTimeout(timeout time.Duration, flags dbus.Flags, host string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoPingWithContext(ctx, flags, make(chan *dbus.Call, 1), host).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method ToggleWirelessEnabled
 
 func (v *network) GoToggleWirelessEnabled(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".ToggleWirelessEnabled", flags, ch)
+}
+
+func (v *network) GoToggleWirelessEnabledWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".ToggleWirelessEnabled", flags, ch)
 }
 
 func (*network) StoreToggleWirelessEnabled(call *dbus.Call) (enabled bool, err error) {
@@ -92,14 +151,44 @@ func (v *network) ToggleWirelessEnabled(flags dbus.Flags) (enabled bool, err err
 		<-v.GoToggleWirelessEnabled(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *network) ToggleWirelessEnabledWithTimeout(timeout time.Duration, flags dbus.Flags) (enabled bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoToggleWirelessEnabledWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreToggleWirelessEnabled(call)
+}
+
 // method OpenWifiDevice
 
 func (v *network) GoOpenWifiDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".OpenWifiDevice", flags, ch, pathOrIface, enabled)
 }
 
+func (v *network) GoOpenWifiDeviceWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".OpenWifiDevice", flags, ch, pathOrIface, enabled)
+}
+
 func (v *network) OpenWifiDevice(flags dbus.Flags, pathOrIface string, enabled bool) error {
 	return (<-v.GoOpenWifiDevice(flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done).Err
+}
+
+func (v *network) OpenWifiDeviceWithTimeout(timeout time.Duration, flags dbus.Flags, pathOrIface string, enabled bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoOpenWifiDeviceWithContext(ctx, flags, make(chan *dbus.Call, 1), pathOrIface, enabled).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal DeviceEnabled

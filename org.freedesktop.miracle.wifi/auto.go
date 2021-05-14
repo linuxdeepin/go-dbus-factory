@@ -1,11 +1,13 @@
 package wifi
 
+import "context"
 import "errors"
 import "fmt"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -55,8 +57,23 @@ func (v *link) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Manage", flags, ch)
 }
 
+func (v *link) GoManageWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Manage", flags, ch)
+}
+
 func (v *link) Manage(flags dbus.Flags) error {
 	return (<-v.GoManage(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *link) ManageWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoManageWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Unmanage
@@ -65,8 +82,23 @@ func (v *link) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Unmanage", flags, ch)
 }
 
+func (v *link) GoUnmanageWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Unmanage", flags, ch)
+}
+
 func (v *link) Unmanage(flags dbus.Flags) error {
 	return (<-v.GoUnmanage(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *link) UnmanageWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoUnmanageWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // property InterfaceIndex u
@@ -171,8 +203,23 @@ func (v *peer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Connect", flags, ch, arg0, arg1)
 }
 
+func (v *peer) GoConnectWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Connect", flags, ch, arg0, arg1)
+}
+
 func (v *peer) Connect(flags dbus.Flags, arg0 string, arg1 string) error {
 	return (<-v.GoConnect(flags, make(chan *dbus.Call, 1), arg0, arg1).Done).Err
+}
+
+func (v *peer) ConnectWithTimeout(timeout time.Duration, flags dbus.Flags, arg0 string, arg1 string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoConnectWithContext(ctx, flags, make(chan *dbus.Call, 1), arg0, arg1).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method Disconnect
@@ -181,8 +228,23 @@ func (v *peer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Disconnect", flags, ch)
 }
 
+func (v *peer) GoDisconnectWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".Disconnect", flags, ch)
+}
+
 func (v *peer) Disconnect(flags dbus.Flags) error {
 	return (<-v.GoDisconnect(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *peer) DisconnectWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoDisconnectWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal ProvisionDiscovery

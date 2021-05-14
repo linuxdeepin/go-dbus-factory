@@ -5,7 +5,8 @@ Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: debhelper,
                dh-golang,
                golang-any,
-               golang-dlib-dev
+               golang-dlib-dev,
+               golang-golang-x-tools,
 Standards-Version: 4.0.0
 Homepage: https://github.com/linuxdeepin/go-dbus-factory
 XS-Go-Import-Path: github.com/linuxdeepin/go-dbus-factory

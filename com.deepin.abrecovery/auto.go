@@ -1,10 +1,12 @@
 package abrecovery
 
+import "context"
 import "errors"
 import "fmt"
-import "pkg.deepin.io/lib/dbus1"
+import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
+import "time"
 import "unsafe"
 
 /* prevent compile error */
@@ -40,6 +42,10 @@ func (v *abRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Cal
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanBackup", flags, ch)
 }
 
+func (v *abRecovery) GoCanBackupWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanBackup", flags, ch)
+}
+
 func (*abRecovery) StoreCanBackup(call *dbus.Call) (can bool, err error) {
 	err = call.Store(&can)
 	return
@@ -50,10 +56,29 @@ func (v *abRecovery) CanBackup(flags dbus.Flags) (can bool, err error) {
 		<-v.GoCanBackup(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *abRecovery) CanBackupWithTimeout(timeout time.Duration, flags dbus.Flags) (can bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanBackupWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanBackup(call)
+}
+
 // method CanRestore
 
 func (v *abRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanRestore", flags, ch)
+}
+
+func (v *abRecovery) GoCanRestoreWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".CanRestore", flags, ch)
 }
 
 func (*abRecovery) StoreCanRestore(call *dbus.Call) (can bool, err error) {
@@ -66,14 +91,44 @@ func (v *abRecovery) CanRestore(flags dbus.Flags) (can bool, err error) {
 		<-v.GoCanRestore(flags, make(chan *dbus.Call, 1)).Done)
 }
 
+func (v *abRecovery) CanRestoreWithTimeout(timeout time.Duration, flags dbus.Flags) (can bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoCanRestoreWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		err = ctx.Err()
+		return
+	} else if call.Err != nil {
+		err = call.Err
+		return
+	}
+
+	return v.StoreCanRestore(call)
+}
+
 // method StartBackup
 
 func (v *abRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartBackup", flags, ch)
 }
 
+func (v *abRecovery) GoStartBackupWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartBackup", flags, ch)
+}
+
 func (v *abRecovery) StartBackup(flags dbus.Flags) error {
 	return (<-v.GoStartBackup(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *abRecovery) StartBackupWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartBackupWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // method StartRestore
@@ -82,8 +137,23 @@ func (v *abRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".StartRestore", flags, ch)
 }
 
+func (v *abRecovery) GoStartRestoreWithContext(ctx context.Context, flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().GoWithContext_(ctx, v.GetInterfaceName_()+".StartRestore", flags, ch)
+}
+
 func (v *abRecovery) StartRestore(flags dbus.Flags) error {
 	return (<-v.GoStartRestore(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+func (v *abRecovery) StartRestoreWithTimeout(timeout time.Duration, flags dbus.Flags) error {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	call := <-v.GoStartRestoreWithContext(ctx, flags, make(chan *dbus.Call, 1)).Done
+	if call.Err == nil && ctx.Err() != nil {
+		return ctx.Err()
+	}
+
+	return call.Err
 }
 
 // signal JobEnd
