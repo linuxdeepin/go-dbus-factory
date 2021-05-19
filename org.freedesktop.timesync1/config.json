@@ -1,0 +1,16 @@
+{
+    "Service": "org.freedesktop.timesync1",
+    "Objects": [
+      {
+        "Type": "Timesync1",
+        "Path": "/org/freedesktop/timesync1",
+        "Interfaces": [
+          {
+            "Name": "org.freedesktop.timesync1.Manager",
+            "Type": "timesync1"
+          }
+        ]
+      }
+    ]
+  }
+  
