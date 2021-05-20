@@ -56,6 +56,25 @@ func (v *mockInterfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duratio
 	return mockArgs.Error(0)
 }
 
+// method SetInputIgnore
+
+func (v *mockInterfaceGesture) GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.Call, node string, ignore bool) *dbus.Call {
+	mockArgs := v.Called(flags, ch, node, ignore)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceGesture) SetInputIgnore(flags dbus.Flags, node string, ignore bool) error {
+	mockArgs := v.Called(flags, node, ignore)
+
+	return mockArgs.Error(0)
+}
+
 // signal Event
 
 func (v *mockInterfaceGesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {

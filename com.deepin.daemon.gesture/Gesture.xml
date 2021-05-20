@@ -8,6 +8,10 @@
         <method name="SetEdgeMoveStopDuration">
             <arg name="duration" type="u" direction="in"></arg>
         </method>
+        <method name="SetInputIgnore">
+            <arg name="node" type="s" direction="in"></arg>
+            <arg name="ignore" type="b" direction="in"></arg>
+        </method>
         <signal name="Event">
             <arg name="name" type="s"></arg>
             <arg name="direction" type="s"></arg>

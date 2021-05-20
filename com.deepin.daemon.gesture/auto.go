@@ -33,6 +33,8 @@ type gesture interface {
 	SetShortPressDuration(flags dbus.Flags, duration uint32) error
 	GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call
 	SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error
+	GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.Call, node string, ignore bool) *dbus.Call
+	SetInputIgnore(flags dbus.Flags, node string, ignore bool) error
 	ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error)
 	ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error)
 	ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error)
@@ -75,6 +77,16 @@ func (v *interfaceGesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *
 
 func (v *interfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
 	return (<-v.GoSetEdgeMoveStopDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
+}
+
+// method SetInputIgnore
+
+func (v *interfaceGesture) GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.Call, node string, ignore bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetInputIgnore", flags, ch, node, ignore)
+}
+
+func (v *interfaceGesture) SetInputIgnore(flags dbus.Flags, node string, ignore bool) error {
+	return (<-v.GoSetInputIgnore(flags, make(chan *dbus.Call, 1), node, ignore).Done).Err
 }
 
 // signal Event
