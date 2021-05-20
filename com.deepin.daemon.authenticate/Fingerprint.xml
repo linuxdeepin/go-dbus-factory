@@ -38,6 +38,9 @@
             <arg name="code" type="i"></arg>
             <arg name="msg" type="s"></arg>
         </signal>
+        <signal name="FingerMouldClear">
+            <arg name="username" type="s"></arg>
+        </signal>
         <signal name="Touch">
             <arg name="id" type="s"></arg>
             <arg name="pressed" type="b"></arg>
