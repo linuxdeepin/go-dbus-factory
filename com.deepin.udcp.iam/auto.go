@@ -68,3 +68,19 @@ func (v *udcpCache) GetUserGroups(flags dbus.Flags, name string) (groups []strin
 	return v.StoreGetUserGroups(
 		<-v.GoGetUserGroups(flags, make(chan *dbus.Call, 1), name).Done)
 }
+
+// method RemoveCacheFile
+
+func (v *udcpCache) GoRemoveCacheFile(flags dbus.Flags, ch chan *dbus.Call, uId uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveCacheFile", flags, ch, uId)
+}
+
+func (*udcpCache) StoreRemoveCacheFile(call *dbus.Call) (result bool, err error) {
+	err = call.Store(&result)
+	return
+}
+
+func (v *udcpCache) RemoveCacheFile(flags dbus.Flags, uId uint32) (result bool, err error) {
+	return v.StoreRemoveCacheFile(
+		<-v.GoRemoveCacheFile(flags, make(chan *dbus.Call, 1), uId).Done)
+}

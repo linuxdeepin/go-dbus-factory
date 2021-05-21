@@ -9,6 +9,10 @@
             <arg name="name" type="s" direction="in"></arg>
             <arg name="groups" type="as" direction="out"></arg>
         </method>
+        <method name="RemoveCacheFile">
+            <arg name="uId" type="u" direction="in"></arg>
+            <arg name="result" type="b" direction="out"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
