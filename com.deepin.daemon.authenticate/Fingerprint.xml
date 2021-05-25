@@ -38,7 +38,8 @@
             <arg name="code" type="i"></arg>
             <arg name="msg" type="s"></arg>
         </signal>
-        <signal name="FingerMouldClear">
+        <signal name="FingerMouldStatus">
+            <arg name="code" type="i"></arg>
             <arg name="username" type="s"></arg>
         </signal>
         <signal name="Touch">

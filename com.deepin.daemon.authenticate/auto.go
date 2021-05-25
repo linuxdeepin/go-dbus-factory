@@ -470,26 +470,27 @@ func (v *fingerprint) ConnectVerifyStatus(cb func(id string, code int32, msg str
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// signal FingerMouldClear
+// signal FingerMouldStatus
 
-func (v *fingerprint) ConnectFingerMouldClear(cb func(username string)) (dbusutil.SignalHandlerId, error) {
+func (v *fingerprint) ConnectFingerMouldStatus(cb func(code int32, username string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
 	obj := v.GetObject_()
 	rule := fmt.Sprintf(
 		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "FingerMouldClear", obj.Path_(), obj.ServiceName_())
+		v.GetInterfaceName_(), "FingerMouldStatus", obj.Path_(), obj.ServiceName_())
 
 	sigRule := &dbusutil.SignalRule{
 		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".FingerMouldClear",
+		Name: v.GetInterfaceName_() + ".FingerMouldStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
+		var code int32
 		var username string
-		err := dbus.Store(sig.Body, &username)
+		err := dbus.Store(sig.Body, &code, &username)
 		if err == nil {
-			cb(username)
+			cb(code, username)
 		}
 	}
 
