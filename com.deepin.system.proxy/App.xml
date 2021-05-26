@@ -20,6 +20,12 @@
 		<method name="SetProxies">
 			<arg name="proxies" type="(a{sa(sssiss)}asasasi)" direction="in"/>
 		</method>
+		<method name="GetCGroups">
+			<arg name="cgroups" type="s" direction="out"/>
+		</method>
+		<method name="AddProc">
+			<arg name="pid" type="i" direction="success"/>
+		</method>
 		<method name="StartProxy">
 			<arg name="proto" type="s" direction="in"/>
 			<arg name="name" type="s" direction="in"/>
