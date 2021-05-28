@@ -32,6 +32,8 @@ type udcpCache interface {
 	GetUserIdList(flags dbus.Flags) ([]uint32, error)
 	GoGetUserGroups(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
 	GetUserGroups(flags dbus.Flags, name string) ([]string, error)
+	GoRemoveCacheFile(flags dbus.Flags, ch chan *dbus.Call, uId uint32) *dbus.Call
+	RemoveCacheFile(flags dbus.Flags, uId uint32) (bool, error)
 	Enable() proxy.PropBool
 }
 
@@ -75,6 +77,22 @@ func (*interfaceUdcpCache) StoreGetUserGroups(call *dbus.Call) (groups []string,
 func (v *interfaceUdcpCache) GetUserGroups(flags dbus.Flags, name string) ([]string, error) {
 	return v.StoreGetUserGroups(
 		<-v.GoGetUserGroups(flags, make(chan *dbus.Call, 1), name).Done)
+}
+
+// method RemoveCacheFile
+
+func (v *interfaceUdcpCache) GoRemoveCacheFile(flags dbus.Flags, ch chan *dbus.Call, uId uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RemoveCacheFile", flags, ch, uId)
+}
+
+func (*interfaceUdcpCache) StoreRemoveCacheFile(call *dbus.Call) (result bool, err error) {
+	err = call.Store(&result)
+	return
+}
+
+func (v *interfaceUdcpCache) RemoveCacheFile(flags dbus.Flags, uId uint32) (bool, error) {
+	return v.StoreRemoveCacheFile(
+		<-v.GoRemoveCacheFile(flags, make(chan *dbus.Call, 1), uId).Done)
 }
 
 // property Enable b
