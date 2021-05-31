@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export GOCACHE := /tmp/gocache
+
 ifeq ($(DEB_BUILD_ARCH),sw_64)
 %:
 	dh $@
