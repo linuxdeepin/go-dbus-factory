@@ -1,6 +1,6 @@
 package login1
 
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 
 type ScheduledShutdown struct {
 	Type string

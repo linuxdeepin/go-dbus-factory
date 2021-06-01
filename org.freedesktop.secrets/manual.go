@@ -1,6 +1,6 @@
 package secrets
 
-import "pkg.deepin.io/lib/dbus1"
+import "github.com/godbus/dbus"
 
 type Secret struct {
 	Session     dbus.ObjectPath

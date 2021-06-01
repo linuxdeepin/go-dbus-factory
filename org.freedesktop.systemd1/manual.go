@@ -1,7 +1,7 @@
 package systemd1
 
 import (
-	"pkg.deepin.io/lib/dbus1"
+	"github.com/godbus/dbus"
 )
 
 type Property struct {

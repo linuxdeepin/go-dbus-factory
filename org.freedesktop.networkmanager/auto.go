@@ -3,8 +3,8 @@ package networkmanager
 import "context"
 import "errors"
 import "fmt"
+import "github.com/godbus/dbus"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import dbus "pkg.deepin.io/lib/dbus1"
 import "pkg.deepin.io/lib/dbusutil"
 import "pkg.deepin.io/lib/dbusutil/proxy"
 import "time"
@@ -167,7 +167,7 @@ func (v *accessPoint) LastSeen() proxy.PropInt32 {
 	}
 }
 
-// property Category i
+// property Category u
 
 func (v *accessPoint) Category() proxy.PropUint32 {
 	return proxy.PropUint32{

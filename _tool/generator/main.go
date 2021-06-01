@@ -11,7 +11,7 @@ import (
 
 	"pkg.deepin.io/lib/utils"
 
-	"pkg.deepin.io/lib/dbus1/introspect"
+	"github.com/godbus/dbus/introspect"
 )
 
 func init() {
@@ -39,7 +39,7 @@ func main() {
 	sf.AddGoImport("unsafe")
 	sf.AddGoImport("time")
 	sf.AddGoImport("context")
-	sf.AddGoImport("pkg.deepin.io/lib/dbus1")
+	sf.AddGoImport("github.com/godbus/dbus")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
 	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
 
