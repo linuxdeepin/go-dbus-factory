@@ -13,6 +13,7 @@
             <arg name="uId" type="u" direction="in"></arg>
             <arg name="result" type="b" direction="out"></arg>
         </method>
+        <property name="Enable" type="b" access="readwrite"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
