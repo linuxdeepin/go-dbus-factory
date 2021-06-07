@@ -84,3 +84,12 @@ func (v *udcpCache) RemoveCacheFile(flags dbus.Flags, uId uint32) (result bool, 
 	return v.StoreRemoveCacheFile(
 		<-v.GoRemoveCacheFile(flags, make(chan *dbus.Call, 1), uId).Done)
 }
+
+// property Enable b
+
+func (v *udcpCache) Enable() proxy.PropBool {
+	return proxy.PropBool{
+		Impl: v,
+		Name: "Enable",
+	}
+}
