@@ -104,6 +104,7 @@
             <arg name="devPath" type="s"></arg>
             <arg name="enabled" type="b"></arg>
         </signal>
+        <signal name="ActiveConnectionInfoChanged" />
         <property name="Connectivity" type="u" access="read"></property>
         <property name="NetworkingEnabled" type="b" access="readwrite"></property>
         <property name="VpnEnabled" type="b" access="readwrite"></property>

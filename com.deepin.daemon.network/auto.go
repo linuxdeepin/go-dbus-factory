@@ -460,6 +460,28 @@ func (v *network) ConnectDeviceEnabled(cb func(devPath string, enabled bool)) (d
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal ActiveConnectionInfoChanged
+
+func (v *network) ConnectActiveConnectionInfoChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "ActiveConnectionInfoChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".ActiveConnectionInfoChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // property Connectivity u
 
 func (v *network) Connectivity() proxy.PropUint32 {
