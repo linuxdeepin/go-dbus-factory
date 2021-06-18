@@ -258,6 +258,32 @@ func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.Sign
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
+// signal TouchInput
+
+func (v *power) ConnectTouchInput(cb func(isTouched bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "TouchInput", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".TouchInput",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var isTouched bool
+		err := dbus.Store(sig.Body, &isTouched)
+		if err == nil {
+			cb(isTouched)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
 // property PowerSavingModeAuto b
 
 func (v *power) PowerSavingModeAuto() proxy.PropBool {

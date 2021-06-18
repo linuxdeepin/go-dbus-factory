@@ -12,8 +12,6 @@ import (
 	"github.com/godbus/dbus/introspect"
 	"pkg.deepin.io/lib/strv"
 	"pkg.deepin.io/lib/utils"
-
-	"github.com/godbus/dbus/introspect"
 )
 
 var reservedSignals = strv.Strv{

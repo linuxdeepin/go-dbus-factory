@@ -22,6 +22,9 @@
         <signal name="PowerActionCode">
             <arg name="actionCode" type="i"></arg>
         </signal>
+        <signal name="TouchInput">
+            <arg name="isTouched" type="b"></arg>
+        </signal>
         <property name="PowerSavingModeAuto" type="b" access="readwrite"></property>
         <property name="OnBattery" type="b" access="read"></property>
         <property name="HasLidSwitch" type="b" access="read"></property>
