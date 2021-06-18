@@ -2,11 +2,13 @@
 
 package iam
 
-import "github.com/godbus/dbus"
+import (
+	"errors"
+	"unsafe"
 
-import "pkg.deepin.io/lib/dbusutil/proxy"
-import "unsafe"
-import "errors"
+	"github.com/godbus/dbus"
+	"pkg.deepin.io/lib/dbusutil/proxy"
+)
 
 type UdcpCache interface {
 	udcpCache // interface com.deepin.udcp.iam
@@ -28,6 +30,7 @@ func NewUdcpCache(conn *dbus.Conn, serviceName string, path dbus.ObjectPath) (Ud
 }
 
 type udcpCache interface {
+	SetInterfaceName_(name string)
 	GoGetUserIdList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	GetUserIdList(flags dbus.Flags) ([]uint32, error)
 	GoGetUserGroups(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call
@@ -43,8 +46,14 @@ func (v *interfaceUdcpCache) GetObject_() *proxy.ImplObject {
 	return (*proxy.ImplObject)(unsafe.Pointer(v))
 }
 
-func (*interfaceUdcpCache) GetInterfaceName_() string {
-	return "com.deepin.udcp.iam"
+func (v *interfaceUdcpCache) SetInterfaceName_(name string) {
+	v.GetObject_().SetExtra("customIfc", name)
+}
+
+func (v *interfaceUdcpCache) GetInterfaceName_() string {
+	ifcName, _ := v.GetObject_().GetExtra("customIfc")
+	ifcNameStr, _ := ifcName.(string)
+	return ifcNameStr
 }
 
 // method GetUserIdList

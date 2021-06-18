@@ -2,11 +2,13 @@
 
 package iam
 
-import "fmt"
-import "github.com/godbus/dbus"
-import "github.com/stretchr/testify/mock"
+import (
+	"fmt"
 
-import "pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/godbus/dbus"
+	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
+)
 
 type MockUdcpCache struct {
 	mockInterfaceUdcpCache // interface com.deepin.udcp.iam
@@ -14,6 +16,9 @@ type MockUdcpCache struct {
 
 type mockInterfaceUdcpCache struct {
 	mock.Mock
+}
+
+func (v *mockInterfaceUdcpCache) SetInterfaceName_(string) {
 }
 
 // method GetUserIdList
