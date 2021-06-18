@@ -27,6 +27,10 @@
             "p/TouchMap": {
               "Type": "PropDisplayTouchMap",
               "ValueType": "map[string]string"
+            },
+            "p/Touchscreens":{
+              "Type": "PropTouchscreens",
+              "ValueType": "[]Touchscreen"
             }
           }
         }

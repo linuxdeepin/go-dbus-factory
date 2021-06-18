@@ -13,3 +13,10 @@ type Rectangle struct {
 	Width  uint16
 	Height uint16
 }
+
+type Touchscreen struct {
+	Id         int32
+	Node       string
+	DeviceNode string
+	Serial     string
+}

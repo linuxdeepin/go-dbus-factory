@@ -70,6 +70,7 @@ type display interface {
 	Monitors() proxy.PropObjectPathArray
 	Brightness() PropDisplayBrightness
 	TouchMap() PropDisplayTouchMap
+	Touchscreens() PropTouchscreens
 	MaxBacklightBrightness() proxy.PropUint32
 	ColorTemperatureMode() proxy.PropInt32
 	ColorTemperatureManual() proxy.PropInt32
@@ -482,6 +483,56 @@ func (v *interfaceDisplay) TouchMap() PropDisplayTouchMap {
 	return &implPropDisplayTouchMap{
 		Impl: v,
 		Name: "TouchMap",
+	}
+}
+
+type PropTouchscreens interface {
+	Get(flags dbus.Flags) (value []Touchscreen, err error)
+	Set(flags dbus.Flags, value []Touchscreen) error
+	ConnectChanged(cb func(hasValue bool, value []Touchscreen)) error
+}
+
+type implPropTouchscreens struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropTouchscreens) Get(flags dbus.Flags) (value []Touchscreen, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p implPropTouchscreens) Set(flags dbus.Flags, value []Touchscreen) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropTouchscreens) ConnectChanged(cb func(hasValue bool, value []Touchscreen)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v []Touchscreen
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, nil)
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+// property Touchscreens a(isss)
+
+func (v *interfaceDisplay) Touchscreens() PropTouchscreens {
+	return &implPropTouchscreens{
+		Impl: v,
+		Name: "Touchscreens",
 	}
 }
 

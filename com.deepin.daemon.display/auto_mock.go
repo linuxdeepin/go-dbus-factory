@@ -570,6 +570,49 @@ func (v *mockInterfaceDisplay) TouchMap() PropDisplayTouchMap {
 	return ret0
 }
 
+type MockPropTouchscreens struct {
+	mock.Mock
+}
+
+func (p MockPropTouchscreens) Get(flags dbus.Flags) (value []Touchscreen, err error) {
+	args := p.Called(flags)
+
+	var ok bool
+	value, ok = args.Get(0).([]Touchscreen)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
+	}
+
+	err = args.Error(1)
+
+	return
+}
+
+func (p MockPropTouchscreens) Set(flags dbus.Flags, value []Touchscreen) error {
+	args := p.Called(flags, value)
+
+	return args.Error(0)
+}
+
+func (p MockPropTouchscreens) ConnectChanged(cb func(hasValue bool, value []Touchscreen)) error {
+	args := p.Called(cb)
+
+	return args.Error(0)
+}
+
+// property Touchscreens a(isss)
+
+func (v *mockInterfaceDisplay) Touchscreens() PropTouchscreens {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*MockPropTouchscreens)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property MaxBacklightBrightness u
 
 func (v *mockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {

@@ -89,6 +89,7 @@
           <property name="Monitors" type="ao" access="read"></property>
           <property name="Brightness" type="a{sd}" access="read"></property>
           <property name="TouchMap" type="a{ss}" access="read"></property>
+          <property name="Touchscreens" type="a(isss)" access="read"></property>
           <property name="MaxBacklightBrightness" type="u" access="read"></property>
           <property name="ColorTemperatureMode" type="i" access="read"></property>
           <property name="ColorTemperatureManual" type="i" access="read"></property>
