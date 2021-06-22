@@ -260,7 +260,7 @@ func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.Sign
 
 // signal TouchInput
 
-func (v *power) ConnectTouchInput(cb func(isTouched bool)) (dbusutil.SignalHandlerId, error) {
+func (v *power) ConnectTouchInput(cb func()) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -274,11 +274,7 @@ func (v *power) ConnectTouchInput(cb func(isTouched bool)) (dbusutil.SignalHandl
 		Name: v.GetInterfaceName_() + ".TouchInput",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
-		var isTouched bool
-		err := dbus.Store(sig.Body, &isTouched)
-		if err == nil {
-			cb(isTouched)
-		}
+		cb()
 	}
 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
