@@ -1,9 +1,9 @@
 {
-  "Service": "com.deepin.udcp.iam",
+  "Service": "",
   "Objects": [
     {
       "Type": "UdcpCache",
-      "Path": "/com/deepin/udcp/iam",
+      "Path": "",
       "Interfaces": [
         {
           "Name": "com.deepin.udcp.iam",
