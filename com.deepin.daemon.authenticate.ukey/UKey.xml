@@ -5,6 +5,9 @@
 			<arg name="uuid" type="s" direction="in"></arg>
 			<arg name="length" type="i" direction="out"></arg>
 		</method>
+		<method name="GetUserList">
+			<arg name="users" type="as" direction="out"></arg>
+		</method>
 		<method name="SetPin">
 			<arg name="uuid" type="s" direction="in"></arg>
 			<arg name="gid" type="s" direction="in"></arg>
