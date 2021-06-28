@@ -13,6 +13,11 @@
 			<arg name="useDefaultDevice" type="b" direction="in"></arg>
 			<arg name="length" type="i" direction="out"></arg>
 		</method>
+		<method name="GetUserList">
+			<arg name="serviceName" type="s" direction="in"></arg>
+			<arg name="useDefaultDevice" type="b" direction="in"></arg>
+			<arg name="users" type="as" direction="out"></arg>
+		</method>
 		<method name="SetDefaultDevice">
 			<arg name="device" type="s" direction="in"></arg>
 		</method>
@@ -37,7 +42,7 @@
 			<arg name="id" type="s"></arg>
 			<arg name="state" type="i"></arg>
 		</signal>
-		<property name="ValidDevices" type="s" access="read"></property>
+		<property name="ValidDevices" type="a(siis)" access="read"></property>
 		<property name="DefaultDevice" type="s" access="read"></property>
 	</interface>
 	<interface name="org.freedesktop.DBus.Introspectable">
