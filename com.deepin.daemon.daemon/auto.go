@@ -66,6 +66,22 @@ func (v *daemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) (ret bool, er
 		<-v.GoIsPidVirtualMachine(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
+// method IsIgnoreCheckVirtual
+
+func (v *daemon) GoIsIgnoreCheckVirtual(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsIgnoreCheckVirtual", flags, ch, pid)
+}
+
+func (*daemon) StoreIsIgnoreCheckVirtual(call *dbus.Call) (ret bool, err error) {
+	err = call.Store(&ret)
+	return
+}
+
+func (v *daemon) IsIgnoreCheckVirtual(flags dbus.Flags, pid uint32) (ret bool, err error) {
+	return v.StoreIsIgnoreCheckVirtual(
+		<-v.GoIsIgnoreCheckVirtual(flags, make(chan *dbus.Call, 1), pid).Done)
+}
+
 // method ClearTtys
 
 func (v *daemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
