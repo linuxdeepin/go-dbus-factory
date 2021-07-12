@@ -110,6 +110,16 @@ func (v *power) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) e
 	return (<-v.GoLockCpuFreq(flags, make(chan *dbus.Call, 1), governor, lockTime).Done).Err
 }
 
+// method SetMode
+
+func (v *power) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMode", flags, ch, mode)
+}
+
+func (v *power) SetMode(flags dbus.Flags, mode string) error {
+	return (<-v.GoSetMode(flags, make(chan *dbus.Call, 1), mode).Done).Err
+}
+
 // signal BatteryDisplayUpdate
 
 func (v *power) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
@@ -394,6 +404,15 @@ func (v *power) CpuGovernor() proxy.PropString {
 	return proxy.PropString{
 		Impl: v,
 		Name: "CpuGovernor",
+	}
+}
+
+// property Mode s
+
+func (v *power) Mode() proxy.PropString {
+	return proxy.PropString{
+		Impl: v,
+		Name: "Mode",
 	}
 }
 
