@@ -11,6 +11,10 @@
             <arg name="pid" type="u" direction="in"></arg>
             <arg name="ret" type="b" direction="out"></arg>
         </method>
+        <method name="IsIgnoreCheckVirtual">
+            <arg name="pid" type="u" direction="in"></arg>
+            <arg name="ret" type="b" direction="out"></arg>
+        </method>
 	<method name="ClearTtys">
         </method>
         <method name="ClearTty">
