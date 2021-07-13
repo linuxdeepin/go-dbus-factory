@@ -33,8 +33,6 @@ type daemon interface {
 	BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error)
 	GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
 	IsPidVirtualMachine(flags dbus.Flags, pid uint32) (bool, error)
-	GoIsIgnoreCheckVirtual(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
-	IsIgnoreCheckVirtual(flags dbus.Flags, pid uint32) (bool, error)
 	GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	ClearTtys(flags dbus.Flags) error
 	GoClearTty(flags dbus.Flags, ch chan *dbus.Call, num uint32) *dbus.Call
@@ -90,22 +88,6 @@ func (*interfaceDaemon) StoreIsPidVirtualMachine(call *dbus.Call) (ret bool, err
 func (v *interfaceDaemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) (bool, error) {
 	return v.StoreIsPidVirtualMachine(
 		<-v.GoIsPidVirtualMachine(flags, make(chan *dbus.Call, 1), pid).Done)
-}
-
-// method IsIgnoreCheckVirtual
-
-func (v *interfaceDaemon) GoIsIgnoreCheckVirtual(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".IsIgnoreCheckVirtual", flags, ch, pid)
-}
-
-func (*interfaceDaemon) StoreIsIgnoreCheckVirtual(call *dbus.Call) (ret bool, err error) {
-	err = call.Store(&ret)
-	return
-}
-
-func (v *interfaceDaemon) IsIgnoreCheckVirtual(flags dbus.Flags, pid uint32) (bool, error) {
-	return v.StoreIsIgnoreCheckVirtual(
-		<-v.GoIsIgnoreCheckVirtual(flags, make(chan *dbus.Call, 1), pid).Done)
 }
 
 // method ClearTtys
