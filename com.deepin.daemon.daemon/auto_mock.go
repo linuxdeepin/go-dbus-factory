@@ -66,30 +66,6 @@ func (v *mockInterfaceDaemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) 
 	return ret0, mockArgs.Error(1)
 }
 
-// method IsIgnoreCheckVirtual
-
-func (v *mockInterfaceDaemon) GoIsIgnoreCheckVirtual(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
-	mockArgs := v.Called(flags, ch, pid)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *mockInterfaceDaemon) IsIgnoreCheckVirtual(flags dbus.Flags, pid uint32) (bool, error) {
-	mockArgs := v.Called(flags, pid)
-
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
-}
-
 // method ClearTtys
 
 func (v *mockInterfaceDaemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
