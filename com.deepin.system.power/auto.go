@@ -50,16 +50,6 @@ func (v *power) GetBatteries(flags dbus.Flags) (batteries []dbus.ObjectPath, err
 		<-v.GoGetBatteries(flags, make(chan *dbus.Call, 1)).Done)
 }
 
-// method SetLowPowerUI
-
-func (v *power) GoSetLowPowerUI(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetLowPowerUI", flags, ch, enabled)
-}
-
-func (v *power) SetLowPowerUI(flags dbus.Flags, enabled bool) error {
-	return (<-v.GoSetLowPowerUI(flags, make(chan *dbus.Call, 1), enabled).Done).Err
-}
-
 // method Refresh
 
 func (v *power) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -272,32 +262,6 @@ func (v *power) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.Sign
 		err := dbus.Store(sig.Body, &actionCode)
 		if err == nil {
 			cb(actionCode)
-		}
-	}
-
-	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
-}
-
-// signal ShowLowPowerUI
-
-func (v *power) ConnectShowLowPowerUI(cb func(isShow bool)) (dbusutil.SignalHandlerId, error) {
-	if cb == nil {
-		return 0, errors.New("nil callback")
-	}
-	obj := v.GetObject_()
-	rule := fmt.Sprintf(
-		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
-		v.GetInterfaceName_(), "ShowLowPowerUI", obj.Path_(), obj.ServiceName_())
-
-	sigRule := &dbusutil.SignalRule{
-		Path: obj.Path_(),
-		Name: v.GetInterfaceName_() + ".ShowLowPowerUI",
-	}
-	handlerFunc := func(sig *dbus.Signal) {
-		var isShow bool
-		err := dbus.Store(sig.Body, &isShow)
-		if err == nil {
-			cb(isShow)
 		}
 	}
 

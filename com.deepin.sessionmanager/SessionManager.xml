@@ -39,6 +39,10 @@
           </method>
           <method name="Shutdown"></method>
           <method name="ToggleDebug"></method>
+          <method name="SetLowPowerUI">
+            <arg name="enabled" type="b" direction="in"></arg>
+          </method>
+          <property name="ShowLowPowerUI" type="b" access="read"></property>
           <signal name="Unlock"></signal>
           <property name="Locked" type="b" access="read"></property>
           <property name="CurrentUid" type="s" access="read"></property>

@@ -5,9 +5,6 @@
         <method name="GetBatteries">
             <arg name="batteries" type="ao" direction="out"></arg>
         </method>
-        <method name="SetLowPowerUI">
-            <arg name="enabled" type="b" direction="in"></arg>
-        </method>
         <method name="Refresh"></method>
         <method name="RefreshBatteries"></method>
         <method name="RefreshMains"></method>
@@ -24,9 +21,6 @@
         <signal name="LidOpened"></signal>
         <signal name="PowerActionCode">
             <arg name="actionCode" type="i"></arg>
-        </signal>
-         <signal name="ShowLowPowerUI">
-            <arg name="isShow" type="b"></arg>
         </signal>
         <signal name="TouchInput"></signal>
         <property name="PowerSavingModeAuto" type="b" access="readwrite"></property>
