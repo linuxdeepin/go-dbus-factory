@@ -14,5 +14,11 @@
         <method name="CanHibernate">
             <arg name="can" type="b" direction="out"></arg>
         </method>
+           <method name="CanSuspendToHibernate">
+            <arg name="can" type="b" direction="out"></arg>
+        </method>
+        <method name="SetSuspendToHibernateTime">
+            <arg name="timeMinute" type="i" direction="in"></arg>
+        </method>
     </interface>
 </node>

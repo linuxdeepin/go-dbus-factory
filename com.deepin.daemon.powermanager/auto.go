@@ -97,3 +97,29 @@ func (v *powerManager) CanHibernate(flags dbus.Flags) (can bool, err error) {
 	return v.StoreCanHibernate(
 		<-v.GoCanHibernate(flags, make(chan *dbus.Call, 1)).Done)
 }
+
+// method CanSuspendToHibernate
+
+func (v *powerManager) GoCanSuspendToHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanSuspendToHibernate", flags, ch)
+}
+
+func (*powerManager) StoreCanSuspendToHibernate(call *dbus.Call) (can bool, err error) {
+	err = call.Store(&can)
+	return
+}
+
+func (v *powerManager) CanSuspendToHibernate(flags dbus.Flags) (can bool, err error) {
+	return v.StoreCanSuspendToHibernate(
+		<-v.GoCanSuspendToHibernate(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method SetSuspendToHibernateTime
+
+func (v *powerManager) GoSetSuspendToHibernateTime(flags dbus.Flags, ch chan *dbus.Call, timeMinute int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSuspendToHibernateTime", flags, ch, timeMinute)
+}
+
+func (v *powerManager) SetSuspendToHibernateTime(flags dbus.Flags, timeMinute int32) error {
+	return (<-v.GoSetSuspendToHibernateTime(flags, make(chan *dbus.Call, 1), timeMinute).Done).Err
+}
