@@ -42,7 +42,7 @@
 			<arg name="id" type="s"></arg>
 			<arg name="state" type="i"></arg>
 		</signal>
-		<property name="ValidDevices" type="a(siis)" access="read"></property>
+		<property name="ValidDevices" type="s" access="read"></property>
 		<property name="DefaultDevice" type="s" access="read"></property>
 	</interface>
 	<interface name="org.freedesktop.DBus.Introspectable">
