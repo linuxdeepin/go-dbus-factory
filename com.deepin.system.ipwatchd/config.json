@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.system.IPWatchD",
+  "Objects": [
+    {
+      "Type": "IPWatchD",
+      "Path": "/com/deepin/system/IPWatchD",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.IPWatchD",
+          "Type": "ipwatchd"
+        }
+      ]
+    }
+  ]
+}
