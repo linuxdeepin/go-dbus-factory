@@ -77,6 +77,25 @@ func (v *MockInterfaceOutputManagement) Apply(flags dbus.Flags, outputs string) 
 	return mockArgs.Error(0)
 }
 
+// method WlSimulateKey
+
+func (v *MockInterfaceOutputManagement) GoWlSimulateKey(flags dbus.Flags, ch chan *dbus.Call, state int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, state)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceOutputManagement) WlSimulateKey(flags dbus.Flags, state int32) error {
+	mockArgs := v.Called(flags, state)
+
+	return mockArgs.Error(0)
+}
+
 // signal OutputAdded
 
 func (v *MockInterfaceOutputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {

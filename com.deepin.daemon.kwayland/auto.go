@@ -35,6 +35,8 @@ type outputManagement interface {
 	GetOutput(flags dbus.Flags, arg1 string) (string, error)
 	GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call
 	Apply(flags dbus.Flags, outputs string) error
+	GoWlSimulateKey(flags dbus.Flags, ch chan *dbus.Call, state int32) *dbus.Call
+	WlSimulateKey(flags dbus.Flags, state int32) error
 	ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error)
 	ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error)
 	ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error)
@@ -90,6 +92,16 @@ func (v *interfaceOutputManagement) GoApply(flags dbus.Flags, ch chan *dbus.Call
 
 func (v *interfaceOutputManagement) Apply(flags dbus.Flags, outputs string) error {
 	return (<-v.GoApply(flags, make(chan *dbus.Call, 1), outputs).Done).Err
+}
+
+// method WlSimulateKey
+
+func (v *interfaceOutputManagement) GoWlSimulateKey(flags dbus.Flags, ch chan *dbus.Call, state int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".WlSimulateKey", flags, ch, state)
+}
+
+func (v *interfaceOutputManagement) WlSimulateKey(flags dbus.Flags, state int32) error {
+	return (<-v.GoWlSimulateKey(flags, make(chan *dbus.Call, 1), state).Done).Err
 }
 
 // signal OutputAdded
