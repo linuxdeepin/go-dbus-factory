@@ -601,3 +601,328 @@ func (v *MockInterfaceUkey) DefaultDevice() proxy.PropString {
 
 	return ret0
 }
+
+type MockFace struct {
+	mockInterfaceFace // interface com.deepin.daemon.Authenticate.Face
+}
+
+type mockInterfaceFace struct {
+	mock.Mock
+}
+
+// method DeleteFace
+
+func (v *mockInterfaceFace) GoDeleteFace(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string, faceName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, username, faceName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) DeleteFace(flags dbus.Flags, serviceName string, username string, faceName string) error {
+	mockArgs := v.Called(flags, serviceName, username, faceName)
+
+	return mockArgs.Error(0)
+}
+
+// method DeleteFaces
+
+func (v *mockInterfaceFace) GoDeleteFaces(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, username)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) DeleteFaces(flags dbus.Flags, serviceName string, username string) error {
+	mockArgs := v.Called(flags, serviceName, username)
+
+	return mockArgs.Error(0)
+}
+
+// method GetShareMemInfo
+
+func (v *mockInterfaceFace) GoGetShareMemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, id)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) GetShareMemInfo(flags dbus.Flags, id string) (string, string, int32, error) {
+	mockArgs := v.Called(flags, id)
+
+	ret0, ok := mockArgs.Get(0).(string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	ret1, ok := mockArgs.Get(1).(string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
+	}
+
+	ret2, ok := mockArgs.Get(2).(int32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
+	}
+
+	return ret0, ret1, ret2, mockArgs.Error(3)
+}
+
+// method ListFaces
+
+func (v *mockInterfaceFace) GoListFaces(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, username)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) ListFaces(flags dbus.Flags, serviceName string, username string) ([]string, error) {
+	mockArgs := v.Called(flags, serviceName, username)
+
+	ret0, ok := mockArgs.Get(0).([]string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method RenameFace
+
+func (v *mockInterfaceFace) GoRenameFace(flags dbus.Flags, ch chan *dbus.Call, serviceName string, username string, oldFace string, newFace string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, username, oldFace, newFace)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) RenameFace(flags dbus.Flags, serviceName string, username string, oldFace string, newFace string) error {
+	mockArgs := v.Called(flags, serviceName, username, oldFace, newFace)
+
+	return mockArgs.Error(0)
+}
+
+// method SetDefaultDevice
+
+func (v *mockInterfaceFace) GoSetDefaultDevice(flags dbus.Flags, ch chan *dbus.Call, serviceName string, device string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName, device)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) SetDefaultDevice(flags dbus.Flags, serviceName string, device string) error {
+	mockArgs := v.Called(flags, serviceName, device)
+
+	return mockArgs.Error(0)
+}
+
+// method SetDefaultService
+
+func (v *mockInterfaceFace) GoSetDefaultService(flags dbus.Flags, ch chan *dbus.Call, serviceName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, serviceName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) SetDefaultService(flags dbus.Flags, serviceName string) error {
+	mockArgs := v.Called(flags, serviceName)
+
+	return mockArgs.Error(0)
+}
+
+// method StartEnroll
+
+func (v *mockInterfaceFace) GoStartEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, serviceName string, faceName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, username, serviceName, faceName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) StartEnroll(flags dbus.Flags, username string, serviceName string, faceName string) (string, error) {
+	mockArgs := v.Called(flags, username, serviceName, faceName)
+
+	ret0, ok := mockArgs.Get(0).(string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method StartVerify
+
+func (v *mockInterfaceFace) GoStartVerify(flags dbus.Flags, ch chan *dbus.Call, username string, serviceName string, timeout int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, username, serviceName, timeout)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) StartVerify(flags dbus.Flags, username string, serviceName string, timeout int32) (string, error) {
+	mockArgs := v.Called(flags, username, serviceName, timeout)
+
+	ret0, ok := mockArgs.Get(0).(string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method StopEnroll
+
+func (v *mockInterfaceFace) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, id)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) StopEnroll(flags dbus.Flags, id string) error {
+	mockArgs := v.Called(flags, id)
+
+	return mockArgs.Error(0)
+}
+
+// method StopVerify
+
+func (v *mockInterfaceFace) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, id)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *mockInterfaceFace) StopVerify(flags dbus.Flags, id string) error {
+	mockArgs := v.Called(flags, id)
+
+	return mockArgs.Error(0)
+}
+
+// signal EnrollStatus
+
+func (v *mockInterfaceFace) ConnectEnrollStatus(cb func(id string, user string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// signal VerifyStatus
+
+func (v *mockInterfaceFace) ConnectVerifyStatus(cb func(id string, user string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// signal DeviceStatus
+
+func (v *mockInterfaceFace) ConnectDeviceStatus(cb func(serviceName string, code int32)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// property DefaultDevice s
+
+func (v *mockInterfaceFace) DefaultDevice() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property DefaultService s
+
+func (v *mockInterfaceFace) DefaultService() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property ServiceList s
+
+func (v *mockInterfaceFace) ServiceList() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}

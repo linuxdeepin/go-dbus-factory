@@ -33,6 +33,17 @@
           "Accessor": "UKey"
         }
       ]
+    },
+    {
+      "Type": "Face",
+      "Path": "/com/deepin/daemon/Authenticate/Face",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.Face",
+          "Type": "face",
+          "Accessor": "Face"
+        }
+      ]
     }
   ]
 }
