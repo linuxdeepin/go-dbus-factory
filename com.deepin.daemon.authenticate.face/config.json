@@ -1,0 +1,17 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "Face",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.Face.Device",
+          "CustomInterfaceName": true,
+          "Type": "face",
+          "Accessor": "Face"
+        }
+      ]
+    }
+  ]
+}
