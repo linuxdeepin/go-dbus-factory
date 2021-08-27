@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockFingerprint struct {
-	mockInterfaceFingerprint // interface com.huawei.Fingerprint
+	MockInterfaceFingerprint // interface com.huawei.Fingerprint
+	proxy.MockObject
 }
 
-type mockInterfaceFingerprint struct {
+type MockInterfaceFingerprint struct {
 	mock.Mock
 }
 
 // method SearchDevice
 
-func (v *mockInterfaceFingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceFingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) SearchDevice(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceFingerprint) SearchDevice(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -44,7 +46,7 @@ func (v *mockInterfaceFingerprint) SearchDevice(flags dbus.Flags) (bool, error) 
 
 // method Identify
 
-func (v *mockInterfaceFingerprint) GoIdentify(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoIdentify(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uuid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceFingerprint) GoIdentify(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) Identify(flags dbus.Flags, uuid string) error {
+func (v *MockInterfaceFingerprint) Identify(flags dbus.Flags, uuid string) error {
 	mockArgs := v.Called(flags, uuid)
 
 	return mockArgs.Error(0)
@@ -63,7 +65,7 @@ func (v *mockInterfaceFingerprint) Identify(flags dbus.Flags, uuid string) error
 
 // method IdentifyWithMultipleUser
 
-func (v *mockInterfaceFingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -74,7 +76,7 @@ func (v *mockInterfaceFingerprint) GoIdentifyWithMultipleUser(flags dbus.Flags, 
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) IdentifyWithMultipleUser(flags dbus.Flags) error {
+func (v *MockInterfaceFingerprint) IdentifyWithMultipleUser(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -82,7 +84,7 @@ func (v *mockInterfaceFingerprint) IdentifyWithMultipleUser(flags dbus.Flags) er
 
 // method GetStatus
 
-func (v *mockInterfaceFingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -93,7 +95,7 @@ func (v *mockInterfaceFingerprint) GoGetStatus(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) GetStatus(flags dbus.Flags) (int32, error) {
+func (v *MockInterfaceFingerprint) GetStatus(flags dbus.Flags) (int32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -106,7 +108,7 @@ func (v *mockInterfaceFingerprint) GetStatus(flags dbus.Flags) (int32, error) {
 
 // method Enroll
 
-func (v *mockInterfaceFingerprint) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, filePath string, uuid string) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, filePath string, uuid string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, filePath, uuid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -117,7 +119,7 @@ func (v *mockInterfaceFingerprint) GoEnroll(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) Enroll(flags dbus.Flags, filePath string, uuid string) error {
+func (v *MockInterfaceFingerprint) Enroll(flags dbus.Flags, filePath string, uuid string) error {
 	mockArgs := v.Called(flags, filePath, uuid)
 
 	return mockArgs.Error(0)
@@ -125,7 +127,7 @@ func (v *mockInterfaceFingerprint) Enroll(flags dbus.Flags, filePath string, uui
 
 // method Close
 
-func (v *mockInterfaceFingerprint) GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -136,7 +138,7 @@ func (v *mockInterfaceFingerprint) GoClose(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) Close(flags dbus.Flags) (int32, error) {
+func (v *MockInterfaceFingerprint) Close(flags dbus.Flags) (int32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -149,7 +151,7 @@ func (v *mockInterfaceFingerprint) Close(flags dbus.Flags) (int32, error) {
 
 // method Reload
 
-func (v *mockInterfaceFingerprint) GoReload(flags dbus.Flags, ch chan *dbus.Call, deleteType int32) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoReload(flags dbus.Flags, ch chan *dbus.Call, deleteType int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, deleteType)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -160,7 +162,7 @@ func (v *mockInterfaceFingerprint) GoReload(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) Reload(flags dbus.Flags, deleteType int32) (int32, error) {
+func (v *MockInterfaceFingerprint) Reload(flags dbus.Flags, deleteType int32) (int32, error) {
 	mockArgs := v.Called(flags, deleteType)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -173,7 +175,7 @@ func (v *mockInterfaceFingerprint) Reload(flags dbus.Flags, deleteType int32) (i
 
 // method ClearPovImage
 
-func (v *mockInterfaceFingerprint) GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceFingerprint) GoClearPovImage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -184,7 +186,7 @@ func (v *mockInterfaceFingerprint) GoClearPovImage(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceFingerprint) ClearPovImage(flags dbus.Flags) (int32, error) {
+func (v *MockInterfaceFingerprint) ClearPovImage(flags dbus.Flags) (int32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -197,7 +199,7 @@ func (v *mockInterfaceFingerprint) ClearPovImage(flags dbus.Flags) (int32, error
 
 // signal EnrollStatus
 
-func (v *mockInterfaceFingerprint) ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceFingerprint) ConnectEnrollStatus(cb func(progress int32, result int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -210,7 +212,7 @@ func (v *mockInterfaceFingerprint) ConnectEnrollStatus(cb func(progress int32, r
 
 // signal IdentifyStatus
 
-func (v *mockInterfaceFingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceFingerprint) ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -223,7 +225,7 @@ func (v *mockInterfaceFingerprint) ConnectIdentifyStatus(cb func(result int32)) 
 
 // signal IdentifyNoAccount
 
-func (v *mockInterfaceFingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceFingerprint) ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -236,7 +238,7 @@ func (v *mockInterfaceFingerprint) ConnectIdentifyNoAccount(cb func(result int32
 
 // signal VerifyStatus
 
-func (v *mockInterfaceFingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceFingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

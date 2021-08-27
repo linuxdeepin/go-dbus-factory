@@ -13,16 +13,17 @@ import (
 
 type MockWfd struct {
 	object_manager.MockInterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
-	mockInterfaceWfd                          // interface org.freedesktop.miracle.wfd
+	MockInterfaceWfd                          // interface org.freedesktop.miracle.wfd
+	proxy.MockObject
 }
 
-type mockInterfaceWfd struct {
+type MockInterfaceWfd struct {
 	mock.Mock
 }
 
 // method Shutdown
 
-func (v *mockInterfaceWfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -33,23 +34,24 @@ func (v *mockInterfaceWfd) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceWfd) Shutdown(flags dbus.Flags) error {
+func (v *MockInterfaceWfd) Shutdown(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
 }
 
 type MockSink struct {
-	mockInterfaceSink // interface org.freedesktop.miracle.wfd.Sink
+	MockInterfaceSink // interface org.freedesktop.miracle.wfd.Sink
+	proxy.MockObject
 }
 
-type mockInterfaceSink struct {
+type MockInterfaceSink struct {
 	mock.Mock
 }
 
 // method StartSession
 
-func (v *mockInterfaceSink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call {
+func (v *MockInterfaceSink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -60,7 +62,7 @@ func (v *mockInterfaceSink) GoStartSession(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceSink) StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceSink) StartSession(flags dbus.Flags, arg0 string, arg1 string, arg2 uint32, arg3 uint32, arg4 uint32, arg5 uint32, arg6 string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -73,7 +75,7 @@ func (v *mockInterfaceSink) StartSession(flags dbus.Flags, arg0 string, arg1 str
 
 // property Session o
 
-func (v *mockInterfaceSink) Session() proxy.PropObjectPath {
+func (v *MockInterfaceSink) Session() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -86,7 +88,7 @@ func (v *mockInterfaceSink) Session() proxy.PropObjectPath {
 
 // property Peer o
 
-func (v *mockInterfaceSink) Peer() proxy.PropObjectPath {
+func (v *MockInterfaceSink) Peer() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -98,16 +100,17 @@ func (v *mockInterfaceSink) Peer() proxy.PropObjectPath {
 }
 
 type MockSession struct {
-	mockInterfaceSession // interface org.freedesktop.miracle.wfd.Session
+	MockInterfaceSession // interface org.freedesktop.miracle.wfd.Session
+	proxy.MockObject
 }
 
-type mockInterfaceSession struct {
+type MockInterfaceSession struct {
 	mock.Mock
 }
 
 // method Resume
 
-func (v *mockInterfaceSession) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -118,7 +121,7 @@ func (v *mockInterfaceSession) GoResume(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceSession) Resume(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Resume(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -126,7 +129,7 @@ func (v *mockInterfaceSession) Resume(flags dbus.Flags) error {
 
 // method Pause
 
-func (v *mockInterfaceSession) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -137,7 +140,7 @@ func (v *mockInterfaceSession) GoPause(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceSession) Pause(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Pause(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -145,7 +148,7 @@ func (v *mockInterfaceSession) Pause(flags dbus.Flags) error {
 
 // method Teardown
 
-func (v *mockInterfaceSession) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -156,7 +159,7 @@ func (v *mockInterfaceSession) GoTeardown(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceSession) Teardown(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Teardown(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -164,7 +167,7 @@ func (v *mockInterfaceSession) Teardown(flags dbus.Flags) error {
 
 // property Sink o
 
-func (v *mockInterfaceSession) Sink() proxy.PropObjectPath {
+func (v *MockInterfaceSession) Sink() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -177,7 +180,7 @@ func (v *mockInterfaceSession) Sink() proxy.PropObjectPath {
 
 // property Url s
 
-func (v *mockInterfaceSession) Url() proxy.PropString {
+func (v *MockInterfaceSession) Url() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -190,7 +193,7 @@ func (v *mockInterfaceSession) Url() proxy.PropString {
 
 // property State i
 
-func (v *mockInterfaceSession) State() proxy.PropInt32 {
+func (v *MockInterfaceSession) State() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)

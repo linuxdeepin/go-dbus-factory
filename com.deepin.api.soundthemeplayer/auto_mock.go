@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockSoundThemePlayer struct {
-	mockInterfaceSoundThemePlayer // interface com.deepin.api.SoundThemePlayer
+	MockInterfaceSoundThemePlayer // interface com.deepin.api.SoundThemePlayer
+	proxy.MockObject
 }
 
-type mockInterfaceSoundThemePlayer struct {
+type MockInterfaceSoundThemePlayer struct {
 	mock.Mock
 }
 
 // method EnableSoundDesktopLogin
 
-func (v *mockInterfaceSoundThemePlayer) GoEnableSoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceSoundThemePlayer) GoEnableSoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceSoundThemePlayer) GoEnableSoundDesktopLogin(flags dbus.Fla
 	return ret
 }
 
-func (v *mockInterfaceSoundThemePlayer) EnableSoundDesktopLogin(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceSoundThemePlayer) EnableSoundDesktopLogin(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -38,7 +40,7 @@ func (v *mockInterfaceSoundThemePlayer) EnableSoundDesktopLogin(flags dbus.Flags
 
 // method Play
 
-func (v *mockInterfaceSoundThemePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call, theme string, event string, device string) *dbus.Call {
+func (v *MockInterfaceSoundThemePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call, theme string, event string, device string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, theme, event, device)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceSoundThemePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceSoundThemePlayer) Play(flags dbus.Flags, theme string, event string, device string) error {
+func (v *MockInterfaceSoundThemePlayer) Play(flags dbus.Flags, theme string, event string, device string) error {
 	mockArgs := v.Called(flags, theme, event, device)
 
 	return mockArgs.Error(0)
@@ -57,7 +59,7 @@ func (v *mockInterfaceSoundThemePlayer) Play(flags dbus.Flags, theme string, eve
 
 // method PlaySoundDesktopLogin
 
-func (v *mockInterfaceSoundThemePlayer) GoPlaySoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSoundThemePlayer) GoPlaySoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -68,7 +70,7 @@ func (v *mockInterfaceSoundThemePlayer) GoPlaySoundDesktopLogin(flags dbus.Flags
 	return ret
 }
 
-func (v *mockInterfaceSoundThemePlayer) PlaySoundDesktopLogin(flags dbus.Flags) error {
+func (v *MockInterfaceSoundThemePlayer) PlaySoundDesktopLogin(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -76,7 +78,7 @@ func (v *mockInterfaceSoundThemePlayer) PlaySoundDesktopLogin(flags dbus.Flags) 
 
 // method SaveAudioState
 
-func (v *mockInterfaceSoundThemePlayer) GoSaveAudioState(flags dbus.Flags, ch chan *dbus.Call, activePlayback map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceSoundThemePlayer) GoSaveAudioState(flags dbus.Flags, ch chan *dbus.Call, activePlayback map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, activePlayback)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -87,7 +89,7 @@ func (v *mockInterfaceSoundThemePlayer) GoSaveAudioState(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceSoundThemePlayer) SaveAudioState(flags dbus.Flags, activePlayback map[string]dbus.Variant) error {
+func (v *MockInterfaceSoundThemePlayer) SaveAudioState(flags dbus.Flags, activePlayback map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, activePlayback)
 
 	return mockArgs.Error(0)
@@ -95,7 +97,7 @@ func (v *mockInterfaceSoundThemePlayer) SaveAudioState(flags dbus.Flags, activeP
 
 // method SetSoundTheme
 
-func (v *mockInterfaceSoundThemePlayer) GoSetSoundTheme(flags dbus.Flags, ch chan *dbus.Call, theme string) *dbus.Call {
+func (v *MockInterfaceSoundThemePlayer) GoSetSoundTheme(flags dbus.Flags, ch chan *dbus.Call, theme string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, theme)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -106,7 +108,7 @@ func (v *mockInterfaceSoundThemePlayer) GoSetSoundTheme(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceSoundThemePlayer) SetSoundTheme(flags dbus.Flags, theme string) error {
+func (v *MockInterfaceSoundThemePlayer) SetSoundTheme(flags dbus.Flags, theme string) error {
 	mockArgs := v.Called(flags, theme)
 
 	return mockArgs.Error(0)

@@ -12,16 +12,17 @@ import (
 )
 
 type MockNetwork struct {
-	mockInterfaceNetwork // interface com.deepin.system.Network
+	MockInterfaceNetwork // interface com.deepin.system.Network
+	proxy.MockObject
 }
 
-type mockInterfaceNetwork struct {
+type MockInterfaceNetwork struct {
 	mock.Mock
 }
 
 // method EnableDevice
 
-func (v *mockInterfaceNetwork) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
+func (v *MockInterfaceNetwork) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pathOrIface, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceNetwork) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceNetwork) EnableDevice(flags dbus.Flags, pathOrIface string, enabled bool) (dbus.ObjectPath, error) {
+func (v *MockInterfaceNetwork) EnableDevice(flags dbus.Flags, pathOrIface string, enabled bool) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, pathOrIface, enabled)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfaceNetwork) EnableDevice(flags dbus.Flags, pathOrIface string
 
 // method IsDeviceEnabled
 
-func (v *mockInterfaceNetwork) GoIsDeviceEnabled(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string) *dbus.Call {
+func (v *MockInterfaceNetwork) GoIsDeviceEnabled(flags dbus.Flags, ch chan *dbus.Call, pathOrIface string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pathOrIface)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceNetwork) GoIsDeviceEnabled(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceNetwork) IsDeviceEnabled(flags dbus.Flags, pathOrIface string) (bool, error) {
+func (v *MockInterfaceNetwork) IsDeviceEnabled(flags dbus.Flags, pathOrIface string) (bool, error) {
 	mockArgs := v.Called(flags, pathOrIface)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -69,7 +70,7 @@ func (v *mockInterfaceNetwork) IsDeviceEnabled(flags dbus.Flags, pathOrIface str
 
 // method Ping
 
-func (v *mockInterfaceNetwork) GoPing(flags dbus.Flags, ch chan *dbus.Call, host string) *dbus.Call {
+func (v *MockInterfaceNetwork) GoPing(flags dbus.Flags, ch chan *dbus.Call, host string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, host)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceNetwork) GoPing(flags dbus.Flags, ch chan *dbus.Call, host
 	return ret
 }
 
-func (v *mockInterfaceNetwork) Ping(flags dbus.Flags, host string) error {
+func (v *MockInterfaceNetwork) Ping(flags dbus.Flags, host string) error {
 	mockArgs := v.Called(flags, host)
 
 	return mockArgs.Error(0)
@@ -88,7 +89,7 @@ func (v *mockInterfaceNetwork) Ping(flags dbus.Flags, host string) error {
 
 // method ToggleWirelessEnabled
 
-func (v *mockInterfaceNetwork) GoToggleWirelessEnabled(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNetwork) GoToggleWirelessEnabled(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +100,7 @@ func (v *mockInterfaceNetwork) GoToggleWirelessEnabled(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceNetwork) ToggleWirelessEnabled(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceNetwork) ToggleWirelessEnabled(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -112,7 +113,7 @@ func (v *mockInterfaceNetwork) ToggleWirelessEnabled(flags dbus.Flags) (bool, er
 
 // signal DeviceEnabled
 
-func (v *mockInterfaceNetwork) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNetwork) ConnectDeviceEnabled(cb func(devPath dbus.ObjectPath, enabled bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -125,7 +126,7 @@ func (v *mockInterfaceNetwork) ConnectDeviceEnabled(cb func(devPath dbus.ObjectP
 
 // property VpnEnabled b
 
-func (v *mockInterfaceNetwork) VpnEnabled() proxy.PropBool {
+func (v *MockInterfaceNetwork) VpnEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

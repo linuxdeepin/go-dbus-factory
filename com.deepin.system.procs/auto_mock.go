@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockProcs struct {
-	mockInterfaceProcs // interface com.deepin.system.Procs
+	MockInterfaceProcs // interface com.deepin.system.Procs
+	proxy.MockObject
 }
 
-type mockInterfaceProcs struct {
+type MockInterfaceProcs struct {
 	mock.Mock
 }
 
 // signal ExecProc
 
-func (v *mockInterfaceProcs) ConnectExecProc(cb func(ExecPath string, CGroupPath string, Pid string, PPid string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceProcs) ConnectExecProc(cb func(ExecPath string, CGroupPath string, Pid string, PPid string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -33,7 +35,7 @@ func (v *mockInterfaceProcs) ConnectExecProc(cb func(ExecPath string, CGroupPath
 
 // signal ExitProc
 
-func (v *mockInterfaceProcs) ConnectExitProc(cb func(ExecPath string, CGroupPath string, Pid string, PPid string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceProcs) ConnectExitProc(cb func(ExecPath string, CGroupPath string, Pid string, PPid string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -46,7 +48,7 @@ func (v *mockInterfaceProcs) ConnectExitProc(cb func(ExecPath string, CGroupPath
 
 // property Procs a{s(ssss)}
 
-func (v *mockInterfaceProcs) Procs() PropProcsMap {
+func (v *MockInterfaceProcs) Procs() PropProcsMap {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropProcsMap)

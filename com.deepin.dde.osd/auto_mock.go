@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockOSD struct {
-	mockInterfaceOsd // interface com.deepin.dde.osd
+	MockInterfaceOsd // interface com.deepin.dde.osd
+	proxy.MockObject
 }
 
-type mockInterfaceOsd struct {
+type MockInterfaceOsd struct {
 	mock.Mock
 }
 
 // method ShowOSD
 
-func (v *mockInterfaceOsd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call {
+func (v *MockInterfaceOsd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, osd)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceOsd) GoShowOSD(flags dbus.Flags, ch chan *dbus.Call, osd s
 	return ret
 }
 
-func (v *mockInterfaceOsd) ShowOSD(flags dbus.Flags, osd string) error {
+func (v *MockInterfaceOsd) ShowOSD(flags dbus.Flags, osd string) error {
 	mockArgs := v.Called(flags, osd)
 
 	return mockArgs.Error(0)

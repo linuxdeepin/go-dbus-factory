@@ -11,17 +11,18 @@ import (
 )
 
 type MockLastore struct {
-	mockInterfaceManager // interface com.deepin.lastore.Manager
-	mockInterfaceUpdater // interface com.deepin.lastore.Updater
+	MockInterfaceManager // interface com.deepin.lastore.Manager
+	MockInterfaceUpdater // interface com.deepin.lastore.Updater
+	proxy.MockObject
 }
 
-type mockInterfaceManager struct {
+type MockInterfaceManager struct {
 	mock.Mock
 }
 
 // method CleanArchives
 
-func (v *mockInterfaceManager) GoCleanArchives(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCleanArchives(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceManager) GoCleanArchives(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) CleanArchives(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) CleanArchives(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfaceManager) CleanArchives(flags dbus.Flags) (dbus.ObjectPath,
 
 // method CleanJob
 
-func (v *mockInterfaceManager) GoCleanJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+func (v *MockInterfaceManager) GoCleanJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceManager) GoCleanJob(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) CleanJob(flags dbus.Flags, jobId string) error {
+func (v *MockInterfaceManager) CleanJob(flags dbus.Flags, jobId string) error {
 	mockArgs := v.Called(flags, jobId)
 
 	return mockArgs.Error(0)
@@ -64,7 +65,7 @@ func (v *mockInterfaceManager) CleanJob(flags dbus.Flags, jobId string) error {
 
 // method DistUpgrade
 
-func (v *mockInterfaceManager) GoDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -75,7 +76,7 @@ func (v *mockInterfaceManager) GoDistUpgrade(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) DistUpgrade(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) DistUpgrade(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -88,7 +89,7 @@ func (v *mockInterfaceManager) DistUpgrade(flags dbus.Flags) (dbus.ObjectPath, e
 
 // method FixError
 
-func (v *mockInterfaceManager) GoFixError(flags dbus.Flags, ch chan *dbus.Call, errType string) *dbus.Call {
+func (v *MockInterfaceManager) GoFixError(flags dbus.Flags, ch chan *dbus.Call, errType string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, errType)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +100,7 @@ func (v *mockInterfaceManager) GoFixError(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) FixError(flags dbus.Flags, errType string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FixError(flags dbus.Flags, errType string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, errType)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -112,7 +113,7 @@ func (v *mockInterfaceManager) FixError(flags dbus.Flags, errType string) (dbus.
 
 // method InstallPackage
 
-func (v *mockInterfaceManager) GoInstallPackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+func (v *MockInterfaceManager) GoInstallPackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobName, packages)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -123,7 +124,7 @@ func (v *mockInterfaceManager) GoInstallPackage(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) InstallPackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) InstallPackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, jobName, packages)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -136,7 +137,7 @@ func (v *mockInterfaceManager) InstallPackage(flags dbus.Flags, jobName string, 
 
 // method PackageDesktopPath
 
-func (v *mockInterfaceManager) GoPackageDesktopPath(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+func (v *MockInterfaceManager) GoPackageDesktopPath(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pkgId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -147,7 +148,7 @@ func (v *mockInterfaceManager) GoPackageDesktopPath(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceManager) PackageDesktopPath(flags dbus.Flags, pkgId string) (string, error) {
+func (v *MockInterfaceManager) PackageDesktopPath(flags dbus.Flags, pkgId string) (string, error) {
 	mockArgs := v.Called(flags, pkgId)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -160,7 +161,7 @@ func (v *mockInterfaceManager) PackageDesktopPath(flags dbus.Flags, pkgId string
 
 // method PackageExists
 
-func (v *mockInterfaceManager) GoPackageExists(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+func (v *MockInterfaceManager) GoPackageExists(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pkgId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -171,7 +172,7 @@ func (v *mockInterfaceManager) GoPackageExists(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) PackageExists(flags dbus.Flags, pkgId string) (bool, error) {
+func (v *MockInterfaceManager) PackageExists(flags dbus.Flags, pkgId string) (bool, error) {
 	mockArgs := v.Called(flags, pkgId)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -184,7 +185,7 @@ func (v *mockInterfaceManager) PackageExists(flags dbus.Flags, pkgId string) (bo
 
 // method PackageInstallable
 
-func (v *mockInterfaceManager) GoPackageInstallable(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
+func (v *MockInterfaceManager) GoPackageInstallable(flags dbus.Flags, ch chan *dbus.Call, pkgId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pkgId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -195,7 +196,7 @@ func (v *mockInterfaceManager) GoPackageInstallable(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceManager) PackageInstallable(flags dbus.Flags, pkgId string) (bool, error) {
+func (v *MockInterfaceManager) PackageInstallable(flags dbus.Flags, pkgId string) (bool, error) {
 	mockArgs := v.Called(flags, pkgId)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -208,7 +209,7 @@ func (v *mockInterfaceManager) PackageInstallable(flags dbus.Flags, pkgId string
 
 // method PackagesDownloadSize
 
-func (v *mockInterfaceManager) GoPackagesDownloadSize(flags dbus.Flags, ch chan *dbus.Call, packages []string) *dbus.Call {
+func (v *MockInterfaceManager) GoPackagesDownloadSize(flags dbus.Flags, ch chan *dbus.Call, packages []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, packages)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -219,7 +220,7 @@ func (v *mockInterfaceManager) GoPackagesDownloadSize(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceManager) PackagesDownloadSize(flags dbus.Flags, packages []string) (int64, error) {
+func (v *MockInterfaceManager) PackagesDownloadSize(flags dbus.Flags, packages []string) (int64, error) {
 	mockArgs := v.Called(flags, packages)
 
 	ret0, ok := mockArgs.Get(0).(int64)
@@ -232,7 +233,7 @@ func (v *mockInterfaceManager) PackagesDownloadSize(flags dbus.Flags, packages [
 
 // method PauseJob
 
-func (v *mockInterfaceManager) GoPauseJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+func (v *MockInterfaceManager) GoPauseJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -243,7 +244,7 @@ func (v *mockInterfaceManager) GoPauseJob(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) PauseJob(flags dbus.Flags, jobId string) error {
+func (v *MockInterfaceManager) PauseJob(flags dbus.Flags, jobId string) error {
 	mockArgs := v.Called(flags, jobId)
 
 	return mockArgs.Error(0)
@@ -251,7 +252,7 @@ func (v *mockInterfaceManager) PauseJob(flags dbus.Flags, jobId string) error {
 
 // method PrepareDistUpgrade
 
-func (v *mockInterfaceManager) GoPrepareDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoPrepareDistUpgrade(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -262,7 +263,7 @@ func (v *mockInterfaceManager) GoPrepareDistUpgrade(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceManager) PrepareDistUpgrade(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) PrepareDistUpgrade(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -275,7 +276,7 @@ func (v *mockInterfaceManager) PrepareDistUpgrade(flags dbus.Flags) (dbus.Object
 
 // method RemovePackage
 
-func (v *mockInterfaceManager) GoRemovePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+func (v *MockInterfaceManager) GoRemovePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobName, packages)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -286,7 +287,7 @@ func (v *mockInterfaceManager) GoRemovePackage(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) RemovePackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) RemovePackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, jobName, packages)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -299,7 +300,7 @@ func (v *mockInterfaceManager) RemovePackage(flags dbus.Flags, jobName string, p
 
 // method SetAutoClean
 
-func (v *mockInterfaceManager) GoSetAutoClean(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceManager) GoSetAutoClean(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -310,7 +311,7 @@ func (v *mockInterfaceManager) GoSetAutoClean(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) SetAutoClean(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceManager) SetAutoClean(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -318,7 +319,7 @@ func (v *mockInterfaceManager) SetAutoClean(flags dbus.Flags, enable bool) error
 
 // method SetLogger
 
-func (v *mockInterfaceManager) GoSetLogger(flags dbus.Flags, ch chan *dbus.Call, levels string, format string, output string) *dbus.Call {
+func (v *MockInterfaceManager) GoSetLogger(flags dbus.Flags, ch chan *dbus.Call, levels string, format string, output string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, levels, format, output)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -329,7 +330,7 @@ func (v *mockInterfaceManager) GoSetLogger(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceManager) SetLogger(flags dbus.Flags, levels string, format string, output string) error {
+func (v *MockInterfaceManager) SetLogger(flags dbus.Flags, levels string, format string, output string) error {
 	mockArgs := v.Called(flags, levels, format, output)
 
 	return mockArgs.Error(0)
@@ -337,7 +338,7 @@ func (v *mockInterfaceManager) SetLogger(flags dbus.Flags, levels string, format
 
 // method SetRegion
 
-func (v *mockInterfaceManager) GoSetRegion(flags dbus.Flags, ch chan *dbus.Call, region string) *dbus.Call {
+func (v *MockInterfaceManager) GoSetRegion(flags dbus.Flags, ch chan *dbus.Call, region string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, region)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -348,7 +349,7 @@ func (v *mockInterfaceManager) GoSetRegion(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceManager) SetRegion(flags dbus.Flags, region string) error {
+func (v *MockInterfaceManager) SetRegion(flags dbus.Flags, region string) error {
 	mockArgs := v.Called(flags, region)
 
 	return mockArgs.Error(0)
@@ -356,7 +357,7 @@ func (v *mockInterfaceManager) SetRegion(flags dbus.Flags, region string) error 
 
 // method StartJob
 
-func (v *mockInterfaceManager) GoStartJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
+func (v *MockInterfaceManager) GoStartJob(flags dbus.Flags, ch chan *dbus.Call, jobId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -367,7 +368,7 @@ func (v *mockInterfaceManager) GoStartJob(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) StartJob(flags dbus.Flags, jobId string) error {
+func (v *MockInterfaceManager) StartJob(flags dbus.Flags, jobId string) error {
 	mockArgs := v.Called(flags, jobId)
 
 	return mockArgs.Error(0)
@@ -375,7 +376,7 @@ func (v *mockInterfaceManager) StartJob(flags dbus.Flags, jobId string) error {
 
 // method UpdatePackage
 
-func (v *mockInterfaceManager) GoUpdatePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
+func (v *MockInterfaceManager) GoUpdatePackage(flags dbus.Flags, ch chan *dbus.Call, jobName string, packages string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, jobName, packages)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -386,7 +387,7 @@ func (v *mockInterfaceManager) GoUpdatePackage(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) UpdatePackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) UpdatePackage(flags dbus.Flags, jobName string, packages string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, jobName, packages)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -399,7 +400,7 @@ func (v *mockInterfaceManager) UpdatePackage(flags dbus.Flags, jobName string, p
 
 // method UpdateSource
 
-func (v *mockInterfaceManager) GoUpdateSource(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoUpdateSource(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -410,7 +411,7 @@ func (v *mockInterfaceManager) GoUpdateSource(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) UpdateSource(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) UpdateSource(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -423,7 +424,7 @@ func (v *mockInterfaceManager) UpdateSource(flags dbus.Flags) (dbus.ObjectPath, 
 
 // property JobList ao
 
-func (v *mockInterfaceManager) JobList() proxy.PropObjectPathArray {
+func (v *MockInterfaceManager) JobList() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -436,7 +437,7 @@ func (v *mockInterfaceManager) JobList() proxy.PropObjectPathArray {
 
 // property SystemArchitectures as
 
-func (v *mockInterfaceManager) SystemArchitectures() proxy.PropStringArray {
+func (v *MockInterfaceManager) SystemArchitectures() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -449,7 +450,7 @@ func (v *mockInterfaceManager) SystemArchitectures() proxy.PropStringArray {
 
 // property UpgradableApps as
 
-func (v *mockInterfaceManager) UpgradableApps() proxy.PropStringArray {
+func (v *MockInterfaceManager) UpgradableApps() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -462,7 +463,7 @@ func (v *mockInterfaceManager) UpgradableApps() proxy.PropStringArray {
 
 // property SystemOnChanging b
 
-func (v *mockInterfaceManager) SystemOnChanging() proxy.PropBool {
+func (v *MockInterfaceManager) SystemOnChanging() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -475,7 +476,7 @@ func (v *mockInterfaceManager) SystemOnChanging() proxy.PropBool {
 
 // property AutoClean b
 
-func (v *mockInterfaceManager) AutoClean() proxy.PropBool {
+func (v *MockInterfaceManager) AutoClean() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -486,13 +487,13 @@ func (v *mockInterfaceManager) AutoClean() proxy.PropBool {
 	return ret0
 }
 
-type mockInterfaceUpdater struct {
+type MockInterfaceUpdater struct {
 	mock.Mock
 }
 
 // method ApplicationUpdateInfos
 
-func (v *mockInterfaceUpdater) GoApplicationUpdateInfos(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
+func (v *MockInterfaceUpdater) GoApplicationUpdateInfos(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, lang)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -503,7 +504,7 @@ func (v *mockInterfaceUpdater) GoApplicationUpdateInfos(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceUpdater) ApplicationUpdateInfos(flags dbus.Flags, lang string) ([][]interface{}, error) {
+func (v *MockInterfaceUpdater) ApplicationUpdateInfos(flags dbus.Flags, lang string) ([][]interface{}, error) {
 	mockArgs := v.Called(flags, lang)
 
 	ret0, ok := mockArgs.Get(0).([][]interface{})
@@ -516,7 +517,7 @@ func (v *mockInterfaceUpdater) ApplicationUpdateInfos(flags dbus.Flags, lang str
 
 // method ListMirrorSources
 
-func (v *mockInterfaceUpdater) GoListMirrorSources(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
+func (v *MockInterfaceUpdater) GoListMirrorSources(flags dbus.Flags, ch chan *dbus.Call, lang string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, lang)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -527,7 +528,7 @@ func (v *mockInterfaceUpdater) GoListMirrorSources(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceUpdater) ListMirrorSources(flags dbus.Flags, lang string) ([][]interface{}, error) {
+func (v *MockInterfaceUpdater) ListMirrorSources(flags dbus.Flags, lang string) ([][]interface{}, error) {
 	mockArgs := v.Called(flags, lang)
 
 	ret0, ok := mockArgs.Get(0).([][]interface{})
@@ -540,7 +541,7 @@ func (v *mockInterfaceUpdater) ListMirrorSources(flags dbus.Flags, lang string) 
 
 // method RestoreSystemSource
 
-func (v *mockInterfaceUpdater) GoRestoreSystemSource(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceUpdater) GoRestoreSystemSource(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -551,7 +552,7 @@ func (v *mockInterfaceUpdater) GoRestoreSystemSource(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceUpdater) RestoreSystemSource(flags dbus.Flags) error {
+func (v *MockInterfaceUpdater) RestoreSystemSource(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -559,7 +560,7 @@ func (v *mockInterfaceUpdater) RestoreSystemSource(flags dbus.Flags) error {
 
 // method SetAutoCheckUpdates
 
-func (v *mockInterfaceUpdater) GoSetAutoCheckUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceUpdater) GoSetAutoCheckUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -570,7 +571,7 @@ func (v *mockInterfaceUpdater) GoSetAutoCheckUpdates(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceUpdater) SetAutoCheckUpdates(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceUpdater) SetAutoCheckUpdates(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -578,7 +579,7 @@ func (v *mockInterfaceUpdater) SetAutoCheckUpdates(flags dbus.Flags, enable bool
 
 // method SetAutoDownloadUpdates
 
-func (v *mockInterfaceUpdater) GoSetAutoDownloadUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceUpdater) GoSetAutoDownloadUpdates(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -589,7 +590,7 @@ func (v *mockInterfaceUpdater) GoSetAutoDownloadUpdates(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceUpdater) SetAutoDownloadUpdates(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceUpdater) SetAutoDownloadUpdates(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -597,7 +598,7 @@ func (v *mockInterfaceUpdater) SetAutoDownloadUpdates(flags dbus.Flags, enable b
 
 // method SetMirrorSource
 
-func (v *mockInterfaceUpdater) GoSetMirrorSource(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceUpdater) GoSetMirrorSource(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -608,7 +609,7 @@ func (v *mockInterfaceUpdater) GoSetMirrorSource(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceUpdater) SetMirrorSource(flags dbus.Flags, id string) error {
+func (v *MockInterfaceUpdater) SetMirrorSource(flags dbus.Flags, id string) error {
 	mockArgs := v.Called(flags, id)
 
 	return mockArgs.Error(0)
@@ -616,7 +617,7 @@ func (v *mockInterfaceUpdater) SetMirrorSource(flags dbus.Flags, id string) erro
 
 // property AutoCheckUpdates b
 
-func (v *mockInterfaceUpdater) AutoCheckUpdates() proxy.PropBool {
+func (v *MockInterfaceUpdater) AutoCheckUpdates() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -629,7 +630,7 @@ func (v *mockInterfaceUpdater) AutoCheckUpdates() proxy.PropBool {
 
 // property AutoDownloadUpdates b
 
-func (v *mockInterfaceUpdater) AutoDownloadUpdates() proxy.PropBool {
+func (v *MockInterfaceUpdater) AutoDownloadUpdates() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -642,7 +643,7 @@ func (v *mockInterfaceUpdater) AutoDownloadUpdates() proxy.PropBool {
 
 // property MirrorSource s
 
-func (v *mockInterfaceUpdater) MirrorSource() proxy.PropString {
+func (v *MockInterfaceUpdater) MirrorSource() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -655,7 +656,7 @@ func (v *mockInterfaceUpdater) MirrorSource() proxy.PropString {
 
 // property UpdatableApps as
 
-func (v *mockInterfaceUpdater) UpdatableApps() proxy.PropStringArray {
+func (v *MockInterfaceUpdater) UpdatableApps() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -668,7 +669,7 @@ func (v *mockInterfaceUpdater) UpdatableApps() proxy.PropStringArray {
 
 // property UpdatablePackages as
 
-func (v *mockInterfaceUpdater) UpdatablePackages() proxy.PropStringArray {
+func (v *MockInterfaceUpdater) UpdatablePackages() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -680,16 +681,17 @@ func (v *mockInterfaceUpdater) UpdatablePackages() proxy.PropStringArray {
 }
 
 type MockJob struct {
-	mockInterfaceJob // interface com.deepin.lastore.Job
+	MockInterfaceJob // interface com.deepin.lastore.Job
+	proxy.MockObject
 }
 
-type mockInterfaceJob struct {
+type MockInterfaceJob struct {
 	mock.Mock
 }
 
 // method String
 
-func (v *mockInterfaceJob) GoString(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceJob) GoString(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -700,7 +702,7 @@ func (v *mockInterfaceJob) GoString(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return ret
 }
 
-func (v *mockInterfaceJob) String(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceJob) String(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -713,7 +715,7 @@ func (v *mockInterfaceJob) String(flags dbus.Flags) (string, error) {
 
 // property Id s
 
-func (v *mockInterfaceJob) Id() proxy.PropString {
+func (v *MockInterfaceJob) Id() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -726,7 +728,7 @@ func (v *mockInterfaceJob) Id() proxy.PropString {
 
 // property Name s
 
-func (v *mockInterfaceJob) Name() proxy.PropString {
+func (v *MockInterfaceJob) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -739,7 +741,7 @@ func (v *mockInterfaceJob) Name() proxy.PropString {
 
 // property Packages as
 
-func (v *mockInterfaceJob) Packages() proxy.PropStringArray {
+func (v *MockInterfaceJob) Packages() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -752,7 +754,7 @@ func (v *mockInterfaceJob) Packages() proxy.PropStringArray {
 
 // property CreateTime x
 
-func (v *mockInterfaceJob) CreateTime() proxy.PropInt64 {
+func (v *MockInterfaceJob) CreateTime() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -765,7 +767,7 @@ func (v *mockInterfaceJob) CreateTime() proxy.PropInt64 {
 
 // property Type s
 
-func (v *mockInterfaceJob) Type() proxy.PropString {
+func (v *MockInterfaceJob) Type() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -778,7 +780,7 @@ func (v *mockInterfaceJob) Type() proxy.PropString {
 
 // property Status s
 
-func (v *mockInterfaceJob) Status() proxy.PropString {
+func (v *MockInterfaceJob) Status() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -791,7 +793,7 @@ func (v *mockInterfaceJob) Status() proxy.PropString {
 
 // property Progress d
 
-func (v *mockInterfaceJob) Progress() proxy.PropDouble {
+func (v *MockInterfaceJob) Progress() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -804,7 +806,7 @@ func (v *mockInterfaceJob) Progress() proxy.PropDouble {
 
 // property Description s
 
-func (v *mockInterfaceJob) Description() proxy.PropString {
+func (v *MockInterfaceJob) Description() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -817,7 +819,7 @@ func (v *mockInterfaceJob) Description() proxy.PropString {
 
 // property Speed x
 
-func (v *mockInterfaceJob) Speed() proxy.PropInt64 {
+func (v *MockInterfaceJob) Speed() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -830,7 +832,7 @@ func (v *mockInterfaceJob) Speed() proxy.PropInt64 {
 
 // property DownloadSize x
 
-func (v *mockInterfaceJob) DownloadSize() proxy.PropInt64 {
+func (v *MockInterfaceJob) DownloadSize() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -843,7 +845,7 @@ func (v *mockInterfaceJob) DownloadSize() proxy.PropInt64 {
 
 // property Cancelable b
 
-func (v *mockInterfaceJob) Cancelable() proxy.PropBool {
+func (v *MockInterfaceJob) Cancelable() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

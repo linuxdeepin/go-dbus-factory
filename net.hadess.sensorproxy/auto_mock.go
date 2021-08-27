@@ -11,16 +11,17 @@ import (
 )
 
 type MockSensorProxy struct {
-	mockInterfaceSensorProxy // interface net.hadess.SensorProxy
+	MockInterfaceSensorProxy // interface net.hadess.SensorProxy
+	proxy.MockObject
 }
 
-type mockInterfaceSensorProxy struct {
+type MockInterfaceSensorProxy struct {
 	mock.Mock
 }
 
 // method ClaimAccelerometer
 
-func (v *mockInterfaceSensorProxy) GoClaimAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSensorProxy) GoClaimAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceSensorProxy) GoClaimAccelerometer(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceSensorProxy) ClaimAccelerometer(flags dbus.Flags) error {
+func (v *MockInterfaceSensorProxy) ClaimAccelerometer(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceSensorProxy) ClaimAccelerometer(flags dbus.Flags) error {
 
 // method ReleaseAccelerometer
 
-func (v *mockInterfaceSensorProxy) GoReleaseAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSensorProxy) GoReleaseAccelerometer(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceSensorProxy) GoReleaseAccelerometer(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceSensorProxy) ReleaseAccelerometer(flags dbus.Flags) error {
+func (v *MockInterfaceSensorProxy) ReleaseAccelerometer(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceSensorProxy) ReleaseAccelerometer(flags dbus.Flags) error 
 
 // method ClaimLight
 
-func (v *mockInterfaceSensorProxy) GoClaimLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSensorProxy) GoClaimLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceSensorProxy) GoClaimLight(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceSensorProxy) ClaimLight(flags dbus.Flags) error {
+func (v *MockInterfaceSensorProxy) ClaimLight(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceSensorProxy) ClaimLight(flags dbus.Flags) error {
 
 // method ReleaseLight
 
-func (v *mockInterfaceSensorProxy) GoReleaseLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSensorProxy) GoReleaseLight(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceSensorProxy) GoReleaseLight(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceSensorProxy) ReleaseLight(flags dbus.Flags) error {
+func (v *MockInterfaceSensorProxy) ReleaseLight(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceSensorProxy) ReleaseLight(flags dbus.Flags) error {
 
 // property HasAccelerometer b
 
-func (v *mockInterfaceSensorProxy) HasAccelerometer() proxy.PropBool {
+func (v *MockInterfaceSensorProxy) HasAccelerometer() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -109,7 +110,7 @@ func (v *mockInterfaceSensorProxy) HasAccelerometer() proxy.PropBool {
 
 // property AccelerometerOrientation s
 
-func (v *mockInterfaceSensorProxy) AccelerometerOrientation() proxy.PropString {
+func (v *MockInterfaceSensorProxy) AccelerometerOrientation() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -122,7 +123,7 @@ func (v *mockInterfaceSensorProxy) AccelerometerOrientation() proxy.PropString {
 
 // property HasAmbientLight b
 
-func (v *mockInterfaceSensorProxy) HasAmbientLight() proxy.PropBool {
+func (v *MockInterfaceSensorProxy) HasAmbientLight() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -135,7 +136,7 @@ func (v *mockInterfaceSensorProxy) HasAmbientLight() proxy.PropBool {
 
 // property LightLevelUnit s
 
-func (v *mockInterfaceSensorProxy) LightLevelUnit() proxy.PropString {
+func (v *MockInterfaceSensorProxy) LightLevelUnit() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -148,7 +149,7 @@ func (v *mockInterfaceSensorProxy) LightLevelUnit() proxy.PropString {
 
 // property LightLevel d
 
-func (v *mockInterfaceSensorProxy) LightLevel() proxy.PropDouble {
+func (v *MockInterfaceSensorProxy) LightLevel() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)

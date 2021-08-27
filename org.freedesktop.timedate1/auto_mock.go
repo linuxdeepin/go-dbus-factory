@@ -11,16 +11,17 @@ import (
 )
 
 type MockTimedate struct {
-	mockInterfaceTimedate // interface org.freedesktop.timedate1
+	MockInterfaceTimedate // interface org.freedesktop.timedate1
+	proxy.MockObject
 }
 
-type mockInterfaceTimedate struct {
+type MockInterfaceTimedate struct {
 	mock.Mock
 }
 
 // method SetTime
 
-func (v *mockInterfaceTimedate) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, arg0 int64, arg1 bool, arg2 bool) *dbus.Call {
+func (v *MockInterfaceTimedate) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, arg0 int64, arg1 bool, arg2 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1, arg2)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceTimedate) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceTimedate) SetTime(flags dbus.Flags, arg0 int64, arg1 bool, arg2 bool) error {
+func (v *MockInterfaceTimedate) SetTime(flags dbus.Flags, arg0 int64, arg1 bool, arg2 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1, arg2)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceTimedate) SetTime(flags dbus.Flags, arg0 int64, arg1 bool,
 
 // method SetTimezone
 
-func (v *mockInterfaceTimedate) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceTimedate) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceTimedate) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceTimedate) SetTimezone(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceTimedate) SetTimezone(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceTimedate) SetTimezone(flags dbus.Flags, arg0 string, arg1 
 
 // method SetLocalRTC
 
-func (v *mockInterfaceTimedate) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool, arg2 bool) *dbus.Call {
+func (v *MockInterfaceTimedate) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool, arg2 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1, arg2)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceTimedate) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceTimedate) SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bool, arg2 bool) error {
+func (v *MockInterfaceTimedate) SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bool, arg2 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1, arg2)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceTimedate) SetLocalRTC(flags dbus.Flags, arg0 bool, arg1 bo
 
 // method SetNTP
 
-func (v *mockInterfaceTimedate) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool) *dbus.Call {
+func (v *MockInterfaceTimedate) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, arg0 bool, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceTimedate) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, a
 	return ret
 }
 
-func (v *mockInterfaceTimedate) SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) error {
+func (v *MockInterfaceTimedate) SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceTimedate) SetNTP(flags dbus.Flags, arg0 bool, arg1 bool) e
 
 // property Timezone s
 
-func (v *mockInterfaceTimedate) Timezone() proxy.PropString {
+func (v *MockInterfaceTimedate) Timezone() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -109,7 +110,7 @@ func (v *mockInterfaceTimedate) Timezone() proxy.PropString {
 
 // property LocalRTC b
 
-func (v *mockInterfaceTimedate) LocalRTC() proxy.PropBool {
+func (v *MockInterfaceTimedate) LocalRTC() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -122,7 +123,7 @@ func (v *mockInterfaceTimedate) LocalRTC() proxy.PropBool {
 
 // property CanNTP b
 
-func (v *mockInterfaceTimedate) CanNTP() proxy.PropBool {
+func (v *MockInterfaceTimedate) CanNTP() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -135,7 +136,7 @@ func (v *mockInterfaceTimedate) CanNTP() proxy.PropBool {
 
 // property NTP b
 
-func (v *mockInterfaceTimedate) NTP() proxy.PropBool {
+func (v *MockInterfaceTimedate) NTP() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -148,7 +149,7 @@ func (v *mockInterfaceTimedate) NTP() proxy.PropBool {
 
 // property NTPSynchronized b
 
-func (v *mockInterfaceTimedate) NTPSynchronized() proxy.PropBool {
+func (v *MockInterfaceTimedate) NTPSynchronized() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -161,7 +162,7 @@ func (v *mockInterfaceTimedate) NTPSynchronized() proxy.PropBool {
 
 // property TimeUSec t
 
-func (v *mockInterfaceTimedate) TimeUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimedate) TimeUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -174,7 +175,7 @@ func (v *mockInterfaceTimedate) TimeUSec() proxy.PropUint64 {
 
 // property RTCTimeUSec t
 
-func (v *mockInterfaceTimedate) RTCTimeUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimedate) RTCTimeUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)

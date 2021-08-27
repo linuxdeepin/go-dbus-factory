@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockScreenSaver struct {
-	mockInterfaceScreenSaver // interface org.freedesktop.ScreenSaver
+	MockInterfaceScreenSaver // interface org.freedesktop.ScreenSaver
+	proxy.MockObject
 }
 
-type mockInterfaceScreenSaver struct {
+type MockInterfaceScreenSaver struct {
 	mock.Mock
 }
 
 // method Inhibit
 
-func (v *mockInterfaceScreenSaver) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, name string, reason string) *dbus.Call {
+func (v *MockInterfaceScreenSaver) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, name string, reason string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name, reason)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceScreenSaver) GoInhibit(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceScreenSaver) Inhibit(flags dbus.Flags, name string, reason string) (uint32, error) {
+func (v *MockInterfaceScreenSaver) Inhibit(flags dbus.Flags, name string, reason string) (uint32, error) {
 	mockArgs := v.Called(flags, name, reason)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -44,7 +46,7 @@ func (v *mockInterfaceScreenSaver) Inhibit(flags dbus.Flags, name string, reason
 
 // method SetTimeout
 
-func (v *mockInterfaceScreenSaver) GoSetTimeout(flags dbus.Flags, ch chan *dbus.Call, seconds uint32, interval uint32, blank bool) *dbus.Call {
+func (v *MockInterfaceScreenSaver) GoSetTimeout(flags dbus.Flags, ch chan *dbus.Call, seconds uint32, interval uint32, blank bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, seconds, interval, blank)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceScreenSaver) GoSetTimeout(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceScreenSaver) SetTimeout(flags dbus.Flags, seconds uint32, interval uint32, blank bool) error {
+func (v *MockInterfaceScreenSaver) SetTimeout(flags dbus.Flags, seconds uint32, interval uint32, blank bool) error {
 	mockArgs := v.Called(flags, seconds, interval, blank)
 
 	return mockArgs.Error(0)
@@ -63,7 +65,7 @@ func (v *mockInterfaceScreenSaver) SetTimeout(flags dbus.Flags, seconds uint32, 
 
 // method SimulateUserActivity
 
-func (v *mockInterfaceScreenSaver) GoSimulateUserActivity(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceScreenSaver) GoSimulateUserActivity(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -74,7 +76,7 @@ func (v *mockInterfaceScreenSaver) GoSimulateUserActivity(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceScreenSaver) SimulateUserActivity(flags dbus.Flags) error {
+func (v *MockInterfaceScreenSaver) SimulateUserActivity(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -82,7 +84,7 @@ func (v *mockInterfaceScreenSaver) SimulateUserActivity(flags dbus.Flags) error 
 
 // method UnInhibit
 
-func (v *mockInterfaceScreenSaver) GoUnInhibit(flags dbus.Flags, ch chan *dbus.Call, cookie uint32) *dbus.Call {
+func (v *MockInterfaceScreenSaver) GoUnInhibit(flags dbus.Flags, ch chan *dbus.Call, cookie uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cookie)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -93,7 +95,7 @@ func (v *mockInterfaceScreenSaver) GoUnInhibit(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceScreenSaver) UnInhibit(flags dbus.Flags, cookie uint32) error {
+func (v *MockInterfaceScreenSaver) UnInhibit(flags dbus.Flags, cookie uint32) error {
 	mockArgs := v.Called(flags, cookie)
 
 	return mockArgs.Error(0)
@@ -101,7 +103,7 @@ func (v *mockInterfaceScreenSaver) UnInhibit(flags dbus.Flags, cookie uint32) er
 
 // signal IdleOn
 
-func (v *mockInterfaceScreenSaver) ConnectIdleOn(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceScreenSaver) ConnectIdleOn(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -114,7 +116,7 @@ func (v *mockInterfaceScreenSaver) ConnectIdleOn(cb func()) (dbusutil.SignalHand
 
 // signal CycleActive
 
-func (v *mockInterfaceScreenSaver) ConnectCycleActive(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceScreenSaver) ConnectCycleActive(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -127,7 +129,7 @@ func (v *mockInterfaceScreenSaver) ConnectCycleActive(cb func()) (dbusutil.Signa
 
 // signal IdleOff
 
-func (v *mockInterfaceScreenSaver) ConnectIdleOff(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceScreenSaver) ConnectIdleOff(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

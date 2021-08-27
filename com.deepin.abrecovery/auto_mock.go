@@ -12,16 +12,17 @@ import (
 )
 
 type MockABRecovery struct {
-	mockInterfaceAbRecovery // interface com.deepin.ABRecovery
+	MockInterfaceAbRecovery // interface com.deepin.ABRecovery
+	proxy.MockObject
 }
 
-type mockInterfaceAbRecovery struct {
+type MockInterfaceAbRecovery struct {
 	mock.Mock
 }
 
 // method CanBackup
 
-func (v *mockInterfaceAbRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAbRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceAbRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceAbRecovery) CanBackup(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceAbRecovery) CanBackup(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -45,7 +46,7 @@ func (v *mockInterfaceAbRecovery) CanBackup(flags dbus.Flags) (bool, error) {
 
 // method CanRestore
 
-func (v *mockInterfaceAbRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAbRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceAbRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceAbRecovery) CanRestore(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceAbRecovery) CanRestore(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -69,7 +70,7 @@ func (v *mockInterfaceAbRecovery) CanRestore(flags dbus.Flags) (bool, error) {
 
 // method StartBackup
 
-func (v *mockInterfaceAbRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAbRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceAbRecovery) GoStartBackup(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceAbRecovery) StartBackup(flags dbus.Flags) error {
+func (v *MockInterfaceAbRecovery) StartBackup(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -88,7 +89,7 @@ func (v *mockInterfaceAbRecovery) StartBackup(flags dbus.Flags) error {
 
 // method StartRestore
 
-func (v *mockInterfaceAbRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAbRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +100,7 @@ func (v *mockInterfaceAbRecovery) GoStartRestore(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceAbRecovery) StartRestore(flags dbus.Flags) error {
+func (v *MockInterfaceAbRecovery) StartRestore(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -107,7 +108,7 @@ func (v *mockInterfaceAbRecovery) StartRestore(flags dbus.Flags) error {
 
 // signal JobEnd
 
-func (v *mockInterfaceAbRecovery) ConnectJobEnd(cb func(kind string, success bool, errMsg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceAbRecovery) ConnectJobEnd(cb func(kind string, success bool, errMsg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -120,7 +121,7 @@ func (v *mockInterfaceAbRecovery) ConnectJobEnd(cb func(kind string, success boo
 
 // property BackingUp b
 
-func (v *mockInterfaceAbRecovery) BackingUp() proxy.PropBool {
+func (v *MockInterfaceAbRecovery) BackingUp() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -133,7 +134,7 @@ func (v *mockInterfaceAbRecovery) BackingUp() proxy.PropBool {
 
 // property Restoring b
 
-func (v *mockInterfaceAbRecovery) Restoring() proxy.PropBool {
+func (v *MockInterfaceAbRecovery) Restoring() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -146,7 +147,7 @@ func (v *mockInterfaceAbRecovery) Restoring() proxy.PropBool {
 
 // property ConfigValid b
 
-func (v *mockInterfaceAbRecovery) ConfigValid() proxy.PropBool {
+func (v *MockInterfaceAbRecovery) ConfigValid() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
