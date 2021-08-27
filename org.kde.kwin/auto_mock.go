@@ -12,16 +12,17 @@ import (
 )
 
 type MockCompositor struct {
-	mockInterfaceCompositing // interface org.kde.kwin.Compositing
+	MockInterfaceCompositing // interface org.kde.kwin.Compositing
+	proxy.MockObject
 }
 
-type mockInterfaceCompositing struct {
+type MockInterfaceCompositing struct {
 	mock.Mock
 }
 
 // method suspend
 
-func (v *mockInterfaceCompositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceCompositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceCompositing) GoSuspend(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceCompositing) Suspend(flags dbus.Flags) error {
+func (v *MockInterfaceCompositing) Suspend(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -40,7 +41,7 @@ func (v *mockInterfaceCompositing) Suspend(flags dbus.Flags) error {
 
 // method resume
 
-func (v *mockInterfaceCompositing) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceCompositing) GoResume(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -51,7 +52,7 @@ func (v *mockInterfaceCompositing) GoResume(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceCompositing) Resume(flags dbus.Flags) error {
+func (v *MockInterfaceCompositing) Resume(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -59,7 +60,7 @@ func (v *mockInterfaceCompositing) Resume(flags dbus.Flags) error {
 
 // signal compositingToggled
 
-func (v *mockInterfaceCompositing) ConnectCompositingToggled(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceCompositing) ConnectCompositingToggled(cb func(active bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -72,7 +73,7 @@ func (v *mockInterfaceCompositing) ConnectCompositingToggled(cb func(active bool
 
 // property active b
 
-func (v *mockInterfaceCompositing) Active() proxy.PropBool {
+func (v *MockInterfaceCompositing) Active() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -85,7 +86,7 @@ func (v *mockInterfaceCompositing) Active() proxy.PropBool {
 
 // property compositingPossible b
 
-func (v *mockInterfaceCompositing) CompositingPossible() proxy.PropBool {
+func (v *MockInterfaceCompositing) CompositingPossible() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -98,7 +99,7 @@ func (v *mockInterfaceCompositing) CompositingPossible() proxy.PropBool {
 
 // property compositingNotPossibleReason s
 
-func (v *mockInterfaceCompositing) CompositingNotPossibleReason() proxy.PropString {
+func (v *MockInterfaceCompositing) CompositingNotPossibleReason() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -111,7 +112,7 @@ func (v *mockInterfaceCompositing) CompositingNotPossibleReason() proxy.PropStri
 
 // property openGLIsBroken b
 
-func (v *mockInterfaceCompositing) OpenGLIsBroken() proxy.PropBool {
+func (v *MockInterfaceCompositing) OpenGLIsBroken() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -124,7 +125,7 @@ func (v *mockInterfaceCompositing) OpenGLIsBroken() proxy.PropBool {
 
 // property compositingType s
 
-func (v *mockInterfaceCompositing) CompositingType() proxy.PropString {
+func (v *MockInterfaceCompositing) CompositingType() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -137,7 +138,7 @@ func (v *mockInterfaceCompositing) CompositingType() proxy.PropString {
 
 // property supportedOpenGLPlatformInterfaces as
 
-func (v *mockInterfaceCompositing) SupportedOpenGLPlatformInterfaces() proxy.PropStringArray {
+func (v *MockInterfaceCompositing) SupportedOpenGLPlatformInterfaces() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -150,7 +151,7 @@ func (v *mockInterfaceCompositing) SupportedOpenGLPlatformInterfaces() proxy.Pro
 
 // property platformRequiresCompositing b
 
-func (v *mockInterfaceCompositing) PlatformRequiresCompositing() proxy.PropBool {
+func (v *MockInterfaceCompositing) PlatformRequiresCompositing() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -162,16 +163,17 @@ func (v *mockInterfaceCompositing) PlatformRequiresCompositing() proxy.PropBool 
 }
 
 type MockInputDeviceManager struct {
-	mockInterfaceInputDeviceManager // interface org.kde.KWin.InputDeviceManager
+	MockInterfaceInputDeviceManager // interface org.kde.KWin.InputDeviceManager
+	proxy.MockObject
 }
 
-type mockInterfaceInputDeviceManager struct {
+type MockInterfaceInputDeviceManager struct {
 	mock.Mock
 }
 
 // signal deviceAdded
 
-func (v *mockInterfaceInputDeviceManager) ConnectDeviceAdded(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceInputDeviceManager) ConnectDeviceAdded(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -184,7 +186,7 @@ func (v *mockInterfaceInputDeviceManager) ConnectDeviceAdded(cb func(sysName str
 
 // signal deviceRemoved
 
-func (v *mockInterfaceInputDeviceManager) ConnectDeviceRemoved(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceInputDeviceManager) ConnectDeviceRemoved(cb func(sysName string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -197,7 +199,7 @@ func (v *mockInterfaceInputDeviceManager) ConnectDeviceRemoved(cb func(sysName s
 
 // property devicesSysNames as
 
-func (v *mockInterfaceInputDeviceManager) DevicesSysNames() proxy.PropStringArray {
+func (v *MockInterfaceInputDeviceManager) DevicesSysNames() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -209,16 +211,17 @@ func (v *mockInterfaceInputDeviceManager) DevicesSysNames() proxy.PropStringArra
 }
 
 type MockInputDevice struct {
-	mockInterfaceInputDevice // interface org.kde.KWin.InputDevice
+	MockInterfaceInputDevice // interface org.kde.KWin.InputDevice
+	proxy.MockObject
 }
 
-type mockInterfaceInputDevice struct {
+type MockInterfaceInputDevice struct {
 	mock.Mock
 }
 
 // property keyboard b
 
-func (v *mockInterfaceInputDevice) Keyboard() proxy.PropBool {
+func (v *MockInterfaceInputDevice) Keyboard() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -231,7 +234,7 @@ func (v *mockInterfaceInputDevice) Keyboard() proxy.PropBool {
 
 // property alphaNumericKeyboard b
 
-func (v *mockInterfaceInputDevice) AlphaNumericKeyboard() proxy.PropBool {
+func (v *MockInterfaceInputDevice) AlphaNumericKeyboard() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -244,7 +247,7 @@ func (v *mockInterfaceInputDevice) AlphaNumericKeyboard() proxy.PropBool {
 
 // property pointer b
 
-func (v *mockInterfaceInputDevice) Pointer() proxy.PropBool {
+func (v *MockInterfaceInputDevice) Pointer() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -257,7 +260,7 @@ func (v *mockInterfaceInputDevice) Pointer() proxy.PropBool {
 
 // property touchpad b
 
-func (v *mockInterfaceInputDevice) Touchpad() proxy.PropBool {
+func (v *MockInterfaceInputDevice) Touchpad() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -270,7 +273,7 @@ func (v *mockInterfaceInputDevice) Touchpad() proxy.PropBool {
 
 // property touch b
 
-func (v *mockInterfaceInputDevice) Touch() proxy.PropBool {
+func (v *MockInterfaceInputDevice) Touch() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -283,7 +286,7 @@ func (v *mockInterfaceInputDevice) Touch() proxy.PropBool {
 
 // property tabletTool b
 
-func (v *mockInterfaceInputDevice) TabletTool() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TabletTool() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -296,7 +299,7 @@ func (v *mockInterfaceInputDevice) TabletTool() proxy.PropBool {
 
 // property tabletPad b
 
-func (v *mockInterfaceInputDevice) TabletPad() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TabletPad() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -309,7 +312,7 @@ func (v *mockInterfaceInputDevice) TabletPad() proxy.PropBool {
 
 // property gestureSupport b
 
-func (v *mockInterfaceInputDevice) GestureSupport() proxy.PropBool {
+func (v *MockInterfaceInputDevice) GestureSupport() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -322,7 +325,7 @@ func (v *mockInterfaceInputDevice) GestureSupport() proxy.PropBool {
 
 // property name s
 
-func (v *mockInterfaceInputDevice) Name() proxy.PropString {
+func (v *MockInterfaceInputDevice) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -335,7 +338,7 @@ func (v *mockInterfaceInputDevice) Name() proxy.PropString {
 
 // property sysName s
 
-func (v *mockInterfaceInputDevice) SysName() proxy.PropString {
+func (v *MockInterfaceInputDevice) SysName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -348,7 +351,7 @@ func (v *mockInterfaceInputDevice) SysName() proxy.PropString {
 
 // property outputName s
 
-func (v *mockInterfaceInputDevice) OutputName() proxy.PropString {
+func (v *MockInterfaceInputDevice) OutputName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -361,7 +364,7 @@ func (v *mockInterfaceInputDevice) OutputName() proxy.PropString {
 
 // property product u
 
-func (v *mockInterfaceInputDevice) Product() proxy.PropUint32 {
+func (v *MockInterfaceInputDevice) Product() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -374,7 +377,7 @@ func (v *mockInterfaceInputDevice) Product() proxy.PropUint32 {
 
 // property vendor u
 
-func (v *mockInterfaceInputDevice) Vendor() proxy.PropUint32 {
+func (v *MockInterfaceInputDevice) Vendor() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -387,7 +390,7 @@ func (v *mockInterfaceInputDevice) Vendor() proxy.PropUint32 {
 
 // property supportsDisableEvents b
 
-func (v *mockInterfaceInputDevice) SupportsDisableEvents() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsDisableEvents() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -400,7 +403,7 @@ func (v *mockInterfaceInputDevice) SupportsDisableEvents() proxy.PropBool {
 
 // property enabled b
 
-func (v *mockInterfaceInputDevice) Enabled() proxy.PropBool {
+func (v *MockInterfaceInputDevice) Enabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -413,7 +416,7 @@ func (v *mockInterfaceInputDevice) Enabled() proxy.PropBool {
 
 // property supportedButtons i
 
-func (v *mockInterfaceInputDevice) SupportedButtons() proxy.PropInt32 {
+func (v *MockInterfaceInputDevice) SupportedButtons() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -426,7 +429,7 @@ func (v *mockInterfaceInputDevice) SupportedButtons() proxy.PropInt32 {
 
 // property supportsCalibrationMatrix b
 
-func (v *mockInterfaceInputDevice) SupportsCalibrationMatrix() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsCalibrationMatrix() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -439,7 +442,7 @@ func (v *mockInterfaceInputDevice) SupportsCalibrationMatrix() proxy.PropBool {
 
 // property supportsLeftHanded b
 
-func (v *mockInterfaceInputDevice) SupportsLeftHanded() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsLeftHanded() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -452,7 +455,7 @@ func (v *mockInterfaceInputDevice) SupportsLeftHanded() proxy.PropBool {
 
 // property leftHandedEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -465,7 +468,7 @@ func (v *mockInterfaceInputDevice) LeftHandedEnabledByDefault() proxy.PropBool {
 
 // property leftHanded b
 
-func (v *mockInterfaceInputDevice) LeftHanded() proxy.PropBool {
+func (v *MockInterfaceInputDevice) LeftHanded() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -478,7 +481,7 @@ func (v *mockInterfaceInputDevice) LeftHanded() proxy.PropBool {
 
 // property supportsDisableEventsOnExternalMouse b
 
-func (v *mockInterfaceInputDevice) SupportsDisableEventsOnExternalMouse() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsDisableEventsOnExternalMouse() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -491,7 +494,7 @@ func (v *mockInterfaceInputDevice) SupportsDisableEventsOnExternalMouse() proxy.
 
 // property supportsDisableWhileTyping b
 
-func (v *mockInterfaceInputDevice) SupportsDisableWhileTyping() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsDisableWhileTyping() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -504,7 +507,7 @@ func (v *mockInterfaceInputDevice) SupportsDisableWhileTyping() proxy.PropBool {
 
 // property disableWhileTypingEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) DisableWhileTypingEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DisableWhileTypingEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -517,7 +520,7 @@ func (v *mockInterfaceInputDevice) DisableWhileTypingEnabledByDefault() proxy.Pr
 
 // property disableWhileTyping b
 
-func (v *mockInterfaceInputDevice) DisableWhileTyping() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DisableWhileTyping() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -530,7 +533,7 @@ func (v *mockInterfaceInputDevice) DisableWhileTyping() proxy.PropBool {
 
 // property supportsPointerAcceleration b
 
-func (v *mockInterfaceInputDevice) SupportsPointerAcceleration() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsPointerAcceleration() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -543,7 +546,7 @@ func (v *mockInterfaceInputDevice) SupportsPointerAcceleration() proxy.PropBool 
 
 // property defaultPointerAcceleration d
 
-func (v *mockInterfaceInputDevice) DefaultPointerAcceleration() proxy.PropDouble {
+func (v *MockInterfaceInputDevice) DefaultPointerAcceleration() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -556,7 +559,7 @@ func (v *mockInterfaceInputDevice) DefaultPointerAcceleration() proxy.PropDouble
 
 // property pointerAcceleration d
 
-func (v *mockInterfaceInputDevice) PointerAcceleration() proxy.PropDouble {
+func (v *MockInterfaceInputDevice) PointerAcceleration() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -569,7 +572,7 @@ func (v *mockInterfaceInputDevice) PointerAcceleration() proxy.PropDouble {
 
 // property supportsPointerAccelerationProfileFlat b
 
-func (v *mockInterfaceInputDevice) SupportsPointerAccelerationProfileFlat() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsPointerAccelerationProfileFlat() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -582,7 +585,7 @@ func (v *mockInterfaceInputDevice) SupportsPointerAccelerationProfileFlat() prox
 
 // property defaultPointerAccelerationProfileFlat b
 
-func (v *mockInterfaceInputDevice) DefaultPointerAccelerationProfileFlat() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DefaultPointerAccelerationProfileFlat() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -595,7 +598,7 @@ func (v *mockInterfaceInputDevice) DefaultPointerAccelerationProfileFlat() proxy
 
 // property pointerAccelerationProfileFlat b
 
-func (v *mockInterfaceInputDevice) PointerAccelerationProfileFlat() proxy.PropBool {
+func (v *MockInterfaceInputDevice) PointerAccelerationProfileFlat() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -608,7 +611,7 @@ func (v *mockInterfaceInputDevice) PointerAccelerationProfileFlat() proxy.PropBo
 
 // property supportsPointerAccelerationProfileAdaptive b
 
-func (v *mockInterfaceInputDevice) SupportsPointerAccelerationProfileAdaptive() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsPointerAccelerationProfileAdaptive() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -621,7 +624,7 @@ func (v *mockInterfaceInputDevice) SupportsPointerAccelerationProfileAdaptive() 
 
 // property defaultPointerAccelerationProfileAdaptive b
 
-func (v *mockInterfaceInputDevice) DefaultPointerAccelerationProfileAdaptive() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DefaultPointerAccelerationProfileAdaptive() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -634,7 +637,7 @@ func (v *mockInterfaceInputDevice) DefaultPointerAccelerationProfileAdaptive() p
 
 // property pointerAccelerationProfileAdaptive b
 
-func (v *mockInterfaceInputDevice) PointerAccelerationProfileAdaptive() proxy.PropBool {
+func (v *MockInterfaceInputDevice) PointerAccelerationProfileAdaptive() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -647,7 +650,7 @@ func (v *mockInterfaceInputDevice) PointerAccelerationProfileAdaptive() proxy.Pr
 
 // property tapFingerCount i
 
-func (v *mockInterfaceInputDevice) TapFingerCount() proxy.PropInt32 {
+func (v *MockInterfaceInputDevice) TapFingerCount() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -660,7 +663,7 @@ func (v *mockInterfaceInputDevice) TapFingerCount() proxy.PropInt32 {
 
 // property tapToClickEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) TapToClickEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapToClickEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -673,7 +676,7 @@ func (v *mockInterfaceInputDevice) TapToClickEnabledByDefault() proxy.PropBool {
 
 // property tapToClick b
 
-func (v *mockInterfaceInputDevice) TapToClick() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapToClick() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -686,7 +689,7 @@ func (v *mockInterfaceInputDevice) TapToClick() proxy.PropBool {
 
 // property supportsLmrTapButtonMap b
 
-func (v *mockInterfaceInputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -699,7 +702,7 @@ func (v *mockInterfaceInputDevice) SupportsLmrTapButtonMap() proxy.PropBool {
 
 // property lmrTapButtonMapEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -712,7 +715,7 @@ func (v *mockInterfaceInputDevice) LmrTapButtonMapEnabledByDefault() proxy.PropB
 
 // property lmrTapButtonMap b
 
-func (v *mockInterfaceInputDevice) LmrTapButtonMap() proxy.PropBool {
+func (v *MockInterfaceInputDevice) LmrTapButtonMap() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -725,7 +728,7 @@ func (v *mockInterfaceInputDevice) LmrTapButtonMap() proxy.PropBool {
 
 // property tapAndDragEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -738,7 +741,7 @@ func (v *mockInterfaceInputDevice) TapAndDragEnabledByDefault() proxy.PropBool {
 
 // property tapAndDrag b
 
-func (v *mockInterfaceInputDevice) TapAndDrag() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapAndDrag() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -751,7 +754,7 @@ func (v *mockInterfaceInputDevice) TapAndDrag() proxy.PropBool {
 
 // property tapDragLockEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) TapDragLockEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapDragLockEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -764,7 +767,7 @@ func (v *mockInterfaceInputDevice) TapDragLockEnabledByDefault() proxy.PropBool 
 
 // property tapDragLock b
 
-func (v *mockInterfaceInputDevice) TapDragLock() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TapDragLock() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -777,7 +780,7 @@ func (v *mockInterfaceInputDevice) TapDragLock() proxy.PropBool {
 
 // property supportsMiddleEmulation b
 
-func (v *mockInterfaceInputDevice) SupportsMiddleEmulation() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsMiddleEmulation() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -790,7 +793,7 @@ func (v *mockInterfaceInputDevice) SupportsMiddleEmulation() proxy.PropBool {
 
 // property middleEmulationEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) MiddleEmulationEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) MiddleEmulationEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -803,7 +806,7 @@ func (v *mockInterfaceInputDevice) MiddleEmulationEnabledByDefault() proxy.PropB
 
 // property middleEmulation b
 
-func (v *mockInterfaceInputDevice) MiddleEmulation() proxy.PropBool {
+func (v *MockInterfaceInputDevice) MiddleEmulation() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -816,7 +819,7 @@ func (v *mockInterfaceInputDevice) MiddleEmulation() proxy.PropBool {
 
 // property supportsNaturalScroll b
 
-func (v *mockInterfaceInputDevice) SupportsNaturalScroll() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsNaturalScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -829,7 +832,7 @@ func (v *mockInterfaceInputDevice) SupportsNaturalScroll() proxy.PropBool {
 
 // property naturalScrollEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) NaturalScrollEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) NaturalScrollEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -842,7 +845,7 @@ func (v *mockInterfaceInputDevice) NaturalScrollEnabledByDefault() proxy.PropBoo
 
 // property naturalScroll b
 
-func (v *mockInterfaceInputDevice) NaturalScroll() proxy.PropBool {
+func (v *MockInterfaceInputDevice) NaturalScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -855,7 +858,7 @@ func (v *mockInterfaceInputDevice) NaturalScroll() proxy.PropBool {
 
 // property supportsScrollTwoFinger b
 
-func (v *mockInterfaceInputDevice) SupportsScrollTwoFinger() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsScrollTwoFinger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -868,7 +871,7 @@ func (v *mockInterfaceInputDevice) SupportsScrollTwoFinger() proxy.PropBool {
 
 // property scrollTwoFingerEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -881,7 +884,7 @@ func (v *mockInterfaceInputDevice) ScrollTwoFingerEnabledByDefault() proxy.PropB
 
 // property scrollTwoFinger b
 
-func (v *mockInterfaceInputDevice) ScrollTwoFinger() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollTwoFinger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -894,7 +897,7 @@ func (v *mockInterfaceInputDevice) ScrollTwoFinger() proxy.PropBool {
 
 // property supportsScrollEdge b
 
-func (v *mockInterfaceInputDevice) SupportsScrollEdge() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsScrollEdge() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -907,7 +910,7 @@ func (v *mockInterfaceInputDevice) SupportsScrollEdge() proxy.PropBool {
 
 // property scrollEdgeEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -920,7 +923,7 @@ func (v *mockInterfaceInputDevice) ScrollEdgeEnabledByDefault() proxy.PropBool {
 
 // property scrollEdge b
 
-func (v *mockInterfaceInputDevice) ScrollEdge() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollEdge() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -933,7 +936,7 @@ func (v *mockInterfaceInputDevice) ScrollEdge() proxy.PropBool {
 
 // property supportsScrollOnButtonDown b
 
-func (v *mockInterfaceInputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -946,7 +949,7 @@ func (v *mockInterfaceInputDevice) SupportsScrollOnButtonDown() proxy.PropBool {
 
 // property scrollOnButtonDownEnabledByDefault b
 
-func (v *mockInterfaceInputDevice) ScrollOnButtonDownEnabledByDefault() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollOnButtonDownEnabledByDefault() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -959,7 +962,7 @@ func (v *mockInterfaceInputDevice) ScrollOnButtonDownEnabledByDefault() proxy.Pr
 
 // property defaultScrollButton u
 
-func (v *mockInterfaceInputDevice) DefaultScrollButton() proxy.PropUint32 {
+func (v *MockInterfaceInputDevice) DefaultScrollButton() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -972,7 +975,7 @@ func (v *mockInterfaceInputDevice) DefaultScrollButton() proxy.PropUint32 {
 
 // property scrollOnButtonDown b
 
-func (v *mockInterfaceInputDevice) ScrollOnButtonDown() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ScrollOnButtonDown() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -985,7 +988,7 @@ func (v *mockInterfaceInputDevice) ScrollOnButtonDown() proxy.PropBool {
 
 // property scrollButton u
 
-func (v *mockInterfaceInputDevice) ScrollButton() proxy.PropUint32 {
+func (v *MockInterfaceInputDevice) ScrollButton() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -998,7 +1001,7 @@ func (v *mockInterfaceInputDevice) ScrollButton() proxy.PropUint32 {
 
 // property switchDevice b
 
-func (v *mockInterfaceInputDevice) SwitchDevice() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SwitchDevice() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1011,7 +1014,7 @@ func (v *mockInterfaceInputDevice) SwitchDevice() proxy.PropBool {
 
 // property lidSwitch b
 
-func (v *mockInterfaceInputDevice) LidSwitch() proxy.PropBool {
+func (v *MockInterfaceInputDevice) LidSwitch() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1024,7 +1027,7 @@ func (v *mockInterfaceInputDevice) LidSwitch() proxy.PropBool {
 
 // property tabletModeSwitch b
 
-func (v *mockInterfaceInputDevice) TabletModeSwitch() proxy.PropBool {
+func (v *MockInterfaceInputDevice) TabletModeSwitch() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1037,7 +1040,7 @@ func (v *mockInterfaceInputDevice) TabletModeSwitch() proxy.PropBool {
 
 // property supportsClickMethodAreas b
 
-func (v *mockInterfaceInputDevice) SupportsClickMethodAreas() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsClickMethodAreas() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1050,7 +1053,7 @@ func (v *mockInterfaceInputDevice) SupportsClickMethodAreas() proxy.PropBool {
 
 // property defaultClickMethodAreas b
 
-func (v *mockInterfaceInputDevice) DefaultClickMethodAreas() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DefaultClickMethodAreas() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1063,7 +1066,7 @@ func (v *mockInterfaceInputDevice) DefaultClickMethodAreas() proxy.PropBool {
 
 // property clickMethodAreas b
 
-func (v *mockInterfaceInputDevice) ClickMethodAreas() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ClickMethodAreas() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1076,7 +1079,7 @@ func (v *mockInterfaceInputDevice) ClickMethodAreas() proxy.PropBool {
 
 // property supportsClickMethodClickfinger b
 
-func (v *mockInterfaceInputDevice) SupportsClickMethodClickfinger() proxy.PropBool {
+func (v *MockInterfaceInputDevice) SupportsClickMethodClickfinger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1089,7 +1092,7 @@ func (v *mockInterfaceInputDevice) SupportsClickMethodClickfinger() proxy.PropBo
 
 // property defaultClickMethodClickfinger b
 
-func (v *mockInterfaceInputDevice) DefaultClickMethodClickfinger() proxy.PropBool {
+func (v *MockInterfaceInputDevice) DefaultClickMethodClickfinger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1102,7 +1105,7 @@ func (v *mockInterfaceInputDevice) DefaultClickMethodClickfinger() proxy.PropBoo
 
 // property clickMethodClickfinger b
 
-func (v *mockInterfaceInputDevice) ClickMethodClickfinger() proxy.PropBool {
+func (v *MockInterfaceInputDevice) ClickMethodClickfinger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

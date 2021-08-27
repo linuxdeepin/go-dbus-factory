@@ -12,16 +12,17 @@ import (
 )
 
 type MockPower struct {
-	mockInterfacePower // interface com.deepin.system.Power
+	MockInterfacePower // interface com.deepin.system.Power
+	proxy.MockObject
 }
 
-type mockInterfacePower struct {
+type MockInterfacePower struct {
 	mock.Mock
 }
 
 // method GetBatteries
 
-func (v *mockInterfacePower) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePower) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfacePower) GoGetBatteries(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfacePower) GetBatteries(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfacePower) GetBatteries(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfacePower) GetBatteries(flags dbus.Flags) ([]dbus.ObjectPath, 
 
 // method Refresh
 
-func (v *mockInterfacePower) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePower) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfacePower) GoRefresh(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfacePower) Refresh(flags dbus.Flags) error {
+func (v *MockInterfacePower) Refresh(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -64,7 +65,7 @@ func (v *mockInterfacePower) Refresh(flags dbus.Flags) error {
 
 // method RefreshBatteries
 
-func (v *mockInterfacePower) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePower) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -75,7 +76,7 @@ func (v *mockInterfacePower) GoRefreshBatteries(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfacePower) RefreshBatteries(flags dbus.Flags) error {
+func (v *MockInterfacePower) RefreshBatteries(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -83,7 +84,7 @@ func (v *mockInterfacePower) RefreshBatteries(flags dbus.Flags) error {
 
 // method RefreshMains
 
-func (v *mockInterfacePower) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePower) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -94,7 +95,7 @@ func (v *mockInterfacePower) GoRefreshMains(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfacePower) RefreshMains(flags dbus.Flags) error {
+func (v *MockInterfacePower) RefreshMains(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -102,7 +103,7 @@ func (v *mockInterfacePower) RefreshMains(flags dbus.Flags) error {
 
 // method SetCpuGovernor
 
-func (v *mockInterfacePower) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call {
+func (v *MockInterfacePower) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Call, governor string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, governor)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -113,7 +114,7 @@ func (v *mockInterfacePower) GoSetCpuGovernor(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfacePower) SetCpuGovernor(flags dbus.Flags, governor string) error {
+func (v *MockInterfacePower) SetCpuGovernor(flags dbus.Flags, governor string) error {
 	mockArgs := v.Called(flags, governor)
 
 	return mockArgs.Error(0)
@@ -121,7 +122,7 @@ func (v *mockInterfacePower) SetCpuGovernor(flags dbus.Flags, governor string) e
 
 // method SetCpuBoost
 
-func (v *mockInterfacePower) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfacePower) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -132,7 +133,7 @@ func (v *mockInterfacePower) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -140,7 +141,7 @@ func (v *mockInterfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 
 // method LockCpuFreq
 
-func (v *mockInterfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
+func (v *MockInterfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, governor, lockTime)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -151,7 +152,7 @@ func (v *mockInterfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfacePower) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error {
+func (v *MockInterfacePower) LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error {
 	mockArgs := v.Called(flags, governor, lockTime)
 
 	return mockArgs.Error(0)
@@ -159,7 +160,7 @@ func (v *mockInterfacePower) LockCpuFreq(flags dbus.Flags, governor string, lock
 
 // signal BatteryDisplayUpdate
 
-func (v *mockInterfacePower) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -172,7 +173,7 @@ func (v *mockInterfacePower) ConnectBatteryDisplayUpdate(cb func(timestamp int64
 
 // signal BatteryAdded
 
-func (v *mockInterfacePower) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -185,7 +186,7 @@ func (v *mockInterfacePower) ConnectBatteryAdded(cb func(path dbus.ObjectPath)) 
 
 // signal BatteryRemoved
 
-func (v *mockInterfacePower) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -198,7 +199,7 @@ func (v *mockInterfacePower) ConnectBatteryRemoved(cb func(path dbus.ObjectPath)
 
 // signal LidClosed
 
-func (v *mockInterfacePower) ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectLidClosed(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -211,7 +212,7 @@ func (v *mockInterfacePower) ConnectLidClosed(cb func()) (dbusutil.SignalHandler
 
 // signal LidOpened
 
-func (v *mockInterfacePower) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectLidOpened(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -224,7 +225,7 @@ func (v *mockInterfacePower) ConnectLidOpened(cb func()) (dbusutil.SignalHandler
 
 // signal PowerActionCode
 
-func (v *mockInterfacePower) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePower) ConnectPowerActionCode(cb func(actionCode int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -237,7 +238,7 @@ func (v *mockInterfacePower) ConnectPowerActionCode(cb func(actionCode int32)) (
 
 // property PowerSavingModeAuto b
 
-func (v *mockInterfacePower) PowerSavingModeAuto() proxy.PropBool {
+func (v *MockInterfacePower) PowerSavingModeAuto() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -250,7 +251,7 @@ func (v *mockInterfacePower) PowerSavingModeAuto() proxy.PropBool {
 
 // property OnBattery b
 
-func (v *mockInterfacePower) OnBattery() proxy.PropBool {
+func (v *MockInterfacePower) OnBattery() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -263,7 +264,7 @@ func (v *mockInterfacePower) OnBattery() proxy.PropBool {
 
 // property HasLidSwitch b
 
-func (v *mockInterfacePower) HasLidSwitch() proxy.PropBool {
+func (v *MockInterfacePower) HasLidSwitch() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -276,7 +277,7 @@ func (v *mockInterfacePower) HasLidSwitch() proxy.PropBool {
 
 // property BatteryPercentage d
 
-func (v *mockInterfacePower) BatteryPercentage() proxy.PropDouble {
+func (v *MockInterfacePower) BatteryPercentage() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -289,7 +290,7 @@ func (v *mockInterfacePower) BatteryPercentage() proxy.PropDouble {
 
 // property BatteryTimeToEmpty t
 
-func (v *mockInterfacePower) BatteryTimeToEmpty() proxy.PropUint64 {
+func (v *MockInterfacePower) BatteryTimeToEmpty() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -302,7 +303,7 @@ func (v *mockInterfacePower) BatteryTimeToEmpty() proxy.PropUint64 {
 
 // property HasBattery b
 
-func (v *mockInterfacePower) HasBattery() proxy.PropBool {
+func (v *MockInterfacePower) HasBattery() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -315,7 +316,7 @@ func (v *mockInterfacePower) HasBattery() proxy.PropBool {
 
 // property BatteryStatus u
 
-func (v *mockInterfacePower) BatteryStatus() proxy.PropUint32 {
+func (v *MockInterfacePower) BatteryStatus() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -328,7 +329,7 @@ func (v *mockInterfacePower) BatteryStatus() proxy.PropUint32 {
 
 // property BatteryTimeToFull t
 
-func (v *mockInterfacePower) BatteryTimeToFull() proxy.PropUint64 {
+func (v *MockInterfacePower) BatteryTimeToFull() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -341,7 +342,7 @@ func (v *mockInterfacePower) BatteryTimeToFull() proxy.PropUint64 {
 
 // property BatteryCapacity d
 
-func (v *mockInterfacePower) BatteryCapacity() proxy.PropDouble {
+func (v *MockInterfacePower) BatteryCapacity() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -354,7 +355,7 @@ func (v *mockInterfacePower) BatteryCapacity() proxy.PropDouble {
 
 // property PowerSavingModeEnabled b
 
-func (v *mockInterfacePower) PowerSavingModeEnabled() proxy.PropBool {
+func (v *MockInterfacePower) PowerSavingModeEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -367,7 +368,7 @@ func (v *mockInterfacePower) PowerSavingModeEnabled() proxy.PropBool {
 
 // property PowerSavingModeAutoWhenBatteryLow b
 
-func (v *mockInterfacePower) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
+func (v *MockInterfacePower) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -380,7 +381,7 @@ func (v *mockInterfacePower) PowerSavingModeAutoWhenBatteryLow() proxy.PropBool 
 
 // property PowerSavingModeBrightnessDropPercent u
 
-func (v *mockInterfacePower) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
+func (v *MockInterfacePower) PowerSavingModeBrightnessDropPercent() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -393,7 +394,7 @@ func (v *mockInterfacePower) PowerSavingModeBrightnessDropPercent() proxy.PropUi
 
 // property CpuGovernor s
 
-func (v *mockInterfacePower) CpuGovernor() proxy.PropString {
+func (v *MockInterfacePower) CpuGovernor() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -406,7 +407,7 @@ func (v *mockInterfacePower) CpuGovernor() proxy.PropString {
 
 // property CpuBoost b
 
-func (v *mockInterfacePower) CpuBoost() proxy.PropBool {
+func (v *MockInterfacePower) CpuBoost() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -419,7 +420,7 @@ func (v *mockInterfacePower) CpuBoost() proxy.PropBool {
 
 // property IsBoostSupported b
 
-func (v *mockInterfacePower) IsBoostSupported() proxy.PropBool {
+func (v *MockInterfacePower) IsBoostSupported() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -431,16 +432,17 @@ func (v *mockInterfacePower) IsBoostSupported() proxy.PropBool {
 }
 
 type MockBattery struct {
-	mockInterfaceBattery // interface com.deepin.system.Power.Battery
+	MockInterfaceBattery // interface com.deepin.system.Power.Battery
+	proxy.MockObject
 }
 
-type mockInterfaceBattery struct {
+type MockInterfaceBattery struct {
 	mock.Mock
 }
 
 // property EnergyFullDesign d
 
-func (v *mockInterfaceBattery) EnergyFullDesign() proxy.PropDouble {
+func (v *MockInterfaceBattery) EnergyFullDesign() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -453,7 +455,7 @@ func (v *mockInterfaceBattery) EnergyFullDesign() proxy.PropDouble {
 
 // property Capacity d
 
-func (v *mockInterfaceBattery) Capacity() proxy.PropDouble {
+func (v *MockInterfaceBattery) Capacity() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -466,7 +468,7 @@ func (v *mockInterfaceBattery) Capacity() proxy.PropDouble {
 
 // property Technology s
 
-func (v *mockInterfaceBattery) Technology() proxy.PropString {
+func (v *MockInterfaceBattery) Technology() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -479,7 +481,7 @@ func (v *mockInterfaceBattery) Technology() proxy.PropString {
 
 // property Energy d
 
-func (v *mockInterfaceBattery) Energy() proxy.PropDouble {
+func (v *MockInterfaceBattery) Energy() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -492,7 +494,7 @@ func (v *mockInterfaceBattery) Energy() proxy.PropDouble {
 
 // property EnergyFull d
 
-func (v *mockInterfaceBattery) EnergyFull() proxy.PropDouble {
+func (v *MockInterfaceBattery) EnergyFull() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -505,7 +507,7 @@ func (v *mockInterfaceBattery) EnergyFull() proxy.PropDouble {
 
 // property Manufacturer s
 
-func (v *mockInterfaceBattery) Manufacturer() proxy.PropString {
+func (v *MockInterfaceBattery) Manufacturer() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -518,7 +520,7 @@ func (v *mockInterfaceBattery) Manufacturer() proxy.PropString {
 
 // property ModelName s
 
-func (v *mockInterfaceBattery) ModelName() proxy.PropString {
+func (v *MockInterfaceBattery) ModelName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -531,7 +533,7 @@ func (v *mockInterfaceBattery) ModelName() proxy.PropString {
 
 // property TimeToEmpty t
 
-func (v *mockInterfaceBattery) TimeToEmpty() proxy.PropUint64 {
+func (v *MockInterfaceBattery) TimeToEmpty() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -544,7 +546,7 @@ func (v *mockInterfaceBattery) TimeToEmpty() proxy.PropUint64 {
 
 // property IsPresent b
 
-func (v *mockInterfaceBattery) IsPresent() proxy.PropBool {
+func (v *MockInterfaceBattery) IsPresent() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -557,7 +559,7 @@ func (v *mockInterfaceBattery) IsPresent() proxy.PropBool {
 
 // property Status u
 
-func (v *mockInterfaceBattery) Status() proxy.PropUint32 {
+func (v *MockInterfaceBattery) Status() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -570,7 +572,7 @@ func (v *mockInterfaceBattery) Status() proxy.PropUint32 {
 
 // property EnergyRate d
 
-func (v *mockInterfaceBattery) EnergyRate() proxy.PropDouble {
+func (v *MockInterfaceBattery) EnergyRate() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -583,7 +585,7 @@ func (v *mockInterfaceBattery) EnergyRate() proxy.PropDouble {
 
 // property Voltage d
 
-func (v *mockInterfaceBattery) Voltage() proxy.PropDouble {
+func (v *MockInterfaceBattery) Voltage() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -596,7 +598,7 @@ func (v *mockInterfaceBattery) Voltage() proxy.PropDouble {
 
 // property Percentage d
 
-func (v *mockInterfaceBattery) Percentage() proxy.PropDouble {
+func (v *MockInterfaceBattery) Percentage() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -609,7 +611,7 @@ func (v *mockInterfaceBattery) Percentage() proxy.PropDouble {
 
 // property TimeToFull t
 
-func (v *mockInterfaceBattery) TimeToFull() proxy.PropUint64 {
+func (v *MockInterfaceBattery) TimeToFull() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -622,7 +624,7 @@ func (v *mockInterfaceBattery) TimeToFull() proxy.PropUint64 {
 
 // property UpdateTime x
 
-func (v *mockInterfaceBattery) UpdateTime() proxy.PropInt64 {
+func (v *MockInterfaceBattery) UpdateTime() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -635,7 +637,7 @@ func (v *mockInterfaceBattery) UpdateTime() proxy.PropInt64 {
 
 // property SysfsPath s
 
-func (v *mockInterfaceBattery) SysfsPath() proxy.PropString {
+func (v *MockInterfaceBattery) SysfsPath() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -648,7 +650,7 @@ func (v *mockInterfaceBattery) SysfsPath() proxy.PropString {
 
 // property SerialNumber s
 
-func (v *mockInterfaceBattery) SerialNumber() proxy.PropString {
+func (v *MockInterfaceBattery) SerialNumber() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -661,7 +663,7 @@ func (v *mockInterfaceBattery) SerialNumber() proxy.PropString {
 
 // property Name s
 
-func (v *mockInterfaceBattery) Name() proxy.PropString {
+func (v *MockInterfaceBattery) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

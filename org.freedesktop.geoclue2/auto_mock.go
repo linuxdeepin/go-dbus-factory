@@ -12,16 +12,17 @@ import (
 )
 
 type MockManager struct {
-	mockInterfaceManager // interface org.freedesktop.GeoClue2.Manager
+	MockInterfaceManager // interface org.freedesktop.GeoClue2.Manager
+	proxy.MockObject
 }
 
-type mockInterfaceManager struct {
+type MockInterfaceManager struct {
 	mock.Mock
 }
 
 // method GetClient
 
-func (v *mockInterfaceManager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceManager) GoGetClient(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceManager) GetClient(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetClient(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfaceManager) GetClient(flags dbus.Flags) (dbus.ObjectPath, err
 
 // method AddAgent
 
-func (v *mockInterfaceManager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceManager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceManager) GoAddAgent(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) AddAgent(flags dbus.Flags, id string) error {
+func (v *MockInterfaceManager) AddAgent(flags dbus.Flags, id string) error {
 	mockArgs := v.Called(flags, id)
 
 	return mockArgs.Error(0)
@@ -64,7 +65,7 @@ func (v *mockInterfaceManager) AddAgent(flags dbus.Flags, id string) error {
 
 // property InUse b
 
-func (v *mockInterfaceManager) InUse() proxy.PropBool {
+func (v *MockInterfaceManager) InUse() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -77,7 +78,7 @@ func (v *mockInterfaceManager) InUse() proxy.PropBool {
 
 // property AvailableAccuracyLevel u
 
-func (v *mockInterfaceManager) AvailableAccuracyLevel() proxy.PropUint32 {
+func (v *MockInterfaceManager) AvailableAccuracyLevel() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -89,16 +90,17 @@ func (v *mockInterfaceManager) AvailableAccuracyLevel() proxy.PropUint32 {
 }
 
 type MockClient struct {
-	mockInterfaceClient // interface org.freedesktop.GeoClue2.Client
+	MockInterfaceClient // interface org.freedesktop.GeoClue2.Client
+	proxy.MockObject
 }
 
-type mockInterfaceClient struct {
+type MockInterfaceClient struct {
 	mock.Mock
 }
 
 // method Start
 
-func (v *mockInterfaceClient) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceClient) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -109,7 +111,7 @@ func (v *mockInterfaceClient) GoStart(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceClient) Start(flags dbus.Flags) error {
+func (v *MockInterfaceClient) Start(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -117,7 +119,7 @@ func (v *mockInterfaceClient) Start(flags dbus.Flags) error {
 
 // method Stop
 
-func (v *mockInterfaceClient) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceClient) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -128,7 +130,7 @@ func (v *mockInterfaceClient) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfaceClient) Stop(flags dbus.Flags) error {
+func (v *MockInterfaceClient) Stop(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -136,7 +138,7 @@ func (v *mockInterfaceClient) Stop(flags dbus.Flags) error {
 
 // signal LocationUpdated
 
-func (v *mockInterfaceClient) ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceClient) ConnectLocationUpdated(cb func(old dbus.ObjectPath, new dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -149,7 +151,7 @@ func (v *mockInterfaceClient) ConnectLocationUpdated(cb func(old dbus.ObjectPath
 
 // property Location o
 
-func (v *mockInterfaceClient) Location() proxy.PropObjectPath {
+func (v *MockInterfaceClient) Location() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -162,7 +164,7 @@ func (v *mockInterfaceClient) Location() proxy.PropObjectPath {
 
 // property DistanceThreshold u
 
-func (v *mockInterfaceClient) DistanceThreshold() proxy.PropUint32 {
+func (v *MockInterfaceClient) DistanceThreshold() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -175,7 +177,7 @@ func (v *mockInterfaceClient) DistanceThreshold() proxy.PropUint32 {
 
 // property TimeThreshold u
 
-func (v *mockInterfaceClient) TimeThreshold() proxy.PropUint32 {
+func (v *MockInterfaceClient) TimeThreshold() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -188,7 +190,7 @@ func (v *mockInterfaceClient) TimeThreshold() proxy.PropUint32 {
 
 // property DesktopId s
 
-func (v *mockInterfaceClient) DesktopId() proxy.PropString {
+func (v *MockInterfaceClient) DesktopId() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -201,7 +203,7 @@ func (v *mockInterfaceClient) DesktopId() proxy.PropString {
 
 // property RequestedAccuracyLevel u
 
-func (v *mockInterfaceClient) RequestedAccuracyLevel() proxy.PropUint32 {
+func (v *MockInterfaceClient) RequestedAccuracyLevel() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -214,7 +216,7 @@ func (v *mockInterfaceClient) RequestedAccuracyLevel() proxy.PropUint32 {
 
 // property Active b
 
-func (v *mockInterfaceClient) Active() proxy.PropBool {
+func (v *MockInterfaceClient) Active() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -226,16 +228,17 @@ func (v *mockInterfaceClient) Active() proxy.PropBool {
 }
 
 type MockLocation struct {
-	mockInterfaceLocation // interface org.freedesktop.GeoClue2.Location
+	MockInterfaceLocation // interface org.freedesktop.GeoClue2.Location
+	proxy.MockObject
 }
 
-type mockInterfaceLocation struct {
+type MockInterfaceLocation struct {
 	mock.Mock
 }
 
 // property Latitude d
 
-func (v *mockInterfaceLocation) Latitude() proxy.PropDouble {
+func (v *MockInterfaceLocation) Latitude() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -248,7 +251,7 @@ func (v *mockInterfaceLocation) Latitude() proxy.PropDouble {
 
 // property Longitude d
 
-func (v *mockInterfaceLocation) Longitude() proxy.PropDouble {
+func (v *MockInterfaceLocation) Longitude() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -261,7 +264,7 @@ func (v *mockInterfaceLocation) Longitude() proxy.PropDouble {
 
 // property Accuracy d
 
-func (v *mockInterfaceLocation) Accuracy() proxy.PropDouble {
+func (v *MockInterfaceLocation) Accuracy() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -274,7 +277,7 @@ func (v *mockInterfaceLocation) Accuracy() proxy.PropDouble {
 
 // property Altitude d
 
-func (v *mockInterfaceLocation) Altitude() proxy.PropDouble {
+func (v *MockInterfaceLocation) Altitude() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -287,7 +290,7 @@ func (v *mockInterfaceLocation) Altitude() proxy.PropDouble {
 
 // property Speed d
 
-func (v *mockInterfaceLocation) Speed() proxy.PropDouble {
+func (v *MockInterfaceLocation) Speed() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -300,7 +303,7 @@ func (v *mockInterfaceLocation) Speed() proxy.PropDouble {
 
 // property Heading d
 
-func (v *mockInterfaceLocation) Heading() proxy.PropDouble {
+func (v *MockInterfaceLocation) Heading() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -313,7 +316,7 @@ func (v *mockInterfaceLocation) Heading() proxy.PropDouble {
 
 // property Description s
 
-func (v *mockInterfaceLocation) Description() proxy.PropString {
+func (v *MockInterfaceLocation) Description() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -356,7 +359,7 @@ func (p MockPropTimestamp) ConnectChanged(cb func(hasValue bool, value Timestamp
 
 // property Timestamp (tt)
 
-func (v *mockInterfaceLocation) Timestamp() PropTimestamp {
+func (v *MockInterfaceLocation) Timestamp() PropTimestamp {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropTimestamp)

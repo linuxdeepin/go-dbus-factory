@@ -12,16 +12,17 @@ import (
 )
 
 type MockLauncher struct {
-	mockInterfaceLauncher // interface com.deepin.dde.daemon.Launcher
+	MockInterfaceLauncher // interface com.deepin.dde.daemon.Launcher
+	proxy.MockObject
 }
 
-type mockInterfaceLauncher struct {
+type MockInterfaceLauncher struct {
 	mock.Mock
 }
 
 // method GetAllItemInfos
 
-func (v *mockInterfaceLauncher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLauncher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceLauncher) GoGetAllItemInfos(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceLauncher) GetAllItemInfos(flags dbus.Flags) ([]ItemInfo, error) {
+func (v *MockInterfaceLauncher) GetAllItemInfos(flags dbus.Flags) ([]ItemInfo, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]ItemInfo)
@@ -45,7 +46,7 @@ func (v *mockInterfaceLauncher) GetAllItemInfos(flags dbus.Flags) ([]ItemInfo, e
 
 // method GetAllNewInstalledApps
 
-func (v *mockInterfaceLauncher) GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLauncher) GoGetAllNewInstalledApps(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceLauncher) GoGetAllNewInstalledApps(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceLauncher) GetAllNewInstalledApps(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceLauncher) GetAllNewInstalledApps(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -69,7 +70,7 @@ func (v *mockInterfaceLauncher) GetAllNewInstalledApps(flags dbus.Flags) ([]stri
 
 // method GetDisableScaling
 
-func (v *mockInterfaceLauncher) GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoGetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceLauncher) GoGetDisableScaling(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceLauncher) GetDisableScaling(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceLauncher) GetDisableScaling(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -93,7 +94,7 @@ func (v *mockInterfaceLauncher) GetDisableScaling(flags dbus.Flags, id string) (
 
 // method GetItemInfo
 
-func (v *mockInterfaceLauncher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -104,7 +105,7 @@ func (v *mockInterfaceLauncher) GoGetItemInfo(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceLauncher) GetItemInfo(flags dbus.Flags, id string) (ItemInfo, error) {
+func (v *MockInterfaceLauncher) GetItemInfo(flags dbus.Flags, id string) (ItemInfo, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(ItemInfo)
@@ -117,7 +118,7 @@ func (v *mockInterfaceLauncher) GetItemInfo(flags dbus.Flags, id string) (ItemIn
 
 // method GetUseProxy
 
-func (v *mockInterfaceLauncher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -128,7 +129,7 @@ func (v *mockInterfaceLauncher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceLauncher) GetUseProxy(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceLauncher) GetUseProxy(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -141,7 +142,7 @@ func (v *mockInterfaceLauncher) GetUseProxy(flags dbus.Flags, id string) (bool, 
 
 // method IsItemOnDesktop
 
-func (v *mockInterfaceLauncher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -152,7 +153,7 @@ func (v *mockInterfaceLauncher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceLauncher) IsItemOnDesktop(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceLauncher) IsItemOnDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -165,7 +166,7 @@ func (v *mockInterfaceLauncher) IsItemOnDesktop(flags dbus.Flags, id string) (bo
 
 // method MarkLaunched
 
-func (v *mockInterfaceLauncher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -176,7 +177,7 @@ func (v *mockInterfaceLauncher) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceLauncher) MarkLaunched(flags dbus.Flags, id string) error {
+func (v *MockInterfaceLauncher) MarkLaunched(flags dbus.Flags, id string) error {
 	mockArgs := v.Called(flags, id)
 
 	return mockArgs.Error(0)
@@ -184,7 +185,7 @@ func (v *mockInterfaceLauncher) MarkLaunched(flags dbus.Flags, id string) error 
 
 // method RequestRemoveFromDesktop
 
-func (v *mockInterfaceLauncher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -195,7 +196,7 @@ func (v *mockInterfaceLauncher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceLauncher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceLauncher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -208,7 +209,7 @@ func (v *mockInterfaceLauncher) RequestRemoveFromDesktop(flags dbus.Flags, id st
 
 // method RequestSendToDesktop
 
-func (v *mockInterfaceLauncher) GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoRequestSendToDesktop(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -219,7 +220,7 @@ func (v *mockInterfaceLauncher) GoRequestSendToDesktop(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceLauncher) RequestSendToDesktop(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceLauncher) RequestSendToDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -232,7 +233,7 @@ func (v *mockInterfaceLauncher) RequestSendToDesktop(flags dbus.Flags, id string
 
 // method RequestUninstall
 
-func (v *mockInterfaceLauncher) GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
+func (v *MockInterfaceLauncher) GoRequestUninstall(flags dbus.Flags, ch chan *dbus.Call, id string, purge bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id, purge)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -243,7 +244,7 @@ func (v *mockInterfaceLauncher) GoRequestUninstall(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceLauncher) RequestUninstall(flags dbus.Flags, id string, purge bool) error {
+func (v *MockInterfaceLauncher) RequestUninstall(flags dbus.Flags, id string, purge bool) error {
 	mockArgs := v.Called(flags, id, purge)
 
 	return mockArgs.Error(0)
@@ -251,7 +252,7 @@ func (v *mockInterfaceLauncher) RequestUninstall(flags dbus.Flags, id string, pu
 
 // method Search
 
-func (v *mockInterfaceLauncher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
+func (v *MockInterfaceLauncher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, key)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -262,7 +263,7 @@ func (v *mockInterfaceLauncher) GoSearch(flags dbus.Flags, ch chan *dbus.Call, k
 	return ret
 }
 
-func (v *mockInterfaceLauncher) Search(flags dbus.Flags, key string) error {
+func (v *MockInterfaceLauncher) Search(flags dbus.Flags, key string) error {
 	mockArgs := v.Called(flags, key)
 
 	return mockArgs.Error(0)
@@ -270,7 +271,7 @@ func (v *mockInterfaceLauncher) Search(flags dbus.Flags, key string) error {
 
 // method SetDisableScaling
 
-func (v *mockInterfaceLauncher) GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+func (v *MockInterfaceLauncher) GoSetDisableScaling(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -281,7 +282,7 @@ func (v *mockInterfaceLauncher) GoSetDisableScaling(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceLauncher) SetDisableScaling(flags dbus.Flags, id string, value bool) error {
+func (v *MockInterfaceLauncher) SetDisableScaling(flags dbus.Flags, id string, value bool) error {
 	mockArgs := v.Called(flags, id, value)
 
 	return mockArgs.Error(0)
@@ -289,7 +290,7 @@ func (v *mockInterfaceLauncher) SetDisableScaling(flags dbus.Flags, id string, v
 
 // method SetUseProxy
 
-func (v *mockInterfaceLauncher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
+func (v *MockInterfaceLauncher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Call, id string, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -300,7 +301,7 @@ func (v *mockInterfaceLauncher) GoSetUseProxy(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceLauncher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
+func (v *MockInterfaceLauncher) SetUseProxy(flags dbus.Flags, id string, value bool) error {
 	mockArgs := v.Called(flags, id, value)
 
 	return mockArgs.Error(0)
@@ -308,7 +309,7 @@ func (v *mockInterfaceLauncher) SetUseProxy(flags dbus.Flags, id string, value b
 
 // signal SearchDone
 
-func (v *mockInterfaceLauncher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLauncher) ConnectSearchDone(cb func(apps []string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -321,7 +322,7 @@ func (v *mockInterfaceLauncher) ConnectSearchDone(cb func(apps []string)) (dbusu
 
 // signal ItemChanged
 
-func (v *mockInterfaceLauncher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLauncher) ConnectItemChanged(cb func(status string, itemInfo ItemInfo, categoryID int64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -334,7 +335,7 @@ func (v *mockInterfaceLauncher) ConnectItemChanged(cb func(status string, itemIn
 
 // signal NewAppLaunched
 
-func (v *mockInterfaceLauncher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLauncher) ConnectNewAppLaunched(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -347,7 +348,7 @@ func (v *mockInterfaceLauncher) ConnectNewAppLaunched(cb func(appID string)) (db
 
 // signal UninstallSuccess
 
-func (v *mockInterfaceLauncher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLauncher) ConnectUninstallSuccess(cb func(appID string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -360,7 +361,7 @@ func (v *mockInterfaceLauncher) ConnectUninstallSuccess(cb func(appID string)) (
 
 // signal UninstallFailed
 
-func (v *mockInterfaceLauncher) ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLauncher) ConnectUninstallFailed(cb func(appId string, errMsg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -373,7 +374,7 @@ func (v *mockInterfaceLauncher) ConnectUninstallFailed(cb func(appId string, err
 
 // property Fullscreen b
 
-func (v *mockInterfaceLauncher) Fullscreen() proxy.PropBool {
+func (v *MockInterfaceLauncher) Fullscreen() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -386,7 +387,7 @@ func (v *mockInterfaceLauncher) Fullscreen() proxy.PropBool {
 
 // property DisplayMode i
 
-func (v *mockInterfaceLauncher) DisplayMode() proxy.PropInt32 {
+func (v *MockInterfaceLauncher) DisplayMode() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)

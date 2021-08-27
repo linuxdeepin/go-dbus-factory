@@ -14,19 +14,21 @@ import (
 
 type MockWifi struct {
 	object_manager.MockInterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.MockObject
 }
 
 type MockLink struct {
-	mockInterfaceLink // interface org.freedesktop.miracle.wifi.Link
+	MockInterfaceLink // interface org.freedesktop.miracle.wifi.Link
+	proxy.MockObject
 }
 
-type mockInterfaceLink struct {
+type MockInterfaceLink struct {
 	mock.Mock
 }
 
 // method Manage
 
-func (v *mockInterfaceLink) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLink) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -37,7 +39,7 @@ func (v *mockInterfaceLink) GoManage(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfaceLink) Manage(flags dbus.Flags) error {
+func (v *MockInterfaceLink) Manage(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -45,7 +47,7 @@ func (v *mockInterfaceLink) Manage(flags dbus.Flags) error {
 
 // method Unmanage
 
-func (v *mockInterfaceLink) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLink) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +58,7 @@ func (v *mockInterfaceLink) GoUnmanage(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceLink) Unmanage(flags dbus.Flags) error {
+func (v *MockInterfaceLink) Unmanage(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -64,7 +66,7 @@ func (v *mockInterfaceLink) Unmanage(flags dbus.Flags) error {
 
 // property InterfaceIndex u
 
-func (v *mockInterfaceLink) InterfaceIndex() proxy.PropUint32 {
+func (v *MockInterfaceLink) InterfaceIndex() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -77,7 +79,7 @@ func (v *mockInterfaceLink) InterfaceIndex() proxy.PropUint32 {
 
 // property MACAddress s
 
-func (v *mockInterfaceLink) MACAddress() proxy.PropString {
+func (v *MockInterfaceLink) MACAddress() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -90,7 +92,7 @@ func (v *mockInterfaceLink) MACAddress() proxy.PropString {
 
 // property InterfaceName s
 
-func (v *mockInterfaceLink) InterfaceName() proxy.PropString {
+func (v *MockInterfaceLink) InterfaceName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -103,7 +105,7 @@ func (v *mockInterfaceLink) InterfaceName() proxy.PropString {
 
 // property FriendlyName s
 
-func (v *mockInterfaceLink) FriendlyName() proxy.PropString {
+func (v *MockInterfaceLink) FriendlyName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -116,7 +118,7 @@ func (v *mockInterfaceLink) FriendlyName() proxy.PropString {
 
 // property Managed b
 
-func (v *mockInterfaceLink) Managed() proxy.PropBool {
+func (v *MockInterfaceLink) Managed() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -129,7 +131,7 @@ func (v *mockInterfaceLink) Managed() proxy.PropBool {
 
 // property P2PState i
 
-func (v *mockInterfaceLink) P2PState() proxy.PropInt32 {
+func (v *MockInterfaceLink) P2PState() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -142,7 +144,7 @@ func (v *mockInterfaceLink) P2PState() proxy.PropInt32 {
 
 // property P2PScanning b
 
-func (v *mockInterfaceLink) P2PScanning() proxy.PropBool {
+func (v *MockInterfaceLink) P2PScanning() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -155,7 +157,7 @@ func (v *mockInterfaceLink) P2PScanning() proxy.PropBool {
 
 // property WfdSubelements s
 
-func (v *mockInterfaceLink) WfdSubelements() proxy.PropString {
+func (v *MockInterfaceLink) WfdSubelements() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -167,16 +169,17 @@ func (v *mockInterfaceLink) WfdSubelements() proxy.PropString {
 }
 
 type MockPeer struct {
-	mockInterfacePeer // interface org.freedesktop.miracle.wifi.Peer
+	MockInterfacePeer // interface org.freedesktop.miracle.wifi.Peer
+	proxy.MockObject
 }
 
-type mockInterfacePeer struct {
+type MockInterfacePeer struct {
 	mock.Mock
 }
 
 // method Connect
 
-func (v *mockInterfacePeer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+func (v *MockInterfacePeer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -187,7 +190,7 @@ func (v *mockInterfacePeer) GoConnect(flags dbus.Flags, ch chan *dbus.Call, arg0
 	return ret
 }
 
-func (v *mockInterfacePeer) Connect(flags dbus.Flags, arg0 string, arg1 string) error {
+func (v *MockInterfacePeer) Connect(flags dbus.Flags, arg0 string, arg1 string) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -195,7 +198,7 @@ func (v *mockInterfacePeer) Connect(flags dbus.Flags, arg0 string, arg1 string) 
 
 // method Disconnect
 
-func (v *mockInterfacePeer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePeer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -206,7 +209,7 @@ func (v *mockInterfacePeer) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfacePeer) Disconnect(flags dbus.Flags) error {
+func (v *MockInterfacePeer) Disconnect(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -214,7 +217,7 @@ func (v *mockInterfacePeer) Disconnect(flags dbus.Flags) error {
 
 // signal ProvisionDiscovery
 
-func (v *mockInterfacePeer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePeer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -227,7 +230,7 @@ func (v *mockInterfacePeer) ConnectProvisionDiscovery(cb func(arg0 string, arg1 
 
 // signal GoNegRequest
 
-func (v *mockInterfacePeer) ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePeer) ConnectGoNegRequest(cb func(arg0 string, arg1 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -240,7 +243,7 @@ func (v *mockInterfacePeer) ConnectGoNegRequest(cb func(arg0 string, arg1 string
 
 // signal FormationFailure
 
-func (v *mockInterfacePeer) ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePeer) ConnectFormationFailure(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -253,7 +256,7 @@ func (v *mockInterfacePeer) ConnectFormationFailure(cb func(arg0 string)) (dbusu
 
 // property Link o
 
-func (v *mockInterfacePeer) Link() proxy.PropObjectPath {
+func (v *MockInterfacePeer) Link() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -266,7 +269,7 @@ func (v *mockInterfacePeer) Link() proxy.PropObjectPath {
 
 // property P2PMac s
 
-func (v *mockInterfacePeer) P2PMac() proxy.PropString {
+func (v *MockInterfacePeer) P2PMac() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -279,7 +282,7 @@ func (v *mockInterfacePeer) P2PMac() proxy.PropString {
 
 // property FriendlyName s
 
-func (v *mockInterfacePeer) FriendlyName() proxy.PropString {
+func (v *MockInterfacePeer) FriendlyName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -292,7 +295,7 @@ func (v *mockInterfacePeer) FriendlyName() proxy.PropString {
 
 // property Connected b
 
-func (v *mockInterfacePeer) Connected() proxy.PropBool {
+func (v *MockInterfacePeer) Connected() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -305,7 +308,7 @@ func (v *mockInterfacePeer) Connected() proxy.PropBool {
 
 // property Interface s
 
-func (v *mockInterfacePeer) Interface() proxy.PropString {
+func (v *MockInterfacePeer) Interface() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -318,7 +321,7 @@ func (v *mockInterfacePeer) Interface() proxy.PropString {
 
 // property LocalAddress s
 
-func (v *mockInterfacePeer) LocalAddress() proxy.PropString {
+func (v *MockInterfacePeer) LocalAddress() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -331,7 +334,7 @@ func (v *mockInterfacePeer) LocalAddress() proxy.PropString {
 
 // property RemoteAddress s
 
-func (v *mockInterfacePeer) RemoteAddress() proxy.PropString {
+func (v *MockInterfacePeer) RemoteAddress() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -344,7 +347,7 @@ func (v *mockInterfacePeer) RemoteAddress() proxy.PropString {
 
 // property WfdSubelements s
 
-func (v *mockInterfacePeer) WfdSubelements() proxy.PropString {
+func (v *MockInterfacePeer) WfdSubelements() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

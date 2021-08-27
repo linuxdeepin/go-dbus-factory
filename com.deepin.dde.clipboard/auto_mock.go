@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockClipboard struct {
-	mockInterfaceClipboard // interface com.deepin.dde.Clipboard
+	MockInterfaceClipboard // interface com.deepin.dde.Clipboard
+	proxy.MockObject
 }
 
-type mockInterfaceClipboard struct {
+type MockInterfaceClipboard struct {
 	mock.Mock
 }
 
 // method Toggle
 
-func (v *mockInterfaceClipboard) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceClipboard) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceClipboard) GoToggle(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceClipboard) Toggle(flags dbus.Flags) error {
+func (v *MockInterfaceClipboard) Toggle(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -38,7 +40,7 @@ func (v *mockInterfaceClipboard) Toggle(flags dbus.Flags) error {
 
 // method Show
 
-func (v *mockInterfaceClipboard) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceClipboard) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceClipboard) GoShow(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceClipboard) Show(flags dbus.Flags) error {
+func (v *MockInterfaceClipboard) Show(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -57,7 +59,7 @@ func (v *mockInterfaceClipboard) Show(flags dbus.Flags) error {
 
 // method Hide
 
-func (v *mockInterfaceClipboard) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceClipboard) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -68,7 +70,7 @@ func (v *mockInterfaceClipboard) GoHide(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceClipboard) Hide(flags dbus.Flags) error {
+func (v *MockInterfaceClipboard) Hide(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)

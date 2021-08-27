@@ -10,16 +10,17 @@ import (
 )
 
 type MockSystemInfo struct {
-	mockInterfaceSystemInfo // interface com.deepin.system.SystemInfo
+	MockInterfaceSystemInfo // interface com.deepin.system.SystemInfo
+	proxy.MockObject
 }
 
-type mockInterfaceSystemInfo struct {
+type MockInterfaceSystemInfo struct {
 	mock.Mock
 }
 
 // property MemorySizeHuman s
 
-func (v *mockInterfaceSystemInfo) MemorySizeHuman() proxy.PropString {
+func (v *MockInterfaceSystemInfo) MemorySizeHuman() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -32,7 +33,7 @@ func (v *mockInterfaceSystemInfo) MemorySizeHuman() proxy.PropString {
 
 // property MemorySize t
 
-func (v *mockInterfaceSystemInfo) MemorySize() proxy.PropUint64 {
+func (v *MockInterfaceSystemInfo) MemorySize() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -45,7 +46,7 @@ func (v *mockInterfaceSystemInfo) MemorySize() proxy.PropUint64 {
 
 // property CurrentSpeed t
 
-func (v *mockInterfaceSystemInfo) CurrentSpeed() proxy.PropUint64 {
+func (v *MockInterfaceSystemInfo) CurrentSpeed() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)

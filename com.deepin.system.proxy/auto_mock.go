@@ -12,16 +12,17 @@ import (
 )
 
 type MockApp struct {
-	mockInterfaceApp // interface com.deepin.system.proxy.App
+	MockInterfaceApp // interface com.deepin.system.proxy.App
+	proxy.MockObject
 }
 
-type mockInterfaceApp struct {
+type MockInterfaceApp struct {
 	mock.Mock
 }
 
 // method AddProxy
 
-func (v *mockInterfaceApp) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
+func (v *MockInterfaceApp) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proto, name, proxy)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceApp) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, prot
 	return ret
 }
 
-func (v *mockInterfaceApp) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
+func (v *MockInterfaceApp) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
 	mockArgs := v.Called(flags, proto, name, proxy)
 
 	return mockArgs.Error(0)
@@ -40,7 +41,7 @@ func (v *mockInterfaceApp) AddProxy(flags dbus.Flags, proto string, name string,
 
 // method AddProxyApps
 
-func (v *mockInterfaceApp) GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *MockInterfaceApp) GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, app)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -51,7 +52,7 @@ func (v *mockInterfaceApp) GoAddProxyApps(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceApp) AddProxyApps(flags dbus.Flags, app []string) error {
+func (v *MockInterfaceApp) AddProxyApps(flags dbus.Flags, app []string) error {
 	mockArgs := v.Called(flags, app)
 
 	return mockArgs.Error(0)
@@ -59,7 +60,7 @@ func (v *mockInterfaceApp) AddProxyApps(flags dbus.Flags, app []string) error {
 
 // method ClearProxy
 
-func (v *mockInterfaceApp) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceApp) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -70,7 +71,7 @@ func (v *mockInterfaceApp) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceApp) ClearProxy(flags dbus.Flags) error {
+func (v *MockInterfaceApp) ClearProxy(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -78,7 +79,7 @@ func (v *mockInterfaceApp) ClearProxy(flags dbus.Flags) error {
 
 // method DelProxyApps
 
-func (v *mockInterfaceApp) GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *MockInterfaceApp) GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, app)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -89,7 +90,7 @@ func (v *mockInterfaceApp) GoDelProxyApps(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceApp) DelProxyApps(flags dbus.Flags, app []string) error {
+func (v *MockInterfaceApp) DelProxyApps(flags dbus.Flags, app []string) error {
 	mockArgs := v.Called(flags, app)
 
 	return mockArgs.Error(0)
@@ -97,7 +98,7 @@ func (v *mockInterfaceApp) DelProxyApps(flags dbus.Flags, app []string) error {
 
 // method GetProxy
 
-func (v *mockInterfaceApp) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceApp) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -108,7 +109,7 @@ func (v *mockInterfaceApp) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceApp) GetProxy(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceApp) GetProxy(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -121,7 +122,7 @@ func (v *mockInterfaceApp) GetProxy(flags dbus.Flags) (string, error) {
 
 // method SetProxies
 
-func (v *mockInterfaceApp) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
+func (v *MockInterfaceApp) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proxies)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -132,7 +133,7 @@ func (v *mockInterfaceApp) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, pr
 	return ret
 }
 
-func (v *mockInterfaceApp) SetProxies(flags dbus.Flags, proxies []interface{}) error {
+func (v *MockInterfaceApp) SetProxies(flags dbus.Flags, proxies []interface{}) error {
 	mockArgs := v.Called(flags, proxies)
 
 	return mockArgs.Error(0)
@@ -140,7 +141,7 @@ func (v *mockInterfaceApp) SetProxies(flags dbus.Flags, proxies []interface{}) e
 
 // method GetCGroups
 
-func (v *mockInterfaceApp) GoGetCGroups(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceApp) GoGetCGroups(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -151,7 +152,7 @@ func (v *mockInterfaceApp) GoGetCGroups(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceApp) GetCGroups(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceApp) GetCGroups(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -164,7 +165,7 @@ func (v *mockInterfaceApp) GetCGroups(flags dbus.Flags) (string, error) {
 
 // method AddProc
 
-func (v *mockInterfaceApp) GoAddProc(flags dbus.Flags, ch chan *dbus.Call, pid int32) *dbus.Call {
+func (v *MockInterfaceApp) GoAddProc(flags dbus.Flags, ch chan *dbus.Call, pid int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -175,7 +176,7 @@ func (v *mockInterfaceApp) GoAddProc(flags dbus.Flags, ch chan *dbus.Call, pid i
 	return ret
 }
 
-func (v *mockInterfaceApp) AddProc(flags dbus.Flags, pid int32) error {
+func (v *MockInterfaceApp) AddProc(flags dbus.Flags, pid int32) error {
 	mockArgs := v.Called(flags, pid)
 
 	return mockArgs.Error(0)
@@ -183,7 +184,7 @@ func (v *mockInterfaceApp) AddProc(flags dbus.Flags, pid int32) error {
 
 // method StartProxy
 
-func (v *mockInterfaceApp) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
+func (v *MockInterfaceApp) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proto, name, udp)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -194,7 +195,7 @@ func (v *mockInterfaceApp) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, pr
 	return ret
 }
 
-func (v *mockInterfaceApp) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
+func (v *MockInterfaceApp) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
 	mockArgs := v.Called(flags, proto, name, udp)
 
 	return mockArgs.Error(0)
@@ -202,7 +203,7 @@ func (v *mockInterfaceApp) StartProxy(flags dbus.Flags, proto string, name strin
 
 // method StopProxy
 
-func (v *mockInterfaceApp) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceApp) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -213,7 +214,7 @@ func (v *mockInterfaceApp) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceApp) StopProxy(flags dbus.Flags) error {
+func (v *MockInterfaceApp) StopProxy(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -221,7 +222,7 @@ func (v *mockInterfaceApp) StopProxy(flags dbus.Flags) error {
 
 // signal Proxy
 
-func (v *mockInterfaceApp) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceApp) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -233,16 +234,17 @@ func (v *mockInterfaceApp) ConnectProxy(cb func(proxy []interface{})) (dbusutil.
 }
 
 type MockGlobal struct {
-	mockInterfaceGlobal // interface com.deepin.system.proxy.Global
+	MockInterfaceGlobal // interface com.deepin.system.proxy.Global
+	proxy.MockObject
 }
 
-type mockInterfaceGlobal struct {
+type MockInterfaceGlobal struct {
 	mock.Mock
 }
 
 // method AddProxy
 
-func (v *mockInterfaceGlobal) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
+func (v *MockInterfaceGlobal) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, proxy []uint8) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proto, name, proxy)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -253,7 +255,7 @@ func (v *mockInterfaceGlobal) GoAddProxy(flags dbus.Flags, ch chan *dbus.Call, p
 	return ret
 }
 
-func (v *mockInterfaceGlobal) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
+func (v *MockInterfaceGlobal) AddProxy(flags dbus.Flags, proto string, name string, proxy []uint8) error {
 	mockArgs := v.Called(flags, proto, name, proxy)
 
 	return mockArgs.Error(0)
@@ -261,7 +263,7 @@ func (v *mockInterfaceGlobal) AddProxy(flags dbus.Flags, proto string, name stri
 
 // method ClearProxy
 
-func (v *mockInterfaceGlobal) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceGlobal) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -272,7 +274,7 @@ func (v *mockInterfaceGlobal) GoClearProxy(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceGlobal) ClearProxy(flags dbus.Flags) error {
+func (v *MockInterfaceGlobal) ClearProxy(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -280,7 +282,7 @@ func (v *mockInterfaceGlobal) ClearProxy(flags dbus.Flags) error {
 
 // method GetProxy
 
-func (v *mockInterfaceGlobal) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceGlobal) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -291,7 +293,7 @@ func (v *mockInterfaceGlobal) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceGlobal) GetProxy(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceGlobal) GetProxy(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -304,7 +306,7 @@ func (v *mockInterfaceGlobal) GetProxy(flags dbus.Flags) (string, error) {
 
 // method IgnoreProxyApps
 
-func (v *mockInterfaceGlobal) GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *MockInterfaceGlobal) GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, app)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -315,7 +317,7 @@ func (v *mockInterfaceGlobal) GoIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceGlobal) IgnoreProxyApps(flags dbus.Flags, app []string) error {
+func (v *MockInterfaceGlobal) IgnoreProxyApps(flags dbus.Flags, app []string) error {
 	mockArgs := v.Called(flags, app)
 
 	return mockArgs.Error(0)
@@ -323,7 +325,7 @@ func (v *mockInterfaceGlobal) IgnoreProxyApps(flags dbus.Flags, app []string) er
 
 // method SetProxies
 
-func (v *mockInterfaceGlobal) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
+func (v *MockInterfaceGlobal) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call, proxies []interface{}) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proxies)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -334,7 +336,7 @@ func (v *mockInterfaceGlobal) GoSetProxies(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceGlobal) SetProxies(flags dbus.Flags, proxies []interface{}) error {
+func (v *MockInterfaceGlobal) SetProxies(flags dbus.Flags, proxies []interface{}) error {
 	mockArgs := v.Called(flags, proxies)
 
 	return mockArgs.Error(0)
@@ -342,7 +344,7 @@ func (v *mockInterfaceGlobal) SetProxies(flags dbus.Flags, proxies []interface{}
 
 // method StartProxy
 
-func (v *mockInterfaceGlobal) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
+func (v *MockInterfaceGlobal) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call, proto string, name string, udp bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, proto, name, udp)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -353,7 +355,7 @@ func (v *mockInterfaceGlobal) GoStartProxy(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceGlobal) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
+func (v *MockInterfaceGlobal) StartProxy(flags dbus.Flags, proto string, name string, udp bool) error {
 	mockArgs := v.Called(flags, proto, name, udp)
 
 	return mockArgs.Error(0)
@@ -361,7 +363,7 @@ func (v *mockInterfaceGlobal) StartProxy(flags dbus.Flags, proto string, name st
 
 // method StopProxy
 
-func (v *mockInterfaceGlobal) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceGlobal) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -372,7 +374,7 @@ func (v *mockInterfaceGlobal) GoStopProxy(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceGlobal) StopProxy(flags dbus.Flags) error {
+func (v *MockInterfaceGlobal) StopProxy(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -380,7 +382,7 @@ func (v *mockInterfaceGlobal) StopProxy(flags dbus.Flags) error {
 
 // method UnIgnoreProxyApps
 
-func (v *mockInterfaceGlobal) GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
+func (v *MockInterfaceGlobal) GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbus.Call, app []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, app)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -391,7 +393,7 @@ func (v *mockInterfaceGlobal) GoUnIgnoreProxyApps(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceGlobal) UnIgnoreProxyApps(flags dbus.Flags, app []string) error {
+func (v *MockInterfaceGlobal) UnIgnoreProxyApps(flags dbus.Flags, app []string) error {
 	mockArgs := v.Called(flags, app)
 
 	return mockArgs.Error(0)
@@ -399,7 +401,7 @@ func (v *mockInterfaceGlobal) UnIgnoreProxyApps(flags dbus.Flags, app []string) 
 
 // signal Proxy
 
-func (v *mockInterfaceGlobal) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGlobal) ConnectProxy(cb func(proxy []interface{})) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -412,7 +414,7 @@ func (v *mockInterfaceGlobal) ConnectProxy(cb func(proxy []interface{})) (dbusut
 
 // property IgnoreApp as
 
-func (v *mockInterfaceGlobal) IgnoreApp() proxy.PropStringArray {
+func (v *MockInterfaceGlobal) IgnoreApp() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)

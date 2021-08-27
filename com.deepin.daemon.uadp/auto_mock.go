@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockUadp struct {
-	mockInterfaceUadp // interface com.deepin.daemon.Uadp
+	MockInterfaceUadp // interface com.deepin.daemon.Uadp
+	proxy.MockObject
 }
 
-type mockInterfaceUadp struct {
+type MockInterfaceUadp struct {
 	mock.Mock
 }
 
 // method SetDataKey
 
-func (v *mockInterfaceUadp) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, dataKey string, keyringKey string) *dbus.Call {
+func (v *MockInterfaceUadp) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, dataKey string, keyringKey string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, exePath, keyName, dataKey, keyringKey)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceUadp) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, e
 	return ret
 }
 
-func (v *mockInterfaceUadp) SetDataKey(flags dbus.Flags, exePath string, keyName string, dataKey string, keyringKey string) error {
+func (v *MockInterfaceUadp) SetDataKey(flags dbus.Flags, exePath string, keyName string, dataKey string, keyringKey string) error {
 	mockArgs := v.Called(flags, exePath, keyName, dataKey, keyringKey)
 
 	return mockArgs.Error(0)
@@ -38,7 +40,7 @@ func (v *mockInterfaceUadp) SetDataKey(flags dbus.Flags, exePath string, keyName
 
 // method GetDataKey
 
-func (v *mockInterfaceUadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, keyringKey string) *dbus.Call {
+func (v *MockInterfaceUadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, exePath string, keyName string, keyringKey string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, exePath, keyName, keyringKey)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceUadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, e
 	return ret
 }
 
-func (v *mockInterfaceUadp) GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (string, error) {
+func (v *MockInterfaceUadp) GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (string, error) {
 	mockArgs := v.Called(flags, exePath, keyName, keyringKey)
 
 	ret0, ok := mockArgs.Get(0).(string)

@@ -12,17 +12,18 @@ import (
 )
 
 type MockMediaPlayer struct {
-	mockInterfaceMediaPlayer // interface org.mpris.MediaPlayer2
-	mockInterfacePlayer      // interface org.mpris.MediaPlayer2.Player
+	MockInterfaceMediaPlayer // interface org.mpris.MediaPlayer2
+	MockInterfacePlayer      // interface org.mpris.MediaPlayer2.Player
+	proxy.MockObject
 }
 
-type mockInterfaceMediaPlayer struct {
+type MockInterfaceMediaPlayer struct {
 	mock.Mock
 }
 
 // method Quit
 
-func (v *mockInterfaceMediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceMediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -33,7 +34,7 @@ func (v *mockInterfaceMediaPlayer) GoQuit(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceMediaPlayer) Quit(flags dbus.Flags) error {
+func (v *MockInterfaceMediaPlayer) Quit(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -41,7 +42,7 @@ func (v *mockInterfaceMediaPlayer) Quit(flags dbus.Flags) error {
 
 // method Raise
 
-func (v *mockInterfaceMediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceMediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -52,7 +53,7 @@ func (v *mockInterfaceMediaPlayer) GoRaise(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceMediaPlayer) Raise(flags dbus.Flags) error {
+func (v *MockInterfaceMediaPlayer) Raise(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -60,7 +61,7 @@ func (v *mockInterfaceMediaPlayer) Raise(flags dbus.Flags) error {
 
 // property CanQuit b
 
-func (v *mockInterfaceMediaPlayer) CanQuit() proxy.PropBool {
+func (v *MockInterfaceMediaPlayer) CanQuit() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -73,7 +74,7 @@ func (v *mockInterfaceMediaPlayer) CanQuit() proxy.PropBool {
 
 // property CanRaise b
 
-func (v *mockInterfaceMediaPlayer) CanRaise() proxy.PropBool {
+func (v *MockInterfaceMediaPlayer) CanRaise() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -86,7 +87,7 @@ func (v *mockInterfaceMediaPlayer) CanRaise() proxy.PropBool {
 
 // property DesktopEntry s
 
-func (v *mockInterfaceMediaPlayer) DesktopEntry() proxy.PropString {
+func (v *MockInterfaceMediaPlayer) DesktopEntry() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -99,7 +100,7 @@ func (v *mockInterfaceMediaPlayer) DesktopEntry() proxy.PropString {
 
 // property Identity s
 
-func (v *mockInterfaceMediaPlayer) Identity() proxy.PropString {
+func (v *MockInterfaceMediaPlayer) Identity() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -110,13 +111,13 @@ func (v *mockInterfaceMediaPlayer) Identity() proxy.PropString {
 	return ret0
 }
 
-type mockInterfacePlayer struct {
+type MockInterfacePlayer struct {
 	mock.Mock
 }
 
 // method Next
 
-func (v *mockInterfacePlayer) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -127,7 +128,7 @@ func (v *mockInterfacePlayer) GoNext(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfacePlayer) Next(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) Next(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -135,7 +136,7 @@ func (v *mockInterfacePlayer) Next(flags dbus.Flags) error {
 
 // method Pause
 
-func (v *mockInterfacePlayer) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -146,7 +147,7 @@ func (v *mockInterfacePlayer) GoPause(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfacePlayer) Pause(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) Pause(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -154,7 +155,7 @@ func (v *mockInterfacePlayer) Pause(flags dbus.Flags) error {
 
 // method Play
 
-func (v *mockInterfacePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -165,7 +166,7 @@ func (v *mockInterfacePlayer) GoPlay(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfacePlayer) Play(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) Play(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -173,7 +174,7 @@ func (v *mockInterfacePlayer) Play(flags dbus.Flags) error {
 
 // method PlayPause
 
-func (v *mockInterfacePlayer) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -184,7 +185,7 @@ func (v *mockInterfacePlayer) GoPlayPause(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfacePlayer) PlayPause(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) PlayPause(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -192,7 +193,7 @@ func (v *mockInterfacePlayer) PlayPause(flags dbus.Flags) error {
 
 // method Previous
 
-func (v *mockInterfacePlayer) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -203,7 +204,7 @@ func (v *mockInterfacePlayer) GoPrevious(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfacePlayer) Previous(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) Previous(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -211,7 +212,7 @@ func (v *mockInterfacePlayer) Previous(flags dbus.Flags) error {
 
 // method Seek
 
-func (v *mockInterfacePlayer) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call {
+func (v *MockInterfacePlayer) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offset int64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, Offset)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -222,7 +223,7 @@ func (v *mockInterfacePlayer) GoSeek(flags dbus.Flags, ch chan *dbus.Call, Offse
 	return ret
 }
 
-func (v *mockInterfacePlayer) Seek(flags dbus.Flags, Offset int64) error {
+func (v *MockInterfacePlayer) Seek(flags dbus.Flags, Offset int64) error {
 	mockArgs := v.Called(flags, Offset)
 
 	return mockArgs.Error(0)
@@ -230,7 +231,7 @@ func (v *mockInterfacePlayer) Seek(flags dbus.Flags, Offset int64) error {
 
 // method SetPosition
 
-func (v *mockInterfacePlayer) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call {
+func (v *MockInterfacePlayer) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, TrackId dbus.ObjectPath, Position int64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, TrackId, Position)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -241,7 +242,7 @@ func (v *mockInterfacePlayer) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfacePlayer) SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
+func (v *MockInterfacePlayer) SetPosition(flags dbus.Flags, TrackId dbus.ObjectPath, Position int64) error {
 	mockArgs := v.Called(flags, TrackId, Position)
 
 	return mockArgs.Error(0)
@@ -249,7 +250,7 @@ func (v *mockInterfacePlayer) SetPosition(flags dbus.Flags, TrackId dbus.ObjectP
 
 // method Stop
 
-func (v *mockInterfacePlayer) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePlayer) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -260,7 +261,7 @@ func (v *mockInterfacePlayer) GoStop(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfacePlayer) Stop(flags dbus.Flags) error {
+func (v *MockInterfacePlayer) Stop(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -268,7 +269,7 @@ func (v *mockInterfacePlayer) Stop(flags dbus.Flags) error {
 
 // signal Seeked
 
-func (v *mockInterfacePlayer) ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePlayer) ConnectSeeked(cb func(Position int64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -281,7 +282,7 @@ func (v *mockInterfacePlayer) ConnectSeeked(cb func(Position int64)) (dbusutil.S
 
 // property CanControl b
 
-func (v *mockInterfacePlayer) CanControl() proxy.PropBool {
+func (v *MockInterfacePlayer) CanControl() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -294,7 +295,7 @@ func (v *mockInterfacePlayer) CanControl() proxy.PropBool {
 
 // property CanGoNext b
 
-func (v *mockInterfacePlayer) CanGoNext() proxy.PropBool {
+func (v *MockInterfacePlayer) CanGoNext() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -307,7 +308,7 @@ func (v *mockInterfacePlayer) CanGoNext() proxy.PropBool {
 
 // property CanGoPrevious b
 
-func (v *mockInterfacePlayer) CanGoPrevious() proxy.PropBool {
+func (v *MockInterfacePlayer) CanGoPrevious() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -320,7 +321,7 @@ func (v *mockInterfacePlayer) CanGoPrevious() proxy.PropBool {
 
 // property CanPause b
 
-func (v *mockInterfacePlayer) CanPause() proxy.PropBool {
+func (v *MockInterfacePlayer) CanPause() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -333,7 +334,7 @@ func (v *mockInterfacePlayer) CanPause() proxy.PropBool {
 
 // property CanPlay b
 
-func (v *mockInterfacePlayer) CanPlay() proxy.PropBool {
+func (v *MockInterfacePlayer) CanPlay() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -346,7 +347,7 @@ func (v *mockInterfacePlayer) CanPlay() proxy.PropBool {
 
 // property CanSeek b
 
-func (v *mockInterfacePlayer) CanSeek() proxy.PropBool {
+func (v *MockInterfacePlayer) CanSeek() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -389,7 +390,7 @@ func (p MockPropPlayerMetadata) ConnectChanged(cb func(hasValue bool, value map[
 
 // property Metadata a{sv}
 
-func (v *mockInterfacePlayer) Metadata() PropPlayerMetadata {
+func (v *MockInterfacePlayer) Metadata() PropPlayerMetadata {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropPlayerMetadata)
@@ -402,7 +403,7 @@ func (v *mockInterfacePlayer) Metadata() PropPlayerMetadata {
 
 // property PlaybackStatus s
 
-func (v *mockInterfacePlayer) PlaybackStatus() proxy.PropString {
+func (v *MockInterfacePlayer) PlaybackStatus() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -415,7 +416,7 @@ func (v *mockInterfacePlayer) PlaybackStatus() proxy.PropString {
 
 // property Position x
 
-func (v *mockInterfacePlayer) Position() proxy.PropInt64 {
+func (v *MockInterfacePlayer) Position() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -428,7 +429,7 @@ func (v *mockInterfacePlayer) Position() proxy.PropInt64 {
 
 // property Volume d
 
-func (v *mockInterfacePlayer) Volume() proxy.PropDouble {
+func (v *MockInterfacePlayer) Volume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)

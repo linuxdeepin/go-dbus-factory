@@ -111,6 +111,7 @@ func main() {
 			}
 		}
 
+		msf.GoBody.Pn("proxy.MockObject")
 		msf.GoBody.Pn("}\n")
 
 		writeNewObject(sf.GoBody, srvCfg.Service, objCfg)
@@ -915,7 +916,7 @@ func toInterfaceImplName(t string) string {
 }
 
 func toInterfaceMockName(t string) string {
-	return "mockInterface" + strings.Title(t)
+	return "MockInterface" + strings.Title(t)
 }
 
 func fixList(str string, begin bool) string {

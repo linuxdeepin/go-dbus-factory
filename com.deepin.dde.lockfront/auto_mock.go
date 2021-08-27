@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockLockFront struct {
-	mockInterfaceLockfront // interface com.deepin.dde.lockFront
+	MockInterfaceLockfront // interface com.deepin.dde.lockFront
+	proxy.MockObject
 }
 
-type mockInterfaceLockfront struct {
+type MockInterfaceLockfront struct {
 	mock.Mock
 }
 
 // method Show
 
-func (v *mockInterfaceLockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceLockfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceLockfront) Show(flags dbus.Flags) error {
+func (v *MockInterfaceLockfront) Show(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -39,7 +41,7 @@ func (v *mockInterfaceLockfront) Show(flags dbus.Flags) error {
 
 // method ShowUserList
 
-func (v *mockInterfaceLockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +52,7 @@ func (v *mockInterfaceLockfront) GoShowUserList(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceLockfront) ShowUserList(flags dbus.Flags) error {
+func (v *MockInterfaceLockfront) ShowUserList(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -58,7 +60,7 @@ func (v *mockInterfaceLockfront) ShowUserList(flags dbus.Flags) error {
 
 // method ShowAuth
 
-func (v *mockInterfaceLockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call {
+func (v *MockInterfaceLockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call, active bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, active)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +71,7 @@ func (v *mockInterfaceLockfront) GoShowAuth(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceLockfront) ShowAuth(flags dbus.Flags, active bool) error {
+func (v *MockInterfaceLockfront) ShowAuth(flags dbus.Flags, active bool) error {
 	mockArgs := v.Called(flags, active)
 
 	return mockArgs.Error(0)
@@ -77,7 +79,7 @@ func (v *mockInterfaceLockfront) ShowAuth(flags dbus.Flags, active bool) error {
 
 // method Suspend
 
-func (v *mockInterfaceLockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceLockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +90,7 @@ func (v *mockInterfaceLockfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceLockfront) Suspend(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceLockfront) Suspend(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -96,7 +98,7 @@ func (v *mockInterfaceLockfront) Suspend(flags dbus.Flags, enable bool) error {
 
 // method Hibernate
 
-func (v *mockInterfaceLockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceLockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +109,7 @@ func (v *mockInterfaceLockfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceLockfront) Hibernate(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceLockfront) Hibernate(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -115,7 +117,7 @@ func (v *mockInterfaceLockfront) Hibernate(flags dbus.Flags, enable bool) error 
 
 // signal ChangKey
 
-func (v *mockInterfaceLockfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLockfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

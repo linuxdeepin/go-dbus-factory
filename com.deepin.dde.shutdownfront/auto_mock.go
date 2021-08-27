@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockShutdownFront struct {
-	mockInterfaceShutdownfront // interface com.deepin.dde.shutdownFront
+	MockInterfaceShutdownfront // interface com.deepin.dde.shutdownFront
+	proxy.MockObject
 }
 
-type mockInterfaceShutdownfront struct {
+type MockInterfaceShutdownfront struct {
 	mock.Mock
 }
 
 // method Hibernate
 
-func (v *mockInterfaceShutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceShutdownfront) GoHibernate(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Hibernate(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Hibernate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -39,7 +41,7 @@ func (v *mockInterfaceShutdownfront) Hibernate(flags dbus.Flags) error {
 
 // method Lock
 
-func (v *mockInterfaceShutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +52,7 @@ func (v *mockInterfaceShutdownfront) GoLock(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Lock(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Lock(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -58,7 +60,7 @@ func (v *mockInterfaceShutdownfront) Lock(flags dbus.Flags) error {
 
 // method Logout
 
-func (v *mockInterfaceShutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +71,7 @@ func (v *mockInterfaceShutdownfront) GoLogout(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Logout(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Logout(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -77,7 +79,7 @@ func (v *mockInterfaceShutdownfront) Logout(flags dbus.Flags) error {
 
 // method Restart
 
-func (v *mockInterfaceShutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +90,7 @@ func (v *mockInterfaceShutdownfront) GoRestart(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Restart(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Restart(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -96,7 +98,7 @@ func (v *mockInterfaceShutdownfront) Restart(flags dbus.Flags) error {
 
 // method Show
 
-func (v *mockInterfaceShutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +109,7 @@ func (v *mockInterfaceShutdownfront) GoShow(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Show(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Show(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -115,7 +117,7 @@ func (v *mockInterfaceShutdownfront) Show(flags dbus.Flags) error {
 
 // method Shutdown
 
-func (v *mockInterfaceShutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -126,7 +128,7 @@ func (v *mockInterfaceShutdownfront) GoShutdown(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Shutdown(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Shutdown(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -134,7 +136,7 @@ func (v *mockInterfaceShutdownfront) Shutdown(flags dbus.Flags) error {
 
 // method Suspend
 
-func (v *mockInterfaceShutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -145,7 +147,7 @@ func (v *mockInterfaceShutdownfront) GoSuspend(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) Suspend(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) Suspend(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -153,7 +155,7 @@ func (v *mockInterfaceShutdownfront) Suspend(flags dbus.Flags) error {
 
 // method SwitchUser
 
-func (v *mockInterfaceShutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceShutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -164,7 +166,7 @@ func (v *mockInterfaceShutdownfront) GoSwitchUser(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceShutdownfront) SwitchUser(flags dbus.Flags) error {
+func (v *MockInterfaceShutdownfront) SwitchUser(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -172,7 +174,7 @@ func (v *mockInterfaceShutdownfront) SwitchUser(flags dbus.Flags) error {
 
 // signal ChangKey
 
-func (v *mockInterfaceShutdownfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceShutdownfront) ConnectChangKey(cb func(keyEvent string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

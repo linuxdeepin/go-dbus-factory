@@ -7,19 +7,21 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockTimedate struct {
-	mockInterfaceTimedate // interface com.deepin.daemon.Timedate
+	MockInterfaceTimedate // interface com.deepin.daemon.Timedate
+	proxy.MockObject
 }
 
-type mockInterfaceTimedate struct {
+type MockInterfaceTimedate struct {
 	mock.Mock
 }
 
 // signal TimeUpdate
 
-func (v *mockInterfaceTimedate) ConnectTimeUpdate(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceTimedate) ConnectTimeUpdate(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

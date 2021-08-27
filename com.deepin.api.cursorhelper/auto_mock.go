@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockCursorHelper struct {
-	mockInterfaceCursorHelper // interface com.deepin.api.CursorHelper
+	MockInterfaceCursorHelper // interface com.deepin.api.CursorHelper
+	proxy.MockObject
 }
 
-type mockInterfaceCursorHelper struct {
+type MockInterfaceCursorHelper struct {
 	mock.Mock
 }
 
 // method Set
 
-func (v *mockInterfaceCursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceCursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceCursorHelper) GoSet(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceCursorHelper) Set(flags dbus.Flags, name string) error {
+func (v *MockInterfaceCursorHelper) Set(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)

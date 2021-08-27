@@ -12,16 +12,17 @@ import (
 )
 
 type MockWm struct {
-	mockInterfaceWm // interface com.deepin.wm
+	MockInterfaceWm // interface com.deepin.wm
+	proxy.MockObject
 }
 
-type mockInterfaceWm struct {
+type MockInterfaceWm struct {
 	mock.Mock
 }
 
 // method SwitchApplication
 
-func (v *mockInterfaceWm) GoSwitchApplication(flags dbus.Flags, ch chan *dbus.Call, backward bool) *dbus.Call {
+func (v *MockInterfaceWm) GoSwitchApplication(flags dbus.Flags, ch chan *dbus.Call, backward bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, backward)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceWm) GoSwitchApplication(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceWm) SwitchApplication(flags dbus.Flags, backward bool) error {
+func (v *MockInterfaceWm) SwitchApplication(flags dbus.Flags, backward bool) error {
 	mockArgs := v.Called(flags, backward)
 
 	return mockArgs.Error(0)
@@ -40,7 +41,7 @@ func (v *mockInterfaceWm) SwitchApplication(flags dbus.Flags, backward bool) err
 
 // method TileActiveWindow
 
-func (v *mockInterfaceWm) GoTileActiveWindow(flags dbus.Flags, ch chan *dbus.Call, side uint32) *dbus.Call {
+func (v *MockInterfaceWm) GoTileActiveWindow(flags dbus.Flags, ch chan *dbus.Call, side uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, side)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -51,7 +52,7 @@ func (v *mockInterfaceWm) GoTileActiveWindow(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceWm) TileActiveWindow(flags dbus.Flags, side uint32) error {
+func (v *MockInterfaceWm) TileActiveWindow(flags dbus.Flags, side uint32) error {
 	mockArgs := v.Called(flags, side)
 
 	return mockArgs.Error(0)
@@ -59,7 +60,7 @@ func (v *mockInterfaceWm) TileActiveWindow(flags dbus.Flags, side uint32) error 
 
 // method BeginToMoveActiveWindow
 
-func (v *mockInterfaceWm) GoBeginToMoveActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoBeginToMoveActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -70,7 +71,7 @@ func (v *mockInterfaceWm) GoBeginToMoveActiveWindow(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceWm) BeginToMoveActiveWindow(flags dbus.Flags) error {
+func (v *MockInterfaceWm) BeginToMoveActiveWindow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -78,7 +79,7 @@ func (v *mockInterfaceWm) BeginToMoveActiveWindow(flags dbus.Flags) error {
 
 // method ToggleActiveWindowMaximize
 
-func (v *mockInterfaceWm) GoToggleActiveWindowMaximize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoToggleActiveWindowMaximize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -89,7 +90,7 @@ func (v *mockInterfaceWm) GoToggleActiveWindowMaximize(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceWm) ToggleActiveWindowMaximize(flags dbus.Flags) error {
+func (v *MockInterfaceWm) ToggleActiveWindowMaximize(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -97,7 +98,7 @@ func (v *mockInterfaceWm) ToggleActiveWindowMaximize(flags dbus.Flags) error {
 
 // method MinimizeActiveWindow
 
-func (v *mockInterfaceWm) GoMinimizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoMinimizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -108,7 +109,7 @@ func (v *mockInterfaceWm) GoMinimizeActiveWindow(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceWm) MinimizeActiveWindow(flags dbus.Flags) error {
+func (v *MockInterfaceWm) MinimizeActiveWindow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -116,7 +117,7 @@ func (v *mockInterfaceWm) MinimizeActiveWindow(flags dbus.Flags) error {
 
 // method ShowWorkspace
 
-func (v *mockInterfaceWm) GoShowWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoShowWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -127,7 +128,7 @@ func (v *mockInterfaceWm) GoShowWorkspace(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceWm) ShowWorkspace(flags dbus.Flags) error {
+func (v *MockInterfaceWm) ShowWorkspace(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -135,7 +136,7 @@ func (v *mockInterfaceWm) ShowWorkspace(flags dbus.Flags) error {
 
 // method ShowWindow
 
-func (v *mockInterfaceWm) GoShowWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoShowWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -146,7 +147,7 @@ func (v *mockInterfaceWm) GoShowWindow(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceWm) ShowWindow(flags dbus.Flags) error {
+func (v *MockInterfaceWm) ShowWindow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -154,7 +155,7 @@ func (v *mockInterfaceWm) ShowWindow(flags dbus.Flags) error {
 
 // method ShowAllWindow
 
-func (v *mockInterfaceWm) GoShowAllWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoShowAllWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -165,7 +166,7 @@ func (v *mockInterfaceWm) GoShowAllWindow(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceWm) ShowAllWindow(flags dbus.Flags) error {
+func (v *MockInterfaceWm) ShowAllWindow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -173,7 +174,7 @@ func (v *mockInterfaceWm) ShowAllWindow(flags dbus.Flags) error {
 
 // method ClearMoveStatus
 
-func (v *mockInterfaceWm) GoClearMoveStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoClearMoveStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -184,7 +185,7 @@ func (v *mockInterfaceWm) GoClearMoveStatus(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWm) ClearMoveStatus(flags dbus.Flags) error {
+func (v *MockInterfaceWm) ClearMoveStatus(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -192,7 +193,7 @@ func (v *mockInterfaceWm) ClearMoveStatus(flags dbus.Flags) error {
 
 // method TouchToMove
 
-func (v *mockInterfaceWm) GoTouchToMove(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32) *dbus.Call {
+func (v *MockInterfaceWm) GoTouchToMove(flags dbus.Flags, ch chan *dbus.Call, x int32, y int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, x, y)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -203,7 +204,7 @@ func (v *mockInterfaceWm) GoTouchToMove(flags dbus.Flags, ch chan *dbus.Call, x 
 	return ret
 }
 
-func (v *mockInterfaceWm) TouchToMove(flags dbus.Flags, x int32, y int32) error {
+func (v *MockInterfaceWm) TouchToMove(flags dbus.Flags, x int32, y int32) error {
 	mockArgs := v.Called(flags, x, y)
 
 	return mockArgs.Error(0)
@@ -211,7 +212,7 @@ func (v *mockInterfaceWm) TouchToMove(flags dbus.Flags, x int32, y int32) error 
 
 // method PerformAction
 
-func (v *mockInterfaceWm) GoPerformAction(flags dbus.Flags, ch chan *dbus.Call, type0 int32) *dbus.Call {
+func (v *MockInterfaceWm) GoPerformAction(flags dbus.Flags, ch chan *dbus.Call, type0 int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, type0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -222,7 +223,7 @@ func (v *mockInterfaceWm) GoPerformAction(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceWm) PerformAction(flags dbus.Flags, type0 int32) error {
+func (v *MockInterfaceWm) PerformAction(flags dbus.Flags, type0 int32) error {
 	mockArgs := v.Called(flags, type0)
 
 	return mockArgs.Error(0)
@@ -230,7 +231,7 @@ func (v *mockInterfaceWm) PerformAction(flags dbus.Flags, type0 int32) error {
 
 // method PreviewWindow
 
-func (v *mockInterfaceWm) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, xid uint32) *dbus.Call {
+func (v *MockInterfaceWm) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, xid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, xid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -241,7 +242,7 @@ func (v *mockInterfaceWm) GoPreviewWindow(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceWm) PreviewWindow(flags dbus.Flags, xid uint32) error {
+func (v *MockInterfaceWm) PreviewWindow(flags dbus.Flags, xid uint32) error {
 	mockArgs := v.Called(flags, xid)
 
 	return mockArgs.Error(0)
@@ -249,7 +250,7 @@ func (v *mockInterfaceWm) PreviewWindow(flags dbus.Flags, xid uint32) error {
 
 // method CancelPreviewWindow
 
-func (v *mockInterfaceWm) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -260,7 +261,7 @@ func (v *mockInterfaceWm) GoCancelPreviewWindow(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWm) CancelPreviewWindow(flags dbus.Flags) error {
+func (v *MockInterfaceWm) CancelPreviewWindow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -268,7 +269,7 @@ func (v *mockInterfaceWm) CancelPreviewWindow(flags dbus.Flags) error {
 
 // method GetCurrentWorkspaceBackground
 
-func (v *mockInterfaceWm) GoGetCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoGetCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -279,7 +280,7 @@ func (v *mockInterfaceWm) GoGetCurrentWorkspaceBackground(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceWm) GetCurrentWorkspaceBackground(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWm) GetCurrentWorkspaceBackground(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -292,7 +293,7 @@ func (v *mockInterfaceWm) GetCurrentWorkspaceBackground(flags dbus.Flags) (strin
 
 // method SetCurrentWorkspaceBackground
 
-func (v *mockInterfaceWm) GoSetCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, uri string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, uri string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uri)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -303,7 +304,7 @@ func (v *mockInterfaceWm) GoSetCurrentWorkspaceBackground(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceWm) SetCurrentWorkspaceBackground(flags dbus.Flags, uri string) error {
+func (v *MockInterfaceWm) SetCurrentWorkspaceBackground(flags dbus.Flags, uri string) error {
 	mockArgs := v.Called(flags, uri)
 
 	return mockArgs.Error(0)
@@ -311,7 +312,7 @@ func (v *mockInterfaceWm) SetCurrentWorkspaceBackground(flags dbus.Flags, uri st
 
 // method GetWorkspaceBackground
 
-func (v *mockInterfaceWm) GoGetWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, index int32) *dbus.Call {
+func (v *MockInterfaceWm) GoGetWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, index int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, index)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -322,7 +323,7 @@ func (v *mockInterfaceWm) GoGetWorkspaceBackground(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceWm) GetWorkspaceBackground(flags dbus.Flags, index int32) (string, error) {
+func (v *MockInterfaceWm) GetWorkspaceBackground(flags dbus.Flags, index int32) (string, error) {
 	mockArgs := v.Called(flags, index)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -335,7 +336,7 @@ func (v *mockInterfaceWm) GetWorkspaceBackground(flags dbus.Flags, index int32) 
 
 // method SetWorkspaceBackground
 
-func (v *mockInterfaceWm) GoSetWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, index int32, uri string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, index int32, uri string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, index, uri)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -346,7 +347,7 @@ func (v *mockInterfaceWm) GoSetWorkspaceBackground(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceWm) SetWorkspaceBackground(flags dbus.Flags, index int32, uri string) error {
+func (v *MockInterfaceWm) SetWorkspaceBackground(flags dbus.Flags, index int32, uri string) error {
 	mockArgs := v.Called(flags, index, uri)
 
 	return mockArgs.Error(0)
@@ -354,7 +355,7 @@ func (v *mockInterfaceWm) SetWorkspaceBackground(flags dbus.Flags, index int32, 
 
 // method SetTransientBackground
 
-func (v *mockInterfaceWm) GoSetTransientBackground(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetTransientBackground(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -365,7 +366,7 @@ func (v *mockInterfaceWm) GoSetTransientBackground(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceWm) SetTransientBackground(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceWm) SetTransientBackground(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -373,7 +374,7 @@ func (v *mockInterfaceWm) SetTransientBackground(flags dbus.Flags, arg0 string) 
 
 // method GetCurrentWorkspaceBackgroundForMonitor
 
-func (v *mockInterfaceWm) GoGetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, strMonitorName string) *dbus.Call {
+func (v *MockInterfaceWm) GoGetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, strMonitorName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, strMonitorName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -384,7 +385,7 @@ func (v *mockInterfaceWm) GoGetCurrentWorkspaceBackgroundForMonitor(flags dbus.F
 	return ret
 }
 
-func (v *mockInterfaceWm) GetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, strMonitorName string) (string, error) {
+func (v *MockInterfaceWm) GetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, strMonitorName string) (string, error) {
 	mockArgs := v.Called(flags, strMonitorName)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -397,7 +398,7 @@ func (v *mockInterfaceWm) GetCurrentWorkspaceBackgroundForMonitor(flags dbus.Fla
 
 // method SetCurrentWorkspaceBackgroundForMonitor
 
-func (v *mockInterfaceWm) GoSetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uri, strMonitorName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -408,7 +409,7 @@ func (v *mockInterfaceWm) GoSetCurrentWorkspaceBackgroundForMonitor(flags dbus.F
 	return ret
 }
 
-func (v *mockInterfaceWm) SetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
+func (v *MockInterfaceWm) SetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
 	mockArgs := v.Called(flags, uri, strMonitorName)
 
 	return mockArgs.Error(0)
@@ -416,7 +417,7 @@ func (v *mockInterfaceWm) SetCurrentWorkspaceBackgroundForMonitor(flags dbus.Fla
 
 // method GetWorkspaceBackgroundForMonitor
 
-func (v *mockInterfaceWm) GoGetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string) *dbus.Call {
+func (v *MockInterfaceWm) GoGetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, index, strMonitorName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -427,7 +428,7 @@ func (v *mockInterfaceWm) GoGetWorkspaceBackgroundForMonitor(flags dbus.Flags, c
 	return ret
 }
 
-func (v *mockInterfaceWm) GetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string) (string, error) {
+func (v *MockInterfaceWm) GetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string) (string, error) {
 	mockArgs := v.Called(flags, index, strMonitorName)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -440,7 +441,7 @@ func (v *mockInterfaceWm) GetWorkspaceBackgroundForMonitor(flags dbus.Flags, ind
 
 // method SetWorkspaceBackgroundForMonitor
 
-func (v *mockInterfaceWm) GoSetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string, uri string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetWorkspaceBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, index int32, strMonitorName string, uri string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, index, strMonitorName, uri)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -451,7 +452,7 @@ func (v *mockInterfaceWm) GoSetWorkspaceBackgroundForMonitor(flags dbus.Flags, c
 	return ret
 }
 
-func (v *mockInterfaceWm) SetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string, uri string) error {
+func (v *MockInterfaceWm) SetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string, uri string) error {
 	mockArgs := v.Called(flags, index, strMonitorName, uri)
 
 	return mockArgs.Error(0)
@@ -459,7 +460,7 @@ func (v *mockInterfaceWm) SetWorkspaceBackgroundForMonitor(flags dbus.Flags, ind
 
 // method SetTransientBackgroundForMonitor
 
-func (v *mockInterfaceWm) GoSetTransientBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetTransientBackgroundForMonitor(flags dbus.Flags, ch chan *dbus.Call, uri string, strMonitorName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uri, strMonitorName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -470,7 +471,7 @@ func (v *mockInterfaceWm) GoSetTransientBackgroundForMonitor(flags dbus.Flags, c
 	return ret
 }
 
-func (v *mockInterfaceWm) SetTransientBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
+func (v *MockInterfaceWm) SetTransientBackgroundForMonitor(flags dbus.Flags, uri string, strMonitorName string) error {
 	mockArgs := v.Called(flags, uri, strMonitorName)
 
 	return mockArgs.Error(0)
@@ -478,7 +479,7 @@ func (v *mockInterfaceWm) SetTransientBackgroundForMonitor(flags dbus.Flags, uri
 
 // method GetCurrentWorkspace
 
-func (v *mockInterfaceWm) GoGetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoGetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -489,7 +490,7 @@ func (v *mockInterfaceWm) GoGetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWm) GetCurrentWorkspace(flags dbus.Flags) (int32, error) {
+func (v *MockInterfaceWm) GetCurrentWorkspace(flags dbus.Flags) (int32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -502,7 +503,7 @@ func (v *mockInterfaceWm) GetCurrentWorkspace(flags dbus.Flags) (int32, error) {
 
 // method WorkspaceCount
 
-func (v *mockInterfaceWm) GoWorkspaceCount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoWorkspaceCount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -513,7 +514,7 @@ func (v *mockInterfaceWm) GoWorkspaceCount(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceWm) WorkspaceCount(flags dbus.Flags) (int32, error) {
+func (v *MockInterfaceWm) WorkspaceCount(flags dbus.Flags) (int32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -526,7 +527,7 @@ func (v *mockInterfaceWm) WorkspaceCount(flags dbus.Flags) (int32, error) {
 
 // method SetCurrentWorkspace
 
-func (v *mockInterfaceWm) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, index int32) *dbus.Call {
+func (v *MockInterfaceWm) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, index int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, index)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -537,7 +538,7 @@ func (v *mockInterfaceWm) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWm) SetCurrentWorkspace(flags dbus.Flags, index int32) error {
+func (v *MockInterfaceWm) SetCurrentWorkspace(flags dbus.Flags, index int32) error {
 	mockArgs := v.Called(flags, index)
 
 	return mockArgs.Error(0)
@@ -545,7 +546,7 @@ func (v *mockInterfaceWm) SetCurrentWorkspace(flags dbus.Flags, index int32) err
 
 // method PreviousWorkspace
 
-func (v *mockInterfaceWm) GoPreviousWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoPreviousWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -556,7 +557,7 @@ func (v *mockInterfaceWm) GoPreviousWorkspace(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceWm) PreviousWorkspace(flags dbus.Flags) error {
+func (v *MockInterfaceWm) PreviousWorkspace(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -564,7 +565,7 @@ func (v *mockInterfaceWm) PreviousWorkspace(flags dbus.Flags) error {
 
 // method NextWorkspace
 
-func (v *mockInterfaceWm) GoNextWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoNextWorkspace(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -575,7 +576,7 @@ func (v *mockInterfaceWm) GoNextWorkspace(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceWm) NextWorkspace(flags dbus.Flags) error {
+func (v *MockInterfaceWm) NextWorkspace(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -583,7 +584,7 @@ func (v *mockInterfaceWm) NextWorkspace(flags dbus.Flags) error {
 
 // method GetAllAccels
 
-func (v *mockInterfaceWm) GoGetAllAccels(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoGetAllAccels(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -594,7 +595,7 @@ func (v *mockInterfaceWm) GoGetAllAccels(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceWm) GetAllAccels(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWm) GetAllAccels(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -607,7 +608,7 @@ func (v *mockInterfaceWm) GetAllAccels(flags dbus.Flags) (string, error) {
 
 // method GetAccel
 
-func (v *mockInterfaceWm) GoGetAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceWm) GoGetAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -618,7 +619,7 @@ func (v *mockInterfaceWm) GoGetAccel(flags dbus.Flags, ch chan *dbus.Call, id st
 	return ret
 }
 
-func (v *mockInterfaceWm) GetAccel(flags dbus.Flags, id string) ([]string, error) {
+func (v *MockInterfaceWm) GetAccel(flags dbus.Flags, id string) ([]string, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -631,7 +632,7 @@ func (v *mockInterfaceWm) GetAccel(flags dbus.Flags, id string) ([]string, error
 
 // method GetDefaultAccel
 
-func (v *mockInterfaceWm) GoGetDefaultAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceWm) GoGetDefaultAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -642,7 +643,7 @@ func (v *mockInterfaceWm) GoGetDefaultAccel(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWm) GetDefaultAccel(flags dbus.Flags, id string) ([]string, error) {
+func (v *MockInterfaceWm) GetDefaultAccel(flags dbus.Flags, id string) ([]string, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -655,7 +656,7 @@ func (v *mockInterfaceWm) GetDefaultAccel(flags dbus.Flags, id string) ([]string
 
 // method SetAccel
 
-func (v *mockInterfaceWm) GoSetAccel(flags dbus.Flags, ch chan *dbus.Call, data string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetAccel(flags dbus.Flags, ch chan *dbus.Call, data string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, data)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -666,7 +667,7 @@ func (v *mockInterfaceWm) GoSetAccel(flags dbus.Flags, ch chan *dbus.Call, data 
 	return ret
 }
 
-func (v *mockInterfaceWm) SetAccel(flags dbus.Flags, data string) (bool, error) {
+func (v *MockInterfaceWm) SetAccel(flags dbus.Flags, data string) (bool, error) {
 	mockArgs := v.Called(flags, data)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -679,7 +680,7 @@ func (v *mockInterfaceWm) SetAccel(flags dbus.Flags, data string) (bool, error) 
 
 // method RemoveAccel
 
-func (v *mockInterfaceWm) GoRemoveAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceWm) GoRemoveAccel(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -690,7 +691,7 @@ func (v *mockInterfaceWm) GoRemoveAccel(flags dbus.Flags, ch chan *dbus.Call, id
 	return ret
 }
 
-func (v *mockInterfaceWm) RemoveAccel(flags dbus.Flags, id string) error {
+func (v *MockInterfaceWm) RemoveAccel(flags dbus.Flags, id string) error {
 	mockArgs := v.Called(flags, id)
 
 	return mockArgs.Error(0)
@@ -698,7 +699,7 @@ func (v *mockInterfaceWm) RemoveAccel(flags dbus.Flags, id string) error {
 
 // method SetDecorationTheme
 
-func (v *mockInterfaceWm) GoSetDecorationTheme(flags dbus.Flags, ch chan *dbus.Call, themeType string, themeName string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetDecorationTheme(flags dbus.Flags, ch chan *dbus.Call, themeType string, themeName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, themeType, themeName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -709,7 +710,7 @@ func (v *mockInterfaceWm) GoSetDecorationTheme(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWm) SetDecorationTheme(flags dbus.Flags, themeType string, themeName string) error {
+func (v *MockInterfaceWm) SetDecorationTheme(flags dbus.Flags, themeType string, themeName string) error {
 	mockArgs := v.Called(flags, themeType, themeName)
 
 	return mockArgs.Error(0)
@@ -717,7 +718,7 @@ func (v *mockInterfaceWm) SetDecorationTheme(flags dbus.Flags, themeType string,
 
 // method SetDecorationDeepinTheme
 
-func (v *mockInterfaceWm) GoSetDecorationDeepinTheme(flags dbus.Flags, ch chan *dbus.Call, deepinThemeName string) *dbus.Call {
+func (v *MockInterfaceWm) GoSetDecorationDeepinTheme(flags dbus.Flags, ch chan *dbus.Call, deepinThemeName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, deepinThemeName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -728,7 +729,7 @@ func (v *mockInterfaceWm) GoSetDecorationDeepinTheme(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceWm) SetDecorationDeepinTheme(flags dbus.Flags, deepinThemeName string) error {
+func (v *MockInterfaceWm) SetDecorationDeepinTheme(flags dbus.Flags, deepinThemeName string) error {
 	mockArgs := v.Called(flags, deepinThemeName)
 
 	return mockArgs.Error(0)
@@ -736,7 +737,7 @@ func (v *mockInterfaceWm) SetDecorationDeepinTheme(flags dbus.Flags, deepinTheme
 
 // method ChangeCurrentWorkspaceBackground
 
-func (v *mockInterfaceWm) GoChangeCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, uri string) *dbus.Call {
+func (v *MockInterfaceWm) GoChangeCurrentWorkspaceBackground(flags dbus.Flags, ch chan *dbus.Call, uri string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uri)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -747,7 +748,7 @@ func (v *mockInterfaceWm) GoChangeCurrentWorkspaceBackground(flags dbus.Flags, c
 	return ret
 }
 
-func (v *mockInterfaceWm) ChangeCurrentWorkspaceBackground(flags dbus.Flags, uri string) error {
+func (v *MockInterfaceWm) ChangeCurrentWorkspaceBackground(flags dbus.Flags, uri string) error {
 	mockArgs := v.Called(flags, uri)
 
 	return mockArgs.Error(0)
@@ -755,7 +756,7 @@ func (v *mockInterfaceWm) ChangeCurrentWorkspaceBackground(flags dbus.Flags, uri
 
 // method SwitchToWorkspace
 
-func (v *mockInterfaceWm) GoSwitchToWorkspace(flags dbus.Flags, ch chan *dbus.Call, backward bool) *dbus.Call {
+func (v *MockInterfaceWm) GoSwitchToWorkspace(flags dbus.Flags, ch chan *dbus.Call, backward bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, backward)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -766,7 +767,7 @@ func (v *mockInterfaceWm) GoSwitchToWorkspace(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceWm) SwitchToWorkspace(flags dbus.Flags, backward bool) error {
+func (v *MockInterfaceWm) SwitchToWorkspace(flags dbus.Flags, backward bool) error {
 	mockArgs := v.Called(flags, backward)
 
 	return mockArgs.Error(0)
@@ -774,7 +775,7 @@ func (v *mockInterfaceWm) SwitchToWorkspace(flags dbus.Flags, backward bool) err
 
 // method PresentWindows
 
-func (v *mockInterfaceWm) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call, xids []uint32) *dbus.Call {
+func (v *MockInterfaceWm) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call, xids []uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, xids)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -785,7 +786,7 @@ func (v *mockInterfaceWm) GoPresentWindows(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceWm) PresentWindows(flags dbus.Flags, xids []uint32) error {
+func (v *MockInterfaceWm) PresentWindows(flags dbus.Flags, xids []uint32) error {
 	mockArgs := v.Called(flags, xids)
 
 	return mockArgs.Error(0)
@@ -793,7 +794,7 @@ func (v *mockInterfaceWm) PresentWindows(flags dbus.Flags, xids []uint32) error 
 
 // method EnableZoneDetected
 
-func (v *mockInterfaceWm) GoEnableZoneDetected(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceWm) GoEnableZoneDetected(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -804,7 +805,7 @@ func (v *mockInterfaceWm) GoEnableZoneDetected(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWm) EnableZoneDetected(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceWm) EnableZoneDetected(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -812,7 +813,7 @@ func (v *mockInterfaceWm) EnableZoneDetected(flags dbus.Flags, enabled bool) err
 
 // method GetIsShowDesktop
 
-func (v *mockInterfaceWm) GoGetIsShowDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoGetIsShowDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -823,7 +824,7 @@ func (v *mockInterfaceWm) GoGetIsShowDesktop(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceWm) GetIsShowDesktop(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWm) GetIsShowDesktop(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -836,7 +837,7 @@ func (v *mockInterfaceWm) GetIsShowDesktop(flags dbus.Flags) (bool, error) {
 
 // method GetMultiTaskingStatus
 
-func (v *mockInterfaceWm) GoGetMultiTaskingStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWm) GoGetMultiTaskingStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -847,7 +848,7 @@ func (v *mockInterfaceWm) GoGetMultiTaskingStatus(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceWm) GetMultiTaskingStatus(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWm) GetMultiTaskingStatus(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -860,7 +861,7 @@ func (v *mockInterfaceWm) GetMultiTaskingStatus(flags dbus.Flags) (bool, error) 
 
 // signal WorkspaceBackgroundChanged
 
-func (v *mockInterfaceWm) ConnectWorkspaceBackgroundChanged(cb func(index int32, newUri string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectWorkspaceBackgroundChanged(cb func(index int32, newUri string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -873,7 +874,7 @@ func (v *mockInterfaceWm) ConnectWorkspaceBackgroundChanged(cb func(index int32,
 
 // signal WorkspaceBackgroundChangedForMonitor
 
-func (v *mockInterfaceWm) ConnectWorkspaceBackgroundChangedForMonitor(cb func(index int32, monitor string, newUri string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectWorkspaceBackgroundChangedForMonitor(cb func(index int32, monitor string, newUri string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -886,7 +887,7 @@ func (v *mockInterfaceWm) ConnectWorkspaceBackgroundChangedForMonitor(cb func(in
 
 // signal compositingEnabledChanged
 
-func (v *mockInterfaceWm) ConnectCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -899,7 +900,7 @@ func (v *mockInterfaceWm) ConnectCompositingEnabledChanged(cb func(enabled bool)
 
 // signal wmCompositingEnabledChanged
 
-func (v *mockInterfaceWm) ConnectWmCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectWmCompositingEnabledChanged(cb func(enabled bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -912,7 +913,7 @@ func (v *mockInterfaceWm) ConnectWmCompositingEnabledChanged(cb func(enabled boo
 
 // signal workspaceCountChanged
 
-func (v *mockInterfaceWm) ConnectWorkspaceCountChanged(cb func(count int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectWorkspaceCountChanged(cb func(count int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -925,7 +926,7 @@ func (v *mockInterfaceWm) ConnectWorkspaceCountChanged(cb func(count int32)) (db
 
 // signal WorkspaceSwitched
 
-func (v *mockInterfaceWm) ConnectWorkspaceSwitched(cb func(from int32, to int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWm) ConnectWorkspaceSwitched(cb func(from int32, to int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -938,7 +939,7 @@ func (v *mockInterfaceWm) ConnectWorkspaceSwitched(cb func(from int32, to int32)
 
 // property compositingEnabled b
 
-func (v *mockInterfaceWm) CompositingEnabled() proxy.PropBool {
+func (v *MockInterfaceWm) CompositingEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -951,7 +952,7 @@ func (v *mockInterfaceWm) CompositingEnabled() proxy.PropBool {
 
 // property compositingPossible b
 
-func (v *mockInterfaceWm) CompositingPossible() proxy.PropBool {
+func (v *MockInterfaceWm) CompositingPossible() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -964,7 +965,7 @@ func (v *mockInterfaceWm) CompositingPossible() proxy.PropBool {
 
 // property compositingAllowSwitch b
 
-func (v *mockInterfaceWm) CompositingAllowSwitch() proxy.PropBool {
+func (v *MockInterfaceWm) CompositingAllowSwitch() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -977,7 +978,7 @@ func (v *mockInterfaceWm) CompositingAllowSwitch() proxy.PropBool {
 
 // property zoneEnabled b
 
-func (v *mockInterfaceWm) ZoneEnabled() proxy.PropBool {
+func (v *MockInterfaceWm) ZoneEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -990,7 +991,7 @@ func (v *mockInterfaceWm) ZoneEnabled() proxy.PropBool {
 
 // property cursorTheme s
 
-func (v *mockInterfaceWm) CursorTheme() proxy.PropString {
+func (v *MockInterfaceWm) CursorTheme() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1003,7 +1004,7 @@ func (v *mockInterfaceWm) CursorTheme() proxy.PropString {
 
 // property cursorSize i
 
-func (v *mockInterfaceWm) CursorSize() proxy.PropInt32 {
+func (v *MockInterfaceWm) CursorSize() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)

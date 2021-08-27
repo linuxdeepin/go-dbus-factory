@@ -8,20 +8,22 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockApps struct {
-	mockInterfaceDesktopFileWatcher // interface com.deepin.daemon.Apps.DesktopFileWatcher
-	mockInterfaceLaunchedRecorder   // interface com.deepin.daemon.Apps.LaunchedRecorder
+	MockInterfaceDesktopFileWatcher // interface com.deepin.daemon.Apps.DesktopFileWatcher
+	MockInterfaceLaunchedRecorder   // interface com.deepin.daemon.Apps.LaunchedRecorder
+	proxy.MockObject
 }
 
-type mockInterfaceDesktopFileWatcher struct {
+type MockInterfaceDesktopFileWatcher struct {
 	mock.Mock
 }
 
 // signal Event
 
-func (v *mockInterfaceDesktopFileWatcher) ConnectEvent(cb func(name string, op uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDesktopFileWatcher) ConnectEvent(cb func(name string, op uint32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -32,13 +34,13 @@ func (v *mockInterfaceDesktopFileWatcher) ConnectEvent(cb func(name string, op u
 	return ret0, mockArgs.Error(1)
 }
 
-type mockInterfaceLaunchedRecorder struct {
+type MockInterfaceLaunchedRecorder struct {
 	mock.Mock
 }
 
 // method GetNew
 
-func (v *mockInterfaceLaunchedRecorder) GoGetNew(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceLaunchedRecorder) GoGetNew(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceLaunchedRecorder) GoGetNew(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceLaunchedRecorder) GetNew(flags dbus.Flags) (map[string][]string, error) {
+func (v *MockInterfaceLaunchedRecorder) GetNew(flags dbus.Flags) (map[string][]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(map[string][]string)
@@ -62,7 +64,7 @@ func (v *mockInterfaceLaunchedRecorder) GetNew(flags dbus.Flags) (map[string][]s
 
 // method MarkLaunched
 
-func (v *mockInterfaceLaunchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
+func (v *MockInterfaceLaunchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan *dbus.Call, desktopFile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, desktopFile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -73,7 +75,7 @@ func (v *mockInterfaceLaunchedRecorder) GoMarkLaunched(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceLaunchedRecorder) MarkLaunched(flags dbus.Flags, desktopFile string) error {
+func (v *MockInterfaceLaunchedRecorder) MarkLaunched(flags dbus.Flags, desktopFile string) error {
 	mockArgs := v.Called(flags, desktopFile)
 
 	return mockArgs.Error(0)
@@ -81,7 +83,7 @@ func (v *mockInterfaceLaunchedRecorder) MarkLaunched(flags dbus.Flags, desktopFi
 
 // method UninstallHints
 
-func (v *mockInterfaceLaunchedRecorder) GoUninstallHints(flags dbus.Flags, ch chan *dbus.Call, desktopFiles []string) *dbus.Call {
+func (v *MockInterfaceLaunchedRecorder) GoUninstallHints(flags dbus.Flags, ch chan *dbus.Call, desktopFiles []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, desktopFiles)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -92,7 +94,7 @@ func (v *mockInterfaceLaunchedRecorder) GoUninstallHints(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceLaunchedRecorder) UninstallHints(flags dbus.Flags, desktopFiles []string) error {
+func (v *MockInterfaceLaunchedRecorder) UninstallHints(flags dbus.Flags, desktopFiles []string) error {
 	mockArgs := v.Called(flags, desktopFiles)
 
 	return mockArgs.Error(0)
@@ -100,7 +102,7 @@ func (v *mockInterfaceLaunchedRecorder) UninstallHints(flags dbus.Flags, desktop
 
 // method WatchDirs
 
-func (v *mockInterfaceLaunchedRecorder) GoWatchDirs(flags dbus.Flags, ch chan *dbus.Call, dirs []string) *dbus.Call {
+func (v *MockInterfaceLaunchedRecorder) GoWatchDirs(flags dbus.Flags, ch chan *dbus.Call, dirs []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, dirs)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -111,7 +113,7 @@ func (v *mockInterfaceLaunchedRecorder) GoWatchDirs(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceLaunchedRecorder) WatchDirs(flags dbus.Flags, dirs []string) error {
+func (v *MockInterfaceLaunchedRecorder) WatchDirs(flags dbus.Flags, dirs []string) error {
 	mockArgs := v.Called(flags, dirs)
 
 	return mockArgs.Error(0)
@@ -119,7 +121,7 @@ func (v *mockInterfaceLaunchedRecorder) WatchDirs(flags dbus.Flags, dirs []strin
 
 // signal Launched
 
-func (v *mockInterfaceLaunchedRecorder) ConnectLaunched(cb func(file string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLaunchedRecorder) ConnectLaunched(cb func(file string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -132,7 +134,7 @@ func (v *mockInterfaceLaunchedRecorder) ConnectLaunched(cb func(file string)) (d
 
 // signal StatusSaved
 
-func (v *mockInterfaceLaunchedRecorder) ConnectStatusSaved(cb func(root string, file string, ok bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLaunchedRecorder) ConnectStatusSaved(cb func(root string, file string, ok bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -145,7 +147,7 @@ func (v *mockInterfaceLaunchedRecorder) ConnectStatusSaved(cb func(root string, 
 
 // signal ServiceRestarted
 
-func (v *mockInterfaceLaunchedRecorder) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLaunchedRecorder) ConnectServiceRestarted(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
