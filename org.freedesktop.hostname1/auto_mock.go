@@ -11,16 +11,17 @@ import (
 )
 
 type MockHostname struct {
-	mockInterfaceHostname // interface org.freedesktop.hostname1
+	MockInterfaceHostname // interface org.freedesktop.hostname1
+	proxy.MockObject
 }
 
-type mockInterfaceHostname struct {
+type MockInterfaceHostname struct {
 	mock.Mock
 }
 
 // method SetHostname
 
-func (v *mockInterfaceHostname) GoSetHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceHostname) GoSetHostname(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceHostname) SetHostname(flags dbus.Flags, arg0 string, arg1 
 
 // method SetStaticHostname
 
-func (v *mockInterfaceHostname) GoSetStaticHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetStaticHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceHostname) GoSetStaticHostname(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetStaticHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetStaticHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceHostname) SetStaticHostname(flags dbus.Flags, arg0 string,
 
 // method SetPrettyHostname
 
-func (v *mockInterfaceHostname) GoSetPrettyHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetPrettyHostname(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceHostname) GoSetPrettyHostname(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetPrettyHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetPrettyHostname(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceHostname) SetPrettyHostname(flags dbus.Flags, arg0 string,
 
 // method SetIconName
 
-func (v *mockInterfaceHostname) GoSetIconName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetIconName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceHostname) GoSetIconName(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetIconName(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetIconName(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceHostname) SetIconName(flags dbus.Flags, arg0 string, arg1 
 
 // method SetChassis
 
-func (v *mockInterfaceHostname) GoSetChassis(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetChassis(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +108,7 @@ func (v *mockInterfaceHostname) GoSetChassis(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetChassis(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetChassis(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -115,7 +116,7 @@ func (v *mockInterfaceHostname) SetChassis(flags dbus.Flags, arg0 string, arg1 b
 
 // method SetDeployment
 
-func (v *mockInterfaceHostname) GoSetDeployment(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetDeployment(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -126,7 +127,7 @@ func (v *mockInterfaceHostname) GoSetDeployment(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetDeployment(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetDeployment(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -134,7 +135,7 @@ func (v *mockInterfaceHostname) SetDeployment(flags dbus.Flags, arg0 string, arg
 
 // method SetLocation
 
-func (v *mockInterfaceHostname) GoSetLocation(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoSetLocation(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -145,7 +146,7 @@ func (v *mockInterfaceHostname) GoSetLocation(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceHostname) SetLocation(flags dbus.Flags, arg0 string, arg1 bool) error {
+func (v *MockInterfaceHostname) SetLocation(flags dbus.Flags, arg0 string, arg1 bool) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -153,7 +154,7 @@ func (v *mockInterfaceHostname) SetLocation(flags dbus.Flags, arg0 string, arg1 
 
 // method GetProductUUID
 
-func (v *mockInterfaceHostname) GoGetProductUUID(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+func (v *MockInterfaceHostname) GoGetProductUUID(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -164,7 +165,7 @@ func (v *mockInterfaceHostname) GoGetProductUUID(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceHostname) GetProductUUID(flags dbus.Flags, arg0 bool) ([]uint8, error) {
+func (v *MockInterfaceHostname) GetProductUUID(flags dbus.Flags, arg0 bool) ([]uint8, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).([]uint8)
@@ -177,7 +178,7 @@ func (v *mockInterfaceHostname) GetProductUUID(flags dbus.Flags, arg0 bool) ([]u
 
 // property Hostname s
 
-func (v *mockInterfaceHostname) Hostname() proxy.PropString {
+func (v *MockInterfaceHostname) Hostname() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -190,7 +191,7 @@ func (v *mockInterfaceHostname) Hostname() proxy.PropString {
 
 // property StaticHostname s
 
-func (v *mockInterfaceHostname) StaticHostname() proxy.PropString {
+func (v *MockInterfaceHostname) StaticHostname() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -203,7 +204,7 @@ func (v *mockInterfaceHostname) StaticHostname() proxy.PropString {
 
 // property PrettyHostname s
 
-func (v *mockInterfaceHostname) PrettyHostname() proxy.PropString {
+func (v *MockInterfaceHostname) PrettyHostname() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -216,7 +217,7 @@ func (v *mockInterfaceHostname) PrettyHostname() proxy.PropString {
 
 // property IconName s
 
-func (v *mockInterfaceHostname) IconName() proxy.PropString {
+func (v *MockInterfaceHostname) IconName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -229,7 +230,7 @@ func (v *mockInterfaceHostname) IconName() proxy.PropString {
 
 // property Chassis s
 
-func (v *mockInterfaceHostname) Chassis() proxy.PropString {
+func (v *MockInterfaceHostname) Chassis() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -242,7 +243,7 @@ func (v *mockInterfaceHostname) Chassis() proxy.PropString {
 
 // property Deployment s
 
-func (v *mockInterfaceHostname) Deployment() proxy.PropString {
+func (v *MockInterfaceHostname) Deployment() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -255,7 +256,7 @@ func (v *mockInterfaceHostname) Deployment() proxy.PropString {
 
 // property Location s
 
-func (v *mockInterfaceHostname) Location() proxy.PropString {
+func (v *MockInterfaceHostname) Location() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -268,7 +269,7 @@ func (v *mockInterfaceHostname) Location() proxy.PropString {
 
 // property KernelName s
 
-func (v *mockInterfaceHostname) KernelName() proxy.PropString {
+func (v *MockInterfaceHostname) KernelName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -281,7 +282,7 @@ func (v *mockInterfaceHostname) KernelName() proxy.PropString {
 
 // property KernelRelease s
 
-func (v *mockInterfaceHostname) KernelRelease() proxy.PropString {
+func (v *MockInterfaceHostname) KernelRelease() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -294,7 +295,7 @@ func (v *mockInterfaceHostname) KernelRelease() proxy.PropString {
 
 // property KernelVersion s
 
-func (v *mockInterfaceHostname) KernelVersion() proxy.PropString {
+func (v *MockInterfaceHostname) KernelVersion() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -307,7 +308,7 @@ func (v *mockInterfaceHostname) KernelVersion() proxy.PropString {
 
 // property OperatingSystemPrettyName s
 
-func (v *mockInterfaceHostname) OperatingSystemPrettyName() proxy.PropString {
+func (v *MockInterfaceHostname) OperatingSystemPrettyName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -320,7 +321,7 @@ func (v *mockInterfaceHostname) OperatingSystemPrettyName() proxy.PropString {
 
 // property OperatingSystemCPEName s
 
-func (v *mockInterfaceHostname) OperatingSystemCPEName() proxy.PropString {
+func (v *MockInterfaceHostname) OperatingSystemCPEName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -333,7 +334,7 @@ func (v *mockInterfaceHostname) OperatingSystemCPEName() proxy.PropString {
 
 // property HomeURL s
 
-func (v *mockInterfaceHostname) HomeURL() proxy.PropString {
+func (v *MockInterfaceHostname) HomeURL() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockPowerManager struct {
-	mockInterfacePowerManager // interface com.deepin.daemon.PowerManager
+	MockInterfacePowerManager // interface com.deepin.daemon.PowerManager
+	proxy.MockObject
 }
 
-type mockInterfacePowerManager struct {
+type MockInterfacePowerManager struct {
 	mock.Mock
 }
 
 // method CanShutdown
 
-func (v *mockInterfacePowerManager) GoCanShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePowerManager) GoCanShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfacePowerManager) GoCanShutdown(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfacePowerManager) CanShutdown(flags dbus.Flags) (bool, error) {
+func (v *MockInterfacePowerManager) CanShutdown(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -43,7 +45,7 @@ func (v *mockInterfacePowerManager) CanShutdown(flags dbus.Flags) (bool, error) 
 
 // method CanReboot
 
-func (v *mockInterfacePowerManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePowerManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -54,7 +56,7 @@ func (v *mockInterfacePowerManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfacePowerManager) CanReboot(flags dbus.Flags) (bool, error) {
+func (v *MockInterfacePowerManager) CanReboot(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -67,7 +69,7 @@ func (v *mockInterfacePowerManager) CanReboot(flags dbus.Flags) (bool, error) {
 
 // method CanSuspend
 
-func (v *mockInterfacePowerManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePowerManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -78,7 +80,7 @@ func (v *mockInterfacePowerManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfacePowerManager) CanSuspend(flags dbus.Flags) (bool, error) {
+func (v *MockInterfacePowerManager) CanSuspend(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -91,7 +93,7 @@ func (v *mockInterfacePowerManager) CanSuspend(flags dbus.Flags) (bool, error) {
 
 // method CanHibernate
 
-func (v *mockInterfacePowerManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfacePowerManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -102,7 +104,7 @@ func (v *mockInterfacePowerManager) GoCanHibernate(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfacePowerManager) CanHibernate(flags dbus.Flags) (bool, error) {
+func (v *MockInterfacePowerManager) CanHibernate(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)

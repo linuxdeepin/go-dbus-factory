@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockGreeter struct {
-	mockInterfaceGreeter // interface com.deepin.daemon.Greeter
+	MockInterfaceGreeter // interface com.deepin.daemon.Greeter
+	proxy.MockObject
 }
 
-type mockInterfaceGreeter struct {
+type MockInterfaceGreeter struct {
 	mock.Mock
 }
 
 // method UpdateGreeterQtTheme
 
-func (v *mockInterfaceGreeter) GoUpdateGreeterQtTheme(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD) *dbus.Call {
+func (v *MockInterfaceGreeter) GoUpdateGreeterQtTheme(flags dbus.Flags, ch chan *dbus.Call, fd dbus.UnixFD) *dbus.Call {
 	mockArgs := v.Called(flags, ch, fd)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceGreeter) GoUpdateGreeterQtTheme(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceGreeter) UpdateGreeterQtTheme(flags dbus.Flags, fd dbus.UnixFD) error {
+func (v *MockInterfaceGreeter) UpdateGreeterQtTheme(flags dbus.Flags, fd dbus.UnixFD) error {
 	mockArgs := v.Called(flags, fd)
 
 	return mockArgs.Error(0)

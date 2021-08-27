@@ -11,16 +11,17 @@ import (
 )
 
 type MockKeyboard struct {
-	mockInterfaceKeyboard // interface com.deepin.daemon.InputDevice.Keyboard
+	MockInterfaceKeyboard // interface com.deepin.daemon.InputDevice.Keyboard
+	proxy.MockObject
 }
 
-type mockInterfaceKeyboard struct {
+type MockInterfaceKeyboard struct {
 	mock.Mock
 }
 
 // method AddLayoutOption
 
-func (v *mockInterfaceKeyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, option)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceKeyboard) GoAddLayoutOption(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) AddLayoutOption(flags dbus.Flags, option string) error {
+func (v *MockInterfaceKeyboard) AddLayoutOption(flags dbus.Flags, option string) error {
 	mockArgs := v.Called(flags, option)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceKeyboard) AddLayoutOption(flags dbus.Flags, option string)
 
 // method AddUserLayout
 
-func (v *mockInterfaceKeyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, layout)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceKeyboard) GoAddUserLayout(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) AddUserLayout(flags dbus.Flags, layout string) error {
+func (v *MockInterfaceKeyboard) AddUserLayout(flags dbus.Flags, layout string) error {
 	mockArgs := v.Called(flags, layout)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceKeyboard) AddUserLayout(flags dbus.Flags, layout string) e
 
 // method ClearLayoutOption
 
-func (v *mockInterfaceKeyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceKeyboard) GoClearLayoutOption(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) ClearLayoutOption(flags dbus.Flags) error {
+func (v *MockInterfaceKeyboard) ClearLayoutOption(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceKeyboard) ClearLayoutOption(flags dbus.Flags) error {
 
 // method DeleteLayoutOption
 
-func (v *mockInterfaceKeyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *dbus.Call, option string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, option)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceKeyboard) GoDeleteLayoutOption(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) DeleteLayoutOption(flags dbus.Flags, option string) error {
+func (v *MockInterfaceKeyboard) DeleteLayoutOption(flags dbus.Flags, option string) error {
 	mockArgs := v.Called(flags, option)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceKeyboard) DeleteLayoutOption(flags dbus.Flags, option stri
 
 // method DeleteUserLayout
 
-func (v *mockInterfaceKeyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, layout)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +108,7 @@ func (v *mockInterfaceKeyboard) GoDeleteUserLayout(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) DeleteUserLayout(flags dbus.Flags, layout string) error {
+func (v *MockInterfaceKeyboard) DeleteUserLayout(flags dbus.Flags, layout string) error {
 	mockArgs := v.Called(flags, layout)
 
 	return mockArgs.Error(0)
@@ -115,7 +116,7 @@ func (v *mockInterfaceKeyboard) DeleteUserLayout(flags dbus.Flags, layout string
 
 // method GetLayoutDesc
 
-func (v *mockInterfaceKeyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, layout)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -126,7 +127,7 @@ func (v *mockInterfaceKeyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) GetLayoutDesc(flags dbus.Flags, layout string) (string, error) {
+func (v *MockInterfaceKeyboard) GetLayoutDesc(flags dbus.Flags, layout string) (string, error) {
 	mockArgs := v.Called(flags, layout)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -139,7 +140,7 @@ func (v *mockInterfaceKeyboard) GetLayoutDesc(flags dbus.Flags, layout string) (
 
 // method LayoutList
 
-func (v *mockInterfaceKeyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -150,7 +151,7 @@ func (v *mockInterfaceKeyboard) GoLayoutList(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) LayoutList(flags dbus.Flags) (map[string]string, error) {
+func (v *MockInterfaceKeyboard) LayoutList(flags dbus.Flags) (map[string]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(map[string]string)
@@ -163,7 +164,7 @@ func (v *mockInterfaceKeyboard) LayoutList(flags dbus.Flags) (map[string]string,
 
 // method Reset
 
-func (v *mockInterfaceKeyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceKeyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -174,7 +175,7 @@ func (v *mockInterfaceKeyboard) GoReset(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceKeyboard) Reset(flags dbus.Flags) error {
+func (v *MockInterfaceKeyboard) Reset(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -182,7 +183,7 @@ func (v *mockInterfaceKeyboard) Reset(flags dbus.Flags) error {
 
 // property UserOptionList as
 
-func (v *mockInterfaceKeyboard) UserOptionList() proxy.PropStringArray {
+func (v *MockInterfaceKeyboard) UserOptionList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -195,7 +196,7 @@ func (v *mockInterfaceKeyboard) UserOptionList() proxy.PropStringArray {
 
 // property RepeatEnabled b
 
-func (v *mockInterfaceKeyboard) RepeatEnabled() proxy.PropBool {
+func (v *MockInterfaceKeyboard) RepeatEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -208,7 +209,7 @@ func (v *mockInterfaceKeyboard) RepeatEnabled() proxy.PropBool {
 
 // property CapslockToggle b
 
-func (v *mockInterfaceKeyboard) CapslockToggle() proxy.PropBool {
+func (v *MockInterfaceKeyboard) CapslockToggle() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -221,7 +222,7 @@ func (v *mockInterfaceKeyboard) CapslockToggle() proxy.PropBool {
 
 // property CursorBlink i
 
-func (v *mockInterfaceKeyboard) CursorBlink() proxy.PropInt32 {
+func (v *MockInterfaceKeyboard) CursorBlink() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -234,7 +235,7 @@ func (v *mockInterfaceKeyboard) CursorBlink() proxy.PropInt32 {
 
 // property RepeatInterval u
 
-func (v *mockInterfaceKeyboard) RepeatInterval() proxy.PropUint32 {
+func (v *MockInterfaceKeyboard) RepeatInterval() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -247,7 +248,7 @@ func (v *mockInterfaceKeyboard) RepeatInterval() proxy.PropUint32 {
 
 // property RepeatDelay u
 
-func (v *mockInterfaceKeyboard) RepeatDelay() proxy.PropUint32 {
+func (v *MockInterfaceKeyboard) RepeatDelay() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -260,7 +261,7 @@ func (v *mockInterfaceKeyboard) RepeatDelay() proxy.PropUint32 {
 
 // property CurrentLayout s
 
-func (v *mockInterfaceKeyboard) CurrentLayout() proxy.PropString {
+func (v *MockInterfaceKeyboard) CurrentLayout() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -273,7 +274,7 @@ func (v *mockInterfaceKeyboard) CurrentLayout() proxy.PropString {
 
 // property UserLayoutList as
 
-func (v *mockInterfaceKeyboard) UserLayoutList() proxy.PropStringArray {
+func (v *MockInterfaceKeyboard) UserLayoutList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -285,16 +286,17 @@ func (v *mockInterfaceKeyboard) UserLayoutList() proxy.PropStringArray {
 }
 
 type MockTouchPad struct {
-	mockInterfaceTouchPad // interface com.deepin.daemon.InputDevice.TouchPad
+	MockInterfaceTouchPad // interface com.deepin.daemon.InputDevice.TouchPad
+	proxy.MockObject
 }
 
-type mockInterfaceTouchPad struct {
+type MockInterfaceTouchPad struct {
 	mock.Mock
 }
 
 // method Reset
 
-func (v *mockInterfaceTouchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceTouchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -305,7 +307,7 @@ func (v *mockInterfaceTouchPad) GoReset(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceTouchPad) Reset(flags dbus.Flags) error {
+func (v *MockInterfaceTouchPad) Reset(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -313,7 +315,7 @@ func (v *mockInterfaceTouchPad) Reset(flags dbus.Flags) error {
 
 // property EdgeScroll b
 
-func (v *mockInterfaceTouchPad) EdgeScroll() proxy.PropBool {
+func (v *MockInterfaceTouchPad) EdgeScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -326,7 +328,7 @@ func (v *mockInterfaceTouchPad) EdgeScroll() proxy.PropBool {
 
 // property PalmDetect b
 
-func (v *mockInterfaceTouchPad) PalmDetect() proxy.PropBool {
+func (v *MockInterfaceTouchPad) PalmDetect() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -339,7 +341,7 @@ func (v *mockInterfaceTouchPad) PalmDetect() proxy.PropBool {
 
 // property MotionAcceleration d
 
-func (v *mockInterfaceTouchPad) MotionAcceleration() proxy.PropDouble {
+func (v *MockInterfaceTouchPad) MotionAcceleration() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -352,7 +354,7 @@ func (v *mockInterfaceTouchPad) MotionAcceleration() proxy.PropDouble {
 
 // property DeltaScroll i
 
-func (v *mockInterfaceTouchPad) DeltaScroll() proxy.PropInt32 {
+func (v *MockInterfaceTouchPad) DeltaScroll() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -365,7 +367,7 @@ func (v *mockInterfaceTouchPad) DeltaScroll() proxy.PropInt32 {
 
 // property DragThreshold i
 
-func (v *mockInterfaceTouchPad) DragThreshold() proxy.PropInt32 {
+func (v *MockInterfaceTouchPad) DragThreshold() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -378,7 +380,7 @@ func (v *mockInterfaceTouchPad) DragThreshold() proxy.PropInt32 {
 
 // property LeftHanded b
 
-func (v *mockInterfaceTouchPad) LeftHanded() proxy.PropBool {
+func (v *MockInterfaceTouchPad) LeftHanded() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -391,7 +393,7 @@ func (v *mockInterfaceTouchPad) LeftHanded() proxy.PropBool {
 
 // property DisableIfTyping b
 
-func (v *mockInterfaceTouchPad) DisableIfTyping() proxy.PropBool {
+func (v *MockInterfaceTouchPad) DisableIfTyping() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -404,7 +406,7 @@ func (v *mockInterfaceTouchPad) DisableIfTyping() proxy.PropBool {
 
 // property NaturalScroll b
 
-func (v *mockInterfaceTouchPad) NaturalScroll() proxy.PropBool {
+func (v *MockInterfaceTouchPad) NaturalScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -417,7 +419,7 @@ func (v *mockInterfaceTouchPad) NaturalScroll() proxy.PropBool {
 
 // property HorizScroll b
 
-func (v *mockInterfaceTouchPad) HorizScroll() proxy.PropBool {
+func (v *MockInterfaceTouchPad) HorizScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -430,7 +432,7 @@ func (v *mockInterfaceTouchPad) HorizScroll() proxy.PropBool {
 
 // property VertScroll b
 
-func (v *mockInterfaceTouchPad) VertScroll() proxy.PropBool {
+func (v *MockInterfaceTouchPad) VertScroll() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -443,7 +445,7 @@ func (v *mockInterfaceTouchPad) VertScroll() proxy.PropBool {
 
 // property MotionThreshold d
 
-func (v *mockInterfaceTouchPad) MotionThreshold() proxy.PropDouble {
+func (v *MockInterfaceTouchPad) MotionThreshold() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -456,7 +458,7 @@ func (v *mockInterfaceTouchPad) MotionThreshold() proxy.PropDouble {
 
 // property DoubleClick i
 
-func (v *mockInterfaceTouchPad) DoubleClick() proxy.PropInt32 {
+func (v *MockInterfaceTouchPad) DoubleClick() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -469,7 +471,7 @@ func (v *mockInterfaceTouchPad) DoubleClick() proxy.PropInt32 {
 
 // property DeviceList s
 
-func (v *mockInterfaceTouchPad) DeviceList() proxy.PropString {
+func (v *MockInterfaceTouchPad) DeviceList() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -482,7 +484,7 @@ func (v *mockInterfaceTouchPad) DeviceList() proxy.PropString {
 
 // property TPadEnable b
 
-func (v *mockInterfaceTouchPad) TPadEnable() proxy.PropBool {
+func (v *MockInterfaceTouchPad) TPadEnable() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -495,7 +497,7 @@ func (v *mockInterfaceTouchPad) TPadEnable() proxy.PropBool {
 
 // property PalmMinZ i
 
-func (v *mockInterfaceTouchPad) PalmMinZ() proxy.PropInt32 {
+func (v *MockInterfaceTouchPad) PalmMinZ() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -508,7 +510,7 @@ func (v *mockInterfaceTouchPad) PalmMinZ() proxy.PropInt32 {
 
 // property Exist b
 
-func (v *mockInterfaceTouchPad) Exist() proxy.PropBool {
+func (v *MockInterfaceTouchPad) Exist() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -521,7 +523,7 @@ func (v *mockInterfaceTouchPad) Exist() proxy.PropBool {
 
 // property TapClick b
 
-func (v *mockInterfaceTouchPad) TapClick() proxy.PropBool {
+func (v *MockInterfaceTouchPad) TapClick() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -534,7 +536,7 @@ func (v *mockInterfaceTouchPad) TapClick() proxy.PropBool {
 
 // property MotionScaling d
 
-func (v *mockInterfaceTouchPad) MotionScaling() proxy.PropDouble {
+func (v *MockInterfaceTouchPad) MotionScaling() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -547,7 +549,7 @@ func (v *mockInterfaceTouchPad) MotionScaling() proxy.PropDouble {
 
 // property PalmMinWidth i
 
-func (v *mockInterfaceTouchPad) PalmMinWidth() proxy.PropInt32 {
+func (v *MockInterfaceTouchPad) PalmMinWidth() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)

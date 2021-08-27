@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockImageEffect struct {
-	mockInterfaceImageEffect // interface com.deepin.daemon.ImageEffect
+	MockInterfaceImageEffect // interface com.deepin.daemon.ImageEffect
+	proxy.MockObject
 }
 
-type mockInterfaceImageEffect struct {
+type MockInterfaceImageEffect struct {
 	mock.Mock
 }
 
 // method Delete
 
-func (v *mockInterfaceImageEffect) GoDelete(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
+func (v *MockInterfaceImageEffect) GoDelete(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, effect, filename)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceImageEffect) GoDelete(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceImageEffect) Delete(flags dbus.Flags, effect string, filename string) error {
+func (v *MockInterfaceImageEffect) Delete(flags dbus.Flags, effect string, filename string) error {
 	mockArgs := v.Called(flags, effect, filename)
 
 	return mockArgs.Error(0)
@@ -38,7 +40,7 @@ func (v *mockInterfaceImageEffect) Delete(flags dbus.Flags, effect string, filen
 
 // method Get
 
-func (v *mockInterfaceImageEffect) GoGet(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
+func (v *MockInterfaceImageEffect) GoGet(flags dbus.Flags, ch chan *dbus.Call, effect string, filename string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, effect, filename)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceImageEffect) GoGet(flags dbus.Flags, ch chan *dbus.Call, e
 	return ret
 }
 
-func (v *mockInterfaceImageEffect) Get(flags dbus.Flags, effect string, filename string) (string, error) {
+func (v *MockInterfaceImageEffect) Get(flags dbus.Flags, effect string, filename string) (string, error) {
 	mockArgs := v.Called(flags, effect, filename)
 
 	ret0, ok := mockArgs.Get(0).(string)

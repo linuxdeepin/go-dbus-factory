@@ -13,20 +13,22 @@ import (
 
 type MockObjectManager struct {
 	object_manager.MockInterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.MockObject
 }
 
 type MockManager struct {
-	mockInterfaceAgentManager // interface org.bluez.obex.AgentManager1
-	mockInterfaceClient       // interface org.bluez.obex.Client1
+	MockInterfaceAgentManager // interface org.bluez.obex.AgentManager1
+	MockInterfaceClient       // interface org.bluez.obex.Client1
+	proxy.MockObject
 }
 
-type mockInterfaceAgentManager struct {
+type MockInterfaceAgentManager struct {
 	mock.Mock
 }
 
 // method RegisterAgent
 
-func (v *mockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, agent)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -37,7 +39,7 @@ func (v *mockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *MockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, agent)
 
 	return mockArgs.Error(0)
@@ -45,7 +47,7 @@ func (v *mockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.O
 
 // method UnregisterAgent
 
-func (v *mockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, agent)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,19 +58,19 @@ func (v *mockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *MockInterfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, agent)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceClient struct {
+type MockInterfaceClient struct {
 	mock.Mock
 }
 
 // method CreateSession
 
-func (v *mockInterfaceClient) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, destination string, args map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceClient) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, destination string, args map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, destination, args)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceClient) GoCreateSession(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceClient) CreateSession(flags dbus.Flags, destination string, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceClient) CreateSession(flags dbus.Flags, destination string, args map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, destination, args)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -92,7 +94,7 @@ func (v *mockInterfaceClient) CreateSession(flags dbus.Flags, destination string
 
 // method RemoveSession
 
-func (v *mockInterfaceClient) GoRemoveSession(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceClient) GoRemoveSession(flags dbus.Flags, ch chan *dbus.Call, session dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, session)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -103,24 +105,25 @@ func (v *mockInterfaceClient) GoRemoveSession(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceClient) RemoveSession(flags dbus.Flags, session dbus.ObjectPath) error {
+func (v *MockInterfaceClient) RemoveSession(flags dbus.Flags, session dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, session)
 
 	return mockArgs.Error(0)
 }
 
 type MockSession struct {
-	mockInterfaceSession    // interface org.bluez.obex.Session1
-	mockInterfaceObjectPush // interface org.bluez.obex.ObjectPush1
+	MockInterfaceSession    // interface org.bluez.obex.Session1
+	MockInterfaceObjectPush // interface org.bluez.obex.ObjectPush1
+	proxy.MockObject
 }
 
-type mockInterfaceSession struct {
+type MockInterfaceSession struct {
 	mock.Mock
 }
 
 // method GetCapabilities
 
-func (v *mockInterfaceSession) GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoGetCapabilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -131,7 +134,7 @@ func (v *mockInterfaceSession) GoGetCapabilities(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceSession) GetCapabilities(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceSession) GetCapabilities(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -144,7 +147,7 @@ func (v *mockInterfaceSession) GetCapabilities(flags dbus.Flags) (string, error)
 
 // property Source s
 
-func (v *mockInterfaceSession) Source() proxy.PropString {
+func (v *MockInterfaceSession) Source() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -157,7 +160,7 @@ func (v *mockInterfaceSession) Source() proxy.PropString {
 
 // property Destination s
 
-func (v *mockInterfaceSession) Destination() proxy.PropString {
+func (v *MockInterfaceSession) Destination() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -170,7 +173,7 @@ func (v *mockInterfaceSession) Destination() proxy.PropString {
 
 // property Channel y
 
-func (v *mockInterfaceSession) Channel() proxy.PropByte {
+func (v *MockInterfaceSession) Channel() proxy.PropByte {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropByte)
@@ -183,7 +186,7 @@ func (v *mockInterfaceSession) Channel() proxy.PropByte {
 
 // property Target s
 
-func (v *mockInterfaceSession) Target() proxy.PropString {
+func (v *MockInterfaceSession) Target() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -194,13 +197,13 @@ func (v *mockInterfaceSession) Target() proxy.PropString {
 	return ret0
 }
 
-type mockInterfaceObjectPush struct {
+type MockInterfaceObjectPush struct {
 	mock.Mock
 }
 
 // method SendFile
 
-func (v *mockInterfaceObjectPush) GoSendFile(flags dbus.Flags, ch chan *dbus.Call, sourcefile string) *dbus.Call {
+func (v *MockInterfaceObjectPush) GoSendFile(flags dbus.Flags, ch chan *dbus.Call, sourcefile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sourcefile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -211,7 +214,7 @@ func (v *mockInterfaceObjectPush) GoSendFile(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceObjectPush) SendFile(flags dbus.Flags, sourcefile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
+func (v *MockInterfaceObjectPush) SendFile(flags dbus.Flags, sourcefile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags, sourcefile)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -229,7 +232,7 @@ func (v *mockInterfaceObjectPush) SendFile(flags dbus.Flags, sourcefile string) 
 
 // method PullBusinessCard
 
-func (v *mockInterfaceObjectPush) GoPullBusinessCard(flags dbus.Flags, ch chan *dbus.Call, targetfile string) *dbus.Call {
+func (v *MockInterfaceObjectPush) GoPullBusinessCard(flags dbus.Flags, ch chan *dbus.Call, targetfile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, targetfile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -240,7 +243,7 @@ func (v *mockInterfaceObjectPush) GoPullBusinessCard(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceObjectPush) PullBusinessCard(flags dbus.Flags, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
+func (v *MockInterfaceObjectPush) PullBusinessCard(flags dbus.Flags, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags, targetfile)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -258,7 +261,7 @@ func (v *mockInterfaceObjectPush) PullBusinessCard(flags dbus.Flags, targetfile 
 
 // method ExchangeBusinessCards
 
-func (v *mockInterfaceObjectPush) GoExchangeBusinessCards(flags dbus.Flags, ch chan *dbus.Call, clientfile string, targetfile string) *dbus.Call {
+func (v *MockInterfaceObjectPush) GoExchangeBusinessCards(flags dbus.Flags, ch chan *dbus.Call, clientfile string, targetfile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, clientfile, targetfile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -269,7 +272,7 @@ func (v *mockInterfaceObjectPush) GoExchangeBusinessCards(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceObjectPush) ExchangeBusinessCards(flags dbus.Flags, clientfile string, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
+func (v *MockInterfaceObjectPush) ExchangeBusinessCards(flags dbus.Flags, clientfile string, targetfile string) (dbus.ObjectPath, map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags, clientfile, targetfile)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -286,16 +289,17 @@ func (v *mockInterfaceObjectPush) ExchangeBusinessCards(flags dbus.Flags, client
 }
 
 type MockTransfer struct {
-	mockInterfaceTransfer // interface org.bluez.obex.Transfer1
+	MockInterfaceTransfer // interface org.bluez.obex.Transfer1
+	proxy.MockObject
 }
 
-type mockInterfaceTransfer struct {
+type MockInterfaceTransfer struct {
 	mock.Mock
 }
 
 // method Cancel
 
-func (v *mockInterfaceTransfer) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceTransfer) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -306,7 +310,7 @@ func (v *mockInterfaceTransfer) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceTransfer) Cancel(flags dbus.Flags) error {
+func (v *MockInterfaceTransfer) Cancel(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -314,7 +318,7 @@ func (v *mockInterfaceTransfer) Cancel(flags dbus.Flags) error {
 
 // property Status s
 
-func (v *mockInterfaceTransfer) Status() proxy.PropString {
+func (v *MockInterfaceTransfer) Status() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -327,7 +331,7 @@ func (v *mockInterfaceTransfer) Status() proxy.PropString {
 
 // property Session o
 
-func (v *mockInterfaceTransfer) Session() proxy.PropObjectPath {
+func (v *MockInterfaceTransfer) Session() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -340,7 +344,7 @@ func (v *mockInterfaceTransfer) Session() proxy.PropObjectPath {
 
 // property Name s
 
-func (v *mockInterfaceTransfer) Name() proxy.PropString {
+func (v *MockInterfaceTransfer) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -353,7 +357,7 @@ func (v *mockInterfaceTransfer) Name() proxy.PropString {
 
 // property Type s
 
-func (v *mockInterfaceTransfer) Type() proxy.PropString {
+func (v *MockInterfaceTransfer) Type() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -366,7 +370,7 @@ func (v *mockInterfaceTransfer) Type() proxy.PropString {
 
 // property Size t
 
-func (v *mockInterfaceTransfer) Size() proxy.PropUint64 {
+func (v *MockInterfaceTransfer) Size() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -379,7 +383,7 @@ func (v *mockInterfaceTransfer) Size() proxy.PropUint64 {
 
 // property Time t
 
-func (v *mockInterfaceTransfer) Time() proxy.PropUint64 {
+func (v *MockInterfaceTransfer) Time() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -392,7 +396,7 @@ func (v *mockInterfaceTransfer) Time() proxy.PropUint64 {
 
 // property Filename s
 
-func (v *mockInterfaceTransfer) Filename() proxy.PropString {
+func (v *MockInterfaceTransfer) Filename() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -405,7 +409,7 @@ func (v *mockInterfaceTransfer) Filename() proxy.PropString {
 
 // property Transferred t
 
-func (v *mockInterfaceTransfer) Transferred() proxy.PropUint64 {
+func (v *MockInterfaceTransfer) Transferred() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)

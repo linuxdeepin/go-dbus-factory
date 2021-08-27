@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockUadpAgent struct {
-	mockInterfaceUadpagent // interface com.deepin.daemon.UadpAgent
+	MockInterfaceUadpagent // interface com.deepin.daemon.UadpAgent
+	proxy.MockObject
 }
 
-type mockInterfaceUadpagent struct {
+type MockInterfaceUadpagent struct {
 	mock.Mock
 }
 
 // method SetDataKey
 
-func (v *mockInterfaceUadpagent) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, keyName string, dataKey string) *dbus.Call {
+func (v *MockInterfaceUadpagent) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Call, keyName string, dataKey string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, keyName, dataKey)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceUadpagent) GoSetDataKey(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceUadpagent) SetDataKey(flags dbus.Flags, keyName string, dataKey string) error {
+func (v *MockInterfaceUadpagent) SetDataKey(flags dbus.Flags, keyName string, dataKey string) error {
 	mockArgs := v.Called(flags, keyName, dataKey)
 
 	return mockArgs.Error(0)
@@ -38,7 +40,7 @@ func (v *mockInterfaceUadpagent) SetDataKey(flags dbus.Flags, keyName string, da
 
 // method GetDataKey
 
-func (v *mockInterfaceUadpagent) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, keyName string) *dbus.Call {
+func (v *MockInterfaceUadpagent) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, keyName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, keyName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -49,7 +51,7 @@ func (v *mockInterfaceUadpagent) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceUadpagent) GetDataKey(flags dbus.Flags, keyName string) (string, error) {
+func (v *MockInterfaceUadpagent) GetDataKey(flags dbus.Flags, keyName string) (string, error) {
 	mockArgs := v.Called(flags, keyName)
 
 	ret0, ok := mockArgs.Get(0).(string)

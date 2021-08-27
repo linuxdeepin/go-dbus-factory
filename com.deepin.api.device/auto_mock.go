@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockDevice struct {
-	mockInterfaceDevice // interface com.deepin.api.Device
+	MockInterfaceDevice // interface com.deepin.api.Device
+	proxy.MockObject
 }
 
-type mockInterfaceDevice struct {
+type MockInterfaceDevice struct {
 	mock.Mock
 }
 
 // method HasBluetoothDeviceBlocked
 
-func (v *mockInterfaceDevice) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceDevice) GoHasBluetoothDeviceBlocked(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceDevice) HasBluetoothDeviceBlocked(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceDevice) HasBluetoothDeviceBlocked(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -43,7 +45,7 @@ func (v *mockInterfaceDevice) HasBluetoothDeviceBlocked(flags dbus.Flags) (bool,
 
 // method UnblockBluetoothDevices
 
-func (v *mockInterfaceDevice) GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoUnblockBluetoothDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -54,7 +56,7 @@ func (v *mockInterfaceDevice) GoUnblockBluetoothDevices(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceDevice) UnblockBluetoothDevices(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) UnblockBluetoothDevices(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)

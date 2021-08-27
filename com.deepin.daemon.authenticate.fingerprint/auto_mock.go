@@ -12,19 +12,20 @@ import (
 )
 
 type MockDevice struct {
-	mockInterfaceDevice // interface com.deepin.daemon.Authenticate.Fingerprint.Device
+	MockInterfaceDevice // interface com.deepin.daemon.Authenticate.Fingerprint.Device
+	proxy.MockObject
 }
 
-type mockInterfaceDevice struct {
+type MockInterfaceDevice struct {
 	mock.Mock
 }
 
-func (v *mockInterfaceDevice) SetInterfaceName_(string) {
+func (v *MockInterfaceDevice) SetInterfaceName_(string) {
 }
 
 // method Claim
 
-func (v *mockInterfaceDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+func (v *MockInterfaceDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, claimed)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -35,7 +36,7 @@ func (v *mockInterfaceDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, user
 	return ret
 }
 
-func (v *mockInterfaceDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
+func (v *MockInterfaceDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	mockArgs := v.Called(flags, userId, claimed)
 
 	return mockArgs.Error(0)
@@ -43,7 +44,7 @@ func (v *mockInterfaceDevice) Claim(flags dbus.Flags, userId string, claimed boo
 
 // method DeleteAllFingers
 
-func (v *mockInterfaceDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *MockInterfaceDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -54,7 +55,7 @@ func (v *mockInterfaceDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
+func (v *MockInterfaceDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	mockArgs := v.Called(flags, userId)
 
 	return mockArgs.Error(0)
@@ -62,7 +63,7 @@ func (v *mockInterfaceDevice) DeleteAllFingers(flags dbus.Flags, userId string) 
 
 // method DeleteFinger
 
-func (v *mockInterfaceDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+func (v *MockInterfaceDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -73,7 +74,7 @@ func (v *mockInterfaceDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
+func (v *MockInterfaceDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	mockArgs := v.Called(flags, userId, finger)
 
 	return mockArgs.Error(0)
@@ -81,7 +82,7 @@ func (v *mockInterfaceDevice) DeleteFinger(flags dbus.Flags, userId string, fing
 
 // method Enroll
 
-func (v *mockInterfaceDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *MockInterfaceDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -92,7 +93,7 @@ func (v *mockInterfaceDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, fin
 	return ret
 }
 
-func (v *mockInterfaceDevice) Enroll(flags dbus.Flags, finger string) error {
+func (v *MockInterfaceDevice) Enroll(flags dbus.Flags, finger string) error {
 	mockArgs := v.Called(flags, finger)
 
 	return mockArgs.Error(0)
@@ -100,7 +101,7 @@ func (v *mockInterfaceDevice) Enroll(flags dbus.Flags, finger string) error {
 
 // method ListFingers
 
-func (v *mockInterfaceDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *MockInterfaceDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -111,7 +112,7 @@ func (v *mockInterfaceDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
+func (v *MockInterfaceDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
 	mockArgs := v.Called(flags, userId)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -124,7 +125,7 @@ func (v *mockInterfaceDevice) ListFingers(flags dbus.Flags, userId string) ([]st
 
 // method RenameFinger
 
-func (v *mockInterfaceDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+func (v *MockInterfaceDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, finger, newName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -135,7 +136,7 @@ func (v *mockInterfaceDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
+func (v *MockInterfaceDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	mockArgs := v.Called(flags, userId, finger, newName)
 
 	return mockArgs.Error(0)
@@ -143,7 +144,7 @@ func (v *mockInterfaceDevice) RenameFinger(flags dbus.Flags, userId string, fing
 
 // method StopEnroll
 
-func (v *mockInterfaceDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -154,7 +155,7 @@ func (v *mockInterfaceDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceDevice) StopEnroll(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) StopEnroll(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -162,7 +163,7 @@ func (v *mockInterfaceDevice) StopEnroll(flags dbus.Flags) error {
 
 // method StopVerify
 
-func (v *mockInterfaceDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -173,7 +174,7 @@ func (v *mockInterfaceDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceDevice) StopVerify(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) StopVerify(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -181,7 +182,7 @@ func (v *mockInterfaceDevice) StopVerify(flags dbus.Flags) error {
 
 // method Verify
 
-func (v *mockInterfaceDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *MockInterfaceDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -192,7 +193,7 @@ func (v *mockInterfaceDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, fin
 	return ret
 }
 
-func (v *mockInterfaceDevice) Verify(flags dbus.Flags, finger string) error {
+func (v *MockInterfaceDevice) Verify(flags dbus.Flags, finger string) error {
 	mockArgs := v.Called(flags, finger)
 
 	return mockArgs.Error(0)
@@ -200,7 +201,7 @@ func (v *mockInterfaceDevice) Verify(flags dbus.Flags, finger string) error {
 
 // signal EnrollStatus
 
-func (v *mockInterfaceDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -213,7 +214,7 @@ func (v *mockInterfaceDevice) ConnectEnrollStatus(cb func(userId string, code in
 
 // signal VerifyStatus
 
-func (v *mockInterfaceDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -226,7 +227,7 @@ func (v *mockInterfaceDevice) ConnectVerifyStatus(cb func(userId string, code in
 
 // signal Touch
 
-func (v *mockInterfaceDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -239,7 +240,7 @@ func (v *mockInterfaceDevice) ConnectTouch(cb func(userId string, pressed bool))
 
 // property Name s
 
-func (v *mockInterfaceDevice) Name() proxy.PropString {
+func (v *MockInterfaceDevice) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -252,7 +253,7 @@ func (v *mockInterfaceDevice) Name() proxy.PropString {
 
 // property State i
 
-func (v *mockInterfaceDevice) State() proxy.PropInt32 {
+func (v *MockInterfaceDevice) State() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -265,7 +266,7 @@ func (v *mockInterfaceDevice) State() proxy.PropInt32 {
 
 // property Type i
 
-func (v *mockInterfaceDevice) Type() proxy.PropInt32 {
+func (v *MockInterfaceDevice) Type() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -278,7 +279,7 @@ func (v *mockInterfaceDevice) Type() proxy.PropInt32 {
 
 // property Capability i
 
-func (v *mockInterfaceDevice) Capability() proxy.PropInt32 {
+func (v *MockInterfaceDevice) Capability() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -290,19 +291,20 @@ func (v *mockInterfaceDevice) Capability() proxy.PropInt32 {
 }
 
 type MockCommonDevice struct {
-	mockInterfaceCommonDevice // interface com.deepin.daemon.Authenticate.Fingerprint.CommonDevice
+	MockInterfaceCommonDevice // interface com.deepin.daemon.Authenticate.Fingerprint.CommonDevice
+	proxy.MockObject
 }
 
-type mockInterfaceCommonDevice struct {
+type MockInterfaceCommonDevice struct {
 	mock.Mock
 }
 
-func (v *mockInterfaceCommonDevice) SetInterfaceName_(string) {
+func (v *MockInterfaceCommonDevice) SetInterfaceName_(string) {
 }
 
 // method Claim
 
-func (v *mockInterfaceCommonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call, userId string, claimed bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, claimed)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -313,7 +315,7 @@ func (v *mockInterfaceCommonDevice) GoClaim(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
+func (v *MockInterfaceCommonDevice) Claim(flags dbus.Flags, userId string, claimed bool) error {
 	mockArgs := v.Called(flags, userId, claimed)
 
 	return mockArgs.Error(0)
@@ -321,7 +323,7 @@ func (v *mockInterfaceCommonDevice) Claim(flags dbus.Flags, userId string, claim
 
 // method DeleteAllFingers
 
-func (v *mockInterfaceCommonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -332,7 +334,7 @@ func (v *mockInterfaceCommonDevice) GoDeleteAllFingers(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
+func (v *MockInterfaceCommonDevice) DeleteAllFingers(flags dbus.Flags, userId string) error {
 	mockArgs := v.Called(flags, userId)
 
 	return mockArgs.Error(0)
@@ -340,7 +342,7 @@ func (v *mockInterfaceCommonDevice) DeleteAllFingers(flags dbus.Flags, userId st
 
 // method DeleteFinger
 
-func (v *mockInterfaceCommonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -351,7 +353,7 @@ func (v *mockInterfaceCommonDevice) GoDeleteFinger(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
+func (v *MockInterfaceCommonDevice) DeleteFinger(flags dbus.Flags, userId string, finger string) error {
 	mockArgs := v.Called(flags, userId, finger)
 
 	return mockArgs.Error(0)
@@ -359,7 +361,7 @@ func (v *mockInterfaceCommonDevice) DeleteFinger(flags dbus.Flags, userId string
 
 // method Enroll
 
-func (v *mockInterfaceCommonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Call, username string, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, username, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -370,7 +372,7 @@ func (v *mockInterfaceCommonDevice) GoEnroll(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) Enroll(flags dbus.Flags, username string, finger string) error {
+func (v *MockInterfaceCommonDevice) Enroll(flags dbus.Flags, username string, finger string) error {
 	mockArgs := v.Called(flags, username, finger)
 
 	return mockArgs.Error(0)
@@ -378,7 +380,7 @@ func (v *mockInterfaceCommonDevice) Enroll(flags dbus.Flags, username string, fi
 
 // method ListFingers
 
-func (v *mockInterfaceCommonDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoListFingers(flags dbus.Flags, ch chan *dbus.Call, userId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -389,7 +391,7 @@ func (v *mockInterfaceCommonDevice) GoListFingers(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
+func (v *MockInterfaceCommonDevice) ListFingers(flags dbus.Flags, userId string) ([]string, error) {
 	mockArgs := v.Called(flags, userId)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -402,7 +404,7 @@ func (v *mockInterfaceCommonDevice) ListFingers(flags dbus.Flags, userId string)
 
 // method RenameFinger
 
-func (v *mockInterfaceCommonDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoRenameFinger(flags dbus.Flags, ch chan *dbus.Call, userId string, finger string, newName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, userId, finger, newName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -413,7 +415,7 @@ func (v *mockInterfaceCommonDevice) GoRenameFinger(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
+func (v *MockInterfaceCommonDevice) RenameFinger(flags dbus.Flags, userId string, finger string, newName string) error {
 	mockArgs := v.Called(flags, userId, finger, newName)
 
 	return mockArgs.Error(0)
@@ -421,7 +423,7 @@ func (v *mockInterfaceCommonDevice) RenameFinger(flags dbus.Flags, userId string
 
 // method StopEnroll
 
-func (v *mockInterfaceCommonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -432,7 +434,7 @@ func (v *mockInterfaceCommonDevice) GoStopEnroll(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) StopEnroll(flags dbus.Flags) error {
+func (v *MockInterfaceCommonDevice) StopEnroll(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -440,7 +442,7 @@ func (v *mockInterfaceCommonDevice) StopEnroll(flags dbus.Flags) error {
 
 // method StopVerify
 
-func (v *mockInterfaceCommonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -451,7 +453,7 @@ func (v *mockInterfaceCommonDevice) GoStopVerify(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) StopVerify(flags dbus.Flags) error {
+func (v *MockInterfaceCommonDevice) StopVerify(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -459,7 +461,7 @@ func (v *mockInterfaceCommonDevice) StopVerify(flags dbus.Flags) error {
 
 // method Verify
 
-func (v *mockInterfaceCommonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
+func (v *MockInterfaceCommonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Call, finger string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, finger)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -470,7 +472,7 @@ func (v *mockInterfaceCommonDevice) GoVerify(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceCommonDevice) Verify(flags dbus.Flags, finger string) error {
+func (v *MockInterfaceCommonDevice) Verify(flags dbus.Flags, finger string) error {
 	mockArgs := v.Called(flags, finger)
 
 	return mockArgs.Error(0)
@@ -478,7 +480,7 @@ func (v *mockInterfaceCommonDevice) Verify(flags dbus.Flags, finger string) erro
 
 // signal EnrollStatus
 
-func (v *mockInterfaceCommonDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceCommonDevice) ConnectEnrollStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -491,7 +493,7 @@ func (v *mockInterfaceCommonDevice) ConnectEnrollStatus(cb func(userId string, c
 
 // signal VerifyStatus
 
-func (v *mockInterfaceCommonDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceCommonDevice) ConnectVerifyStatus(cb func(userId string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -504,7 +506,7 @@ func (v *mockInterfaceCommonDevice) ConnectVerifyStatus(cb func(userId string, c
 
 // signal Touch
 
-func (v *mockInterfaceCommonDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceCommonDevice) ConnectTouch(cb func(userId string, pressed bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -517,7 +519,7 @@ func (v *mockInterfaceCommonDevice) ConnectTouch(cb func(userId string, pressed 
 
 // property Name s
 
-func (v *mockInterfaceCommonDevice) Name() proxy.PropString {
+func (v *MockInterfaceCommonDevice) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -530,7 +532,7 @@ func (v *mockInterfaceCommonDevice) Name() proxy.PropString {
 
 // property State i
 
-func (v *mockInterfaceCommonDevice) State() proxy.PropInt32 {
+func (v *MockInterfaceCommonDevice) State() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -543,7 +545,7 @@ func (v *mockInterfaceCommonDevice) State() proxy.PropInt32 {
 
 // property Type i
 
-func (v *mockInterfaceCommonDevice) Type() proxy.PropInt32 {
+func (v *MockInterfaceCommonDevice) Type() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -556,7 +558,7 @@ func (v *mockInterfaceCommonDevice) Type() proxy.PropInt32 {
 
 // property Capability i
 
-func (v *mockInterfaceCommonDevice) Capability() proxy.PropInt32 {
+func (v *MockInterfaceCommonDevice) Capability() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)

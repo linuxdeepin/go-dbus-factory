@@ -12,16 +12,17 @@ import (
 )
 
 type MockNotification struct {
-	mockInterfaceNotification // interface com.deepin.dde.Notification
+	MockInterfaceNotification // interface com.deepin.dde.Notification
+	proxy.MockObject
 }
 
-type mockInterfaceNotification struct {
+type MockInterfaceNotification struct {
 	mock.Mock
 }
 
 // method CloseNotification
 
-func (v *mockInterfaceNotification) GoCloseNotification(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
+func (v *MockInterfaceNotification) GoCloseNotification(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceNotification) GoCloseNotification(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceNotification) CloseNotification(flags dbus.Flags, arg0 uint32) error {
+func (v *MockInterfaceNotification) CloseNotification(flags dbus.Flags, arg0 uint32) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -40,7 +41,7 @@ func (v *mockInterfaceNotification) CloseNotification(flags dbus.Flags, arg0 uin
 
 // method GetCapbilities
 
-func (v *mockInterfaceNotification) GoGetCapbilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetCapbilities(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -51,7 +52,7 @@ func (v *mockInterfaceNotification) GoGetCapbilities(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetCapbilities(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceNotification) GetCapbilities(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -64,7 +65,7 @@ func (v *mockInterfaceNotification) GetCapbilities(flags dbus.Flags) ([]string, 
 
 // method GetServerInformation
 
-func (v *mockInterfaceNotification) GoGetServerInformation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetServerInformation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -75,7 +76,7 @@ func (v *mockInterfaceNotification) GoGetServerInformation(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetServerInformation(flags dbus.Flags) (string, string, string, string, error) {
+func (v *MockInterfaceNotification) GetServerInformation(flags dbus.Flags) (string, string, string, string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -103,7 +104,7 @@ func (v *mockInterfaceNotification) GetServerInformation(flags dbus.Flags) (stri
 
 // method Notify
 
-func (v *mockInterfaceNotification) GoNotify(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32, arg2 string, arg3 string, arg4 string, arg5 []string, arg6 map[string]dbus.Variant, arg7 int32) *dbus.Call {
+func (v *MockInterfaceNotification) GoNotify(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32, arg2 string, arg3 string, arg4 string, arg5 []string, arg6 map[string]dbus.Variant, arg7 int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -114,7 +115,7 @@ func (v *mockInterfaceNotification) GoNotify(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceNotification) Notify(flags dbus.Flags, arg0 string, arg1 uint32, arg2 string, arg3 string, arg4 string, arg5 []string, arg6 map[string]dbus.Variant, arg7 int32) (uint32, error) {
+func (v *MockInterfaceNotification) Notify(flags dbus.Flags, arg0 string, arg1 uint32, arg2 string, arg3 string, arg4 string, arg5 []string, arg6 map[string]dbus.Variant, arg7 int32) (uint32, error) {
 	mockArgs := v.Called(flags, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -127,7 +128,7 @@ func (v *mockInterfaceNotification) Notify(flags dbus.Flags, arg0 string, arg1 u
 
 // method GetAllRecords
 
-func (v *mockInterfaceNotification) GoGetAllRecords(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetAllRecords(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -138,7 +139,7 @@ func (v *mockInterfaceNotification) GoGetAllRecords(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetAllRecords(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceNotification) GetAllRecords(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -151,7 +152,7 @@ func (v *mockInterfaceNotification) GetAllRecords(flags dbus.Flags) (string, err
 
 // method GetRecordById
 
-func (v *mockInterfaceNotification) GoGetRecordById(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetRecordById(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -162,7 +163,7 @@ func (v *mockInterfaceNotification) GoGetRecordById(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetRecordById(flags dbus.Flags, arg0 string) (string, error) {
+func (v *MockInterfaceNotification) GetRecordById(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -175,7 +176,7 @@ func (v *mockInterfaceNotification) GetRecordById(flags dbus.Flags, arg0 string)
 
 // method GetRecordsFromId
 
-func (v *mockInterfaceNotification) GoGetRecordsFromId(flags dbus.Flags, ch chan *dbus.Call, arg0 int32, arg1 string) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetRecordsFromId(flags dbus.Flags, ch chan *dbus.Call, arg0 int32, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -186,7 +187,7 @@ func (v *mockInterfaceNotification) GoGetRecordsFromId(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetRecordsFromId(flags dbus.Flags, arg0 int32, arg1 string) (string, error) {
+func (v *MockInterfaceNotification) GetRecordsFromId(flags dbus.Flags, arg0 int32, arg1 string) (string, error) {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -199,7 +200,7 @@ func (v *mockInterfaceNotification) GetRecordsFromId(flags dbus.Flags, arg0 int3
 
 // method RemoveRecord
 
-func (v *mockInterfaceNotification) GoRemoveRecord(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceNotification) GoRemoveRecord(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -210,7 +211,7 @@ func (v *mockInterfaceNotification) GoRemoveRecord(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceNotification) RemoveRecord(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceNotification) RemoveRecord(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -218,7 +219,7 @@ func (v *mockInterfaceNotification) RemoveRecord(flags dbus.Flags, arg0 string) 
 
 // method ClearRecords
 
-func (v *mockInterfaceNotification) GoClearRecords(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoClearRecords(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -229,7 +230,7 @@ func (v *mockInterfaceNotification) GoClearRecords(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceNotification) ClearRecords(flags dbus.Flags) error {
+func (v *MockInterfaceNotification) ClearRecords(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -237,7 +238,7 @@ func (v *mockInterfaceNotification) ClearRecords(flags dbus.Flags) error {
 
 // method getAppSetting
 
-func (v *mockInterfaceNotification) GoGetAppSetting(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetAppSetting(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -248,7 +249,7 @@ func (v *mockInterfaceNotification) GoGetAppSetting(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetAppSetting(flags dbus.Flags, arg0 string) (string, error) {
+func (v *MockInterfaceNotification) GetAppSetting(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -261,7 +262,7 @@ func (v *mockInterfaceNotification) GetAppSetting(flags dbus.Flags, arg0 string)
 
 // method Toggle
 
-func (v *mockInterfaceNotification) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoToggle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -272,7 +273,7 @@ func (v *mockInterfaceNotification) GoToggle(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceNotification) Toggle(flags dbus.Flags) error {
+func (v *MockInterfaceNotification) Toggle(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -280,7 +281,7 @@ func (v *mockInterfaceNotification) Toggle(flags dbus.Flags) error {
 
 // method Show
 
-func (v *mockInterfaceNotification) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoShow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -291,7 +292,7 @@ func (v *mockInterfaceNotification) GoShow(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceNotification) Show(flags dbus.Flags) error {
+func (v *MockInterfaceNotification) Show(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -299,7 +300,7 @@ func (v *mockInterfaceNotification) Show(flags dbus.Flags) error {
 
 // method Hide
 
-func (v *mockInterfaceNotification) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoHide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -310,7 +311,7 @@ func (v *mockInterfaceNotification) GoHide(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceNotification) Hide(flags dbus.Flags) error {
+func (v *MockInterfaceNotification) Hide(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -318,7 +319,7 @@ func (v *mockInterfaceNotification) Hide(flags dbus.Flags) error {
 
 // method recordCount
 
-func (v *mockInterfaceNotification) GoRecordCount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoRecordCount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -329,7 +330,7 @@ func (v *mockInterfaceNotification) GoRecordCount(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceNotification) RecordCount(flags dbus.Flags) (uint32, error) {
+func (v *MockInterfaceNotification) RecordCount(flags dbus.Flags) (uint32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -342,7 +343,7 @@ func (v *mockInterfaceNotification) RecordCount(flags dbus.Flags) (uint32, error
 
 // method GetAppList
 
-func (v *mockInterfaceNotification) GoGetAppList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetAppList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -353,7 +354,7 @@ func (v *mockInterfaceNotification) GoGetAppList(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetAppList(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceNotification) GetAppList(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -366,7 +367,7 @@ func (v *mockInterfaceNotification) GetAppList(flags dbus.Flags) ([]string, erro
 
 // method GetAppInfo
 
-func (v *mockInterfaceNotification) GoGetAppInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetAppInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -377,7 +378,7 @@ func (v *mockInterfaceNotification) GoGetAppInfo(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetAppInfo(flags dbus.Flags, arg0 string, arg1 uint32) (dbus.Variant, error) {
+func (v *MockInterfaceNotification) GetAppInfo(flags dbus.Flags, arg0 string, arg1 uint32) (dbus.Variant, error) {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	ret0, ok := mockArgs.Get(0).(dbus.Variant)
@@ -390,7 +391,7 @@ func (v *mockInterfaceNotification) GetAppInfo(flags dbus.Flags, arg0 string, ar
 
 // method GetSystemInfo
 
-func (v *mockInterfaceNotification) GoGetSystemInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
+func (v *MockInterfaceNotification) GoGetSystemInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -401,7 +402,7 @@ func (v *mockInterfaceNotification) GoGetSystemInfo(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) GetSystemInfo(flags dbus.Flags, arg0 uint32) (dbus.Variant, error) {
+func (v *MockInterfaceNotification) GetSystemInfo(flags dbus.Flags, arg0 uint32) (dbus.Variant, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(dbus.Variant)
@@ -414,7 +415,7 @@ func (v *mockInterfaceNotification) GetSystemInfo(flags dbus.Flags, arg0 uint32)
 
 // method SetAppInfo
 
-func (v *mockInterfaceNotification) GoSetAppInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32, arg2 dbus.Variant) *dbus.Call {
+func (v *MockInterfaceNotification) GoSetAppInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32, arg2 dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1, arg2)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -425,7 +426,7 @@ func (v *mockInterfaceNotification) GoSetAppInfo(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceNotification) SetAppInfo(flags dbus.Flags, arg0 string, arg1 uint32, arg2 dbus.Variant) error {
+func (v *MockInterfaceNotification) SetAppInfo(flags dbus.Flags, arg0 string, arg1 uint32, arg2 dbus.Variant) error {
 	mockArgs := v.Called(flags, arg0, arg1, arg2)
 
 	return mockArgs.Error(0)
@@ -433,7 +434,7 @@ func (v *mockInterfaceNotification) SetAppInfo(flags dbus.Flags, arg0 string, ar
 
 // method SetSystemInfo
 
-func (v *mockInterfaceNotification) GoSetSystemInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32, arg1 dbus.Variant) *dbus.Call {
+func (v *MockInterfaceNotification) GoSetSystemInfo(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32, arg1 dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -444,7 +445,7 @@ func (v *mockInterfaceNotification) GoSetSystemInfo(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) SetSystemInfo(flags dbus.Flags, arg0 uint32, arg1 dbus.Variant) error {
+func (v *MockInterfaceNotification) SetSystemInfo(flags dbus.Flags, arg0 uint32, arg1 dbus.Variant) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -452,7 +453,7 @@ func (v *mockInterfaceNotification) SetSystemInfo(flags dbus.Flags, arg0 uint32,
 
 // method setAppSetting
 
-func (v *mockInterfaceNotification) GoSetAppSetting(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceNotification) GoSetAppSetting(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -463,7 +464,7 @@ func (v *mockInterfaceNotification) GoSetAppSetting(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceNotification) SetAppSetting(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceNotification) SetAppSetting(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -471,7 +472,7 @@ func (v *mockInterfaceNotification) SetAppSetting(flags dbus.Flags, arg0 string)
 
 // signal NotificationClosed
 
-func (v *mockInterfaceNotification) ConnectNotificationClosed(cb func(arg0 uint32, arg1 uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectNotificationClosed(cb func(arg0 uint32, arg1 uint32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -484,7 +485,7 @@ func (v *mockInterfaceNotification) ConnectNotificationClosed(cb func(arg0 uint3
 
 // signal ActionInvoked
 
-func (v *mockInterfaceNotification) ConnectActionInvoked(cb func(arg0 uint32, arg1 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectActionInvoked(cb func(arg0 uint32, arg1 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -497,7 +498,7 @@ func (v *mockInterfaceNotification) ConnectActionInvoked(cb func(arg0 uint32, ar
 
 // signal RecordAdded
 
-func (v *mockInterfaceNotification) ConnectRecordAdded(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectRecordAdded(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -510,7 +511,7 @@ func (v *mockInterfaceNotification) ConnectRecordAdded(cb func(arg0 string)) (db
 
 // signal AppInfoChanged
 
-func (v *mockInterfaceNotification) ConnectAppInfoChanged(cb func(arg0 string, arg1 uint32, arg2 dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppInfoChanged(cb func(arg0 string, arg1 uint32, arg2 dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -523,7 +524,7 @@ func (v *mockInterfaceNotification) ConnectAppInfoChanged(cb func(arg0 string, a
 
 // signal SystemInfoChanged
 
-func (v *mockInterfaceNotification) ConnectSystemInfoChanged(cb func(arg0 uint32, arg1 dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectSystemInfoChanged(cb func(arg0 uint32, arg1 dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -536,7 +537,7 @@ func (v *mockInterfaceNotification) ConnectSystemInfoChanged(cb func(arg0 uint32
 
 // signal AppAddedSignal
 
-func (v *mockInterfaceNotification) ConnectAppAddedSignal(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppAddedSignal(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -549,7 +550,7 @@ func (v *mockInterfaceNotification) ConnectAppAddedSignal(cb func(arg0 string)) 
 
 // signal AppRemovedSignal
 
-func (v *mockInterfaceNotification) ConnectAppRemovedSignal(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppRemovedSignal(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -562,7 +563,7 @@ func (v *mockInterfaceNotification) ConnectAppRemovedSignal(cb func(arg0 string)
 
 // signal appRemoved
 
-func (v *mockInterfaceNotification) ConnectAppRemoved(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppRemoved(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -575,7 +576,7 @@ func (v *mockInterfaceNotification) ConnectAppRemoved(cb func(arg0 string)) (dbu
 
 // signal appAdded
 
-func (v *mockInterfaceNotification) ConnectAppAdded(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppAdded(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -588,7 +589,7 @@ func (v *mockInterfaceNotification) ConnectAppAdded(cb func(arg0 string)) (dbusu
 
 // signal appSettingChanged
 
-func (v *mockInterfaceNotification) ConnectAppSettingChanged(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectAppSettingChanged(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -601,7 +602,7 @@ func (v *mockInterfaceNotification) ConnectAppSettingChanged(cb func(arg0 string
 
 // signal systemSettingChanged
 
-func (v *mockInterfaceNotification) ConnectSystemSettingChanged(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceNotification) ConnectSystemSettingChanged(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -614,7 +615,7 @@ func (v *mockInterfaceNotification) ConnectSystemSettingChanged(cb func(arg0 str
 
 // property allSetting s
 
-func (v *mockInterfaceNotification) AllSetting() proxy.PropString {
+func (v *MockInterfaceNotification) AllSetting() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -627,7 +628,7 @@ func (v *mockInterfaceNotification) AllSetting() proxy.PropString {
 
 // property systemSetting s
 
-func (v *mockInterfaceNotification) SystemSetting() proxy.PropString {
+func (v *MockInterfaceNotification) SystemSetting() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

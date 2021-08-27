@@ -12,16 +12,17 @@ import (
 )
 
 type MockManager struct {
-	mockInterfaceManager // interface org.freedesktop.ColorManager
+	MockInterfaceManager // interface org.freedesktop.ColorManager
+	proxy.MockObject
 }
 
-type mockInterfaceManager struct {
+type MockInterfaceManager struct {
 	mock.Mock
 }
 
 // method GetDevices
 
-func (v *mockInterfaceManager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceManager) GoGetDevices(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceManager) GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfaceManager) GetDevices(flags dbus.Flags) ([]dbus.ObjectPath, 
 
 // method GetDevicesByKind
 
-func (v *mockInterfaceManager) GoGetDevicesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
+func (v *MockInterfaceManager) GoGetDevicesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, kind)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceManager) GoGetDevicesByKind(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceManager) GetDevicesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetDevicesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, kind)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -69,7 +70,7 @@ func (v *mockInterfaceManager) GetDevicesByKind(flags dbus.Flags, kind string) (
 
 // method FindDeviceById
 
-func (v *mockInterfaceManager) GoFindDeviceById(flags dbus.Flags, ch chan *dbus.Call, device_id string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindDeviceById(flags dbus.Flags, ch chan *dbus.Call, device_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, device_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceManager) GoFindDeviceById(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) FindDeviceById(flags dbus.Flags, device_id string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindDeviceById(flags dbus.Flags, device_id string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, device_id)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -93,7 +94,7 @@ func (v *mockInterfaceManager) FindDeviceById(flags dbus.Flags, device_id string
 
 // method FindSensorById
 
-func (v *mockInterfaceManager) GoFindSensorById(flags dbus.Flags, ch chan *dbus.Call, sensor_id string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindSensorById(flags dbus.Flags, ch chan *dbus.Call, sensor_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sensor_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -104,7 +105,7 @@ func (v *mockInterfaceManager) GoFindSensorById(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) FindSensorById(flags dbus.Flags, sensor_id string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindSensorById(flags dbus.Flags, sensor_id string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, sensor_id)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -117,7 +118,7 @@ func (v *mockInterfaceManager) FindSensorById(flags dbus.Flags, sensor_id string
 
 // method FindDeviceByProperty
 
-func (v *mockInterfaceManager) GoFindDeviceByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindDeviceByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, key, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -128,7 +129,7 @@ func (v *mockInterfaceManager) GoFindDeviceByProperty(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceManager) FindDeviceByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindDeviceByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, key, value)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -141,7 +142,7 @@ func (v *mockInterfaceManager) FindDeviceByProperty(flags dbus.Flags, key string
 
 // method FindProfileById
 
-func (v *mockInterfaceManager) GoFindProfileById(flags dbus.Flags, ch chan *dbus.Call, profile_id string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindProfileById(flags dbus.Flags, ch chan *dbus.Call, profile_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, profile_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -152,7 +153,7 @@ func (v *mockInterfaceManager) GoFindProfileById(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceManager) FindProfileById(flags dbus.Flags, profile_id string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindProfileById(flags dbus.Flags, profile_id string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, profile_id)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -165,7 +166,7 @@ func (v *mockInterfaceManager) FindProfileById(flags dbus.Flags, profile_id stri
 
 // method FindProfileByProperty
 
-func (v *mockInterfaceManager) GoFindProfileByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindProfileByProperty(flags dbus.Flags, ch chan *dbus.Call, key string, value string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, key, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -176,7 +177,7 @@ func (v *mockInterfaceManager) GoFindProfileByProperty(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceManager) FindProfileByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindProfileByProperty(flags dbus.Flags, key string, value string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, key, value)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -189,7 +190,7 @@ func (v *mockInterfaceManager) FindProfileByProperty(flags dbus.Flags, key strin
 
 // method FindProfileByFilename
 
-func (v *mockInterfaceManager) GoFindProfileByFilename(flags dbus.Flags, ch chan *dbus.Call, filename string) *dbus.Call {
+func (v *MockInterfaceManager) GoFindProfileByFilename(flags dbus.Flags, ch chan *dbus.Call, filename string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, filename)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -200,7 +201,7 @@ func (v *mockInterfaceManager) GoFindProfileByFilename(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceManager) FindProfileByFilename(flags dbus.Flags, filename string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) FindProfileByFilename(flags dbus.Flags, filename string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, filename)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -213,7 +214,7 @@ func (v *mockInterfaceManager) FindProfileByFilename(flags dbus.Flags, filename 
 
 // method GetStandardSpace
 
-func (v *mockInterfaceManager) GoGetStandardSpace(flags dbus.Flags, ch chan *dbus.Call, standard_space string) *dbus.Call {
+func (v *MockInterfaceManager) GoGetStandardSpace(flags dbus.Flags, ch chan *dbus.Call, standard_space string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, standard_space)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -224,7 +225,7 @@ func (v *mockInterfaceManager) GoGetStandardSpace(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceManager) GetStandardSpace(flags dbus.Flags, standard_space string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetStandardSpace(flags dbus.Flags, standard_space string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, standard_space)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -237,7 +238,7 @@ func (v *mockInterfaceManager) GetStandardSpace(flags dbus.Flags, standard_space
 
 // method GetProfiles
 
-func (v *mockInterfaceManager) GoGetProfiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoGetProfiles(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -248,7 +249,7 @@ func (v *mockInterfaceManager) GoGetProfiles(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) GetProfiles(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetProfiles(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -261,7 +262,7 @@ func (v *mockInterfaceManager) GetProfiles(flags dbus.Flags) ([]dbus.ObjectPath,
 
 // method GetSensors
 
-func (v *mockInterfaceManager) GoGetSensors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoGetSensors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -272,7 +273,7 @@ func (v *mockInterfaceManager) GoGetSensors(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceManager) GetSensors(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetSensors(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -285,7 +286,7 @@ func (v *mockInterfaceManager) GetSensors(flags dbus.Flags) ([]dbus.ObjectPath, 
 
 // method GetProfilesByKind
 
-func (v *mockInterfaceManager) GoGetProfilesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
+func (v *MockInterfaceManager) GoGetProfilesByKind(flags dbus.Flags, ch chan *dbus.Call, kind string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, kind)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -296,7 +297,7 @@ func (v *mockInterfaceManager) GoGetProfilesByKind(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceManager) GetProfilesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetProfilesByKind(flags dbus.Flags, kind string) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, kind)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -309,7 +310,7 @@ func (v *mockInterfaceManager) GetProfilesByKind(flags dbus.Flags, kind string) 
 
 // method CreateProfileWithFd
 
-func (v *mockInterfaceManager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call {
+func (v *MockInterfaceManager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, profile_id, scope, handle, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -320,7 +321,7 @@ func (v *mockInterfaceManager) GoCreateProfileWithFd(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceManager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) CreateProfileWithFd(flags dbus.Flags, profile_id string, scope string, handle dbus.UnixFD, properties map[string]string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, profile_id, scope, handle, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -333,7 +334,7 @@ func (v *mockInterfaceManager) CreateProfileWithFd(flags dbus.Flags, profile_id 
 
 // method CreateProfile
 
-func (v *mockInterfaceManager) GoCreateProfile(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, properties map[string]string) *dbus.Call {
+func (v *MockInterfaceManager) GoCreateProfile(flags dbus.Flags, ch chan *dbus.Call, profile_id string, scope string, properties map[string]string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, profile_id, scope, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -344,7 +345,7 @@ func (v *mockInterfaceManager) GoCreateProfile(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) CreateProfile(flags dbus.Flags, profile_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) CreateProfile(flags dbus.Flags, profile_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, profile_id, scope, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -357,7 +358,7 @@ func (v *mockInterfaceManager) CreateProfile(flags dbus.Flags, profile_id string
 
 // method CreateDevice
 
-func (v *mockInterfaceManager) GoCreateDevice(flags dbus.Flags, ch chan *dbus.Call, device_id string, scope string, properties map[string]string) *dbus.Call {
+func (v *MockInterfaceManager) GoCreateDevice(flags dbus.Flags, ch chan *dbus.Call, device_id string, scope string, properties map[string]string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, device_id, scope, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -368,7 +369,7 @@ func (v *mockInterfaceManager) GoCreateDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) CreateDevice(flags dbus.Flags, device_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) CreateDevice(flags dbus.Flags, device_id string, scope string, properties map[string]string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, device_id, scope, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -381,7 +382,7 @@ func (v *mockInterfaceManager) CreateDevice(flags dbus.Flags, device_id string, 
 
 // method DeleteDevice
 
-func (v *mockInterfaceManager) GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceManager) GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, object_path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -392,7 +393,7 @@ func (v *mockInterfaceManager) GoDeleteDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) DeleteDevice(flags dbus.Flags, object_path dbus.ObjectPath) error {
+func (v *MockInterfaceManager) DeleteDevice(flags dbus.Flags, object_path dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, object_path)
 
 	return mockArgs.Error(0)
@@ -400,7 +401,7 @@ func (v *mockInterfaceManager) DeleteDevice(flags dbus.Flags, object_path dbus.O
 
 // method DeleteProfile
 
-func (v *mockInterfaceManager) GoDeleteProfile(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceManager) GoDeleteProfile(flags dbus.Flags, ch chan *dbus.Call, object_path dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, object_path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -411,7 +412,7 @@ func (v *mockInterfaceManager) GoDeleteProfile(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) DeleteProfile(flags dbus.Flags, object_path dbus.ObjectPath) error {
+func (v *MockInterfaceManager) DeleteProfile(flags dbus.Flags, object_path dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, object_path)
 
 	return mockArgs.Error(0)
@@ -419,7 +420,7 @@ func (v *mockInterfaceManager) DeleteProfile(flags dbus.Flags, object_path dbus.
 
 // signal Changed
 
-func (v *mockInterfaceManager) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -432,7 +433,7 @@ func (v *mockInterfaceManager) ConnectChanged(cb func()) (dbusutil.SignalHandler
 
 // signal DeviceAdded
 
-func (v *mockInterfaceManager) ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectDeviceAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -445,7 +446,7 @@ func (v *mockInterfaceManager) ConnectDeviceAdded(cb func(object_path dbus.Objec
 
 // signal DeviceRemoved
 
-func (v *mockInterfaceManager) ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectDeviceRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -458,7 +459,7 @@ func (v *mockInterfaceManager) ConnectDeviceRemoved(cb func(object_path dbus.Obj
 
 // signal DeviceChanged
 
-func (v *mockInterfaceManager) ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectDeviceChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -471,7 +472,7 @@ func (v *mockInterfaceManager) ConnectDeviceChanged(cb func(object_path dbus.Obj
 
 // signal ProfileAdded
 
-func (v *mockInterfaceManager) ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectProfileAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -484,7 +485,7 @@ func (v *mockInterfaceManager) ConnectProfileAdded(cb func(object_path dbus.Obje
 
 // signal ProfileRemoved
 
-func (v *mockInterfaceManager) ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectProfileRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -497,7 +498,7 @@ func (v *mockInterfaceManager) ConnectProfileRemoved(cb func(object_path dbus.Ob
 
 // signal SensorAdded
 
-func (v *mockInterfaceManager) ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSensorAdded(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -510,7 +511,7 @@ func (v *mockInterfaceManager) ConnectSensorAdded(cb func(object_path dbus.Objec
 
 // signal SensorRemoved
 
-func (v *mockInterfaceManager) ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSensorRemoved(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -523,7 +524,7 @@ func (v *mockInterfaceManager) ConnectSensorRemoved(cb func(object_path dbus.Obj
 
 // signal ProfileChanged
 
-func (v *mockInterfaceManager) ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectProfileChanged(cb func(object_path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -536,7 +537,7 @@ func (v *mockInterfaceManager) ConnectProfileChanged(cb func(object_path dbus.Ob
 
 // property DaemonVersion s
 
-func (v *mockInterfaceManager) DaemonVersion() proxy.PropString {
+func (v *MockInterfaceManager) DaemonVersion() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -549,7 +550,7 @@ func (v *mockInterfaceManager) DaemonVersion() proxy.PropString {
 
 // property SystemVendor s
 
-func (v *mockInterfaceManager) SystemVendor() proxy.PropString {
+func (v *MockInterfaceManager) SystemVendor() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -562,7 +563,7 @@ func (v *mockInterfaceManager) SystemVendor() proxy.PropString {
 
 // property SystemModel s
 
-func (v *mockInterfaceManager) SystemModel() proxy.PropString {
+func (v *MockInterfaceManager) SystemModel() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -574,16 +575,17 @@ func (v *mockInterfaceManager) SystemModel() proxy.PropString {
 }
 
 type MockProfile struct {
-	mockInterfaceProfile // interface org.freedesktop.ColorManager.Profile
+	MockInterfaceProfile // interface org.freedesktop.ColorManager.Profile
+	proxy.MockObject
 }
 
-type mockInterfaceProfile struct {
+type MockInterfaceProfile struct {
 	mock.Mock
 }
 
 // method SetProperty
 
-func (v *mockInterfaceProfile) GoSetProperty(flags dbus.Flags, ch chan *dbus.Call, property_name string, property_value string) *dbus.Call {
+func (v *MockInterfaceProfile) GoSetProperty(flags dbus.Flags, ch chan *dbus.Call, property_name string, property_value string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, property_name, property_value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -594,7 +596,7 @@ func (v *mockInterfaceProfile) GoSetProperty(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceProfile) SetProperty(flags dbus.Flags, property_name string, property_value string) error {
+func (v *MockInterfaceProfile) SetProperty(flags dbus.Flags, property_name string, property_value string) error {
 	mockArgs := v.Called(flags, property_name, property_value)
 
 	return mockArgs.Error(0)
@@ -602,7 +604,7 @@ func (v *mockInterfaceProfile) SetProperty(flags dbus.Flags, property_name strin
 
 // method InstallSystemWide
 
-func (v *mockInterfaceProfile) GoInstallSystemWide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceProfile) GoInstallSystemWide(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -613,7 +615,7 @@ func (v *mockInterfaceProfile) GoInstallSystemWide(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceProfile) InstallSystemWide(flags dbus.Flags) error {
+func (v *MockInterfaceProfile) InstallSystemWide(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -621,7 +623,7 @@ func (v *mockInterfaceProfile) InstallSystemWide(flags dbus.Flags) error {
 
 // signal Changed
 
-func (v *mockInterfaceProfile) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceProfile) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -634,7 +636,7 @@ func (v *mockInterfaceProfile) ConnectChanged(cb func()) (dbusutil.SignalHandler
 
 // property ProfileId s
 
-func (v *mockInterfaceProfile) ProfileId() proxy.PropString {
+func (v *MockInterfaceProfile) ProfileId() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -647,7 +649,7 @@ func (v *mockInterfaceProfile) ProfileId() proxy.PropString {
 
 // property Title s
 
-func (v *mockInterfaceProfile) Title() proxy.PropString {
+func (v *MockInterfaceProfile) Title() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -690,7 +692,7 @@ func (p MockPropProfileMetadata) ConnectChanged(cb func(hasValue bool, value map
 
 // property Metadata a{ss}
 
-func (v *mockInterfaceProfile) Metadata() PropProfileMetadata {
+func (v *MockInterfaceProfile) Metadata() PropProfileMetadata {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropProfileMetadata)
@@ -703,7 +705,7 @@ func (v *mockInterfaceProfile) Metadata() PropProfileMetadata {
 
 // property Qualifier s
 
-func (v *mockInterfaceProfile) Qualifier() proxy.PropString {
+func (v *MockInterfaceProfile) Qualifier() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -716,7 +718,7 @@ func (v *mockInterfaceProfile) Qualifier() proxy.PropString {
 
 // property Format s
 
-func (v *mockInterfaceProfile) Format() proxy.PropString {
+func (v *MockInterfaceProfile) Format() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -729,7 +731,7 @@ func (v *mockInterfaceProfile) Format() proxy.PropString {
 
 // property Kind s
 
-func (v *mockInterfaceProfile) Kind() proxy.PropString {
+func (v *MockInterfaceProfile) Kind() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -742,7 +744,7 @@ func (v *mockInterfaceProfile) Kind() proxy.PropString {
 
 // property Colorspace s
 
-func (v *mockInterfaceProfile) Colorspace() proxy.PropString {
+func (v *MockInterfaceProfile) Colorspace() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -755,7 +757,7 @@ func (v *mockInterfaceProfile) Colorspace() proxy.PropString {
 
 // property HasVcgt b
 
-func (v *mockInterfaceProfile) HasVcgt() proxy.PropBool {
+func (v *MockInterfaceProfile) HasVcgt() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -768,7 +770,7 @@ func (v *mockInterfaceProfile) HasVcgt() proxy.PropBool {
 
 // property IsSystemWide b
 
-func (v *mockInterfaceProfile) IsSystemWide() proxy.PropBool {
+func (v *MockInterfaceProfile) IsSystemWide() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -781,7 +783,7 @@ func (v *mockInterfaceProfile) IsSystemWide() proxy.PropBool {
 
 // property Filename s
 
-func (v *mockInterfaceProfile) Filename() proxy.PropString {
+func (v *MockInterfaceProfile) Filename() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -794,7 +796,7 @@ func (v *mockInterfaceProfile) Filename() proxy.PropString {
 
 // property Created x
 
-func (v *mockInterfaceProfile) Created() proxy.PropInt64 {
+func (v *MockInterfaceProfile) Created() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)
@@ -807,7 +809,7 @@ func (v *mockInterfaceProfile) Created() proxy.PropInt64 {
 
 // property Scope s
 
-func (v *mockInterfaceProfile) Scope() proxy.PropString {
+func (v *MockInterfaceProfile) Scope() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -820,7 +822,7 @@ func (v *mockInterfaceProfile) Scope() proxy.PropString {
 
 // property Owner u
 
-func (v *mockInterfaceProfile) Owner() proxy.PropUint32 {
+func (v *MockInterfaceProfile) Owner() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -833,7 +835,7 @@ func (v *mockInterfaceProfile) Owner() proxy.PropUint32 {
 
 // property Warnings as
 
-func (v *mockInterfaceProfile) Warnings() proxy.PropStringArray {
+func (v *MockInterfaceProfile) Warnings() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)

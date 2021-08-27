@@ -14,16 +14,17 @@ import (
 
 type MockManager struct {
 	object_manager.MockInterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
-	mockInterfaceManager                      // interface org.freedesktop.ModemManager1
+	MockInterfaceManager                      // interface org.freedesktop.ModemManager1
+	proxy.MockObject
 }
 
-type mockInterfaceManager struct {
+type MockInterfaceManager struct {
 	mock.Mock
 }
 
 // method ScanDevices
 
-func (v *mockInterfaceManager) GoScanDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoScanDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -34,7 +35,7 @@ func (v *mockInterfaceManager) GoScanDevices(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) ScanDevices(flags dbus.Flags) error {
+func (v *MockInterfaceManager) ScanDevices(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -42,7 +43,7 @@ func (v *mockInterfaceManager) ScanDevices(flags dbus.Flags) error {
 
 // method SetLogging
 
-func (v *mockInterfaceManager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string) *dbus.Call {
+func (v *MockInterfaceManager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call, level string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, level)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -53,34 +54,35 @@ func (v *mockInterfaceManager) GoSetLogging(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceManager) SetLogging(flags dbus.Flags, level string) error {
+func (v *MockInterfaceManager) SetLogging(flags dbus.Flags, level string) error {
 	mockArgs := v.Called(flags, level)
 
 	return mockArgs.Error(0)
 }
 
 type MockModem struct {
-	mockInterfaceModem          // interface org.freedesktop.ModemManager1.Modem
-	mockInterfaceModemFirmware  // interface org.freedesktop.ModemManager1.Modem.Firmware
-	mockInterfaceModemLocation  // interface org.freedesktop.ModemManager1.Modem.Location
-	mockInterfaceModemMessaging // interface org.freedesktop.ModemManager1.Modem.Messaging
-	mockInterfaceModem3gppUssd  // interface org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd
-	mockInterfaceModem3gpp      // interface org.freedesktop.ModemManager1.Modem.Modem3gpp
-	mockInterfaceModemCdma      // interface org.freedesktop.ModemManager1.Modem.ModemCdma
-	mockInterfaceModemOma       // interface org.freedesktop.ModemManager1.Modem.Oma
-	mockInterfaceModemSignal    // interface org.freedesktop.ModemManager1.Modem.Signal
-	mockInterfaceModemSimple    // interface org.freedesktop.ModemManager1.Modem.Simple
-	mockInterfaceModemTime      // interface org.freedesktop.ModemManager1.Modem.Time
-	mockInterfaceModemVoice     // interface org.freedesktop.ModemManager1.Modem.Voice
+	MockInterfaceModem          // interface org.freedesktop.ModemManager1.Modem
+	MockInterfaceModemFirmware  // interface org.freedesktop.ModemManager1.Modem.Firmware
+	MockInterfaceModemLocation  // interface org.freedesktop.ModemManager1.Modem.Location
+	MockInterfaceModemMessaging // interface org.freedesktop.ModemManager1.Modem.Messaging
+	MockInterfaceModem3gppUssd  // interface org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd
+	MockInterfaceModem3gpp      // interface org.freedesktop.ModemManager1.Modem.Modem3gpp
+	MockInterfaceModemCdma      // interface org.freedesktop.ModemManager1.Modem.ModemCdma
+	MockInterfaceModemOma       // interface org.freedesktop.ModemManager1.Modem.Oma
+	MockInterfaceModemSignal    // interface org.freedesktop.ModemManager1.Modem.Signal
+	MockInterfaceModemSimple    // interface org.freedesktop.ModemManager1.Modem.Simple
+	MockInterfaceModemTime      // interface org.freedesktop.ModemManager1.Modem.Time
+	MockInterfaceModemVoice     // interface org.freedesktop.ModemManager1.Modem.Voice
+	proxy.MockObject
 }
 
-type mockInterfaceModem struct {
+type MockInterfaceModem struct {
 	mock.Mock
 }
 
 // method Enable
 
-func (v *mockInterfaceModem) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceModem) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -91,7 +93,7 @@ func (v *mockInterfaceModem) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enab
 	return ret
 }
 
-func (v *mockInterfaceModem) Enable(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceModem) Enable(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -99,7 +101,7 @@ func (v *mockInterfaceModem) Enable(flags dbus.Flags, enable bool) error {
 
 // method ListBearers
 
-func (v *mockInterfaceModem) GoListBearers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModem) GoListBearers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -110,7 +112,7 @@ func (v *mockInterfaceModem) GoListBearers(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceModem) ListBearers(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceModem) ListBearers(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -123,7 +125,7 @@ func (v *mockInterfaceModem) ListBearers(flags dbus.Flags) ([]dbus.ObjectPath, e
 
 // method CreateBearer
 
-func (v *mockInterfaceModem) GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceModem) GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -134,7 +136,7 @@ func (v *mockInterfaceModem) GoCreateBearer(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModem) CreateBearer(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceModem) CreateBearer(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -147,7 +149,7 @@ func (v *mockInterfaceModem) CreateBearer(flags dbus.Flags, properties map[strin
 
 // method DeleteBearer
 
-func (v *mockInterfaceModem) GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceModem) GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, bearer)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -158,7 +160,7 @@ func (v *mockInterfaceModem) GoDeleteBearer(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModem) DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPath) error {
+func (v *MockInterfaceModem) DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, bearer)
 
 	return mockArgs.Error(0)
@@ -166,7 +168,7 @@ func (v *mockInterfaceModem) DeleteBearer(flags dbus.Flags, bearer dbus.ObjectPa
 
 // method Reset
 
-func (v *mockInterfaceModem) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModem) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -177,7 +179,7 @@ func (v *mockInterfaceModem) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfaceModem) Reset(flags dbus.Flags) error {
+func (v *MockInterfaceModem) Reset(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -185,7 +187,7 @@ func (v *mockInterfaceModem) Reset(flags dbus.Flags) error {
 
 // method FactoryReset
 
-func (v *mockInterfaceModem) GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call, code string) *dbus.Call {
+func (v *MockInterfaceModem) GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call, code string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, code)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -196,7 +198,7 @@ func (v *mockInterfaceModem) GoFactoryReset(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModem) FactoryReset(flags dbus.Flags, code string) error {
+func (v *MockInterfaceModem) FactoryReset(flags dbus.Flags, code string) error {
 	mockArgs := v.Called(flags, code)
 
 	return mockArgs.Error(0)
@@ -204,7 +206,7 @@ func (v *mockInterfaceModem) FactoryReset(flags dbus.Flags, code string) error {
 
 // method SetPowerState
 
-func (v *mockInterfaceModem) GoSetPowerState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
+func (v *MockInterfaceModem) GoSetPowerState(flags dbus.Flags, ch chan *dbus.Call, state uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, state)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -215,7 +217,7 @@ func (v *mockInterfaceModem) GoSetPowerState(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceModem) SetPowerState(flags dbus.Flags, state uint32) error {
+func (v *MockInterfaceModem) SetPowerState(flags dbus.Flags, state uint32) error {
 	mockArgs := v.Called(flags, state)
 
 	return mockArgs.Error(0)
@@ -223,7 +225,7 @@ func (v *mockInterfaceModem) SetPowerState(flags dbus.Flags, state uint32) error
 
 // method SetCurrentCapabilities
 
-func (v *mockInterfaceModem) GoSetCurrentCapabilities(flags dbus.Flags, ch chan *dbus.Call, capabilities uint32) *dbus.Call {
+func (v *MockInterfaceModem) GoSetCurrentCapabilities(flags dbus.Flags, ch chan *dbus.Call, capabilities uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, capabilities)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -234,7 +236,7 @@ func (v *mockInterfaceModem) GoSetCurrentCapabilities(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceModem) SetCurrentCapabilities(flags dbus.Flags, capabilities uint32) error {
+func (v *MockInterfaceModem) SetCurrentCapabilities(flags dbus.Flags, capabilities uint32) error {
 	mockArgs := v.Called(flags, capabilities)
 
 	return mockArgs.Error(0)
@@ -242,7 +244,7 @@ func (v *mockInterfaceModem) SetCurrentCapabilities(flags dbus.Flags, capabiliti
 
 // method SetCurrentModes
 
-func (v *mockInterfaceModem) GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.Call, modes ModemModes) *dbus.Call {
+func (v *MockInterfaceModem) GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.Call, modes ModemModes) *dbus.Call {
 	mockArgs := v.Called(flags, ch, modes)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -253,7 +255,7 @@ func (v *mockInterfaceModem) GoSetCurrentModes(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModem) SetCurrentModes(flags dbus.Flags, modes ModemModes) error {
+func (v *MockInterfaceModem) SetCurrentModes(flags dbus.Flags, modes ModemModes) error {
 	mockArgs := v.Called(flags, modes)
 
 	return mockArgs.Error(0)
@@ -261,7 +263,7 @@ func (v *mockInterfaceModem) SetCurrentModes(flags dbus.Flags, modes ModemModes)
 
 // method SetCurrentBands
 
-func (v *mockInterfaceModem) GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.Call, bands []uint32) *dbus.Call {
+func (v *MockInterfaceModem) GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.Call, bands []uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, bands)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -272,7 +274,7 @@ func (v *mockInterfaceModem) GoSetCurrentBands(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModem) SetCurrentBands(flags dbus.Flags, bands []uint32) error {
+func (v *MockInterfaceModem) SetCurrentBands(flags dbus.Flags, bands []uint32) error {
 	mockArgs := v.Called(flags, bands)
 
 	return mockArgs.Error(0)
@@ -280,7 +282,7 @@ func (v *mockInterfaceModem) SetCurrentBands(flags dbus.Flags, bands []uint32) e
 
 // method Command
 
-func (v *mockInterfaceModem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd string, timeout uint32) *dbus.Call {
+func (v *MockInterfaceModem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd string, timeout uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cmd, timeout)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -291,7 +293,7 @@ func (v *mockInterfaceModem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd
 	return ret
 }
 
-func (v *mockInterfaceModem) Command(flags dbus.Flags, cmd string, timeout uint32) (string, error) {
+func (v *MockInterfaceModem) Command(flags dbus.Flags, cmd string, timeout uint32) (string, error) {
 	mockArgs := v.Called(flags, cmd, timeout)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -304,7 +306,7 @@ func (v *mockInterfaceModem) Command(flags dbus.Flags, cmd string, timeout uint3
 
 // signal StateChanged
 
-func (v *mockInterfaceModem) ConnectStateChanged(cb func(old int32, new int32, reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModem) ConnectStateChanged(cb func(old int32, new int32, reason uint32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -317,7 +319,7 @@ func (v *mockInterfaceModem) ConnectStateChanged(cb func(old int32, new int32, r
 
 // property Sim o
 
-func (v *mockInterfaceModem) Sim() proxy.PropObjectPath {
+func (v *MockInterfaceModem) Sim() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -330,7 +332,7 @@ func (v *mockInterfaceModem) Sim() proxy.PropObjectPath {
 
 // property Bearers ao
 
-func (v *mockInterfaceModem) Bearers() proxy.PropObjectPathArray {
+func (v *MockInterfaceModem) Bearers() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -343,7 +345,7 @@ func (v *mockInterfaceModem) Bearers() proxy.PropObjectPathArray {
 
 // property SupportedCapabilities au
 
-func (v *mockInterfaceModem) SupportedCapabilities() proxy.PropUint32Array {
+func (v *MockInterfaceModem) SupportedCapabilities() proxy.PropUint32Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32Array)
@@ -356,7 +358,7 @@ func (v *mockInterfaceModem) SupportedCapabilities() proxy.PropUint32Array {
 
 // property CurrentCapabilities u
 
-func (v *mockInterfaceModem) CurrentCapabilities() proxy.PropUint32 {
+func (v *MockInterfaceModem) CurrentCapabilities() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -369,7 +371,7 @@ func (v *mockInterfaceModem) CurrentCapabilities() proxy.PropUint32 {
 
 // property MaxBearers u
 
-func (v *mockInterfaceModem) MaxBearers() proxy.PropUint32 {
+func (v *MockInterfaceModem) MaxBearers() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -382,7 +384,7 @@ func (v *mockInterfaceModem) MaxBearers() proxy.PropUint32 {
 
 // property MaxActiveBearers u
 
-func (v *mockInterfaceModem) MaxActiveBearers() proxy.PropUint32 {
+func (v *MockInterfaceModem) MaxActiveBearers() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -395,7 +397,7 @@ func (v *mockInterfaceModem) MaxActiveBearers() proxy.PropUint32 {
 
 // property Manufacturer s
 
-func (v *mockInterfaceModem) Manufacturer() proxy.PropString {
+func (v *MockInterfaceModem) Manufacturer() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -408,7 +410,7 @@ func (v *mockInterfaceModem) Manufacturer() proxy.PropString {
 
 // property Model s
 
-func (v *mockInterfaceModem) Model() proxy.PropString {
+func (v *MockInterfaceModem) Model() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -421,7 +423,7 @@ func (v *mockInterfaceModem) Model() proxy.PropString {
 
 // property Revision s
 
-func (v *mockInterfaceModem) Revision() proxy.PropString {
+func (v *MockInterfaceModem) Revision() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -434,7 +436,7 @@ func (v *mockInterfaceModem) Revision() proxy.PropString {
 
 // property DeviceIdentifier s
 
-func (v *mockInterfaceModem) DeviceIdentifier() proxy.PropString {
+func (v *MockInterfaceModem) DeviceIdentifier() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -447,7 +449,7 @@ func (v *mockInterfaceModem) DeviceIdentifier() proxy.PropString {
 
 // property Device s
 
-func (v *mockInterfaceModem) Device() proxy.PropString {
+func (v *MockInterfaceModem) Device() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -460,7 +462,7 @@ func (v *mockInterfaceModem) Device() proxy.PropString {
 
 // property Drivers as
 
-func (v *mockInterfaceModem) Drivers() proxy.PropStringArray {
+func (v *MockInterfaceModem) Drivers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -473,7 +475,7 @@ func (v *mockInterfaceModem) Drivers() proxy.PropStringArray {
 
 // property Plugin s
 
-func (v *mockInterfaceModem) Plugin() proxy.PropString {
+func (v *MockInterfaceModem) Plugin() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -486,7 +488,7 @@ func (v *mockInterfaceModem) Plugin() proxy.PropString {
 
 // property PrimaryPort s
 
-func (v *mockInterfaceModem) PrimaryPort() proxy.PropString {
+func (v *MockInterfaceModem) PrimaryPort() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -529,7 +531,7 @@ func (p MockPropModemPorts) ConnectChanged(cb func(hasValue bool, value []ModemP
 
 // property Ports a(su)
 
-func (v *mockInterfaceModem) Ports() PropModemPorts {
+func (v *MockInterfaceModem) Ports() PropModemPorts {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemPorts)
@@ -542,7 +544,7 @@ func (v *mockInterfaceModem) Ports() PropModemPorts {
 
 // property EquipmentIdentifier s
 
-func (v *mockInterfaceModem) EquipmentIdentifier() proxy.PropString {
+func (v *MockInterfaceModem) EquipmentIdentifier() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -555,7 +557,7 @@ func (v *mockInterfaceModem) EquipmentIdentifier() proxy.PropString {
 
 // property UnlockRequired u
 
-func (v *mockInterfaceModem) UnlockRequired() proxy.PropUint32 {
+func (v *MockInterfaceModem) UnlockRequired() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -598,7 +600,7 @@ func (p MockPropModemUnlockRetries) ConnectChanged(cb func(hasValue bool, value 
 
 // property UnlockRetries a{uu}
 
-func (v *mockInterfaceModem) UnlockRetries() PropModemUnlockRetries {
+func (v *MockInterfaceModem) UnlockRetries() PropModemUnlockRetries {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemUnlockRetries)
@@ -611,7 +613,7 @@ func (v *mockInterfaceModem) UnlockRetries() PropModemUnlockRetries {
 
 // property State i
 
-func (v *mockInterfaceModem) State() proxy.PropInt32 {
+func (v *MockInterfaceModem) State() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -624,7 +626,7 @@ func (v *mockInterfaceModem) State() proxy.PropInt32 {
 
 // property StateFailedReason u
 
-func (v *mockInterfaceModem) StateFailedReason() proxy.PropUint32 {
+func (v *MockInterfaceModem) StateFailedReason() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -637,7 +639,7 @@ func (v *mockInterfaceModem) StateFailedReason() proxy.PropUint32 {
 
 // property AccessTechnologies u
 
-func (v *mockInterfaceModem) AccessTechnologies() proxy.PropUint32 {
+func (v *MockInterfaceModem) AccessTechnologies() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -680,7 +682,7 @@ func (p MockPropModemSignalQuality) ConnectChanged(cb func(hasValue bool, value 
 
 // property SignalQuality (ub)
 
-func (v *mockInterfaceModem) SignalQuality() PropModemSignalQuality {
+func (v *MockInterfaceModem) SignalQuality() PropModemSignalQuality {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemSignalQuality)
@@ -693,7 +695,7 @@ func (v *mockInterfaceModem) SignalQuality() PropModemSignalQuality {
 
 // property OwnNumbers as
 
-func (v *mockInterfaceModem) OwnNumbers() proxy.PropStringArray {
+func (v *MockInterfaceModem) OwnNumbers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -706,7 +708,7 @@ func (v *mockInterfaceModem) OwnNumbers() proxy.PropStringArray {
 
 // property PowerState u
 
-func (v *mockInterfaceModem) PowerState() proxy.PropUint32 {
+func (v *MockInterfaceModem) PowerState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -749,7 +751,7 @@ func (p MockPropModemSupportedModes) ConnectChanged(cb func(hasValue bool, value
 
 // property SupportedModes a(uu)
 
-func (v *mockInterfaceModem) SupportedModes() PropModemSupportedModes {
+func (v *MockInterfaceModem) SupportedModes() PropModemSupportedModes {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemSupportedModes)
@@ -792,7 +794,7 @@ func (p MockPropModemCurrentModes) ConnectChanged(cb func(hasValue bool, value M
 
 // property CurrentModes (uu)
 
-func (v *mockInterfaceModem) CurrentModes() PropModemCurrentModes {
+func (v *MockInterfaceModem) CurrentModes() PropModemCurrentModes {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemCurrentModes)
@@ -805,7 +807,7 @@ func (v *mockInterfaceModem) CurrentModes() PropModemCurrentModes {
 
 // property SupportedBands au
 
-func (v *mockInterfaceModem) SupportedBands() proxy.PropUint32Array {
+func (v *MockInterfaceModem) SupportedBands() proxy.PropUint32Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32Array)
@@ -818,7 +820,7 @@ func (v *mockInterfaceModem) SupportedBands() proxy.PropUint32Array {
 
 // property CurrentBands au
 
-func (v *mockInterfaceModem) CurrentBands() proxy.PropUint32Array {
+func (v *MockInterfaceModem) CurrentBands() proxy.PropUint32Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32Array)
@@ -831,7 +833,7 @@ func (v *mockInterfaceModem) CurrentBands() proxy.PropUint32Array {
 
 // property SupportedIpFamilies u
 
-func (v *mockInterfaceModem) SupportedIpFamilies() proxy.PropUint32 {
+func (v *MockInterfaceModem) SupportedIpFamilies() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -842,13 +844,13 @@ func (v *mockInterfaceModem) SupportedIpFamilies() proxy.PropUint32 {
 	return ret0
 }
 
-type mockInterfaceModemFirmware struct {
+type MockInterfaceModemFirmware struct {
 	mock.Mock
 }
 
 // method List
 
-func (v *mockInterfaceModemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -859,7 +861,7 @@ func (v *mockInterfaceModemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModemFirmware) List(flags dbus.Flags) (string, []map[string]dbus.Variant, error) {
+func (v *MockInterfaceModemFirmware) List(flags dbus.Flags) (string, []map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -877,7 +879,7 @@ func (v *mockInterfaceModemFirmware) List(flags dbus.Flags) (string, []map[strin
 
 // method Select
 
-func (v *mockInterfaceModemFirmware) GoSelect(flags dbus.Flags, ch chan *dbus.Call, uniqueid string) *dbus.Call {
+func (v *MockInterfaceModemFirmware) GoSelect(flags dbus.Flags, ch chan *dbus.Call, uniqueid string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uniqueid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -888,19 +890,19 @@ func (v *mockInterfaceModemFirmware) GoSelect(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceModemFirmware) Select(flags dbus.Flags, uniqueid string) error {
+func (v *MockInterfaceModemFirmware) Select(flags dbus.Flags, uniqueid string) error {
 	mockArgs := v.Called(flags, uniqueid)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceModemLocation struct {
+type MockInterfaceModemLocation struct {
 	mock.Mock
 }
 
 // method Setup
 
-func (v *mockInterfaceModemLocation) GoSetup(flags dbus.Flags, ch chan *dbus.Call, sources uint32, signal_location bool) *dbus.Call {
+func (v *MockInterfaceModemLocation) GoSetup(flags dbus.Flags, ch chan *dbus.Call, sources uint32, signal_location bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sources, signal_location)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -911,7 +913,7 @@ func (v *mockInterfaceModemLocation) GoSetup(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceModemLocation) Setup(flags dbus.Flags, sources uint32, signal_location bool) error {
+func (v *MockInterfaceModemLocation) Setup(flags dbus.Flags, sources uint32, signal_location bool) error {
 	mockArgs := v.Called(flags, sources, signal_location)
 
 	return mockArgs.Error(0)
@@ -919,7 +921,7 @@ func (v *mockInterfaceModemLocation) Setup(flags dbus.Flags, sources uint32, sig
 
 // method GetLocation
 
-func (v *mockInterfaceModemLocation) GoGetLocation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemLocation) GoGetLocation(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -930,7 +932,7 @@ func (v *mockInterfaceModemLocation) GoGetLocation(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceModemLocation) GetLocation(flags dbus.Flags) (map[uint32]dbus.Variant, error) {
+func (v *MockInterfaceModemLocation) GetLocation(flags dbus.Flags) (map[uint32]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(map[uint32]dbus.Variant)
@@ -943,7 +945,7 @@ func (v *mockInterfaceModemLocation) GetLocation(flags dbus.Flags) (map[uint32]d
 
 // method SetSuplServer
 
-func (v *mockInterfaceModemLocation) GoSetSuplServer(flags dbus.Flags, ch chan *dbus.Call, supl string) *dbus.Call {
+func (v *MockInterfaceModemLocation) GoSetSuplServer(flags dbus.Flags, ch chan *dbus.Call, supl string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, supl)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -954,7 +956,7 @@ func (v *mockInterfaceModemLocation) GoSetSuplServer(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceModemLocation) SetSuplServer(flags dbus.Flags, supl string) error {
+func (v *MockInterfaceModemLocation) SetSuplServer(flags dbus.Flags, supl string) error {
 	mockArgs := v.Called(flags, supl)
 
 	return mockArgs.Error(0)
@@ -962,7 +964,7 @@ func (v *mockInterfaceModemLocation) SetSuplServer(flags dbus.Flags, supl string
 
 // method SetGpsRefreshRate
 
-func (v *mockInterfaceModemLocation) GoSetGpsRefreshRate(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
+func (v *MockInterfaceModemLocation) GoSetGpsRefreshRate(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, rate)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -973,7 +975,7 @@ func (v *mockInterfaceModemLocation) GoSetGpsRefreshRate(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceModemLocation) SetGpsRefreshRate(flags dbus.Flags, rate uint32) error {
+func (v *MockInterfaceModemLocation) SetGpsRefreshRate(flags dbus.Flags, rate uint32) error {
 	mockArgs := v.Called(flags, rate)
 
 	return mockArgs.Error(0)
@@ -981,7 +983,7 @@ func (v *mockInterfaceModemLocation) SetGpsRefreshRate(flags dbus.Flags, rate ui
 
 // property Capabilities u
 
-func (v *mockInterfaceModemLocation) Capabilities() proxy.PropUint32 {
+func (v *MockInterfaceModemLocation) Capabilities() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -994,7 +996,7 @@ func (v *mockInterfaceModemLocation) Capabilities() proxy.PropUint32 {
 
 // property Enabled u
 
-func (v *mockInterfaceModemLocation) Enabled() proxy.PropUint32 {
+func (v *MockInterfaceModemLocation) Enabled() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1007,7 +1009,7 @@ func (v *mockInterfaceModemLocation) Enabled() proxy.PropUint32 {
 
 // property SignalsLocation b
 
-func (v *mockInterfaceModemLocation) SignalsLocation() proxy.PropBool {
+func (v *MockInterfaceModemLocation) SignalsLocation() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1050,7 +1052,7 @@ func (p MockPropModemLocation) ConnectChanged(cb func(hasValue bool, value map[u
 
 // property Location a{uv}
 
-func (v *mockInterfaceModemLocation) Location() PropModemLocation {
+func (v *MockInterfaceModemLocation) Location() PropModemLocation {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemLocation)
@@ -1063,7 +1065,7 @@ func (v *mockInterfaceModemLocation) Location() PropModemLocation {
 
 // property SuplServer s
 
-func (v *mockInterfaceModemLocation) SuplServer() proxy.PropString {
+func (v *MockInterfaceModemLocation) SuplServer() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1076,7 +1078,7 @@ func (v *mockInterfaceModemLocation) SuplServer() proxy.PropString {
 
 // property GpsRefreshRate u
 
-func (v *mockInterfaceModemLocation) GpsRefreshRate() proxy.PropUint32 {
+func (v *MockInterfaceModemLocation) GpsRefreshRate() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1087,13 +1089,13 @@ func (v *mockInterfaceModemLocation) GpsRefreshRate() proxy.PropUint32 {
 	return ret0
 }
 
-type mockInterfaceModemMessaging struct {
+type MockInterfaceModemMessaging struct {
 	mock.Mock
 }
 
 // method List
 
-func (v *mockInterfaceModemMessaging) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemMessaging) GoList(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1104,7 +1106,7 @@ func (v *mockInterfaceModemMessaging) GoList(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceModemMessaging) List(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceModemMessaging) List(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -1117,7 +1119,7 @@ func (v *mockInterfaceModemMessaging) List(flags dbus.Flags) ([]dbus.ObjectPath,
 
 // method Delete
 
-func (v *mockInterfaceModemMessaging) GoDelete(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceModemMessaging) GoDelete(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1128,7 +1130,7 @@ func (v *mockInterfaceModemMessaging) GoDelete(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModemMessaging) Delete(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *MockInterfaceModemMessaging) Delete(flags dbus.Flags, path dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, path)
 
 	return mockArgs.Error(0)
@@ -1136,7 +1138,7 @@ func (v *mockInterfaceModemMessaging) Delete(flags dbus.Flags, path dbus.ObjectP
 
 // method Create
 
-func (v *mockInterfaceModemMessaging) GoCreate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceModemMessaging) GoCreate(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1147,7 +1149,7 @@ func (v *mockInterfaceModemMessaging) GoCreate(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModemMessaging) Create(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceModemMessaging) Create(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -1160,7 +1162,7 @@ func (v *mockInterfaceModemMessaging) Create(flags dbus.Flags, properties map[st
 
 // signal Added
 
-func (v *mockInterfaceModemMessaging) ConnectAdded(cb func(path dbus.ObjectPath, received bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemMessaging) ConnectAdded(cb func(path dbus.ObjectPath, received bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1173,7 +1175,7 @@ func (v *mockInterfaceModemMessaging) ConnectAdded(cb func(path dbus.ObjectPath,
 
 // signal Deleted
 
-func (v *mockInterfaceModemMessaging) ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemMessaging) ConnectDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1186,7 +1188,7 @@ func (v *mockInterfaceModemMessaging) ConnectDeleted(cb func(path dbus.ObjectPat
 
 // property Messages ao
 
-func (v *mockInterfaceModemMessaging) Messages() proxy.PropObjectPathArray {
+func (v *MockInterfaceModemMessaging) Messages() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -1199,7 +1201,7 @@ func (v *mockInterfaceModemMessaging) Messages() proxy.PropObjectPathArray {
 
 // property SupportedStorages au
 
-func (v *mockInterfaceModemMessaging) SupportedStorages() proxy.PropUint32Array {
+func (v *MockInterfaceModemMessaging) SupportedStorages() proxy.PropUint32Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32Array)
@@ -1212,7 +1214,7 @@ func (v *mockInterfaceModemMessaging) SupportedStorages() proxy.PropUint32Array 
 
 // property DefaultStorage u
 
-func (v *mockInterfaceModemMessaging) DefaultStorage() proxy.PropUint32 {
+func (v *MockInterfaceModemMessaging) DefaultStorage() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1223,13 +1225,13 @@ func (v *mockInterfaceModemMessaging) DefaultStorage() proxy.PropUint32 {
 	return ret0
 }
 
-type mockInterfaceModem3gppUssd struct {
+type MockInterfaceModem3gppUssd struct {
 	mock.Mock
 }
 
 // method Initiate
 
-func (v *mockInterfaceModem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.Call, command string) *dbus.Call {
+func (v *MockInterfaceModem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.Call, command string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, command)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1240,7 +1242,7 @@ func (v *mockInterfaceModem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceModem3gppUssd) Initiate(flags dbus.Flags, command string) (string, error) {
+func (v *MockInterfaceModem3gppUssd) Initiate(flags dbus.Flags, command string) (string, error) {
 	mockArgs := v.Called(flags, command)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -1253,7 +1255,7 @@ func (v *mockInterfaceModem3gppUssd) Initiate(flags dbus.Flags, command string) 
 
 // method Respond
 
-func (v *mockInterfaceModem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.Call, response string) *dbus.Call {
+func (v *MockInterfaceModem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.Call, response string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, response)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1264,7 +1266,7 @@ func (v *mockInterfaceModem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModem3gppUssd) Respond(flags dbus.Flags, response string) (string, error) {
+func (v *MockInterfaceModem3gppUssd) Respond(flags dbus.Flags, response string) (string, error) {
 	mockArgs := v.Called(flags, response)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -1277,7 +1279,7 @@ func (v *mockInterfaceModem3gppUssd) Respond(flags dbus.Flags, response string) 
 
 // method Cancel
 
-func (v *mockInterfaceModem3gppUssd) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModem3gppUssd) GoCancel(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1288,7 +1290,7 @@ func (v *mockInterfaceModem3gppUssd) GoCancel(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceModem3gppUssd) Cancel(flags dbus.Flags) error {
+func (v *MockInterfaceModem3gppUssd) Cancel(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1296,7 +1298,7 @@ func (v *mockInterfaceModem3gppUssd) Cancel(flags dbus.Flags) error {
 
 // property State u
 
-func (v *mockInterfaceModem3gppUssd) State() proxy.PropUint32 {
+func (v *MockInterfaceModem3gppUssd) State() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1309,7 +1311,7 @@ func (v *mockInterfaceModem3gppUssd) State() proxy.PropUint32 {
 
 // property NetworkNotification s
 
-func (v *mockInterfaceModem3gppUssd) NetworkNotification() proxy.PropString {
+func (v *MockInterfaceModem3gppUssd) NetworkNotification() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1322,7 +1324,7 @@ func (v *mockInterfaceModem3gppUssd) NetworkNotification() proxy.PropString {
 
 // property NetworkRequest s
 
-func (v *mockInterfaceModem3gppUssd) NetworkRequest() proxy.PropString {
+func (v *MockInterfaceModem3gppUssd) NetworkRequest() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1333,13 +1335,13 @@ func (v *mockInterfaceModem3gppUssd) NetworkRequest() proxy.PropString {
 	return ret0
 }
 
-type mockInterfaceModem3gpp struct {
+type MockInterfaceModem3gpp struct {
 	mock.Mock
 }
 
 // method Register
 
-func (v *mockInterfaceModem3gpp) GoRegister(flags dbus.Flags, ch chan *dbus.Call, operator_id string) *dbus.Call {
+func (v *MockInterfaceModem3gpp) GoRegister(flags dbus.Flags, ch chan *dbus.Call, operator_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, operator_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1350,7 +1352,7 @@ func (v *mockInterfaceModem3gpp) GoRegister(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModem3gpp) Register(flags dbus.Flags, operator_id string) error {
+func (v *MockInterfaceModem3gpp) Register(flags dbus.Flags, operator_id string) error {
 	mockArgs := v.Called(flags, operator_id)
 
 	return mockArgs.Error(0)
@@ -1358,7 +1360,7 @@ func (v *mockInterfaceModem3gpp) Register(flags dbus.Flags, operator_id string) 
 
 // method Scan
 
-func (v *mockInterfaceModem3gpp) GoScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModem3gpp) GoScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1369,7 +1371,7 @@ func (v *mockInterfaceModem3gpp) GoScan(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceModem3gpp) Scan(flags dbus.Flags) ([]map[string]dbus.Variant, error) {
+func (v *MockInterfaceModem3gpp) Scan(flags dbus.Flags) ([]map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]map[string]dbus.Variant)
@@ -1382,7 +1384,7 @@ func (v *mockInterfaceModem3gpp) Scan(flags dbus.Flags) ([]map[string]dbus.Varia
 
 // property Imei s
 
-func (v *mockInterfaceModem3gpp) Imei() proxy.PropString {
+func (v *MockInterfaceModem3gpp) Imei() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1395,7 +1397,7 @@ func (v *mockInterfaceModem3gpp) Imei() proxy.PropString {
 
 // property RegistrationState u
 
-func (v *mockInterfaceModem3gpp) RegistrationState() proxy.PropUint32 {
+func (v *MockInterfaceModem3gpp) RegistrationState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1408,7 +1410,7 @@ func (v *mockInterfaceModem3gpp) RegistrationState() proxy.PropUint32 {
 
 // property OperatorCode s
 
-func (v *mockInterfaceModem3gpp) OperatorCode() proxy.PropString {
+func (v *MockInterfaceModem3gpp) OperatorCode() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1421,7 +1423,7 @@ func (v *mockInterfaceModem3gpp) OperatorCode() proxy.PropString {
 
 // property OperatorName s
 
-func (v *mockInterfaceModem3gpp) OperatorName() proxy.PropString {
+func (v *MockInterfaceModem3gpp) OperatorName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1434,7 +1436,7 @@ func (v *mockInterfaceModem3gpp) OperatorName() proxy.PropString {
 
 // property EnabledFacilityLocks u
 
-func (v *mockInterfaceModem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
+func (v *MockInterfaceModem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1447,7 +1449,7 @@ func (v *mockInterfaceModem3gpp) EnabledFacilityLocks() proxy.PropUint32 {
 
 // property SubscriptionState u
 
-func (v *mockInterfaceModem3gpp) SubscriptionState() proxy.PropUint32 {
+func (v *MockInterfaceModem3gpp) SubscriptionState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1458,13 +1460,13 @@ func (v *mockInterfaceModem3gpp) SubscriptionState() proxy.PropUint32 {
 	return ret0
 }
 
-type mockInterfaceModemCdma struct {
+type MockInterfaceModemCdma struct {
 	mock.Mock
 }
 
 // method Activate
 
-func (v *mockInterfaceModemCdma) GoActivate(flags dbus.Flags, ch chan *dbus.Call, carrier_code string) *dbus.Call {
+func (v *MockInterfaceModemCdma) GoActivate(flags dbus.Flags, ch chan *dbus.Call, carrier_code string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, carrier_code)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1475,7 +1477,7 @@ func (v *mockInterfaceModemCdma) GoActivate(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceModemCdma) Activate(flags dbus.Flags, carrier_code string) error {
+func (v *MockInterfaceModemCdma) Activate(flags dbus.Flags, carrier_code string) error {
 	mockArgs := v.Called(flags, carrier_code)
 
 	return mockArgs.Error(0)
@@ -1483,7 +1485,7 @@ func (v *mockInterfaceModemCdma) Activate(flags dbus.Flags, carrier_code string)
 
 // method ActivateManual
 
-func (v *mockInterfaceModemCdma) GoActivateManual(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceModemCdma) GoActivateManual(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1494,7 +1496,7 @@ func (v *mockInterfaceModemCdma) GoActivateManual(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceModemCdma) ActivateManual(flags dbus.Flags, properties map[string]dbus.Variant) error {
+func (v *MockInterfaceModemCdma) ActivateManual(flags dbus.Flags, properties map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, properties)
 
 	return mockArgs.Error(0)
@@ -1502,7 +1504,7 @@ func (v *mockInterfaceModemCdma) ActivateManual(flags dbus.Flags, properties map
 
 // signal ActivationStateChanged
 
-func (v *mockInterfaceModemCdma) ConnectActivationStateChanged(cb func(activation_state uint32, activation_error uint32, status_changes map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemCdma) ConnectActivationStateChanged(cb func(activation_state uint32, activation_error uint32, status_changes map[string]dbus.Variant)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1515,7 +1517,7 @@ func (v *mockInterfaceModemCdma) ConnectActivationStateChanged(cb func(activatio
 
 // property ActivationState u
 
-func (v *mockInterfaceModemCdma) ActivationState() proxy.PropUint32 {
+func (v *MockInterfaceModemCdma) ActivationState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1528,7 +1530,7 @@ func (v *mockInterfaceModemCdma) ActivationState() proxy.PropUint32 {
 
 // property Meid s
 
-func (v *mockInterfaceModemCdma) Meid() proxy.PropString {
+func (v *MockInterfaceModemCdma) Meid() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1541,7 +1543,7 @@ func (v *mockInterfaceModemCdma) Meid() proxy.PropString {
 
 // property Esn s
 
-func (v *mockInterfaceModemCdma) Esn() proxy.PropString {
+func (v *MockInterfaceModemCdma) Esn() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1554,7 +1556,7 @@ func (v *mockInterfaceModemCdma) Esn() proxy.PropString {
 
 // property Sid u
 
-func (v *mockInterfaceModemCdma) Sid() proxy.PropUint32 {
+func (v *MockInterfaceModemCdma) Sid() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1567,7 +1569,7 @@ func (v *mockInterfaceModemCdma) Sid() proxy.PropUint32 {
 
 // property Nid u
 
-func (v *mockInterfaceModemCdma) Nid() proxy.PropUint32 {
+func (v *MockInterfaceModemCdma) Nid() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1580,7 +1582,7 @@ func (v *mockInterfaceModemCdma) Nid() proxy.PropUint32 {
 
 // property Cdma1xRegistrationState u
 
-func (v *mockInterfaceModemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
+func (v *MockInterfaceModemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1593,7 +1595,7 @@ func (v *mockInterfaceModemCdma) Cdma1xRegistrationState() proxy.PropUint32 {
 
 // property EvdoRegistrationState u
 
-func (v *mockInterfaceModemCdma) EvdoRegistrationState() proxy.PropUint32 {
+func (v *MockInterfaceModemCdma) EvdoRegistrationState() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1604,13 +1606,13 @@ func (v *mockInterfaceModemCdma) EvdoRegistrationState() proxy.PropUint32 {
 	return ret0
 }
 
-type mockInterfaceModemOma struct {
+type MockInterfaceModemOma struct {
 	mock.Mock
 }
 
 // method Setup
 
-func (v *mockInterfaceModemOma) GoSetup(flags dbus.Flags, ch chan *dbus.Call, features uint32) *dbus.Call {
+func (v *MockInterfaceModemOma) GoSetup(flags dbus.Flags, ch chan *dbus.Call, features uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, features)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1621,7 +1623,7 @@ func (v *mockInterfaceModemOma) GoSetup(flags dbus.Flags, ch chan *dbus.Call, fe
 	return ret
 }
 
-func (v *mockInterfaceModemOma) Setup(flags dbus.Flags, features uint32) error {
+func (v *MockInterfaceModemOma) Setup(flags dbus.Flags, features uint32) error {
 	mockArgs := v.Called(flags, features)
 
 	return mockArgs.Error(0)
@@ -1629,7 +1631,7 @@ func (v *mockInterfaceModemOma) Setup(flags dbus.Flags, features uint32) error {
 
 // method StartClientInitiatedSession
 
-func (v *mockInterfaceModemOma) GoStartClientInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_type uint32) *dbus.Call {
+func (v *MockInterfaceModemOma) GoStartClientInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_type uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, session_type)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1640,7 +1642,7 @@ func (v *mockInterfaceModemOma) GoStartClientInitiatedSession(flags dbus.Flags, 
 	return ret
 }
 
-func (v *mockInterfaceModemOma) StartClientInitiatedSession(flags dbus.Flags, session_type uint32) error {
+func (v *MockInterfaceModemOma) StartClientInitiatedSession(flags dbus.Flags, session_type uint32) error {
 	mockArgs := v.Called(flags, session_type)
 
 	return mockArgs.Error(0)
@@ -1648,7 +1650,7 @@ func (v *mockInterfaceModemOma) StartClientInitiatedSession(flags dbus.Flags, se
 
 // method AcceptNetworkInitiatedSession
 
-func (v *mockInterfaceModemOma) GoAcceptNetworkInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_id uint32, accept bool) *dbus.Call {
+func (v *MockInterfaceModemOma) GoAcceptNetworkInitiatedSession(flags dbus.Flags, ch chan *dbus.Call, session_id uint32, accept bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, session_id, accept)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1659,7 +1661,7 @@ func (v *mockInterfaceModemOma) GoAcceptNetworkInitiatedSession(flags dbus.Flags
 	return ret
 }
 
-func (v *mockInterfaceModemOma) AcceptNetworkInitiatedSession(flags dbus.Flags, session_id uint32, accept bool) error {
+func (v *MockInterfaceModemOma) AcceptNetworkInitiatedSession(flags dbus.Flags, session_id uint32, accept bool) error {
 	mockArgs := v.Called(flags, session_id, accept)
 
 	return mockArgs.Error(0)
@@ -1667,7 +1669,7 @@ func (v *mockInterfaceModemOma) AcceptNetworkInitiatedSession(flags dbus.Flags, 
 
 // method CancelSession
 
-func (v *mockInterfaceModemOma) GoCancelSession(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemOma) GoCancelSession(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1678,7 +1680,7 @@ func (v *mockInterfaceModemOma) GoCancelSession(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceModemOma) CancelSession(flags dbus.Flags) error {
+func (v *MockInterfaceModemOma) CancelSession(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1686,7 +1688,7 @@ func (v *mockInterfaceModemOma) CancelSession(flags dbus.Flags) error {
 
 // signal SessionStateChanged
 
-func (v *mockInterfaceModemOma) ConnectSessionStateChanged(cb func(old_session_state int32, new_session_state int32, session_state_failed_reason uint32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemOma) ConnectSessionStateChanged(cb func(old_session_state int32, new_session_state int32, session_state_failed_reason uint32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1699,7 +1701,7 @@ func (v *mockInterfaceModemOma) ConnectSessionStateChanged(cb func(old_session_s
 
 // property Features u
 
-func (v *mockInterfaceModemOma) Features() proxy.PropUint32 {
+func (v *MockInterfaceModemOma) Features() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1742,7 +1744,7 @@ func (p MockPropModemOmaPendingNetworkInitiatedSessions) ConnectChanged(cb func(
 
 // property PendingNetworkInitiatedSessions a(uu)
 
-func (v *mockInterfaceModemOma) PendingNetworkInitiatedSessions() PropModemOmaPendingNetworkInitiatedSessions {
+func (v *MockInterfaceModemOma) PendingNetworkInitiatedSessions() PropModemOmaPendingNetworkInitiatedSessions {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModemOmaPendingNetworkInitiatedSessions)
@@ -1755,7 +1757,7 @@ func (v *mockInterfaceModemOma) PendingNetworkInitiatedSessions() PropModemOmaPe
 
 // property SessionType u
 
-func (v *mockInterfaceModemOma) SessionType() proxy.PropUint32 {
+func (v *MockInterfaceModemOma) SessionType() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1768,7 +1770,7 @@ func (v *mockInterfaceModemOma) SessionType() proxy.PropUint32 {
 
 // property SessionState i
 
-func (v *mockInterfaceModemOma) SessionState() proxy.PropInt32 {
+func (v *MockInterfaceModemOma) SessionState() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1779,13 +1781,13 @@ func (v *mockInterfaceModemOma) SessionState() proxy.PropInt32 {
 	return ret0
 }
 
-type mockInterfaceModemSignal struct {
+type MockInterfaceModemSignal struct {
 	mock.Mock
 }
 
 // method Setup
 
-func (v *mockInterfaceModemSignal) GoSetup(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
+func (v *MockInterfaceModemSignal) GoSetup(flags dbus.Flags, ch chan *dbus.Call, rate uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, rate)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1796,7 +1798,7 @@ func (v *mockInterfaceModemSignal) GoSetup(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceModemSignal) Setup(flags dbus.Flags, rate uint32) error {
+func (v *MockInterfaceModemSignal) Setup(flags dbus.Flags, rate uint32) error {
 	mockArgs := v.Called(flags, rate)
 
 	return mockArgs.Error(0)
@@ -1804,7 +1806,7 @@ func (v *mockInterfaceModemSignal) Setup(flags dbus.Flags, rate uint32) error {
 
 // property Rate u
 
-func (v *mockInterfaceModemSignal) Rate() proxy.PropUint32 {
+func (v *MockInterfaceModemSignal) Rate() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1817,7 +1819,7 @@ func (v *mockInterfaceModemSignal) Rate() proxy.PropUint32 {
 
 // property Cdma a{sv}
 
-func (v *mockInterfaceModemSignal) Cdma() PropMapStringVariant {
+func (v *MockInterfaceModemSignal) Cdma() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -1830,7 +1832,7 @@ func (v *mockInterfaceModemSignal) Cdma() PropMapStringVariant {
 
 // property Evdo a{sv}
 
-func (v *mockInterfaceModemSignal) Evdo() PropMapStringVariant {
+func (v *MockInterfaceModemSignal) Evdo() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -1843,7 +1845,7 @@ func (v *mockInterfaceModemSignal) Evdo() PropMapStringVariant {
 
 // property Gsm a{sv}
 
-func (v *mockInterfaceModemSignal) Gsm() PropMapStringVariant {
+func (v *MockInterfaceModemSignal) Gsm() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -1856,7 +1858,7 @@ func (v *mockInterfaceModemSignal) Gsm() PropMapStringVariant {
 
 // property Umts a{sv}
 
-func (v *mockInterfaceModemSignal) Umts() PropMapStringVariant {
+func (v *MockInterfaceModemSignal) Umts() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -1869,7 +1871,7 @@ func (v *mockInterfaceModemSignal) Umts() PropMapStringVariant {
 
 // property Lte a{sv}
 
-func (v *mockInterfaceModemSignal) Lte() PropMapStringVariant {
+func (v *MockInterfaceModemSignal) Lte() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -1880,13 +1882,13 @@ func (v *mockInterfaceModemSignal) Lte() PropMapStringVariant {
 	return ret0
 }
 
-type mockInterfaceModemSimple struct {
+type MockInterfaceModemSimple struct {
 	mock.Mock
 }
 
 // method Connect
 
-func (v *mockInterfaceModemSimple) GoConnect(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceModemSimple) GoConnect(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1897,7 +1899,7 @@ func (v *mockInterfaceModemSimple) GoConnect(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceModemSimple) Connect(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceModemSimple) Connect(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -1910,7 +1912,7 @@ func (v *mockInterfaceModemSimple) Connect(flags dbus.Flags, properties map[stri
 
 // method Disconnect
 
-func (v *mockInterfaceModemSimple) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceModemSimple) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call, bearer dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, bearer)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1921,7 +1923,7 @@ func (v *mockInterfaceModemSimple) GoDisconnect(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceModemSimple) Disconnect(flags dbus.Flags, bearer dbus.ObjectPath) error {
+func (v *MockInterfaceModemSimple) Disconnect(flags dbus.Flags, bearer dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, bearer)
 
 	return mockArgs.Error(0)
@@ -1929,7 +1931,7 @@ func (v *mockInterfaceModemSimple) Disconnect(flags dbus.Flags, bearer dbus.Obje
 
 // method GetStatus
 
-func (v *mockInterfaceModemSimple) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemSimple) GoGetStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1940,7 +1942,7 @@ func (v *mockInterfaceModemSimple) GoGetStatus(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModemSimple) GetStatus(flags dbus.Flags) (map[string]dbus.Variant, error) {
+func (v *MockInterfaceModemSimple) GetStatus(flags dbus.Flags) (map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(map[string]dbus.Variant)
@@ -1951,13 +1953,13 @@ func (v *mockInterfaceModemSimple) GetStatus(flags dbus.Flags) (map[string]dbus.
 	return ret0, mockArgs.Error(1)
 }
 
-type mockInterfaceModemTime struct {
+type MockInterfaceModemTime struct {
 	mock.Mock
 }
 
 // method GetNetworkTime
 
-func (v *mockInterfaceModemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1968,7 +1970,7 @@ func (v *mockInterfaceModemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceModemTime) GetNetworkTime(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceModemTime) GetNetworkTime(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -1981,7 +1983,7 @@ func (v *mockInterfaceModemTime) GetNetworkTime(flags dbus.Flags) (string, error
 
 // signal NetworkTimeChanged
 
-func (v *mockInterfaceModemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemTime) ConnectNetworkTimeChanged(cb func(time string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1994,7 +1996,7 @@ func (v *mockInterfaceModemTime) ConnectNetworkTimeChanged(cb func(time string))
 
 // property NetworkTimezone a{sv}
 
-func (v *mockInterfaceModemTime) NetworkTimezone() PropMapStringVariant {
+func (v *MockInterfaceModemTime) NetworkTimezone() PropMapStringVariant {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropMapStringVariant)
@@ -2005,13 +2007,13 @@ func (v *mockInterfaceModemTime) NetworkTimezone() PropMapStringVariant {
 	return ret0
 }
 
-type mockInterfaceModemVoice struct {
+type MockInterfaceModemVoice struct {
 	mock.Mock
 }
 
 // method ListCalls
 
-func (v *mockInterfaceModemVoice) GoListCalls(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceModemVoice) GoListCalls(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -2022,7 +2024,7 @@ func (v *mockInterfaceModemVoice) GoListCalls(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceModemVoice) ListCalls(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceModemVoice) ListCalls(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -2035,7 +2037,7 @@ func (v *mockInterfaceModemVoice) ListCalls(flags dbus.Flags) ([]dbus.ObjectPath
 
 // method DeleteCall
 
-func (v *mockInterfaceModemVoice) GoDeleteCall(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceModemVoice) GoDeleteCall(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -2046,7 +2048,7 @@ func (v *mockInterfaceModemVoice) GoDeleteCall(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModemVoice) DeleteCall(flags dbus.Flags, path dbus.ObjectPath) error {
+func (v *MockInterfaceModemVoice) DeleteCall(flags dbus.Flags, path dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, path)
 
 	return mockArgs.Error(0)
@@ -2054,7 +2056,7 @@ func (v *mockInterfaceModemVoice) DeleteCall(flags dbus.Flags, path dbus.ObjectP
 
 // method CreateCall
 
-func (v *mockInterfaceModemVoice) GoCreateCall(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceModemVoice) GoCreateCall(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -2065,7 +2067,7 @@ func (v *mockInterfaceModemVoice) GoCreateCall(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceModemVoice) CreateCall(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceModemVoice) CreateCall(flags dbus.Flags, properties map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, properties)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -2078,7 +2080,7 @@ func (v *mockInterfaceModemVoice) CreateCall(flags dbus.Flags, properties map[st
 
 // signal CallAdded
 
-func (v *mockInterfaceModemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -2091,7 +2093,7 @@ func (v *mockInterfaceModemVoice) ConnectCallAdded(cb func(path dbus.ObjectPath)
 
 // signal CallDeleted
 
-func (v *mockInterfaceModemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceModemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -2104,7 +2106,7 @@ func (v *mockInterfaceModemVoice) ConnectCallDeleted(cb func(path dbus.ObjectPat
 
 // property Calls ao
 
-func (v *mockInterfaceModemVoice) Calls() proxy.PropObjectPathArray {
+func (v *MockInterfaceModemVoice) Calls() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)

@@ -12,16 +12,17 @@ import (
 )
 
 type MockAuthority struct {
-	mockInterfaceAuthority // interface org.freedesktop.PolicyKit1.Authority
+	MockInterfaceAuthority // interface org.freedesktop.PolicyKit1.Authority
+	proxy.MockObject
 }
 
-type mockInterfaceAuthority struct {
+type MockInterfaceAuthority struct {
 	mock.Mock
 }
 
 // method EnumerateActions
 
-func (v *mockInterfaceAuthority) GoEnumerateActions(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoEnumerateActions(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locale)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceAuthority) GoEnumerateActions(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceAuthority) EnumerateActions(flags dbus.Flags, locale string) ([]ActionDescription, error) {
+func (v *MockInterfaceAuthority) EnumerateActions(flags dbus.Flags, locale string) ([]ActionDescription, error) {
 	mockArgs := v.Called(flags, locale)
 
 	ret0, ok := mockArgs.Get(0).([]ActionDescription)
@@ -45,7 +46,7 @@ func (v *mockInterfaceAuthority) EnumerateActions(flags dbus.Flags, locale strin
 
 // method CheckAuthorization
 
-func (v *mockInterfaceAuthority) GoCheckAuthorization(flags dbus.Flags, ch chan *dbus.Call, subject Subject, action_id string, details map[string]string, flags0 uint32, cancellation_id string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoCheckAuthorization(flags dbus.Flags, ch chan *dbus.Call, subject Subject, action_id string, details map[string]string, flags0 uint32, cancellation_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject, action_id, details, flags0, cancellation_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceAuthority) GoCheckAuthorization(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceAuthority) CheckAuthorization(flags dbus.Flags, subject Subject, action_id string, details map[string]string, flags0 uint32, cancellation_id string) (AuthorizationResult, error) {
+func (v *MockInterfaceAuthority) CheckAuthorization(flags dbus.Flags, subject Subject, action_id string, details map[string]string, flags0 uint32, cancellation_id string) (AuthorizationResult, error) {
 	mockArgs := v.Called(flags, subject, action_id, details, flags0, cancellation_id)
 
 	ret0, ok := mockArgs.Get(0).(AuthorizationResult)
@@ -69,7 +70,7 @@ func (v *mockInterfaceAuthority) CheckAuthorization(flags dbus.Flags, subject Su
 
 // method CancelCheckAuthorization
 
-func (v *mockInterfaceAuthority) GoCancelCheckAuthorization(flags dbus.Flags, ch chan *dbus.Call, cancellation_id string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoCancelCheckAuthorization(flags dbus.Flags, ch chan *dbus.Call, cancellation_id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cancellation_id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceAuthority) GoCancelCheckAuthorization(flags dbus.Flags, ch
 	return ret
 }
 
-func (v *mockInterfaceAuthority) CancelCheckAuthorization(flags dbus.Flags, cancellation_id string) error {
+func (v *MockInterfaceAuthority) CancelCheckAuthorization(flags dbus.Flags, cancellation_id string) error {
 	mockArgs := v.Called(flags, cancellation_id)
 
 	return mockArgs.Error(0)
@@ -88,7 +89,7 @@ func (v *mockInterfaceAuthority) CancelCheckAuthorization(flags dbus.Flags, canc
 
 // method RegisterAuthenticationAgent
 
-func (v *mockInterfaceAuthority) GoRegisterAuthenticationAgent(flags dbus.Flags, ch chan *dbus.Call, subject Subject, locale string, object_path string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoRegisterAuthenticationAgent(flags dbus.Flags, ch chan *dbus.Call, subject Subject, locale string, object_path string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject, locale, object_path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +100,7 @@ func (v *mockInterfaceAuthority) GoRegisterAuthenticationAgent(flags dbus.Flags,
 	return ret
 }
 
-func (v *mockInterfaceAuthority) RegisterAuthenticationAgent(flags dbus.Flags, subject Subject, locale string, object_path string) error {
+func (v *MockInterfaceAuthority) RegisterAuthenticationAgent(flags dbus.Flags, subject Subject, locale string, object_path string) error {
 	mockArgs := v.Called(flags, subject, locale, object_path)
 
 	return mockArgs.Error(0)
@@ -107,7 +108,7 @@ func (v *mockInterfaceAuthority) RegisterAuthenticationAgent(flags dbus.Flags, s
 
 // method RegisterAuthenticationAgentWithOptions
 
-func (v *mockInterfaceAuthority) GoRegisterAuthenticationAgentWithOptions(flags dbus.Flags, ch chan *dbus.Call, subject Subject, locale string, object_path string, options map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceAuthority) GoRegisterAuthenticationAgentWithOptions(flags dbus.Flags, ch chan *dbus.Call, subject Subject, locale string, object_path string, options map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject, locale, object_path, options)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -118,7 +119,7 @@ func (v *mockInterfaceAuthority) GoRegisterAuthenticationAgentWithOptions(flags 
 	return ret
 }
 
-func (v *mockInterfaceAuthority) RegisterAuthenticationAgentWithOptions(flags dbus.Flags, subject Subject, locale string, object_path string, options map[string]dbus.Variant) error {
+func (v *MockInterfaceAuthority) RegisterAuthenticationAgentWithOptions(flags dbus.Flags, subject Subject, locale string, object_path string, options map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, subject, locale, object_path, options)
 
 	return mockArgs.Error(0)
@@ -126,7 +127,7 @@ func (v *mockInterfaceAuthority) RegisterAuthenticationAgentWithOptions(flags db
 
 // method UnregisterAuthenticationAgent
 
-func (v *mockInterfaceAuthority) GoUnregisterAuthenticationAgent(flags dbus.Flags, ch chan *dbus.Call, subject Subject, object_path string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoUnregisterAuthenticationAgent(flags dbus.Flags, ch chan *dbus.Call, subject Subject, object_path string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject, object_path)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -137,7 +138,7 @@ func (v *mockInterfaceAuthority) GoUnregisterAuthenticationAgent(flags dbus.Flag
 	return ret
 }
 
-func (v *mockInterfaceAuthority) UnregisterAuthenticationAgent(flags dbus.Flags, subject Subject, object_path string) error {
+func (v *MockInterfaceAuthority) UnregisterAuthenticationAgent(flags dbus.Flags, subject Subject, object_path string) error {
 	mockArgs := v.Called(flags, subject, object_path)
 
 	return mockArgs.Error(0)
@@ -145,7 +146,7 @@ func (v *mockInterfaceAuthority) UnregisterAuthenticationAgent(flags dbus.Flags,
 
 // method AuthenticationAgentResponse
 
-func (v *mockInterfaceAuthority) GoAuthenticationAgentResponse(flags dbus.Flags, ch chan *dbus.Call, cookie string, identity Identity) *dbus.Call {
+func (v *MockInterfaceAuthority) GoAuthenticationAgentResponse(flags dbus.Flags, ch chan *dbus.Call, cookie string, identity Identity) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cookie, identity)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -156,7 +157,7 @@ func (v *mockInterfaceAuthority) GoAuthenticationAgentResponse(flags dbus.Flags,
 	return ret
 }
 
-func (v *mockInterfaceAuthority) AuthenticationAgentResponse(flags dbus.Flags, cookie string, identity Identity) error {
+func (v *MockInterfaceAuthority) AuthenticationAgentResponse(flags dbus.Flags, cookie string, identity Identity) error {
 	mockArgs := v.Called(flags, cookie, identity)
 
 	return mockArgs.Error(0)
@@ -164,7 +165,7 @@ func (v *mockInterfaceAuthority) AuthenticationAgentResponse(flags dbus.Flags, c
 
 // method AuthenticationAgentResponse2
 
-func (v *mockInterfaceAuthority) GoAuthenticationAgentResponse2(flags dbus.Flags, ch chan *dbus.Call, uid uint32, cookie string, identity Identity) *dbus.Call {
+func (v *MockInterfaceAuthority) GoAuthenticationAgentResponse2(flags dbus.Flags, ch chan *dbus.Call, uid uint32, cookie string, identity Identity) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid, cookie, identity)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -175,7 +176,7 @@ func (v *mockInterfaceAuthority) GoAuthenticationAgentResponse2(flags dbus.Flags
 	return ret
 }
 
-func (v *mockInterfaceAuthority) AuthenticationAgentResponse2(flags dbus.Flags, uid uint32, cookie string, identity Identity) error {
+func (v *MockInterfaceAuthority) AuthenticationAgentResponse2(flags dbus.Flags, uid uint32, cookie string, identity Identity) error {
 	mockArgs := v.Called(flags, uid, cookie, identity)
 
 	return mockArgs.Error(0)
@@ -183,7 +184,7 @@ func (v *mockInterfaceAuthority) AuthenticationAgentResponse2(flags dbus.Flags, 
 
 // method EnumerateTemporaryAuthorizations
 
-func (v *mockInterfaceAuthority) GoEnumerateTemporaryAuthorizations(flags dbus.Flags, ch chan *dbus.Call, subject Subject) *dbus.Call {
+func (v *MockInterfaceAuthority) GoEnumerateTemporaryAuthorizations(flags dbus.Flags, ch chan *dbus.Call, subject Subject) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -194,7 +195,7 @@ func (v *mockInterfaceAuthority) GoEnumerateTemporaryAuthorizations(flags dbus.F
 	return ret
 }
 
-func (v *mockInterfaceAuthority) EnumerateTemporaryAuthorizations(flags dbus.Flags, subject Subject) (TemporaryAuthorization, error) {
+func (v *MockInterfaceAuthority) EnumerateTemporaryAuthorizations(flags dbus.Flags, subject Subject) (TemporaryAuthorization, error) {
 	mockArgs := v.Called(flags, subject)
 
 	ret0, ok := mockArgs.Get(0).(TemporaryAuthorization)
@@ -207,7 +208,7 @@ func (v *mockInterfaceAuthority) EnumerateTemporaryAuthorizations(flags dbus.Fla
 
 // method RevokeTemporaryAuthorizations
 
-func (v *mockInterfaceAuthority) GoRevokeTemporaryAuthorizations(flags dbus.Flags, ch chan *dbus.Call, subject Subject) *dbus.Call {
+func (v *MockInterfaceAuthority) GoRevokeTemporaryAuthorizations(flags dbus.Flags, ch chan *dbus.Call, subject Subject) *dbus.Call {
 	mockArgs := v.Called(flags, ch, subject)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -218,7 +219,7 @@ func (v *mockInterfaceAuthority) GoRevokeTemporaryAuthorizations(flags dbus.Flag
 	return ret
 }
 
-func (v *mockInterfaceAuthority) RevokeTemporaryAuthorizations(flags dbus.Flags, subject Subject) error {
+func (v *MockInterfaceAuthority) RevokeTemporaryAuthorizations(flags dbus.Flags, subject Subject) error {
 	mockArgs := v.Called(flags, subject)
 
 	return mockArgs.Error(0)
@@ -226,7 +227,7 @@ func (v *mockInterfaceAuthority) RevokeTemporaryAuthorizations(flags dbus.Flags,
 
 // method RevokeTemporaryAuthorizationById
 
-func (v *mockInterfaceAuthority) GoRevokeTemporaryAuthorizationById(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceAuthority) GoRevokeTemporaryAuthorizationById(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -237,7 +238,7 @@ func (v *mockInterfaceAuthority) GoRevokeTemporaryAuthorizationById(flags dbus.F
 	return ret
 }
 
-func (v *mockInterfaceAuthority) RevokeTemporaryAuthorizationById(flags dbus.Flags, id string) error {
+func (v *MockInterfaceAuthority) RevokeTemporaryAuthorizationById(flags dbus.Flags, id string) error {
 	mockArgs := v.Called(flags, id)
 
 	return mockArgs.Error(0)
@@ -245,7 +246,7 @@ func (v *mockInterfaceAuthority) RevokeTemporaryAuthorizationById(flags dbus.Fla
 
 // signal Changed
 
-func (v *mockInterfaceAuthority) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceAuthority) ConnectChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -258,7 +259,7 @@ func (v *mockInterfaceAuthority) ConnectChanged(cb func()) (dbusutil.SignalHandl
 
 // property BackendName s
 
-func (v *mockInterfaceAuthority) BackendName() proxy.PropString {
+func (v *MockInterfaceAuthority) BackendName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -271,7 +272,7 @@ func (v *mockInterfaceAuthority) BackendName() proxy.PropString {
 
 // property BackendVersion s
 
-func (v *mockInterfaceAuthority) BackendVersion() proxy.PropString {
+func (v *MockInterfaceAuthority) BackendVersion() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -284,7 +285,7 @@ func (v *mockInterfaceAuthority) BackendVersion() proxy.PropString {
 
 // property BackendFeatures u
 
-func (v *mockInterfaceAuthority) BackendFeatures() proxy.PropUint32 {
+func (v *MockInterfaceAuthority) BackendFeatures() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)

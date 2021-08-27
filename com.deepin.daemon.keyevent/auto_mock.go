@@ -7,19 +7,21 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockKeyEvent struct {
-	mockInterfaceKeyEvent // interface com.deepin.daemon.KeyEvent
+	MockInterfaceKeyEvent // interface com.deepin.daemon.KeyEvent
+	proxy.MockObject
 }
 
-type mockInterfaceKeyEvent struct {
+type MockInterfaceKeyEvent struct {
 	mock.Mock
 }
 
 // signal KeyEvent
 
-func (v *mockInterfaceKeyEvent) ConnectKeyEvent(cb func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceKeyEvent) ConnectKeyEvent(cb func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

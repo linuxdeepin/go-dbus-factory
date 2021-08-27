@@ -12,16 +12,17 @@ import (
 )
 
 type MockAccounts struct {
-	mockInterfaceAccounts // interface com.deepin.daemon.Accounts
+	MockInterfaceAccounts // interface com.deepin.daemon.Accounts
+	proxy.MockObject
 }
 
-type mockInterfaceAccounts struct {
+type MockInterfaceAccounts struct {
 	mock.Mock
 }
 
 // method AllowGuestAccount
 
-func (v *mockInterfaceAccounts) GoAllowGuestAccount(flags dbus.Flags, ch chan *dbus.Call, allow bool) *dbus.Call {
+func (v *MockInterfaceAccounts) GoAllowGuestAccount(flags dbus.Flags, ch chan *dbus.Call, allow bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, allow)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceAccounts) GoAllowGuestAccount(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceAccounts) AllowGuestAccount(flags dbus.Flags, allow bool) error {
+func (v *MockInterfaceAccounts) AllowGuestAccount(flags dbus.Flags, allow bool) error {
 	mockArgs := v.Called(flags, allow)
 
 	return mockArgs.Error(0)
@@ -40,7 +41,7 @@ func (v *mockInterfaceAccounts) AllowGuestAccount(flags dbus.Flags, allow bool) 
 
 // method CreateGuestAccount
 
-func (v *mockInterfaceAccounts) GoCreateGuestAccount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAccounts) GoCreateGuestAccount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -51,7 +52,7 @@ func (v *mockInterfaceAccounts) GoCreateGuestAccount(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceAccounts) CreateGuestAccount(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceAccounts) CreateGuestAccount(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -64,7 +65,7 @@ func (v *mockInterfaceAccounts) CreateGuestAccount(flags dbus.Flags) (string, er
 
 // method CreateUser
 
-func (v *mockInterfaceAccounts) GoCreateUser(flags dbus.Flags, ch chan *dbus.Call, name string, fullName string, type0 int32) *dbus.Call {
+func (v *MockInterfaceAccounts) GoCreateUser(flags dbus.Flags, ch chan *dbus.Call, name string, fullName string, type0 int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name, fullName, type0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -75,7 +76,7 @@ func (v *mockInterfaceAccounts) GoCreateUser(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceAccounts) CreateUser(flags dbus.Flags, name string, fullName string, type0 int32) (dbus.ObjectPath, error) {
+func (v *MockInterfaceAccounts) CreateUser(flags dbus.Flags, name string, fullName string, type0 int32) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, name, fullName, type0)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -88,7 +89,7 @@ func (v *mockInterfaceAccounts) CreateUser(flags dbus.Flags, name string, fullNa
 
 // method DeleteUser
 
-func (v *mockInterfaceAccounts) GoDeleteUser(flags dbus.Flags, ch chan *dbus.Call, name string, rmFiles bool) *dbus.Call {
+func (v *MockInterfaceAccounts) GoDeleteUser(flags dbus.Flags, ch chan *dbus.Call, name string, rmFiles bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name, rmFiles)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +100,7 @@ func (v *mockInterfaceAccounts) GoDeleteUser(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceAccounts) DeleteUser(flags dbus.Flags, name string, rmFiles bool) error {
+func (v *MockInterfaceAccounts) DeleteUser(flags dbus.Flags, name string, rmFiles bool) error {
 	mockArgs := v.Called(flags, name, rmFiles)
 
 	return mockArgs.Error(0)
@@ -107,7 +108,7 @@ func (v *mockInterfaceAccounts) DeleteUser(flags dbus.Flags, name string, rmFile
 
 // method FindUserById
 
-func (v *mockInterfaceAccounts) GoFindUserById(flags dbus.Flags, ch chan *dbus.Call, uid string) *dbus.Call {
+func (v *MockInterfaceAccounts) GoFindUserById(flags dbus.Flags, ch chan *dbus.Call, uid string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -118,7 +119,7 @@ func (v *mockInterfaceAccounts) GoFindUserById(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceAccounts) FindUserById(flags dbus.Flags, uid string) (string, error) {
+func (v *MockInterfaceAccounts) FindUserById(flags dbus.Flags, uid string) (string, error) {
 	mockArgs := v.Called(flags, uid)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -131,7 +132,7 @@ func (v *mockInterfaceAccounts) FindUserById(flags dbus.Flags, uid string) (stri
 
 // method FindUserByName
 
-func (v *mockInterfaceAccounts) GoFindUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceAccounts) GoFindUserByName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -142,7 +143,7 @@ func (v *mockInterfaceAccounts) GoFindUserByName(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceAccounts) FindUserByName(flags dbus.Flags, name string) (string, error) {
+func (v *MockInterfaceAccounts) FindUserByName(flags dbus.Flags, name string) (string, error) {
 	mockArgs := v.Called(flags, name)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -155,7 +156,7 @@ func (v *mockInterfaceAccounts) FindUserByName(flags dbus.Flags, name string) (s
 
 // method IsPasswordValid
 
-func (v *mockInterfaceAccounts) GoIsPasswordValid(flags dbus.Flags, ch chan *dbus.Call, password string) *dbus.Call {
+func (v *MockInterfaceAccounts) GoIsPasswordValid(flags dbus.Flags, ch chan *dbus.Call, password string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, password)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -166,7 +167,7 @@ func (v *mockInterfaceAccounts) GoIsPasswordValid(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceAccounts) IsPasswordValid(flags dbus.Flags, password string) (bool, string, int32, error) {
+func (v *MockInterfaceAccounts) IsPasswordValid(flags dbus.Flags, password string) (bool, string, int32, error) {
 	mockArgs := v.Called(flags, password)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -189,7 +190,7 @@ func (v *mockInterfaceAccounts) IsPasswordValid(flags dbus.Flags, password strin
 
 // method IsUsernameValid
 
-func (v *mockInterfaceAccounts) GoIsUsernameValid(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceAccounts) GoIsUsernameValid(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -200,7 +201,7 @@ func (v *mockInterfaceAccounts) GoIsUsernameValid(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceAccounts) IsUsernameValid(flags dbus.Flags, name string) (bool, string, int32, error) {
+func (v *MockInterfaceAccounts) IsUsernameValid(flags dbus.Flags, name string) (bool, string, int32, error) {
 	mockArgs := v.Called(flags, name)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -223,7 +224,7 @@ func (v *mockInterfaceAccounts) IsUsernameValid(flags dbus.Flags, name string) (
 
 // method RandUserIcon
 
-func (v *mockInterfaceAccounts) GoRandUserIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAccounts) GoRandUserIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -234,7 +235,7 @@ func (v *mockInterfaceAccounts) GoRandUserIcon(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceAccounts) RandUserIcon(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceAccounts) RandUserIcon(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -247,7 +248,7 @@ func (v *mockInterfaceAccounts) RandUserIcon(flags dbus.Flags) (string, error) {
 
 // signal UserAdded
 
-func (v *mockInterfaceAccounts) ConnectUserAdded(cb func(objPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceAccounts) ConnectUserAdded(cb func(objPath string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -260,7 +261,7 @@ func (v *mockInterfaceAccounts) ConnectUserAdded(cb func(objPath string)) (dbusu
 
 // signal UserDeleted
 
-func (v *mockInterfaceAccounts) ConnectUserDeleted(cb func(objPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceAccounts) ConnectUserDeleted(cb func(objPath string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -273,7 +274,7 @@ func (v *mockInterfaceAccounts) ConnectUserDeleted(cb func(objPath string)) (dbu
 
 // property UserList as
 
-func (v *mockInterfaceAccounts) UserList() proxy.PropStringArray {
+func (v *MockInterfaceAccounts) UserList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -286,7 +287,7 @@ func (v *mockInterfaceAccounts) UserList() proxy.PropStringArray {
 
 // property GuestIcon s
 
-func (v *mockInterfaceAccounts) GuestIcon() proxy.PropString {
+func (v *MockInterfaceAccounts) GuestIcon() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -299,7 +300,7 @@ func (v *mockInterfaceAccounts) GuestIcon() proxy.PropString {
 
 // property AllowGuest b
 
-func (v *mockInterfaceAccounts) AllowGuest() proxy.PropBool {
+func (v *MockInterfaceAccounts) AllowGuest() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -311,16 +312,17 @@ func (v *mockInterfaceAccounts) AllowGuest() proxy.PropBool {
 }
 
 type MockUser struct {
-	mockInterfaceUser // interface com.deepin.daemon.Accounts.User
+	MockInterfaceUser // interface com.deepin.daemon.Accounts.User
+	proxy.MockObject
 }
 
-type mockInterfaceUser struct {
+type MockInterfaceUser struct {
 	mock.Mock
 }
 
 // method AddGroup
 
-func (v *mockInterfaceUser) GoAddGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
+func (v *MockInterfaceUser) GoAddGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, group)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -331,7 +333,7 @@ func (v *mockInterfaceUser) GoAddGroup(flags dbus.Flags, ch chan *dbus.Call, gro
 	return ret
 }
 
-func (v *mockInterfaceUser) AddGroup(flags dbus.Flags, group string) error {
+func (v *MockInterfaceUser) AddGroup(flags dbus.Flags, group string) error {
 	mockArgs := v.Called(flags, group)
 
 	return mockArgs.Error(0)
@@ -339,7 +341,7 @@ func (v *mockInterfaceUser) AddGroup(flags dbus.Flags, group string) error {
 
 // method DeleteGroup
 
-func (v *mockInterfaceUser) GoDeleteGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
+func (v *MockInterfaceUser) GoDeleteGroup(flags dbus.Flags, ch chan *dbus.Call, group string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, group)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -350,7 +352,7 @@ func (v *mockInterfaceUser) GoDeleteGroup(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceUser) DeleteGroup(flags dbus.Flags, group string) error {
+func (v *MockInterfaceUser) DeleteGroup(flags dbus.Flags, group string) error {
 	mockArgs := v.Called(flags, group)
 
 	return mockArgs.Error(0)
@@ -358,7 +360,7 @@ func (v *mockInterfaceUser) DeleteGroup(flags dbus.Flags, group string) error {
 
 // method DeleteIconFile
 
-func (v *mockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
+func (v *MockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, iconFile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -369,7 +371,7 @@ func (v *mockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceUser) DeleteIconFile(flags dbus.Flags, iconFile string) error {
+func (v *MockInterfaceUser) DeleteIconFile(flags dbus.Flags, iconFile string) error {
 	mockArgs := v.Called(flags, iconFile)
 
 	return mockArgs.Error(0)
@@ -377,7 +379,7 @@ func (v *mockInterfaceUser) DeleteIconFile(flags dbus.Flags, iconFile string) er
 
 // method EnableNoPasswdLogin
 
-func (v *mockInterfaceUser) GoEnableNoPasswdLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceUser) GoEnableNoPasswdLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -388,7 +390,7 @@ func (v *mockInterfaceUser) GoEnableNoPasswdLogin(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceUser) EnableNoPasswdLogin(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceUser) EnableNoPasswdLogin(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -396,7 +398,7 @@ func (v *mockInterfaceUser) EnableNoPasswdLogin(flags dbus.Flags, enabled bool) 
 
 // method SetAutomaticLogin
 
-func (v *mockInterfaceUser) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceUser) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -407,7 +409,7 @@ func (v *mockInterfaceUser) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceUser) SetAutomaticLogin(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceUser) SetAutomaticLogin(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -415,7 +417,7 @@ func (v *mockInterfaceUser) SetAutomaticLogin(flags dbus.Flags, enabled bool) er
 
 // method SetDesktopBackgrounds
 
-func (v *mockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *dbus.Call, backgrounds []string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *dbus.Call, backgrounds []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, backgrounds)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -426,7 +428,7 @@ func (v *mockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceUser) SetDesktopBackgrounds(flags dbus.Flags, backgrounds []string) error {
+func (v *MockInterfaceUser) SetDesktopBackgrounds(flags dbus.Flags, backgrounds []string) error {
 	mockArgs := v.Called(flags, backgrounds)
 
 	return mockArgs.Error(0)
@@ -434,7 +436,7 @@ func (v *mockInterfaceUser) SetDesktopBackgrounds(flags dbus.Flags, backgrounds 
 
 // method SetFullName
 
-func (v *mockInterfaceUser) GoSetFullName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetFullName(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -445,7 +447,7 @@ func (v *mockInterfaceUser) GoSetFullName(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceUser) SetFullName(flags dbus.Flags, name string) error {
+func (v *MockInterfaceUser) SetFullName(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)
@@ -453,7 +455,7 @@ func (v *mockInterfaceUser) SetFullName(flags dbus.Flags, name string) error {
 
 // method SetGreeterBackground
 
-func (v *mockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *dbus.Call, background string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *dbus.Call, background string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, background)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -464,7 +466,7 @@ func (v *mockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceUser) SetGreeterBackground(flags dbus.Flags, background string) error {
+func (v *MockInterfaceUser) SetGreeterBackground(flags dbus.Flags, background string) error {
 	mockArgs := v.Called(flags, background)
 
 	return mockArgs.Error(0)
@@ -472,7 +474,7 @@ func (v *mockInterfaceUser) SetGreeterBackground(flags dbus.Flags, background st
 
 // method SetCurrentWorkspace
 
-func (v *mockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, currentWorkspace int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, currentWorkspace int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, currentWorkspace)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -483,7 +485,7 @@ func (v *mockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceUser) SetCurrentWorkspace(flags dbus.Flags, currentWorkspace int32) error {
+func (v *MockInterfaceUser) SetCurrentWorkspace(flags dbus.Flags, currentWorkspace int32) error {
 	mockArgs := v.Called(flags, currentWorkspace)
 
 	return mockArgs.Error(0)
@@ -491,7 +493,7 @@ func (v *mockInterfaceUser) SetCurrentWorkspace(flags dbus.Flags, currentWorkspa
 
 // method SetHistoryLayout
 
-func (v *mockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.Call, layouts []string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.Call, layouts []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, layouts)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -502,7 +504,7 @@ func (v *mockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceUser) SetHistoryLayout(flags dbus.Flags, layouts []string) error {
+func (v *MockInterfaceUser) SetHistoryLayout(flags dbus.Flags, layouts []string) error {
 	mockArgs := v.Called(flags, layouts)
 
 	return mockArgs.Error(0)
@@ -510,7 +512,7 @@ func (v *mockInterfaceUser) SetHistoryLayout(flags dbus.Flags, layouts []string)
 
 // method SetHomeDir
 
-func (v *mockInterfaceUser) GoSetHomeDir(flags dbus.Flags, ch chan *dbus.Call, home string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetHomeDir(flags dbus.Flags, ch chan *dbus.Call, home string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, home)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -521,7 +523,7 @@ func (v *mockInterfaceUser) GoSetHomeDir(flags dbus.Flags, ch chan *dbus.Call, h
 	return ret
 }
 
-func (v *mockInterfaceUser) SetHomeDir(flags dbus.Flags, home string) error {
+func (v *MockInterfaceUser) SetHomeDir(flags dbus.Flags, home string) error {
 	mockArgs := v.Called(flags, home)
 
 	return mockArgs.Error(0)
@@ -529,7 +531,7 @@ func (v *mockInterfaceUser) SetHomeDir(flags dbus.Flags, home string) error {
 
 // method SetIconFile
 
-func (v *mockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, iconFile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -540,7 +542,7 @@ func (v *mockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceUser) SetIconFile(flags dbus.Flags, iconFile string) error {
+func (v *MockInterfaceUser) SetIconFile(flags dbus.Flags, iconFile string) error {
 	mockArgs := v.Called(flags, iconFile)
 
 	return mockArgs.Error(0)
@@ -548,7 +550,7 @@ func (v *mockInterfaceUser) SetIconFile(flags dbus.Flags, iconFile string) error
 
 // method SetLayout
 
-func (v *mockInterfaceUser) GoSetLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetLayout(flags dbus.Flags, ch chan *dbus.Call, layout string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, layout)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -559,7 +561,7 @@ func (v *mockInterfaceUser) GoSetLayout(flags dbus.Flags, ch chan *dbus.Call, la
 	return ret
 }
 
-func (v *mockInterfaceUser) SetLayout(flags dbus.Flags, layout string) error {
+func (v *MockInterfaceUser) SetLayout(flags dbus.Flags, layout string) error {
 	mockArgs := v.Called(flags, layout)
 
 	return mockArgs.Error(0)
@@ -567,7 +569,7 @@ func (v *mockInterfaceUser) SetLayout(flags dbus.Flags, layout string) error {
 
 // method SetLocale
 
-func (v *mockInterfaceUser) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locale)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -578,7 +580,7 @@ func (v *mockInterfaceUser) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, lo
 	return ret
 }
 
-func (v *mockInterfaceUser) SetLocale(flags dbus.Flags, locale string) error {
+func (v *MockInterfaceUser) SetLocale(flags dbus.Flags, locale string) error {
 	mockArgs := v.Called(flags, locale)
 
 	return mockArgs.Error(0)
@@ -586,7 +588,7 @@ func (v *mockInterfaceUser) SetLocale(flags dbus.Flags, locale string) error {
 
 // method SetLocked
 
-func (v *mockInterfaceUser) GoSetLocked(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
+func (v *MockInterfaceUser) GoSetLocked(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locked)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -597,7 +599,7 @@ func (v *mockInterfaceUser) GoSetLocked(flags dbus.Flags, ch chan *dbus.Call, lo
 	return ret
 }
 
-func (v *mockInterfaceUser) SetLocked(flags dbus.Flags, locked bool) error {
+func (v *MockInterfaceUser) SetLocked(flags dbus.Flags, locked bool) error {
 	mockArgs := v.Called(flags, locked)
 
 	return mockArgs.Error(0)
@@ -605,7 +607,7 @@ func (v *mockInterfaceUser) SetLocked(flags dbus.Flags, locked bool) error {
 
 // method SetPassword
 
-func (v *mockInterfaceUser) GoSetPassword(flags dbus.Flags, ch chan *dbus.Call, password string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetPassword(flags dbus.Flags, ch chan *dbus.Call, password string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, password)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -616,7 +618,7 @@ func (v *mockInterfaceUser) GoSetPassword(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceUser) SetPassword(flags dbus.Flags, password string) error {
+func (v *MockInterfaceUser) SetPassword(flags dbus.Flags, password string) error {
 	mockArgs := v.Called(flags, password)
 
 	return mockArgs.Error(0)
@@ -624,7 +626,7 @@ func (v *mockInterfaceUser) SetPassword(flags dbus.Flags, password string) error
 
 // method SetShell
 
-func (v *mockInterfaceUser) GoSetShell(flags dbus.Flags, ch chan *dbus.Call, shell string) *dbus.Call {
+func (v *MockInterfaceUser) GoSetShell(flags dbus.Flags, ch chan *dbus.Call, shell string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, shell)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -635,7 +637,7 @@ func (v *mockInterfaceUser) GoSetShell(flags dbus.Flags, ch chan *dbus.Call, she
 	return ret
 }
 
-func (v *mockInterfaceUser) SetShell(flags dbus.Flags, shell string) error {
+func (v *MockInterfaceUser) SetShell(flags dbus.Flags, shell string) error {
 	mockArgs := v.Called(flags, shell)
 
 	return mockArgs.Error(0)
@@ -643,7 +645,7 @@ func (v *mockInterfaceUser) SetShell(flags dbus.Flags, shell string) error {
 
 // method SetUse24HourFormat
 
-func (v *mockInterfaceUser) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *MockInterfaceUser) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -654,7 +656,7 @@ func (v *mockInterfaceUser) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceUser) SetUse24HourFormat(flags dbus.Flags, value bool) error {
+func (v *MockInterfaceUser) SetUse24HourFormat(flags dbus.Flags, value bool) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -662,7 +664,7 @@ func (v *mockInterfaceUser) SetUse24HourFormat(flags dbus.Flags, value bool) err
 
 // method SetWeekdayFormat
 
-func (v *mockInterfaceUser) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -673,7 +675,7 @@ func (v *mockInterfaceUser) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceUser) SetWeekdayFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetWeekdayFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -681,7 +683,7 @@ func (v *mockInterfaceUser) SetWeekdayFormat(flags dbus.Flags, value int32) erro
 
 // method SetShortDateFormat
 
-func (v *mockInterfaceUser) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -692,7 +694,7 @@ func (v *mockInterfaceUser) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceUser) SetShortDateFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetShortDateFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -700,7 +702,7 @@ func (v *mockInterfaceUser) SetShortDateFormat(flags dbus.Flags, value int32) er
 
 // method SetLongDateFormat
 
-func (v *mockInterfaceUser) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -711,7 +713,7 @@ func (v *mockInterfaceUser) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceUser) SetLongDateFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetLongDateFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -719,7 +721,7 @@ func (v *mockInterfaceUser) SetLongDateFormat(flags dbus.Flags, value int32) err
 
 // method SetShortTimeFormat
 
-func (v *mockInterfaceUser) GoSetShortTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetShortTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -730,7 +732,7 @@ func (v *mockInterfaceUser) GoSetShortTimeFormat(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceUser) SetShortTimeFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetShortTimeFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -738,7 +740,7 @@ func (v *mockInterfaceUser) SetShortTimeFormat(flags dbus.Flags, value int32) er
 
 // method SetLongTimeFormat
 
-func (v *mockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -749,7 +751,7 @@ func (v *mockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceUser) SetLongTimeFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetLongTimeFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -757,7 +759,7 @@ func (v *mockInterfaceUser) SetLongTimeFormat(flags dbus.Flags, value int32) err
 
 // method SetWeekBegins
 
-func (v *mockInterfaceUser) GoSetWeekBegins(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetWeekBegins(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -768,7 +770,7 @@ func (v *mockInterfaceUser) GoSetWeekBegins(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceUser) SetWeekBegins(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetWeekBegins(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -776,7 +778,7 @@ func (v *mockInterfaceUser) SetWeekBegins(flags dbus.Flags, value int32) error {
 
 // property HistoryLayout as
 
-func (v *mockInterfaceUser) HistoryLayout() proxy.PropStringArray {
+func (v *MockInterfaceUser) HistoryLayout() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -789,7 +791,7 @@ func (v *mockInterfaceUser) HistoryLayout() proxy.PropStringArray {
 
 // property Gid s
 
-func (v *mockInterfaceUser) Gid() proxy.PropString {
+func (v *MockInterfaceUser) Gid() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -802,7 +804,7 @@ func (v *mockInterfaceUser) Gid() proxy.PropString {
 
 // property Groups as
 
-func (v *mockInterfaceUser) Groups() proxy.PropStringArray {
+func (v *MockInterfaceUser) Groups() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -815,7 +817,7 @@ func (v *mockInterfaceUser) Groups() proxy.PropStringArray {
 
 // property XSession s
 
-func (v *mockInterfaceUser) XSession() proxy.PropString {
+func (v *MockInterfaceUser) XSession() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -828,7 +830,7 @@ func (v *mockInterfaceUser) XSession() proxy.PropString {
 
 // property PasswordStatus s
 
-func (v *mockInterfaceUser) PasswordStatus() proxy.PropString {
+func (v *MockInterfaceUser) PasswordStatus() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -841,7 +843,7 @@ func (v *mockInterfaceUser) PasswordStatus() proxy.PropString {
 
 // property LoginTime t
 
-func (v *mockInterfaceUser) LoginTime() proxy.PropUint64 {
+func (v *MockInterfaceUser) LoginTime() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -854,7 +856,7 @@ func (v *mockInterfaceUser) LoginTime() proxy.PropUint64 {
 
 // property GreeterBackground s
 
-func (v *mockInterfaceUser) GreeterBackground() proxy.PropString {
+func (v *MockInterfaceUser) GreeterBackground() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -867,7 +869,7 @@ func (v *mockInterfaceUser) GreeterBackground() proxy.PropString {
 
 // property CreatedTime t
 
-func (v *mockInterfaceUser) CreatedTime() proxy.PropUint64 {
+func (v *MockInterfaceUser) CreatedTime() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -880,7 +882,7 @@ func (v *mockInterfaceUser) CreatedTime() proxy.PropUint64 {
 
 // property UserName s
 
-func (v *mockInterfaceUser) UserName() proxy.PropString {
+func (v *MockInterfaceUser) UserName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -893,7 +895,7 @@ func (v *mockInterfaceUser) UserName() proxy.PropString {
 
 // property Shell s
 
-func (v *mockInterfaceUser) Shell() proxy.PropString {
+func (v *MockInterfaceUser) Shell() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -906,7 +908,7 @@ func (v *mockInterfaceUser) Shell() proxy.PropString {
 
 // property Layout s
 
-func (v *mockInterfaceUser) Layout() proxy.PropString {
+func (v *MockInterfaceUser) Layout() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -919,7 +921,7 @@ func (v *mockInterfaceUser) Layout() proxy.PropString {
 
 // property IconFile s
 
-func (v *mockInterfaceUser) IconFile() proxy.PropString {
+func (v *MockInterfaceUser) IconFile() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -932,7 +934,7 @@ func (v *mockInterfaceUser) IconFile() proxy.PropString {
 
 // property Use24HourFormat b
 
-func (v *mockInterfaceUser) Use24HourFormat() proxy.PropBool {
+func (v *MockInterfaceUser) Use24HourFormat() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -945,7 +947,7 @@ func (v *mockInterfaceUser) Use24HourFormat() proxy.PropBool {
 
 // property AccountType i
 
-func (v *mockInterfaceUser) AccountType() proxy.PropInt32 {
+func (v *MockInterfaceUser) AccountType() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -958,7 +960,7 @@ func (v *mockInterfaceUser) AccountType() proxy.PropInt32 {
 
 // property HomeDir s
 
-func (v *mockInterfaceUser) HomeDir() proxy.PropString {
+func (v *MockInterfaceUser) HomeDir() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -971,7 +973,7 @@ func (v *mockInterfaceUser) HomeDir() proxy.PropString {
 
 // property Locale s
 
-func (v *mockInterfaceUser) Locale() proxy.PropString {
+func (v *MockInterfaceUser) Locale() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -984,7 +986,7 @@ func (v *mockInterfaceUser) Locale() proxy.PropString {
 
 // property DesktopBackgrounds as
 
-func (v *mockInterfaceUser) DesktopBackgrounds() proxy.PropStringArray {
+func (v *MockInterfaceUser) DesktopBackgrounds() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -997,7 +999,7 @@ func (v *mockInterfaceUser) DesktopBackgrounds() proxy.PropStringArray {
 
 // property Locked b
 
-func (v *mockInterfaceUser) Locked() proxy.PropBool {
+func (v *MockInterfaceUser) Locked() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1010,7 +1012,7 @@ func (v *mockInterfaceUser) Locked() proxy.PropBool {
 
 // property NoPasswdLogin b
 
-func (v *mockInterfaceUser) NoPasswdLogin() proxy.PropBool {
+func (v *MockInterfaceUser) NoPasswdLogin() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1023,7 +1025,7 @@ func (v *mockInterfaceUser) NoPasswdLogin() proxy.PropBool {
 
 // property IconList as
 
-func (v *mockInterfaceUser) IconList() proxy.PropStringArray {
+func (v *MockInterfaceUser) IconList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -1036,7 +1038,7 @@ func (v *mockInterfaceUser) IconList() proxy.PropStringArray {
 
 // property UUID s
 
-func (v *mockInterfaceUser) UUID() proxy.PropString {
+func (v *MockInterfaceUser) UUID() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1049,7 +1051,7 @@ func (v *mockInterfaceUser) UUID() proxy.PropString {
 
 // property FullName s
 
-func (v *mockInterfaceUser) FullName() proxy.PropString {
+func (v *MockInterfaceUser) FullName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1062,7 +1064,7 @@ func (v *mockInterfaceUser) FullName() proxy.PropString {
 
 // property Uid s
 
-func (v *mockInterfaceUser) Uid() proxy.PropString {
+func (v *MockInterfaceUser) Uid() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1075,7 +1077,7 @@ func (v *mockInterfaceUser) Uid() proxy.PropString {
 
 // property AutomaticLogin b
 
-func (v *mockInterfaceUser) AutomaticLogin() proxy.PropBool {
+func (v *MockInterfaceUser) AutomaticLogin() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1088,7 +1090,7 @@ func (v *mockInterfaceUser) AutomaticLogin() proxy.PropBool {
 
 // property SystemAccount b
 
-func (v *mockInterfaceUser) SystemAccount() proxy.PropBool {
+func (v *MockInterfaceUser) SystemAccount() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1101,7 +1103,7 @@ func (v *mockInterfaceUser) SystemAccount() proxy.PropBool {
 
 // property WeekdayFormat i
 
-func (v *mockInterfaceUser) WeekdayFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) WeekdayFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1114,7 +1116,7 @@ func (v *mockInterfaceUser) WeekdayFormat() proxy.PropInt32 {
 
 // property ShortDateFormat i
 
-func (v *mockInterfaceUser) ShortDateFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) ShortDateFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1127,7 +1129,7 @@ func (v *mockInterfaceUser) ShortDateFormat() proxy.PropInt32 {
 
 // property LongDateFormat i
 
-func (v *mockInterfaceUser) LongDateFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) LongDateFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1140,7 +1142,7 @@ func (v *mockInterfaceUser) LongDateFormat() proxy.PropInt32 {
 
 // property ShortTimeFormat i
 
-func (v *mockInterfaceUser) ShortTimeFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) ShortTimeFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1153,7 +1155,7 @@ func (v *mockInterfaceUser) ShortTimeFormat() proxy.PropInt32 {
 
 // property LongTimeFormat i
 
-func (v *mockInterfaceUser) LongTimeFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) LongTimeFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1166,7 +1168,7 @@ func (v *mockInterfaceUser) LongTimeFormat() proxy.PropInt32 {
 
 // property WeekBegins i
 
-func (v *mockInterfaceUser) WeekBegins() proxy.PropInt32 {
+func (v *MockInterfaceUser) WeekBegins() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -1178,16 +1180,17 @@ func (v *mockInterfaceUser) WeekBegins() proxy.PropInt32 {
 }
 
 type MockImageBlur struct {
-	mockInterfaceImageBlur // interface com.deepin.daemon.ImageBlur
+	MockInterfaceImageBlur // interface com.deepin.daemon.ImageBlur
+	proxy.MockObject
 }
 
-type mockInterfaceImageBlur struct {
+type MockInterfaceImageBlur struct {
 	mock.Mock
 }
 
 // method Delete
 
-func (v *mockInterfaceImageBlur) GoDelete(flags dbus.Flags, ch chan *dbus.Call, file string) *dbus.Call {
+func (v *MockInterfaceImageBlur) GoDelete(flags dbus.Flags, ch chan *dbus.Call, file string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, file)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1198,7 +1201,7 @@ func (v *mockInterfaceImageBlur) GoDelete(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceImageBlur) Delete(flags dbus.Flags, file string) error {
+func (v *MockInterfaceImageBlur) Delete(flags dbus.Flags, file string) error {
 	mockArgs := v.Called(flags, file)
 
 	return mockArgs.Error(0)
@@ -1206,7 +1209,7 @@ func (v *mockInterfaceImageBlur) Delete(flags dbus.Flags, file string) error {
 
 // method Get
 
-func (v *mockInterfaceImageBlur) GoGet(flags dbus.Flags, ch chan *dbus.Call, source string) *dbus.Call {
+func (v *MockInterfaceImageBlur) GoGet(flags dbus.Flags, ch chan *dbus.Call, source string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, source)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1217,7 +1220,7 @@ func (v *mockInterfaceImageBlur) GoGet(flags dbus.Flags, ch chan *dbus.Call, sou
 	return ret
 }
 
-func (v *mockInterfaceImageBlur) Get(flags dbus.Flags, source string) (string, error) {
+func (v *MockInterfaceImageBlur) Get(flags dbus.Flags, source string) (string, error) {
 	mockArgs := v.Called(flags, source)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -1230,7 +1233,7 @@ func (v *mockInterfaceImageBlur) Get(flags dbus.Flags, source string) (string, e
 
 // signal BlurDone
 
-func (v *mockInterfaceImageBlur) ConnectBlurDone(cb func(imgFile string, imgBlurFile string, ok bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceImageBlur) ConnectBlurDone(cb func(imgFile string, imgBlurFile string, ok bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

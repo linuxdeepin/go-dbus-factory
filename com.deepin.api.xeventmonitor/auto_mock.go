@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockXEventMonitor struct {
-	mockInterfaceXEventMonitor // interface com.deepin.api.XEventMonitor
+	MockInterfaceXEventMonitor // interface com.deepin.api.XEventMonitor
+	proxy.MockObject
 }
 
-type mockInterfaceXEventMonitor struct {
+type MockInterfaceXEventMonitor struct {
 	mock.Mock
 }
 
 // method RegisterArea
 
-func (v *mockInterfaceXEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call {
+func (v *MockInterfaceXEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *dbus.Call, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, x1, y1, x2, y2, flag)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceXEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceXEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (string, error) {
+func (v *MockInterfaceXEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (string, error) {
 	mockArgs := v.Called(flags, x1, y1, x2, y2, flag)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -44,7 +46,7 @@ func (v *mockInterfaceXEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1
 
 // method RegisterAreas
 
-func (v *mockInterfaceXEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
+func (v *MockInterfaceXEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *dbus.Call, areas []CoordinateRange, flag int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, areas, flag)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceXEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceXEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (string, error) {
+func (v *MockInterfaceXEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (string, error) {
 	mockArgs := v.Called(flags, areas, flag)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -68,7 +70,7 @@ func (v *mockInterfaceXEventMonitor) RegisterAreas(flags dbus.Flags, areas []Coo
 
 // method RegisterFullScreen
 
-func (v *mockInterfaceXEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceXEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceXEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceXEventMonitor) RegisterFullScreen(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceXEventMonitor) RegisterFullScreen(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -92,7 +94,7 @@ func (v *mockInterfaceXEventMonitor) RegisterFullScreen(flags dbus.Flags) (strin
 
 // method UnregisterArea
 
-func (v *mockInterfaceXEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+func (v *MockInterfaceXEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, id)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -103,7 +105,7 @@ func (v *mockInterfaceXEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceXEventMonitor) UnregisterArea(flags dbus.Flags, id string) (bool, error) {
+func (v *MockInterfaceXEventMonitor) UnregisterArea(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -116,7 +118,7 @@ func (v *mockInterfaceXEventMonitor) UnregisterArea(flags dbus.Flags, id string)
 
 // signal CancelAllArea
 
-func (v *mockInterfaceXEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -129,7 +131,7 @@ func (v *mockInterfaceXEventMonitor) ConnectCancelAllArea(cb func()) (dbusutil.S
 
 // signal CursorInto
 
-func (v *mockInterfaceXEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectCursorInto(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -142,7 +144,7 @@ func (v *mockInterfaceXEventMonitor) ConnectCursorInto(cb func(x int32, y int32,
 
 // signal CursorOut
 
-func (v *mockInterfaceXEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectCursorOut(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -155,7 +157,7 @@ func (v *mockInterfaceXEventMonitor) ConnectCursorOut(cb func(x int32, y int32, 
 
 // signal CursorMove
 
-func (v *mockInterfaceXEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectCursorMove(cb func(x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -168,7 +170,7 @@ func (v *mockInterfaceXEventMonitor) ConnectCursorMove(cb func(x int32, y int32,
 
 // signal ButtonPress
 
-func (v *mockInterfaceXEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectButtonPress(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -181,7 +183,7 @@ func (v *mockInterfaceXEventMonitor) ConnectButtonPress(cb func(button int32, x 
 
 // signal ButtonRelease
 
-func (v *mockInterfaceXEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectButtonRelease(cb func(button int32, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -194,7 +196,7 @@ func (v *mockInterfaceXEventMonitor) ConnectButtonRelease(cb func(button int32, 
 
 // signal KeyPress
 
-func (v *mockInterfaceXEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectKeyPress(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -207,7 +209,7 @@ func (v *mockInterfaceXEventMonitor) ConnectKeyPress(cb func(key string, x int32
 
 // signal KeyRelease
 
-func (v *mockInterfaceXEventMonitor) ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceXEventMonitor) ConnectKeyRelease(cb func(key string, x int32, y int32, id string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

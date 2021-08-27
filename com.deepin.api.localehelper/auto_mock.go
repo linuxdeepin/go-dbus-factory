@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockLocaleHelper struct {
-	mockInterfaceLocaleHelper // interface com.deepin.api.LocaleHelper
+	MockInterfaceLocaleHelper // interface com.deepin.api.LocaleHelper
+	proxy.MockObject
 }
 
-type mockInterfaceLocaleHelper struct {
+type MockInterfaceLocaleHelper struct {
 	mock.Mock
 }
 
 // method GenerateLocale
 
-func (v *mockInterfaceLocaleHelper) GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *MockInterfaceLocaleHelper) GoGenerateLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locale)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceLocaleHelper) GoGenerateLocale(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceLocaleHelper) GenerateLocale(flags dbus.Flags, locale string) error {
+func (v *MockInterfaceLocaleHelper) GenerateLocale(flags dbus.Flags, locale string) error {
 	mockArgs := v.Called(flags, locale)
 
 	return mockArgs.Error(0)
@@ -39,7 +41,7 @@ func (v *mockInterfaceLocaleHelper) GenerateLocale(flags dbus.Flags, locale stri
 
 // method SetLocale
 
-func (v *mockInterfaceLocaleHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
+func (v *MockInterfaceLocaleHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.Call, locale string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locale)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +52,7 @@ func (v *mockInterfaceLocaleHelper) GoSetLocale(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceLocaleHelper) SetLocale(flags dbus.Flags, locale string) error {
+func (v *MockInterfaceLocaleHelper) SetLocale(flags dbus.Flags, locale string) error {
 	mockArgs := v.Called(flags, locale)
 
 	return mockArgs.Error(0)
@@ -58,7 +60,7 @@ func (v *mockInterfaceLocaleHelper) SetLocale(flags dbus.Flags, locale string) e
 
 // signal Success
 
-func (v *mockInterfaceLocaleHelper) ConnectSuccess(cb func(ok bool, reason string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceLocaleHelper) ConnectSuccess(cb func(ok bool, reason string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

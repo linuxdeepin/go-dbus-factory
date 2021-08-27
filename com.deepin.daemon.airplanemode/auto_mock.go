@@ -11,16 +11,17 @@ import (
 )
 
 type MockAirplaneMode struct {
-	mockInterfaceAirplaneMode // interface com.deepin.daemon.AirplaneMode
+	MockInterfaceAirplaneMode // interface com.deepin.daemon.AirplaneMode
+	proxy.MockObject
 }
 
-type mockInterfaceAirplaneMode struct {
+type MockInterfaceAirplaneMode struct {
 	mock.Mock
 }
 
 // method DumpState
 
-func (v *mockInterfaceAirplaneMode) GoDumpState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAirplaneMode) GoDumpState(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceAirplaneMode) GoDumpState(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceAirplaneMode) DumpState(flags dbus.Flags) error {
+func (v *MockInterfaceAirplaneMode) DumpState(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceAirplaneMode) DumpState(flags dbus.Flags) error {
 
 // method Enable
 
-func (v *mockInterfaceAirplaneMode) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceAirplaneMode) GoEnable(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceAirplaneMode) GoEnable(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceAirplaneMode) Enable(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceAirplaneMode) Enable(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceAirplaneMode) Enable(flags dbus.Flags, enabled bool) error
 
 // method EnableBluetooth
 
-func (v *mockInterfaceAirplaneMode) GoEnableBluetooth(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceAirplaneMode) GoEnableBluetooth(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceAirplaneMode) GoEnableBluetooth(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceAirplaneMode) EnableBluetooth(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceAirplaneMode) EnableBluetooth(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceAirplaneMode) EnableBluetooth(flags dbus.Flags, enabled bo
 
 // method EnableWifi
 
-func (v *mockInterfaceAirplaneMode) GoEnableWifi(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
+func (v *MockInterfaceAirplaneMode) GoEnableWifi(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceAirplaneMode) GoEnableWifi(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceAirplaneMode) EnableWifi(flags dbus.Flags, enabled bool) error {
+func (v *MockInterfaceAirplaneMode) EnableWifi(flags dbus.Flags, enabled bool) error {
 	mockArgs := v.Called(flags, enabled)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceAirplaneMode) EnableWifi(flags dbus.Flags, enabled bool) e
 
 // property Enabled b
 
-func (v *mockInterfaceAirplaneMode) Enabled() proxy.PropBool {
+func (v *MockInterfaceAirplaneMode) Enabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -109,7 +110,7 @@ func (v *mockInterfaceAirplaneMode) Enabled() proxy.PropBool {
 
 // property WifiEnabled b
 
-func (v *mockInterfaceAirplaneMode) WifiEnabled() proxy.PropBool {
+func (v *MockInterfaceAirplaneMode) WifiEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -122,7 +123,7 @@ func (v *mockInterfaceAirplaneMode) WifiEnabled() proxy.PropBool {
 
 // property BluetoothEnabled b
 
-func (v *mockInterfaceAirplaneMode) BluetoothEnabled() proxy.PropBool {
+func (v *MockInterfaceAirplaneMode) BluetoothEnabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

@@ -11,16 +11,17 @@ import (
 )
 
 type MockSessionWatcher struct {
-	mockInterfaceSessionWatcher // interface com.deepin.daemon.SessionWatcher
+	MockInterfaceSessionWatcher // interface com.deepin.daemon.SessionWatcher
+	proxy.MockObject
 }
 
-type mockInterfaceSessionWatcher struct {
+type MockInterfaceSessionWatcher struct {
 	mock.Mock
 }
 
 // method GetSessions
 
-func (v *mockInterfaceSessionWatcher) GoGetSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSessionWatcher) GoGetSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceSessionWatcher) GoGetSessions(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceSessionWatcher) GetSessions(flags dbus.Flags) ([]dbus.ObjectPath, error) {
+func (v *MockInterfaceSessionWatcher) GetSessions(flags dbus.Flags) ([]dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.ObjectPath)
@@ -44,7 +45,7 @@ func (v *mockInterfaceSessionWatcher) GetSessions(flags dbus.Flags) ([]dbus.Obje
 
 // method IsX11SessionActive
 
-func (v *mockInterfaceSessionWatcher) GoIsX11SessionActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSessionWatcher) GoIsX11SessionActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +56,7 @@ func (v *mockInterfaceSessionWatcher) GoIsX11SessionActive(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceSessionWatcher) IsX11SessionActive(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceSessionWatcher) IsX11SessionActive(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -68,7 +69,7 @@ func (v *mockInterfaceSessionWatcher) IsX11SessionActive(flags dbus.Flags) (bool
 
 // property IsActive b
 
-func (v *mockInterfaceSessionWatcher) IsActive() proxy.PropBool {
+func (v *MockInterfaceSessionWatcher) IsActive() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

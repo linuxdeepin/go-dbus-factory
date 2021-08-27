@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockGesture struct {
-	mockInterfaceGesture // interface com.deepin.daemon.Gesture
+	MockInterfaceGesture // interface com.deepin.daemon.Gesture
+	proxy.MockObject
 }
 
-type mockInterfaceGesture struct {
+type MockInterfaceGesture struct {
 	mock.Mock
 }
 
 // method SetShortPressDuration
 
-func (v *mockInterfaceGesture) GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+func (v *MockInterfaceGesture) GoSetShortPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, duration)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceGesture) GoSetShortPressDuration(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceGesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error {
+func (v *MockInterfaceGesture) SetShortPressDuration(flags dbus.Flags, duration uint32) error {
 	mockArgs := v.Called(flags, duration)
 
 	return mockArgs.Error(0)
@@ -39,7 +41,7 @@ func (v *mockInterfaceGesture) SetShortPressDuration(flags dbus.Flags, duration 
 
 // method SetEdgeMoveStopDuration
 
-func (v *mockInterfaceGesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+func (v *MockInterfaceGesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, duration)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +52,7 @@ func (v *mockInterfaceGesture) GoSetEdgeMoveStopDuration(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
+func (v *MockInterfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duration uint32) error {
 	mockArgs := v.Called(flags, duration)
 
 	return mockArgs.Error(0)
@@ -58,7 +60,7 @@ func (v *mockInterfaceGesture) SetEdgeMoveStopDuration(flags dbus.Flags, duratio
 
 // method SetInputIgnore
 
-func (v *mockInterfaceGesture) GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.Call, node string, ignore bool) *dbus.Call {
+func (v *MockInterfaceGesture) GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.Call, node string, ignore bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, node, ignore)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +71,7 @@ func (v *mockInterfaceGesture) GoSetInputIgnore(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceGesture) SetInputIgnore(flags dbus.Flags, node string, ignore bool) error {
+func (v *MockInterfaceGesture) SetInputIgnore(flags dbus.Flags, node string, ignore bool) error {
 	mockArgs := v.Called(flags, node, ignore)
 
 	return mockArgs.Error(0)
@@ -77,7 +79,7 @@ func (v *mockInterfaceGesture) SetInputIgnore(flags dbus.Flags, node string, ign
 
 // signal Event
 
-func (v *mockInterfaceGesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectEvent(cb func(name string, direction string, fingers int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -90,7 +92,7 @@ func (v *mockInterfaceGesture) ConnectEvent(cb func(name string, direction strin
 
 // signal DbclickDown
 
-func (v *mockInterfaceGesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectDbclickDown(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -103,7 +105,7 @@ func (v *mockInterfaceGesture) ConnectDbclickDown(cb func(fingers int32)) (dbusu
 
 // signal SwipeMoving
 
-func (v *mockInterfaceGesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectSwipeMoving(cb func(fingers int32, accelX float64, accely float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -116,7 +118,7 @@ func (v *mockInterfaceGesture) ConnectSwipeMoving(cb func(fingers int32, accelX 
 
 // signal SwipeStop
 
-func (v *mockInterfaceGesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectSwipeStop(cb func(fingers int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -129,7 +131,7 @@ func (v *mockInterfaceGesture) ConnectSwipeStop(cb func(fingers int32)) (dbusuti
 
 // signal TouchEdgeEvent
 
-func (v *mockInterfaceGesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchEdgeEvent(cb func(direction string, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -142,7 +144,7 @@ func (v *mockInterfaceGesture) ConnectTouchEdgeEvent(cb func(direction string, s
 
 // signal TouchSinglePressTimeout
 
-func (v *mockInterfaceGesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchSinglePressTimeout(cb func(time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -155,7 +157,7 @@ func (v *mockInterfaceGesture) ConnectTouchSinglePressTimeout(cb func(time int32
 
 // signal TouchPressTimeout
 
-func (v *mockInterfaceGesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchPressTimeout(cb func(fingers int32, time int32, scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -168,7 +170,7 @@ func (v *mockInterfaceGesture) ConnectTouchPressTimeout(cb func(fingers int32, t
 
 // signal TouchUpOrCancel
 
-func (v *mockInterfaceGesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchUpOrCancel(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -181,7 +183,7 @@ func (v *mockInterfaceGesture) ConnectTouchUpOrCancel(cb func(scalex float64, sc
 
 // signal TouchEdgeMoveStop
 
-func (v *mockInterfaceGesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchEdgeMoveStop(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -194,7 +196,7 @@ func (v *mockInterfaceGesture) ConnectTouchEdgeMoveStop(cb func(direction string
 
 // signal TouchEdgeMoveStopLeave
 
-func (v *mockInterfaceGesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchEdgeMoveStopLeave(cb func(direction string, scalex float64, scaley float64, duration int32)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -207,7 +209,7 @@ func (v *mockInterfaceGesture) ConnectTouchEdgeMoveStopLeave(cb func(direction s
 
 // signal TouchMoving
 
-func (v *mockInterfaceGesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchMoving(cb func(scalex float64, scaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -220,7 +222,7 @@ func (v *mockInterfaceGesture) ConnectTouchMoving(cb func(scalex float64, scaley
 
 // signal TouchMovementEvent
 
-func (v *mockInterfaceGesture) ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceGesture) ConnectTouchMovementEvent(cb func(duration string, fingers int32, startScalex float64, startScaley float64, endScalex float64, endScaley float64)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

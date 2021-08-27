@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockBacklight struct {
-	mockInterfaceBacklight // interface com.deepin.daemon.helper.Backlight
+	MockInterfaceBacklight // interface com.deepin.daemon.helper.Backlight
+	proxy.MockObject
 }
 
-type mockInterfaceBacklight struct {
+type MockInterfaceBacklight struct {
 	mock.Mock
 }
 
 // method SetBrightness
 
-func (v *mockInterfaceBacklight) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, type0 uint8, name string, value int32) *dbus.Call {
+func (v *MockInterfaceBacklight) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, type0 uint8, name string, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, type0, name, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,23 +32,24 @@ func (v *mockInterfaceBacklight) GoSetBrightness(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceBacklight) SetBrightness(flags dbus.Flags, type0 uint8, name string, value int32) error {
+func (v *MockInterfaceBacklight) SetBrightness(flags dbus.Flags, type0 uint8, name string, value int32) error {
 	mockArgs := v.Called(flags, type0, name, value)
 
 	return mockArgs.Error(0)
 }
 
 type MockDDCCI struct {
-	mockInterfaceDdcci // interface com.deepin.daemon.helper.Backlight.DDCCI
+	MockInterfaceDdcci // interface com.deepin.daemon.helper.Backlight.DDCCI
+	proxy.MockObject
 }
 
-type mockInterfaceDdcci struct {
+type MockInterfaceDdcci struct {
 	mock.Mock
 }
 
 // method CheckSupport
 
-func (v *mockInterfaceDdcci) GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
+func (v *MockInterfaceDdcci) GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, edidChecksum)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -57,7 +60,7 @@ func (v *mockInterfaceDdcci) GoCheckSupport(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceDdcci) CheckSupport(flags dbus.Flags, edidChecksum string) (bool, error) {
+func (v *MockInterfaceDdcci) CheckSupport(flags dbus.Flags, edidChecksum string) (bool, error) {
 	mockArgs := v.Called(flags, edidChecksum)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -70,7 +73,7 @@ func (v *mockInterfaceDdcci) CheckSupport(flags dbus.Flags, edidChecksum string)
 
 // method GetBrightness
 
-func (v *mockInterfaceDdcci) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
+func (v *MockInterfaceDdcci) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, edidChecksum)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -81,7 +84,7 @@ func (v *mockInterfaceDdcci) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDdcci) GetBrightness(flags dbus.Flags, edidChecksum string) (int32, error) {
+func (v *MockInterfaceDdcci) GetBrightness(flags dbus.Flags, edidChecksum string) (int32, error) {
 	mockArgs := v.Called(flags, edidChecksum)
 
 	ret0, ok := mockArgs.Get(0).(int32)
@@ -94,7 +97,7 @@ func (v *mockInterfaceDdcci) GetBrightness(flags dbus.Flags, edidChecksum string
 
 // method SetBrightness
 
-func (v *mockInterfaceDdcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string, value int32) *dbus.Call {
+func (v *MockInterfaceDdcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, edidChecksum string, value int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, edidChecksum, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -105,7 +108,7 @@ func (v *mockInterfaceDdcci) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDdcci) SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error {
+func (v *MockInterfaceDdcci) SetBrightness(flags dbus.Flags, edidChecksum string, value int32) error {
 	mockArgs := v.Called(flags, edidChecksum, value)
 
 	return mockArgs.Error(0)
@@ -113,7 +116,7 @@ func (v *mockInterfaceDdcci) SetBrightness(flags dbus.Flags, edidChecksum string
 
 // method RefreshDisplays
 
-func (v *mockInterfaceDdcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDdcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -124,7 +127,7 @@ func (v *mockInterfaceDdcci) GoRefreshDisplays(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceDdcci) RefreshDisplays(flags dbus.Flags) error {
+func (v *MockInterfaceDdcci) RefreshDisplays(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)

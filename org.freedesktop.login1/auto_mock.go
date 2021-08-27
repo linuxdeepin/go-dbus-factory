@@ -12,16 +12,17 @@ import (
 )
 
 type MockManager struct {
-	mockInterfaceManager // interface org.freedesktop.login1.Manager
+	MockInterfaceManager // interface org.freedesktop.login1.Manager
+	proxy.MockObject
 }
 
-type mockInterfaceManager struct {
+type MockInterfaceManager struct {
 	mock.Mock
 }
 
 // method GetSession
 
-func (v *mockInterfaceManager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -32,7 +33,7 @@ func (v *mockInterfaceManager) GoGetSession(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceManager) GetSession(flags dbus.Flags, sessionId string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetSession(flags dbus.Flags, sessionId string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, sessionId)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -45,7 +46,7 @@ func (v *mockInterfaceManager) GetSession(flags dbus.Flags, sessionId string) (d
 
 // method GetSessionByPID
 
-func (v *mockInterfaceManager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *MockInterfaceManager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -56,7 +57,7 @@ func (v *mockInterfaceManager) GoGetSessionByPID(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceManager) GetSessionByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetSessionByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, pid)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -69,7 +70,7 @@ func (v *mockInterfaceManager) GetSessionByPID(flags dbus.Flags, pid uint32) (db
 
 // method GetUser
 
-func (v *mockInterfaceManager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+func (v *MockInterfaceManager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -80,7 +81,7 @@ func (v *mockInterfaceManager) GoGetUser(flags dbus.Flags, ch chan *dbus.Call, u
 	return ret
 }
 
-func (v *mockInterfaceManager) GetUser(flags dbus.Flags, uid uint32) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetUser(flags dbus.Flags, uid uint32) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, uid)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -93,7 +94,7 @@ func (v *mockInterfaceManager) GetUser(flags dbus.Flags, uid uint32) (dbus.Objec
 
 // method GetUserByPID
 
-func (v *mockInterfaceManager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *MockInterfaceManager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -104,7 +105,7 @@ func (v *mockInterfaceManager) GoGetUserByPID(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) GetUserByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetUserByPID(flags dbus.Flags, pid uint32) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, pid)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -117,7 +118,7 @@ func (v *mockInterfaceManager) GetUserByPID(flags dbus.Flags, pid uint32) (dbus.
 
 // method GetSeat
 
-func (v *mockInterfaceManager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+func (v *MockInterfaceManager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, seatId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -128,7 +129,7 @@ func (v *mockInterfaceManager) GoGetSeat(flags dbus.Flags, ch chan *dbus.Call, s
 	return ret
 }
 
-func (v *mockInterfaceManager) GetSeat(flags dbus.Flags, seatId string) (dbus.ObjectPath, error) {
+func (v *MockInterfaceManager) GetSeat(flags dbus.Flags, seatId string) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, seatId)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -141,7 +142,7 @@ func (v *mockInterfaceManager) GetSeat(flags dbus.Flags, seatId string) (dbus.Ob
 
 // method ListSessions
 
-func (v *mockInterfaceManager) GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoListSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -152,7 +153,7 @@ func (v *mockInterfaceManager) GoListSessions(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) ListSessions(flags dbus.Flags) ([]SessionDetail, error) {
+func (v *MockInterfaceManager) ListSessions(flags dbus.Flags) ([]SessionDetail, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]SessionDetail)
@@ -165,7 +166,7 @@ func (v *mockInterfaceManager) ListSessions(flags dbus.Flags) ([]SessionDetail, 
 
 // method ListUsers
 
-func (v *mockInterfaceManager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -176,7 +177,7 @@ func (v *mockInterfaceManager) GoListUsers(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceManager) ListUsers(flags dbus.Flags) ([]UserDetail, error) {
+func (v *MockInterfaceManager) ListUsers(flags dbus.Flags) ([]UserDetail, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]UserDetail)
@@ -189,7 +190,7 @@ func (v *mockInterfaceManager) ListUsers(flags dbus.Flags) ([]UserDetail, error)
 
 // method ListSeats
 
-func (v *mockInterfaceManager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -200,7 +201,7 @@ func (v *mockInterfaceManager) GoListSeats(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceManager) ListSeats(flags dbus.Flags) ([]SeatInfo, error) {
+func (v *MockInterfaceManager) ListSeats(flags dbus.Flags) ([]SeatInfo, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]SeatInfo)
@@ -213,7 +214,7 @@ func (v *mockInterfaceManager) ListSeats(flags dbus.Flags) ([]SeatInfo, error) {
 
 // method ListInhibitors
 
-func (v *mockInterfaceManager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -224,7 +225,7 @@ func (v *mockInterfaceManager) GoListInhibitors(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) ListInhibitors(flags dbus.Flags) ([]InhibitorInfo, error) {
+func (v *MockInterfaceManager) ListInhibitors(flags dbus.Flags) ([]InhibitorInfo, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]InhibitorInfo)
@@ -237,7 +238,7 @@ func (v *mockInterfaceManager) ListInhibitors(flags dbus.Flags) ([]InhibitorInfo
 
 // method CreateSession
 
-func (v *mockInterfaceManager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
+func (v *MockInterfaceManager) GoCreateSession(flags dbus.Flags, ch chan *dbus.Call, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -248,7 +249,7 @@ func (v *mockInterfaceManager) GoCreateSession(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (string, dbus.ObjectPath, string, dbus.UnixFD, uint32, string, uint32, bool, error) {
+func (v *MockInterfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (string, dbus.ObjectPath, string, dbus.UnixFD, uint32, string, uint32, bool, error) {
 	mockArgs := v.Called(flags, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -296,7 +297,7 @@ func (v *mockInterfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid u
 
 // method ReleaseSession
 
-func (v *mockInterfaceManager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -307,7 +308,7 @@ func (v *mockInterfaceManager) GoReleaseSession(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) ReleaseSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceManager) ReleaseSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -315,7 +316,7 @@ func (v *mockInterfaceManager) ReleaseSession(flags dbus.Flags, sessionId string
 
 // method ActivateSession
 
-func (v *mockInterfaceManager) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -326,7 +327,7 @@ func (v *mockInterfaceManager) GoActivateSession(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceManager) ActivateSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceManager) ActivateSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -334,7 +335,7 @@ func (v *mockInterfaceManager) ActivateSession(flags dbus.Flags, sessionId strin
 
 // method ActivateSessionOnSeat
 
-func (v *mockInterfaceManager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call {
+func (v *MockInterfaceManager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan *dbus.Call, sessionId string, seatId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId, seatId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -345,7 +346,7 @@ func (v *mockInterfaceManager) GoActivateSessionOnSeat(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceManager) ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error {
+func (v *MockInterfaceManager) ActivateSessionOnSeat(flags dbus.Flags, sessionId string, seatId string) error {
 	mockArgs := v.Called(flags, sessionId, seatId)
 
 	return mockArgs.Error(0)
@@ -353,7 +354,7 @@ func (v *mockInterfaceManager) ActivateSessionOnSeat(flags dbus.Flags, sessionId
 
 // method LockSession
 
-func (v *mockInterfaceManager) GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoLockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -364,7 +365,7 @@ func (v *mockInterfaceManager) GoLockSession(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) LockSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceManager) LockSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -372,7 +373,7 @@ func (v *mockInterfaceManager) LockSession(flags dbus.Flags, sessionId string) e
 
 // method UnlockSession
 
-func (v *mockInterfaceManager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -383,7 +384,7 @@ func (v *mockInterfaceManager) GoUnlockSession(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) UnlockSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceManager) UnlockSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -391,7 +392,7 @@ func (v *mockInterfaceManager) UnlockSession(flags dbus.Flags, sessionId string)
 
 // method LockSessions
 
-func (v *mockInterfaceManager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -402,7 +403,7 @@ func (v *mockInterfaceManager) GoLockSessions(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) LockSessions(flags dbus.Flags) error {
+func (v *MockInterfaceManager) LockSessions(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -410,7 +411,7 @@ func (v *mockInterfaceManager) LockSessions(flags dbus.Flags) error {
 
 // method UnlockSessions
 
-func (v *mockInterfaceManager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -421,7 +422,7 @@ func (v *mockInterfaceManager) GoUnlockSessions(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) UnlockSessions(flags dbus.Flags) error {
+func (v *MockInterfaceManager) UnlockSessions(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -429,7 +430,7 @@ func (v *mockInterfaceManager) UnlockSessions(flags dbus.Flags) error {
 
 // method KillSession
 
-func (v *mockInterfaceManager) GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call {
+func (v *MockInterfaceManager) GoKillSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string, who string, signo int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId, who, signo)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -440,7 +441,7 @@ func (v *mockInterfaceManager) GoKillSession(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error {
+func (v *MockInterfaceManager) KillSession(flags dbus.Flags, sessionId string, who string, signo int32) error {
 	mockArgs := v.Called(flags, sessionId, who, signo)
 
 	return mockArgs.Error(0)
@@ -448,7 +449,7 @@ func (v *mockInterfaceManager) KillSession(flags dbus.Flags, sessionId string, w
 
 // method KillUser
 
-func (v *mockInterfaceManager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call {
+func (v *MockInterfaceManager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32, signo int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid, signo)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -459,7 +460,7 @@ func (v *mockInterfaceManager) GoKillUser(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) KillUser(flags dbus.Flags, uid uint32, signo int32) error {
+func (v *MockInterfaceManager) KillUser(flags dbus.Flags, uid uint32, signo int32) error {
 	mockArgs := v.Called(flags, uid, signo)
 
 	return mockArgs.Error(0)
@@ -467,7 +468,7 @@ func (v *mockInterfaceManager) KillUser(flags dbus.Flags, uid uint32, signo int3
 
 // method TerminateSession
 
-func (v *mockInterfaceManager) GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceManager) GoTerminateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -478,7 +479,7 @@ func (v *mockInterfaceManager) GoTerminateSession(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceManager) TerminateSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceManager) TerminateSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -486,7 +487,7 @@ func (v *mockInterfaceManager) TerminateSession(flags dbus.Flags, sessionId stri
 
 // method TerminateUser
 
-func (v *mockInterfaceManager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+func (v *MockInterfaceManager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -497,7 +498,7 @@ func (v *mockInterfaceManager) GoTerminateUser(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) TerminateUser(flags dbus.Flags, uid uint32) error {
+func (v *MockInterfaceManager) TerminateUser(flags dbus.Flags, uid uint32) error {
 	mockArgs := v.Called(flags, uid)
 
 	return mockArgs.Error(0)
@@ -505,7 +506,7 @@ func (v *mockInterfaceManager) TerminateUser(flags dbus.Flags, uid uint32) error
 
 // method TerminateSeat
 
-func (v *mockInterfaceManager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
+func (v *MockInterfaceManager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.Call, seatId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, seatId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -516,7 +517,7 @@ func (v *mockInterfaceManager) GoTerminateSeat(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) TerminateSeat(flags dbus.Flags, seatId string) error {
+func (v *MockInterfaceManager) TerminateSeat(flags dbus.Flags, seatId string) error {
 	mockArgs := v.Called(flags, seatId)
 
 	return mockArgs.Error(0)
@@ -524,7 +525,7 @@ func (v *mockInterfaceManager) TerminateSeat(flags dbus.Flags, seatId string) er
 
 // method SetUserLinger
 
-func (v *mockInterfaceManager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.Call, uid uint32, linger bool, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uid, linger, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -535,7 +536,7 @@ func (v *mockInterfaceManager) GoSetUserLinger(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceManager) SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
+func (v *MockInterfaceManager) SetUserLinger(flags dbus.Flags, uid uint32, linger bool, interactive bool) error {
 	mockArgs := v.Called(flags, uid, linger, interactive)
 
 	return mockArgs.Error(0)
@@ -543,7 +544,7 @@ func (v *mockInterfaceManager) SetUserLinger(flags dbus.Flags, uid uint32, linge
 
 // method AttachDevice
 
-func (v *mockInterfaceManager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Call, seatId string, sysfs string, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, seatId, sysfs, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -554,7 +555,7 @@ func (v *mockInterfaceManager) GoAttachDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
+func (v *MockInterfaceManager) AttachDevice(flags dbus.Flags, seatId string, sysfs string, interactive bool) error {
 	mockArgs := v.Called(flags, seatId, sysfs, interactive)
 
 	return mockArgs.Error(0)
@@ -562,7 +563,7 @@ func (v *mockInterfaceManager) AttachDevice(flags dbus.Flags, seatId string, sys
 
 // method FlushDevices
 
-func (v *mockInterfaceManager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -573,7 +574,7 @@ func (v *mockInterfaceManager) GoFlushDevices(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) FlushDevices(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) FlushDevices(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -581,7 +582,7 @@ func (v *mockInterfaceManager) FlushDevices(flags dbus.Flags, interactive bool) 
 
 // method PowerOff
 
-func (v *mockInterfaceManager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -592,7 +593,7 @@ func (v *mockInterfaceManager) GoPowerOff(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceManager) PowerOff(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) PowerOff(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -600,7 +601,7 @@ func (v *mockInterfaceManager) PowerOff(flags dbus.Flags, interactive bool) erro
 
 // method Reboot
 
-func (v *mockInterfaceManager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -611,7 +612,7 @@ func (v *mockInterfaceManager) GoReboot(flags dbus.Flags, ch chan *dbus.Call, in
 	return ret
 }
 
-func (v *mockInterfaceManager) Reboot(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) Reboot(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -619,7 +620,7 @@ func (v *mockInterfaceManager) Reboot(flags dbus.Flags, interactive bool) error 
 
 // method Suspend
 
-func (v *mockInterfaceManager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -630,7 +631,7 @@ func (v *mockInterfaceManager) GoSuspend(flags dbus.Flags, ch chan *dbus.Call, i
 	return ret
 }
 
-func (v *mockInterfaceManager) Suspend(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) Suspend(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -638,7 +639,7 @@ func (v *mockInterfaceManager) Suspend(flags dbus.Flags, interactive bool) error
 
 // method Hibernate
 
-func (v *mockInterfaceManager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -649,7 +650,7 @@ func (v *mockInterfaceManager) GoHibernate(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceManager) Hibernate(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) Hibernate(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -657,7 +658,7 @@ func (v *mockInterfaceManager) Hibernate(flags dbus.Flags, interactive bool) err
 
 // method HybridSleep
 
-func (v *mockInterfaceManager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
+func (v *MockInterfaceManager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Call, interactive bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, interactive)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -668,7 +669,7 @@ func (v *mockInterfaceManager) GoHybridSleep(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) HybridSleep(flags dbus.Flags, interactive bool) error {
+func (v *MockInterfaceManager) HybridSleep(flags dbus.Flags, interactive bool) error {
 	mockArgs := v.Called(flags, interactive)
 
 	return mockArgs.Error(0)
@@ -676,7 +677,7 @@ func (v *mockInterfaceManager) HybridSleep(flags dbus.Flags, interactive bool) e
 
 // method CanPowerOff
 
-func (v *mockInterfaceManager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -687,7 +688,7 @@ func (v *mockInterfaceManager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceManager) CanPowerOff(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanPowerOff(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -700,7 +701,7 @@ func (v *mockInterfaceManager) CanPowerOff(flags dbus.Flags) (string, error) {
 
 // method CanReboot
 
-func (v *mockInterfaceManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -711,7 +712,7 @@ func (v *mockInterfaceManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceManager) CanReboot(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanReboot(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -724,7 +725,7 @@ func (v *mockInterfaceManager) CanReboot(flags dbus.Flags) (string, error) {
 
 // method CanSuspend
 
-func (v *mockInterfaceManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -735,7 +736,7 @@ func (v *mockInterfaceManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceManager) CanSuspend(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanSuspend(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -748,7 +749,7 @@ func (v *mockInterfaceManager) CanSuspend(flags dbus.Flags) (string, error) {
 
 // method CanHibernate
 
-func (v *mockInterfaceManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -759,7 +760,7 @@ func (v *mockInterfaceManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceManager) CanHibernate(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanHibernate(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -772,7 +773,7 @@ func (v *mockInterfaceManager) CanHibernate(flags dbus.Flags) (string, error) {
 
 // method CanHybridSleep
 
-func (v *mockInterfaceManager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -783,7 +784,7 @@ func (v *mockInterfaceManager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) CanHybridSleep(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanHybridSleep(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -796,7 +797,7 @@ func (v *mockInterfaceManager) CanHybridSleep(flags dbus.Flags) (string, error) 
 
 // method ScheduleShutdown
 
-func (v *mockInterfaceManager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
+func (v *MockInterfaceManager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbus.Call, type0 string, usec uint64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, type0, usec)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -807,7 +808,7 @@ func (v *mockInterfaceManager) GoScheduleShutdown(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceManager) ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error {
+func (v *MockInterfaceManager) ScheduleShutdown(flags dbus.Flags, type0 string, usec uint64) error {
 	mockArgs := v.Called(flags, type0, usec)
 
 	return mockArgs.Error(0)
@@ -815,7 +816,7 @@ func (v *mockInterfaceManager) ScheduleShutdown(flags dbus.Flags, type0 string, 
 
 // method CancelScheduledShutdown
 
-func (v *mockInterfaceManager) GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCancelScheduledShutdown(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -826,7 +827,7 @@ func (v *mockInterfaceManager) GoCancelScheduledShutdown(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceManager) CancelScheduledShutdown(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceManager) CancelScheduledShutdown(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -839,7 +840,7 @@ func (v *mockInterfaceManager) CancelScheduledShutdown(flags dbus.Flags) (bool, 
 
 // method Inhibit
 
-func (v *mockInterfaceManager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
+func (v *MockInterfaceManager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, what string, who string, why string, mode string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, what, who, why, mode)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -850,7 +851,7 @@ func (v *mockInterfaceManager) GoInhibit(flags dbus.Flags, ch chan *dbus.Call, w
 	return ret
 }
 
-func (v *mockInterfaceManager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (dbus.UnixFD, error) {
+func (v *MockInterfaceManager) Inhibit(flags dbus.Flags, what string, who string, why string, mode string) (dbus.UnixFD, error) {
 	mockArgs := v.Called(flags, what, who, why, mode)
 
 	ret0, ok := mockArgs.Get(0).(dbus.UnixFD)
@@ -863,7 +864,7 @@ func (v *mockInterfaceManager) Inhibit(flags dbus.Flags, what string, who string
 
 // method CanRebootToFirmwareSetup
 
-func (v *mockInterfaceManager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceManager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -874,7 +875,7 @@ func (v *mockInterfaceManager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceManager) CanRebootToFirmwareSetup(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceManager) CanRebootToFirmwareSetup(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -887,7 +888,7 @@ func (v *mockInterfaceManager) CanRebootToFirmwareSetup(flags dbus.Flags) (strin
 
 // method SetRebootToFirmwareSetup
 
-func (v *mockInterfaceManager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
+func (v *MockInterfaceManager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch chan *dbus.Call, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -898,7 +899,7 @@ func (v *mockInterfaceManager) GoSetRebootToFirmwareSetup(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceManager) SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error {
+func (v *MockInterfaceManager) SetRebootToFirmwareSetup(flags dbus.Flags, enable bool) error {
 	mockArgs := v.Called(flags, enable)
 
 	return mockArgs.Error(0)
@@ -906,7 +907,7 @@ func (v *mockInterfaceManager) SetRebootToFirmwareSetup(flags dbus.Flags, enable
 
 // method SetWallMessage
 
-func (v *mockInterfaceManager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call {
+func (v *MockInterfaceManager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.Call, wallMessage string, enable bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, wallMessage, enable)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -917,7 +918,7 @@ func (v *mockInterfaceManager) GoSetWallMessage(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceManager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error {
+func (v *MockInterfaceManager) SetWallMessage(flags dbus.Flags, wallMessage string, enable bool) error {
 	mockArgs := v.Called(flags, wallMessage, enable)
 
 	return mockArgs.Error(0)
@@ -925,7 +926,7 @@ func (v *mockInterfaceManager) SetWallMessage(flags dbus.Flags, wallMessage stri
 
 // signal SessionNew
 
-func (v *mockInterfaceManager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSessionNew(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -938,7 +939,7 @@ func (v *mockInterfaceManager) ConnectSessionNew(cb func(sessionId string, sessi
 
 // signal SessionRemoved
 
-func (v *mockInterfaceManager) ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSessionRemoved(cb func(sessionId string, sessionPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -951,7 +952,7 @@ func (v *mockInterfaceManager) ConnectSessionRemoved(cb func(sessionId string, s
 
 // signal UserNew
 
-func (v *mockInterfaceManager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectUserNew(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -964,7 +965,7 @@ func (v *mockInterfaceManager) ConnectUserNew(cb func(uid uint32, userPath dbus.
 
 // signal UserRemoved
 
-func (v *mockInterfaceManager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectUserRemoved(cb func(uid uint32, userPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -977,7 +978,7 @@ func (v *mockInterfaceManager) ConnectUserRemoved(cb func(uid uint32, userPath d
 
 // signal SeatNew
 
-func (v *mockInterfaceManager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSeatNew(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -990,7 +991,7 @@ func (v *mockInterfaceManager) ConnectSeatNew(cb func(seatId string, seatPath db
 
 // signal SeatRemoved
 
-func (v *mockInterfaceManager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectSeatRemoved(cb func(seatId string, seatPath dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1003,7 +1004,7 @@ func (v *mockInterfaceManager) ConnectSeatRemoved(cb func(seatId string, seatPat
 
 // signal PrepareForShutdown
 
-func (v *mockInterfaceManager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectPrepareForShutdown(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1016,7 +1017,7 @@ func (v *mockInterfaceManager) ConnectPrepareForShutdown(cb func(start bool)) (d
 
 // signal PrepareForSleep
 
-func (v *mockInterfaceManager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceManager) ConnectPrepareForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1029,7 +1030,7 @@ func (v *mockInterfaceManager) ConnectPrepareForSleep(cb func(start bool)) (dbus
 
 // property EnableWallMessages b
 
-func (v *mockInterfaceManager) EnableWallMessages() proxy.PropBool {
+func (v *MockInterfaceManager) EnableWallMessages() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1042,7 +1043,7 @@ func (v *mockInterfaceManager) EnableWallMessages() proxy.PropBool {
 
 // property WallMessage s
 
-func (v *mockInterfaceManager) WallMessage() proxy.PropString {
+func (v *MockInterfaceManager) WallMessage() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1055,7 +1056,7 @@ func (v *mockInterfaceManager) WallMessage() proxy.PropString {
 
 // property NAutoVTs u
 
-func (v *mockInterfaceManager) NAutoVTs() proxy.PropUint32 {
+func (v *MockInterfaceManager) NAutoVTs() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -1068,7 +1069,7 @@ func (v *mockInterfaceManager) NAutoVTs() proxy.PropUint32 {
 
 // property KillOnlyUsers as
 
-func (v *mockInterfaceManager) KillOnlyUsers() proxy.PropStringArray {
+func (v *MockInterfaceManager) KillOnlyUsers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -1081,7 +1082,7 @@ func (v *mockInterfaceManager) KillOnlyUsers() proxy.PropStringArray {
 
 // property KillExcludeUsers as
 
-func (v *mockInterfaceManager) KillExcludeUsers() proxy.PropStringArray {
+func (v *MockInterfaceManager) KillExcludeUsers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -1094,7 +1095,7 @@ func (v *mockInterfaceManager) KillExcludeUsers() proxy.PropStringArray {
 
 // property KillUserProcesses b
 
-func (v *mockInterfaceManager) KillUserProcesses() proxy.PropBool {
+func (v *MockInterfaceManager) KillUserProcesses() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1107,7 +1108,7 @@ func (v *mockInterfaceManager) KillUserProcesses() proxy.PropBool {
 
 // property RebootToFirmwareSetup b
 
-func (v *mockInterfaceManager) RebootToFirmwareSetup() proxy.PropBool {
+func (v *MockInterfaceManager) RebootToFirmwareSetup() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1120,7 +1121,7 @@ func (v *mockInterfaceManager) RebootToFirmwareSetup() proxy.PropBool {
 
 // property IdleHint b
 
-func (v *mockInterfaceManager) IdleHint() proxy.PropBool {
+func (v *MockInterfaceManager) IdleHint() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1133,7 +1134,7 @@ func (v *mockInterfaceManager) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *mockInterfaceManager) IdleSinceHint() proxy.PropUint64 {
+func (v *MockInterfaceManager) IdleSinceHint() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1146,7 +1147,7 @@ func (v *mockInterfaceManager) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *mockInterfaceManager) IdleSinceHintMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceManager) IdleSinceHintMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1159,7 +1160,7 @@ func (v *mockInterfaceManager) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property BlockInhibited s
 
-func (v *mockInterfaceManager) BlockInhibited() proxy.PropString {
+func (v *MockInterfaceManager) BlockInhibited() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1172,7 +1173,7 @@ func (v *mockInterfaceManager) BlockInhibited() proxy.PropString {
 
 // property DelayInhibited s
 
-func (v *mockInterfaceManager) DelayInhibited() proxy.PropString {
+func (v *MockInterfaceManager) DelayInhibited() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1185,7 +1186,7 @@ func (v *mockInterfaceManager) DelayInhibited() proxy.PropString {
 
 // property InhibitDelayMaxUSec t
 
-func (v *mockInterfaceManager) InhibitDelayMaxUSec() proxy.PropUint64 {
+func (v *MockInterfaceManager) InhibitDelayMaxUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1198,7 +1199,7 @@ func (v *mockInterfaceManager) InhibitDelayMaxUSec() proxy.PropUint64 {
 
 // property HandlePowerKey s
 
-func (v *mockInterfaceManager) HandlePowerKey() proxy.PropString {
+func (v *MockInterfaceManager) HandlePowerKey() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1211,7 +1212,7 @@ func (v *mockInterfaceManager) HandlePowerKey() proxy.PropString {
 
 // property HandleSuspendKey s
 
-func (v *mockInterfaceManager) HandleSuspendKey() proxy.PropString {
+func (v *MockInterfaceManager) HandleSuspendKey() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1224,7 +1225,7 @@ func (v *mockInterfaceManager) HandleSuspendKey() proxy.PropString {
 
 // property HandleHibernateKey s
 
-func (v *mockInterfaceManager) HandleHibernateKey() proxy.PropString {
+func (v *MockInterfaceManager) HandleHibernateKey() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1237,7 +1238,7 @@ func (v *mockInterfaceManager) HandleHibernateKey() proxy.PropString {
 
 // property HandleLidSwitch s
 
-func (v *mockInterfaceManager) HandleLidSwitch() proxy.PropString {
+func (v *MockInterfaceManager) HandleLidSwitch() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1250,7 +1251,7 @@ func (v *mockInterfaceManager) HandleLidSwitch() proxy.PropString {
 
 // property HandleLidSwitchDocked s
 
-func (v *mockInterfaceManager) HandleLidSwitchDocked() proxy.PropString {
+func (v *MockInterfaceManager) HandleLidSwitchDocked() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1263,7 +1264,7 @@ func (v *mockInterfaceManager) HandleLidSwitchDocked() proxy.PropString {
 
 // property HoldoffTimeoutUSec t
 
-func (v *mockInterfaceManager) HoldoffTimeoutUSec() proxy.PropUint64 {
+func (v *MockInterfaceManager) HoldoffTimeoutUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1276,7 +1277,7 @@ func (v *mockInterfaceManager) HoldoffTimeoutUSec() proxy.PropUint64 {
 
 // property IdleAction s
 
-func (v *mockInterfaceManager) IdleAction() proxy.PropString {
+func (v *MockInterfaceManager) IdleAction() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1289,7 +1290,7 @@ func (v *mockInterfaceManager) IdleAction() proxy.PropString {
 
 // property IdleActionUSec t
 
-func (v *mockInterfaceManager) IdleActionUSec() proxy.PropUint64 {
+func (v *MockInterfaceManager) IdleActionUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1302,7 +1303,7 @@ func (v *mockInterfaceManager) IdleActionUSec() proxy.PropUint64 {
 
 // property PreparingForShutdown b
 
-func (v *mockInterfaceManager) PreparingForShutdown() proxy.PropBool {
+func (v *MockInterfaceManager) PreparingForShutdown() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1315,7 +1316,7 @@ func (v *mockInterfaceManager) PreparingForShutdown() proxy.PropBool {
 
 // property PreparingForSleep b
 
-func (v *mockInterfaceManager) PreparingForSleep() proxy.PropBool {
+func (v *MockInterfaceManager) PreparingForSleep() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1358,7 +1359,7 @@ func (p MockPropManagerScheduledShutdown) ConnectChanged(cb func(hasValue bool, 
 
 // property ScheduledShutdown (st)
 
-func (v *mockInterfaceManager) ScheduledShutdown() PropManagerScheduledShutdown {
+func (v *MockInterfaceManager) ScheduledShutdown() PropManagerScheduledShutdown {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropManagerScheduledShutdown)
@@ -1371,7 +1372,7 @@ func (v *mockInterfaceManager) ScheduledShutdown() PropManagerScheduledShutdown 
 
 // property Docked b
 
-func (v *mockInterfaceManager) Docked() proxy.PropBool {
+func (v *MockInterfaceManager) Docked() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1384,7 +1385,7 @@ func (v *mockInterfaceManager) Docked() proxy.PropBool {
 
 // property RemoveIPC b
 
-func (v *mockInterfaceManager) RemoveIPC() proxy.PropBool {
+func (v *MockInterfaceManager) RemoveIPC() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1397,7 +1398,7 @@ func (v *mockInterfaceManager) RemoveIPC() proxy.PropBool {
 
 // property RuntimeDirectorySize t
 
-func (v *mockInterfaceManager) RuntimeDirectorySize() proxy.PropUint64 {
+func (v *MockInterfaceManager) RuntimeDirectorySize() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1410,7 +1411,7 @@ func (v *mockInterfaceManager) RuntimeDirectorySize() proxy.PropUint64 {
 
 // property InhibitorsMax t
 
-func (v *mockInterfaceManager) InhibitorsMax() proxy.PropUint64 {
+func (v *MockInterfaceManager) InhibitorsMax() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1423,7 +1424,7 @@ func (v *mockInterfaceManager) InhibitorsMax() proxy.PropUint64 {
 
 // property NCurrentInhibitors t
 
-func (v *mockInterfaceManager) NCurrentInhibitors() proxy.PropUint64 {
+func (v *MockInterfaceManager) NCurrentInhibitors() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1436,7 +1437,7 @@ func (v *mockInterfaceManager) NCurrentInhibitors() proxy.PropUint64 {
 
 // property SessionsMax t
 
-func (v *mockInterfaceManager) SessionsMax() proxy.PropUint64 {
+func (v *MockInterfaceManager) SessionsMax() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1449,7 +1450,7 @@ func (v *mockInterfaceManager) SessionsMax() proxy.PropUint64 {
 
 // property NCurrentSessions t
 
-func (v *mockInterfaceManager) NCurrentSessions() proxy.PropUint64 {
+func (v *MockInterfaceManager) NCurrentSessions() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1462,7 +1463,7 @@ func (v *mockInterfaceManager) NCurrentSessions() proxy.PropUint64 {
 
 // property UserTasksMax t
 
-func (v *mockInterfaceManager) UserTasksMax() proxy.PropUint64 {
+func (v *MockInterfaceManager) UserTasksMax() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1474,16 +1475,17 @@ func (v *mockInterfaceManager) UserTasksMax() proxy.PropUint64 {
 }
 
 type MockSeat struct {
-	mockInterfaceSeat // interface org.freedesktop.login1.Seat
+	MockInterfaceSeat // interface org.freedesktop.login1.Seat
+	proxy.MockObject
 }
 
-type mockInterfaceSeat struct {
+type MockInterfaceSeat struct {
 	mock.Mock
 }
 
 // method Terminate
 
-func (v *mockInterfaceSeat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSeat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1494,7 +1496,7 @@ func (v *mockInterfaceSeat) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceSeat) Terminate(flags dbus.Flags) error {
+func (v *MockInterfaceSeat) Terminate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1502,7 +1504,7 @@ func (v *mockInterfaceSeat) Terminate(flags dbus.Flags) error {
 
 // method ActivateSession
 
-func (v *mockInterfaceSeat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
+func (v *MockInterfaceSeat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Call, sessionId string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, sessionId)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1513,7 +1515,7 @@ func (v *mockInterfaceSeat) GoActivateSession(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceSeat) ActivateSession(flags dbus.Flags, sessionId string) error {
+func (v *MockInterfaceSeat) ActivateSession(flags dbus.Flags, sessionId string) error {
 	mockArgs := v.Called(flags, sessionId)
 
 	return mockArgs.Error(0)
@@ -1521,7 +1523,7 @@ func (v *mockInterfaceSeat) ActivateSession(flags dbus.Flags, sessionId string) 
 
 // method SwitchTo
 
-func (v *mockInterfaceSeat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call {
+func (v *MockInterfaceSeat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtnr uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, vtnr)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1532,7 +1534,7 @@ func (v *mockInterfaceSeat) GoSwitchTo(flags dbus.Flags, ch chan *dbus.Call, vtn
 	return ret
 }
 
-func (v *mockInterfaceSeat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
+func (v *MockInterfaceSeat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
 	mockArgs := v.Called(flags, vtnr)
 
 	return mockArgs.Error(0)
@@ -1540,7 +1542,7 @@ func (v *mockInterfaceSeat) SwitchTo(flags dbus.Flags, vtnr uint32) error {
 
 // method SwitchToNext
 
-func (v *mockInterfaceSeat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSeat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1551,7 +1553,7 @@ func (v *mockInterfaceSeat) GoSwitchToNext(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceSeat) SwitchToNext(flags dbus.Flags) error {
+func (v *MockInterfaceSeat) SwitchToNext(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1559,7 +1561,7 @@ func (v *mockInterfaceSeat) SwitchToNext(flags dbus.Flags) error {
 
 // method SwitchToPrevious
 
-func (v *mockInterfaceSeat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSeat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1570,7 +1572,7 @@ func (v *mockInterfaceSeat) GoSwitchToPrevious(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceSeat) SwitchToPrevious(flags dbus.Flags) error {
+func (v *MockInterfaceSeat) SwitchToPrevious(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1578,7 +1580,7 @@ func (v *mockInterfaceSeat) SwitchToPrevious(flags dbus.Flags) error {
 
 // property Id s
 
-func (v *mockInterfaceSeat) Id() proxy.PropString {
+func (v *MockInterfaceSeat) Id() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1591,7 +1593,7 @@ func (v *mockInterfaceSeat) Id() proxy.PropString {
 
 // property ActiveSession (so)
 
-func (v *mockInterfaceSeat) ActiveSession() PropSessionInfo {
+func (v *MockInterfaceSeat) ActiveSession() PropSessionInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionInfo)
@@ -1604,7 +1606,7 @@ func (v *mockInterfaceSeat) ActiveSession() PropSessionInfo {
 
 // property CanMultiSession b
 
-func (v *mockInterfaceSeat) CanMultiSession() proxy.PropBool {
+func (v *MockInterfaceSeat) CanMultiSession() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1617,7 +1619,7 @@ func (v *mockInterfaceSeat) CanMultiSession() proxy.PropBool {
 
 // property CanTTY b
 
-func (v *mockInterfaceSeat) CanTTY() proxy.PropBool {
+func (v *MockInterfaceSeat) CanTTY() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1630,7 +1632,7 @@ func (v *mockInterfaceSeat) CanTTY() proxy.PropBool {
 
 // property CanGraphical b
 
-func (v *mockInterfaceSeat) CanGraphical() proxy.PropBool {
+func (v *MockInterfaceSeat) CanGraphical() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1643,7 +1645,7 @@ func (v *mockInterfaceSeat) CanGraphical() proxy.PropBool {
 
 // property Sessions a(so)
 
-func (v *mockInterfaceSeat) Sessions() PropSessionInfoSlice {
+func (v *MockInterfaceSeat) Sessions() PropSessionInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionInfoSlice)
@@ -1656,7 +1658,7 @@ func (v *mockInterfaceSeat) Sessions() PropSessionInfoSlice {
 
 // property IdleHint b
 
-func (v *mockInterfaceSeat) IdleHint() proxy.PropBool {
+func (v *MockInterfaceSeat) IdleHint() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1669,7 +1671,7 @@ func (v *mockInterfaceSeat) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *mockInterfaceSeat) IdleSinceHint() proxy.PropUint64 {
+func (v *MockInterfaceSeat) IdleSinceHint() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1682,7 +1684,7 @@ func (v *mockInterfaceSeat) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *mockInterfaceSeat) IdleSinceHintMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceSeat) IdleSinceHintMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -1694,16 +1696,17 @@ func (v *mockInterfaceSeat) IdleSinceHintMonotonic() proxy.PropUint64 {
 }
 
 type MockSession struct {
-	mockInterfaceSession // interface org.freedesktop.login1.Session
+	MockInterfaceSession // interface org.freedesktop.login1.Session
+	proxy.MockObject
 }
 
-type mockInterfaceSession struct {
+type MockInterfaceSession struct {
 	mock.Mock
 }
 
 // method Terminate
 
-func (v *mockInterfaceSession) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1714,7 +1717,7 @@ func (v *mockInterfaceSession) GoTerminate(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceSession) Terminate(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Terminate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1722,7 +1725,7 @@ func (v *mockInterfaceSession) Terminate(flags dbus.Flags) error {
 
 // method Activate
 
-func (v *mockInterfaceSession) GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1733,7 +1736,7 @@ func (v *mockInterfaceSession) GoActivate(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceSession) Activate(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Activate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1741,7 +1744,7 @@ func (v *mockInterfaceSession) Activate(flags dbus.Flags) error {
 
 // method Lock
 
-func (v *mockInterfaceSession) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1752,7 +1755,7 @@ func (v *mockInterfaceSession) GoLock(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceSession) Lock(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Lock(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1760,7 +1763,7 @@ func (v *mockInterfaceSession) Lock(flags dbus.Flags) error {
 
 // method Unlock
 
-func (v *mockInterfaceSession) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1771,7 +1774,7 @@ func (v *mockInterfaceSession) GoUnlock(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceSession) Unlock(flags dbus.Flags) error {
+func (v *MockInterfaceSession) Unlock(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1779,7 +1782,7 @@ func (v *mockInterfaceSession) Unlock(flags dbus.Flags) error {
 
 // method SetIdleHint
 
-func (v *mockInterfaceSession) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call {
+func (v *MockInterfaceSession) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Call, idle bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, idle)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1790,7 +1793,7 @@ func (v *mockInterfaceSession) GoSetIdleHint(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceSession) SetIdleHint(flags dbus.Flags, idle bool) error {
+func (v *MockInterfaceSession) SetIdleHint(flags dbus.Flags, idle bool) error {
 	mockArgs := v.Called(flags, idle)
 
 	return mockArgs.Error(0)
@@ -1798,7 +1801,7 @@ func (v *mockInterfaceSession) SetIdleHint(flags dbus.Flags, idle bool) error {
 
 // method SetLockedHint
 
-func (v *mockInterfaceSession) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
+func (v *MockInterfaceSession) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.Call, locked bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, locked)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1809,7 +1812,7 @@ func (v *mockInterfaceSession) GoSetLockedHint(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceSession) SetLockedHint(flags dbus.Flags, locked bool) error {
+func (v *MockInterfaceSession) SetLockedHint(flags dbus.Flags, locked bool) error {
 	mockArgs := v.Called(flags, locked)
 
 	return mockArgs.Error(0)
@@ -1817,7 +1820,7 @@ func (v *mockInterfaceSession) SetLockedHint(flags dbus.Flags, locked bool) erro
 
 // method Kill
 
-func (v *mockInterfaceSession) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call {
+func (v *MockInterfaceSession) GoKill(flags dbus.Flags, ch chan *dbus.Call, who string, signo int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, who, signo)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1828,7 +1831,7 @@ func (v *mockInterfaceSession) GoKill(flags dbus.Flags, ch chan *dbus.Call, who 
 	return ret
 }
 
-func (v *mockInterfaceSession) Kill(flags dbus.Flags, who string, signo int32) error {
+func (v *MockInterfaceSession) Kill(flags dbus.Flags, who string, signo int32) error {
 	mockArgs := v.Called(flags, who, signo)
 
 	return mockArgs.Error(0)
@@ -1836,7 +1839,7 @@ func (v *mockInterfaceSession) Kill(flags dbus.Flags, who string, signo int32) e
 
 // method TakeControl
 
-func (v *mockInterfaceSession) GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call {
+func (v *MockInterfaceSession) GoTakeControl(flags dbus.Flags, ch chan *dbus.Call, force bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, force)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1847,7 +1850,7 @@ func (v *mockInterfaceSession) GoTakeControl(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceSession) TakeControl(flags dbus.Flags, force bool) error {
+func (v *MockInterfaceSession) TakeControl(flags dbus.Flags, force bool) error {
 	mockArgs := v.Called(flags, force)
 
 	return mockArgs.Error(0)
@@ -1855,7 +1858,7 @@ func (v *mockInterfaceSession) TakeControl(flags dbus.Flags, force bool) error {
 
 // method ReleaseControl
 
-func (v *mockInterfaceSession) GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSession) GoReleaseControl(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1866,7 +1869,7 @@ func (v *mockInterfaceSession) GoReleaseControl(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceSession) ReleaseControl(flags dbus.Flags) error {
+func (v *MockInterfaceSession) ReleaseControl(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -1874,7 +1877,7 @@ func (v *mockInterfaceSession) ReleaseControl(flags dbus.Flags) error {
 
 // method TakeDevice
 
-func (v *mockInterfaceSession) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *MockInterfaceSession) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, major, minor)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1885,7 +1888,7 @@ func (v *mockInterfaceSession) GoTakeDevice(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceSession) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (dbus.UnixFD, bool, error) {
+func (v *MockInterfaceSession) TakeDevice(flags dbus.Flags, major uint32, minor uint32) (dbus.UnixFD, bool, error) {
 	mockArgs := v.Called(flags, major, minor)
 
 	ret0, ok := mockArgs.Get(0).(dbus.UnixFD)
@@ -1903,7 +1906,7 @@ func (v *mockInterfaceSession) TakeDevice(flags dbus.Flags, major uint32, minor 
 
 // method ReleaseDevice
 
-func (v *mockInterfaceSession) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *MockInterfaceSession) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, major, minor)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1914,7 +1917,7 @@ func (v *mockInterfaceSession) GoReleaseDevice(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceSession) ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error {
+func (v *MockInterfaceSession) ReleaseDevice(flags dbus.Flags, major uint32, minor uint32) error {
 	mockArgs := v.Called(flags, major, minor)
 
 	return mockArgs.Error(0)
@@ -1922,7 +1925,7 @@ func (v *mockInterfaceSession) ReleaseDevice(flags dbus.Flags, major uint32, min
 
 // method PauseDeviceComplete
 
-func (v *mockInterfaceSession) GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
+func (v *MockInterfaceSession) GoPauseDeviceComplete(flags dbus.Flags, ch chan *dbus.Call, major uint32, minor uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, major, minor)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1933,7 +1936,7 @@ func (v *mockInterfaceSession) GoPauseDeviceComplete(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceSession) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error {
+func (v *MockInterfaceSession) PauseDeviceComplete(flags dbus.Flags, major uint32, minor uint32) error {
 	mockArgs := v.Called(flags, major, minor)
 
 	return mockArgs.Error(0)
@@ -1941,7 +1944,7 @@ func (v *mockInterfaceSession) PauseDeviceComplete(flags dbus.Flags, major uint3
 
 // signal PauseDevice
 
-func (v *mockInterfaceSession) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceSession) ConnectPauseDevice(cb func(major uint32, minor uint32, type0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1954,7 +1957,7 @@ func (v *mockInterfaceSession) ConnectPauseDevice(cb func(major uint32, minor ui
 
 // signal ResumeDevice
 
-func (v *mockInterfaceSession) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceSession) ConnectResumeDevice(cb func(major uint32, minor uint32, fd dbus.UnixFD)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1967,7 +1970,7 @@ func (v *mockInterfaceSession) ConnectResumeDevice(cb func(major uint32, minor u
 
 // signal Lock
 
-func (v *mockInterfaceSession) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceSession) ConnectLock(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1980,7 +1983,7 @@ func (v *mockInterfaceSession) ConnectLock(cb func()) (dbusutil.SignalHandlerId,
 
 // signal Unlock
 
-func (v *mockInterfaceSession) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceSession) ConnectUnlock(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1993,7 +1996,7 @@ func (v *mockInterfaceSession) ConnectUnlock(cb func()) (dbusutil.SignalHandlerI
 
 // property Id s
 
-func (v *mockInterfaceSession) Id() proxy.PropString {
+func (v *MockInterfaceSession) Id() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2036,7 +2039,7 @@ func (p MockPropSessionUser) ConnectChanged(cb func(hasValue bool, value UserInf
 
 // property User (uo)
 
-func (v *mockInterfaceSession) User() PropSessionUser {
+func (v *MockInterfaceSession) User() PropSessionUser {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionUser)
@@ -2049,7 +2052,7 @@ func (v *mockInterfaceSession) User() PropSessionUser {
 
 // property Name s
 
-func (v *mockInterfaceSession) Name() proxy.PropString {
+func (v *MockInterfaceSession) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2062,7 +2065,7 @@ func (v *mockInterfaceSession) Name() proxy.PropString {
 
 // property Timestamp t
 
-func (v *mockInterfaceSession) Timestamp() proxy.PropUint64 {
+func (v *MockInterfaceSession) Timestamp() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2075,7 +2078,7 @@ func (v *mockInterfaceSession) Timestamp() proxy.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *mockInterfaceSession) TimestampMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceSession) TimestampMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2088,7 +2091,7 @@ func (v *mockInterfaceSession) TimestampMonotonic() proxy.PropUint64 {
 
 // property VTNr u
 
-func (v *mockInterfaceSession) VTNr() proxy.PropUint32 {
+func (v *MockInterfaceSession) VTNr() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -2131,7 +2134,7 @@ func (p MockPropSessionSeat) ConnectChanged(cb func(hasValue bool, value SeatInf
 
 // property Seat (so)
 
-func (v *mockInterfaceSession) Seat() PropSessionSeat {
+func (v *MockInterfaceSession) Seat() PropSessionSeat {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionSeat)
@@ -2144,7 +2147,7 @@ func (v *mockInterfaceSession) Seat() PropSessionSeat {
 
 // property TTY s
 
-func (v *mockInterfaceSession) TTY() proxy.PropString {
+func (v *MockInterfaceSession) TTY() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2157,7 +2160,7 @@ func (v *mockInterfaceSession) TTY() proxy.PropString {
 
 // property Display s
 
-func (v *mockInterfaceSession) Display() proxy.PropString {
+func (v *MockInterfaceSession) Display() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2170,7 +2173,7 @@ func (v *mockInterfaceSession) Display() proxy.PropString {
 
 // property Remote b
 
-func (v *mockInterfaceSession) Remote() proxy.PropBool {
+func (v *MockInterfaceSession) Remote() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -2183,7 +2186,7 @@ func (v *mockInterfaceSession) Remote() proxy.PropBool {
 
 // property RemoteHost s
 
-func (v *mockInterfaceSession) RemoteHost() proxy.PropString {
+func (v *MockInterfaceSession) RemoteHost() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2196,7 +2199,7 @@ func (v *mockInterfaceSession) RemoteHost() proxy.PropString {
 
 // property RemoteUser s
 
-func (v *mockInterfaceSession) RemoteUser() proxy.PropString {
+func (v *MockInterfaceSession) RemoteUser() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2209,7 +2212,7 @@ func (v *mockInterfaceSession) RemoteUser() proxy.PropString {
 
 // property Service s
 
-func (v *mockInterfaceSession) Service() proxy.PropString {
+func (v *MockInterfaceSession) Service() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2222,7 +2225,7 @@ func (v *mockInterfaceSession) Service() proxy.PropString {
 
 // property Desktop s
 
-func (v *mockInterfaceSession) Desktop() proxy.PropString {
+func (v *MockInterfaceSession) Desktop() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2235,7 +2238,7 @@ func (v *mockInterfaceSession) Desktop() proxy.PropString {
 
 // property Scope s
 
-func (v *mockInterfaceSession) Scope() proxy.PropString {
+func (v *MockInterfaceSession) Scope() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2248,7 +2251,7 @@ func (v *mockInterfaceSession) Scope() proxy.PropString {
 
 // property Leader u
 
-func (v *mockInterfaceSession) Leader() proxy.PropUint32 {
+func (v *MockInterfaceSession) Leader() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -2261,7 +2264,7 @@ func (v *mockInterfaceSession) Leader() proxy.PropUint32 {
 
 // property Audit u
 
-func (v *mockInterfaceSession) Audit() proxy.PropUint32 {
+func (v *MockInterfaceSession) Audit() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -2274,7 +2277,7 @@ func (v *mockInterfaceSession) Audit() proxy.PropUint32 {
 
 // property Type s
 
-func (v *mockInterfaceSession) Type() proxy.PropString {
+func (v *MockInterfaceSession) Type() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2287,7 +2290,7 @@ func (v *mockInterfaceSession) Type() proxy.PropString {
 
 // property Class s
 
-func (v *mockInterfaceSession) Class() proxy.PropString {
+func (v *MockInterfaceSession) Class() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2300,7 +2303,7 @@ func (v *mockInterfaceSession) Class() proxy.PropString {
 
 // property Active b
 
-func (v *mockInterfaceSession) Active() proxy.PropBool {
+func (v *MockInterfaceSession) Active() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -2313,7 +2316,7 @@ func (v *mockInterfaceSession) Active() proxy.PropBool {
 
 // property State s
 
-func (v *mockInterfaceSession) State() proxy.PropString {
+func (v *MockInterfaceSession) State() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2326,7 +2329,7 @@ func (v *mockInterfaceSession) State() proxy.PropString {
 
 // property IdleHint b
 
-func (v *mockInterfaceSession) IdleHint() proxy.PropBool {
+func (v *MockInterfaceSession) IdleHint() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -2339,7 +2342,7 @@ func (v *mockInterfaceSession) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *mockInterfaceSession) IdleSinceHint() proxy.PropUint64 {
+func (v *MockInterfaceSession) IdleSinceHint() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2352,7 +2355,7 @@ func (v *mockInterfaceSession) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *mockInterfaceSession) IdleSinceHintMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceSession) IdleSinceHintMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2365,7 +2368,7 @@ func (v *mockInterfaceSession) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property LockedHint b
 
-func (v *mockInterfaceSession) LockedHint() proxy.PropBool {
+func (v *MockInterfaceSession) LockedHint() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -2377,16 +2380,17 @@ func (v *mockInterfaceSession) LockedHint() proxy.PropBool {
 }
 
 type MockUser struct {
-	mockInterfaceUser // interface org.freedesktop.login1.User
+	MockInterfaceUser // interface org.freedesktop.login1.User
+	proxy.MockObject
 }
 
-type mockInterfaceUser struct {
+type MockInterfaceUser struct {
 	mock.Mock
 }
 
 // method Terminate
 
-func (v *mockInterfaceUser) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceUser) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -2397,7 +2401,7 @@ func (v *mockInterfaceUser) GoTerminate(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceUser) Terminate(flags dbus.Flags) error {
+func (v *MockInterfaceUser) Terminate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -2405,7 +2409,7 @@ func (v *mockInterfaceUser) Terminate(flags dbus.Flags) error {
 
 // method Kill
 
-func (v *mockInterfaceUser) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call {
+func (v *MockInterfaceUser) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, signo)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -2416,7 +2420,7 @@ func (v *mockInterfaceUser) GoKill(flags dbus.Flags, ch chan *dbus.Call, signo i
 	return ret
 }
 
-func (v *mockInterfaceUser) Kill(flags dbus.Flags, signo int32) error {
+func (v *MockInterfaceUser) Kill(flags dbus.Flags, signo int32) error {
 	mockArgs := v.Called(flags, signo)
 
 	return mockArgs.Error(0)
@@ -2424,7 +2428,7 @@ func (v *mockInterfaceUser) Kill(flags dbus.Flags, signo int32) error {
 
 // property UID u
 
-func (v *mockInterfaceUser) UID() proxy.PropUint32 {
+func (v *MockInterfaceUser) UID() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -2437,7 +2441,7 @@ func (v *mockInterfaceUser) UID() proxy.PropUint32 {
 
 // property GID u
 
-func (v *mockInterfaceUser) GID() proxy.PropUint32 {
+func (v *MockInterfaceUser) GID() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -2450,7 +2454,7 @@ func (v *mockInterfaceUser) GID() proxy.PropUint32 {
 
 // property Name s
 
-func (v *mockInterfaceUser) Name() proxy.PropString {
+func (v *MockInterfaceUser) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2463,7 +2467,7 @@ func (v *mockInterfaceUser) Name() proxy.PropString {
 
 // property Timestamp t
 
-func (v *mockInterfaceUser) Timestamp() proxy.PropUint64 {
+func (v *MockInterfaceUser) Timestamp() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2476,7 +2480,7 @@ func (v *mockInterfaceUser) Timestamp() proxy.PropUint64 {
 
 // property TimestampMonotonic t
 
-func (v *mockInterfaceUser) TimestampMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceUser) TimestampMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2489,7 +2493,7 @@ func (v *mockInterfaceUser) TimestampMonotonic() proxy.PropUint64 {
 
 // property RuntimePath s
 
-func (v *mockInterfaceUser) RuntimePath() proxy.PropString {
+func (v *MockInterfaceUser) RuntimePath() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2502,7 +2506,7 @@ func (v *mockInterfaceUser) RuntimePath() proxy.PropString {
 
 // property Service s
 
-func (v *mockInterfaceUser) Service() proxy.PropString {
+func (v *MockInterfaceUser) Service() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2515,7 +2519,7 @@ func (v *mockInterfaceUser) Service() proxy.PropString {
 
 // property Slice s
 
-func (v *mockInterfaceUser) Slice() proxy.PropString {
+func (v *MockInterfaceUser) Slice() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2528,7 +2532,7 @@ func (v *mockInterfaceUser) Slice() proxy.PropString {
 
 // property Display (so)
 
-func (v *mockInterfaceUser) Display() PropSessionInfo {
+func (v *MockInterfaceUser) Display() PropSessionInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionInfo)
@@ -2541,7 +2545,7 @@ func (v *mockInterfaceUser) Display() PropSessionInfo {
 
 // property State s
 
-func (v *mockInterfaceUser) State() proxy.PropString {
+func (v *MockInterfaceUser) State() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -2554,7 +2558,7 @@ func (v *mockInterfaceUser) State() proxy.PropString {
 
 // property Sessions a(so)
 
-func (v *mockInterfaceUser) Sessions() PropSessionInfoSlice {
+func (v *MockInterfaceUser) Sessions() PropSessionInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropSessionInfoSlice)
@@ -2567,7 +2571,7 @@ func (v *mockInterfaceUser) Sessions() PropSessionInfoSlice {
 
 // property IdleHint b
 
-func (v *mockInterfaceUser) IdleHint() proxy.PropBool {
+func (v *MockInterfaceUser) IdleHint() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -2580,7 +2584,7 @@ func (v *mockInterfaceUser) IdleHint() proxy.PropBool {
 
 // property IdleSinceHint t
 
-func (v *mockInterfaceUser) IdleSinceHint() proxy.PropUint64 {
+func (v *MockInterfaceUser) IdleSinceHint() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2593,7 +2597,7 @@ func (v *mockInterfaceUser) IdleSinceHint() proxy.PropUint64 {
 
 // property IdleSinceHintMonotonic t
 
-func (v *mockInterfaceUser) IdleSinceHintMonotonic() proxy.PropUint64 {
+func (v *MockInterfaceUser) IdleSinceHintMonotonic() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -2606,7 +2610,7 @@ func (v *mockInterfaceUser) IdleSinceHintMonotonic() proxy.PropUint64 {
 
 // property Linger b
 
-func (v *mockInterfaceUser) Linger() proxy.PropBool {
+func (v *MockInterfaceUser) Linger() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
