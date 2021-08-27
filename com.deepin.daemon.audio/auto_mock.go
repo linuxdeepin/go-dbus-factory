@@ -11,16 +11,17 @@ import (
 )
 
 type MockAudio struct {
-	mockInterfaceAudio // interface com.deepin.daemon.Audio
+	MockInterfaceAudio // interface com.deepin.daemon.Audio
+	proxy.MockObject
 }
 
-type mockInterfaceAudio struct {
+type MockInterfaceAudio struct {
 	mock.Mock
 }
 
 // method SetDefaultSink
 
-func (v *mockInterfaceAudio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceAudio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceAudio) GoSetDefaultSink(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceAudio) SetDefaultSink(flags dbus.Flags, name string) error {
+func (v *MockInterfaceAudio) SetDefaultSink(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceAudio) SetDefaultSink(flags dbus.Flags, name string) error
 
 // method SetDefaultSource
 
-func (v *mockInterfaceAudio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceAudio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceAudio) GoSetDefaultSource(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceAudio) SetDefaultSource(flags dbus.Flags, name string) error {
+func (v *MockInterfaceAudio) SetDefaultSource(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceAudio) SetDefaultSource(flags dbus.Flags, name string) err
 
 // method SetPort
 
-func (v *mockInterfaceAudio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call {
+func (v *MockInterfaceAudio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, direction int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cardId, portName, direction)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceAudio) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, car
 	return ret
 }
 
-func (v *mockInterfaceAudio) SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error {
+func (v *MockInterfaceAudio) SetPort(flags dbus.Flags, cardId uint32, portName string, direction int32) error {
 	mockArgs := v.Called(flags, cardId, portName, direction)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceAudio) SetPort(flags dbus.Flags, cardId uint32, portName s
 
 // method SetPortEnabled
 
-func (v *mockInterfaceAudio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call {
+func (v *MockInterfaceAudio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string, enabled bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cardId, portName, enabled)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceAudio) GoSetPortEnabled(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceAudio) SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error {
+func (v *MockInterfaceAudio) SetPortEnabled(flags dbus.Flags, cardId uint32, portName string, enabled bool) error {
 	mockArgs := v.Called(flags, cardId, portName, enabled)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceAudio) SetPortEnabled(flags dbus.Flags, cardId uint32, por
 
 // method IsPortEnabled
 
-func (v *mockInterfaceAudio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call {
+func (v *MockInterfaceAudio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Call, cardId uint32, portName string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, cardId, portName)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +108,7 @@ func (v *mockInterfaceAudio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceAudio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (bool, error) {
+func (v *MockInterfaceAudio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (bool, error) {
 	mockArgs := v.Called(flags, cardId, portName)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -120,7 +121,7 @@ func (v *mockInterfaceAudio) IsPortEnabled(flags dbus.Flags, cardId uint32, port
 
 // property MaxUIVolume d
 
-func (v *mockInterfaceAudio) MaxUIVolume() proxy.PropDouble {
+func (v *MockInterfaceAudio) MaxUIVolume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -133,7 +134,7 @@ func (v *mockInterfaceAudio) MaxUIVolume() proxy.PropDouble {
 
 // property SinkInputs ao
 
-func (v *mockInterfaceAudio) SinkInputs() proxy.PropObjectPathArray {
+func (v *MockInterfaceAudio) SinkInputs() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -146,7 +147,7 @@ func (v *mockInterfaceAudio) SinkInputs() proxy.PropObjectPathArray {
 
 // property DefaultSink o
 
-func (v *mockInterfaceAudio) DefaultSink() proxy.PropObjectPath {
+func (v *MockInterfaceAudio) DefaultSink() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -159,7 +160,7 @@ func (v *mockInterfaceAudio) DefaultSink() proxy.PropObjectPath {
 
 // property DefaultSource o
 
-func (v *mockInterfaceAudio) DefaultSource() proxy.PropObjectPath {
+func (v *MockInterfaceAudio) DefaultSource() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -172,7 +173,7 @@ func (v *mockInterfaceAudio) DefaultSource() proxy.PropObjectPath {
 
 // property Cards s
 
-func (v *mockInterfaceAudio) Cards() proxy.PropString {
+func (v *MockInterfaceAudio) Cards() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -185,7 +186,7 @@ func (v *mockInterfaceAudio) Cards() proxy.PropString {
 
 // property CardsWithoutUnavailable s
 
-func (v *mockInterfaceAudio) CardsWithoutUnavailable() proxy.PropString {
+func (v *MockInterfaceAudio) CardsWithoutUnavailable() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -197,16 +198,17 @@ func (v *mockInterfaceAudio) CardsWithoutUnavailable() proxy.PropString {
 }
 
 type MockSink struct {
-	mockInterfaceSink // interface com.deepin.daemon.Audio.Sink
+	MockInterfaceSink // interface com.deepin.daemon.Audio.Sink
+	proxy.MockObject
 }
 
-type mockInterfaceSink struct {
+type MockInterfaceSink struct {
 	mock.Mock
 }
 
 // method GetMeter
 
-func (v *mockInterfaceSink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -217,7 +219,7 @@ func (v *mockInterfaceSink) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceSink) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceSink) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -230,7 +232,7 @@ func (v *mockInterfaceSink) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) 
 
 // method SetBalance
 
-func (v *mockInterfaceSink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -241,7 +243,7 @@ func (v *mockInterfaceSink) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, v
 	return ret
 }
 
-func (v *mockInterfaceSink) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSink) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -249,7 +251,7 @@ func (v *mockInterfaceSink) SetBalance(flags dbus.Flags, value float64, isPlay b
 
 // method SetFade
 
-func (v *mockInterfaceSink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *MockInterfaceSink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -260,7 +262,7 @@ func (v *mockInterfaceSink) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, valu
 	return ret
 }
 
-func (v *mockInterfaceSink) SetFade(flags dbus.Flags, value float64) error {
+func (v *MockInterfaceSink) SetFade(flags dbus.Flags, value float64) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -268,7 +270,7 @@ func (v *mockInterfaceSink) SetFade(flags dbus.Flags, value float64) error {
 
 // method SetMute
 
-func (v *mockInterfaceSink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *MockInterfaceSink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -279,7 +281,7 @@ func (v *mockInterfaceSink) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, valu
 	return ret
 }
 
-func (v *mockInterfaceSink) SetMute(flags dbus.Flags, value bool) error {
+func (v *MockInterfaceSink) SetMute(flags dbus.Flags, value bool) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -287,7 +289,7 @@ func (v *mockInterfaceSink) SetMute(flags dbus.Flags, value bool) error {
 
 // method SetPort
 
-func (v *mockInterfaceSink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceSink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -298,7 +300,7 @@ func (v *mockInterfaceSink) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name
 	return ret
 }
 
-func (v *mockInterfaceSink) SetPort(flags dbus.Flags, name string) error {
+func (v *MockInterfaceSink) SetPort(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)
@@ -306,7 +308,7 @@ func (v *mockInterfaceSink) SetPort(flags dbus.Flags, name string) error {
 
 // method SetVolume
 
-func (v *mockInterfaceSink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -317,7 +319,7 @@ func (v *mockInterfaceSink) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, va
 	return ret
 }
 
-func (v *mockInterfaceSink) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSink) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -325,7 +327,7 @@ func (v *mockInterfaceSink) SetVolume(flags dbus.Flags, value float64, isPlay bo
 
 // property SupportBalance b
 
-func (v *mockInterfaceSink) SupportBalance() proxy.PropBool {
+func (v *MockInterfaceSink) SupportBalance() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -338,7 +340,7 @@ func (v *mockInterfaceSink) SupportBalance() proxy.PropBool {
 
 // property Ports a(ssy)
 
-func (v *mockInterfaceSink) Ports() PropPortInfoSlice {
+func (v *MockInterfaceSink) Ports() PropPortInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropPortInfoSlice)
@@ -351,7 +353,7 @@ func (v *mockInterfaceSink) Ports() PropPortInfoSlice {
 
 // property Name s
 
-func (v *mockInterfaceSink) Name() proxy.PropString {
+func (v *MockInterfaceSink) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -364,7 +366,7 @@ func (v *mockInterfaceSink) Name() proxy.PropString {
 
 // property Mute b
 
-func (v *mockInterfaceSink) Mute() proxy.PropBool {
+func (v *MockInterfaceSink) Mute() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -377,7 +379,7 @@ func (v *mockInterfaceSink) Mute() proxy.PropBool {
 
 // property Volume d
 
-func (v *mockInterfaceSink) Volume() proxy.PropDouble {
+func (v *MockInterfaceSink) Volume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -390,7 +392,7 @@ func (v *mockInterfaceSink) Volume() proxy.PropDouble {
 
 // property Balance d
 
-func (v *mockInterfaceSink) Balance() proxy.PropDouble {
+func (v *MockInterfaceSink) Balance() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -403,7 +405,7 @@ func (v *mockInterfaceSink) Balance() proxy.PropDouble {
 
 // property ActivePort (ssy)
 
-func (v *mockInterfaceSink) ActivePort() PropPortInfo {
+func (v *MockInterfaceSink) ActivePort() PropPortInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropPortInfo)
@@ -416,7 +418,7 @@ func (v *mockInterfaceSink) ActivePort() PropPortInfo {
 
 // property Card u
 
-func (v *mockInterfaceSink) Card() proxy.PropUint32 {
+func (v *MockInterfaceSink) Card() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -429,7 +431,7 @@ func (v *mockInterfaceSink) Card() proxy.PropUint32 {
 
 // property Description s
 
-func (v *mockInterfaceSink) Description() proxy.PropString {
+func (v *MockInterfaceSink) Description() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -442,7 +444,7 @@ func (v *mockInterfaceSink) Description() proxy.PropString {
 
 // property BaseVolume d
 
-func (v *mockInterfaceSink) BaseVolume() proxy.PropDouble {
+func (v *MockInterfaceSink) BaseVolume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -455,7 +457,7 @@ func (v *mockInterfaceSink) BaseVolume() proxy.PropDouble {
 
 // property Fade d
 
-func (v *mockInterfaceSink) Fade() proxy.PropDouble {
+func (v *MockInterfaceSink) Fade() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -468,7 +470,7 @@ func (v *mockInterfaceSink) Fade() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *mockInterfaceSink) SupportFade() proxy.PropBool {
+func (v *MockInterfaceSink) SupportFade() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -480,16 +482,17 @@ func (v *mockInterfaceSink) SupportFade() proxy.PropBool {
 }
 
 type MockSource struct {
-	mockInterfaceSource // interface com.deepin.daemon.Audio.Source
+	MockInterfaceSource // interface com.deepin.daemon.Audio.Source
+	proxy.MockObject
 }
 
-type mockInterfaceSource struct {
+type MockInterfaceSource struct {
 	mock.Mock
 }
 
 // method GetMeter
 
-func (v *mockInterfaceSource) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceSource) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -500,7 +503,7 @@ func (v *mockInterfaceSource) GoGetMeter(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceSource) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
+func (v *MockInterfaceSource) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -513,7 +516,7 @@ func (v *mockInterfaceSource) GetMeter(flags dbus.Flags) (dbus.ObjectPath, error
 
 // method SetBalance
 
-func (v *mockInterfaceSource) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSource) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -524,7 +527,7 @@ func (v *mockInterfaceSource) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceSource) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSource) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -532,7 +535,7 @@ func (v *mockInterfaceSource) SetBalance(flags dbus.Flags, value float64, isPlay
 
 // method SetFade
 
-func (v *mockInterfaceSource) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *MockInterfaceSource) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -543,7 +546,7 @@ func (v *mockInterfaceSource) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, va
 	return ret
 }
 
-func (v *mockInterfaceSource) SetFade(flags dbus.Flags, value float64) error {
+func (v *MockInterfaceSource) SetFade(flags dbus.Flags, value float64) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -551,7 +554,7 @@ func (v *mockInterfaceSource) SetFade(flags dbus.Flags, value float64) error {
 
 // method SetMute
 
-func (v *mockInterfaceSource) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *MockInterfaceSource) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -562,7 +565,7 @@ func (v *mockInterfaceSource) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, va
 	return ret
 }
 
-func (v *mockInterfaceSource) SetMute(flags dbus.Flags, value bool) error {
+func (v *MockInterfaceSource) SetMute(flags dbus.Flags, value bool) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -570,7 +573,7 @@ func (v *mockInterfaceSource) SetMute(flags dbus.Flags, value bool) error {
 
 // method SetPort
 
-func (v *mockInterfaceSource) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
+func (v *MockInterfaceSource) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, name string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -581,7 +584,7 @@ func (v *mockInterfaceSource) GoSetPort(flags dbus.Flags, ch chan *dbus.Call, na
 	return ret
 }
 
-func (v *mockInterfaceSource) SetPort(flags dbus.Flags, name string) error {
+func (v *MockInterfaceSource) SetPort(flags dbus.Flags, name string) error {
 	mockArgs := v.Called(flags, name)
 
 	return mockArgs.Error(0)
@@ -589,7 +592,7 @@ func (v *mockInterfaceSource) SetPort(flags dbus.Flags, name string) error {
 
 // method SetVolume
 
-func (v *mockInterfaceSource) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSource) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -600,7 +603,7 @@ func (v *mockInterfaceSource) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceSource) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSource) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -608,7 +611,7 @@ func (v *mockInterfaceSource) SetVolume(flags dbus.Flags, value float64, isPlay 
 
 // property Mute b
 
-func (v *mockInterfaceSource) Mute() proxy.PropBool {
+func (v *MockInterfaceSource) Mute() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -621,7 +624,7 @@ func (v *mockInterfaceSource) Mute() proxy.PropBool {
 
 // property Balance d
 
-func (v *mockInterfaceSource) Balance() proxy.PropDouble {
+func (v *MockInterfaceSource) Balance() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -634,7 +637,7 @@ func (v *mockInterfaceSource) Balance() proxy.PropDouble {
 
 // property SupportBalance b
 
-func (v *mockInterfaceSource) SupportBalance() proxy.PropBool {
+func (v *MockInterfaceSource) SupportBalance() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -647,7 +650,7 @@ func (v *mockInterfaceSource) SupportBalance() proxy.PropBool {
 
 // property Fade d
 
-func (v *mockInterfaceSource) Fade() proxy.PropDouble {
+func (v *MockInterfaceSource) Fade() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -660,7 +663,7 @@ func (v *mockInterfaceSource) Fade() proxy.PropDouble {
 
 // property Ports a(ssy)
 
-func (v *mockInterfaceSource) Ports() PropPortInfoSlice {
+func (v *MockInterfaceSource) Ports() PropPortInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropPortInfoSlice)
@@ -673,7 +676,7 @@ func (v *mockInterfaceSource) Ports() PropPortInfoSlice {
 
 // property Card u
 
-func (v *mockInterfaceSource) Card() proxy.PropUint32 {
+func (v *MockInterfaceSource) Card() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -686,7 +689,7 @@ func (v *mockInterfaceSource) Card() proxy.PropUint32 {
 
 // property BaseVolume d
 
-func (v *mockInterfaceSource) BaseVolume() proxy.PropDouble {
+func (v *MockInterfaceSource) BaseVolume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -699,7 +702,7 @@ func (v *mockInterfaceSource) BaseVolume() proxy.PropDouble {
 
 // property Description s
 
-func (v *mockInterfaceSource) Description() proxy.PropString {
+func (v *MockInterfaceSource) Description() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -712,7 +715,7 @@ func (v *mockInterfaceSource) Description() proxy.PropString {
 
 // property Volume d
 
-func (v *mockInterfaceSource) Volume() proxy.PropDouble {
+func (v *MockInterfaceSource) Volume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -725,7 +728,7 @@ func (v *mockInterfaceSource) Volume() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *mockInterfaceSource) SupportFade() proxy.PropBool {
+func (v *MockInterfaceSource) SupportFade() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -738,7 +741,7 @@ func (v *mockInterfaceSource) SupportFade() proxy.PropBool {
 
 // property ActivePort (ssy)
 
-func (v *mockInterfaceSource) ActivePort() PropPortInfo {
+func (v *MockInterfaceSource) ActivePort() PropPortInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropPortInfo)
@@ -751,7 +754,7 @@ func (v *mockInterfaceSource) ActivePort() PropPortInfo {
 
 // property Name s
 
-func (v *mockInterfaceSource) Name() proxy.PropString {
+func (v *MockInterfaceSource) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -763,16 +766,17 @@ func (v *mockInterfaceSource) Name() proxy.PropString {
 }
 
 type MockSinkInput struct {
-	mockInterfaceSinkInput // interface com.deepin.daemon.Audio.SinkInput
+	MockInterfaceSinkInput // interface com.deepin.daemon.Audio.SinkInput
+	proxy.MockObject
 }
 
-type mockInterfaceSinkInput struct {
+type MockInterfaceSinkInput struct {
 	mock.Mock
 }
 
 // method SetBalance
 
-func (v *mockInterfaceSinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -783,7 +787,7 @@ func (v *mockInterfaceSinkInput) GoSetBalance(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceSinkInput) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSinkInput) SetBalance(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -791,7 +795,7 @@ func (v *mockInterfaceSinkInput) SetBalance(flags dbus.Flags, value float64, isP
 
 // method SetFade
 
-func (v *mockInterfaceSinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
+func (v *MockInterfaceSinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call, value float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -802,7 +806,7 @@ func (v *mockInterfaceSinkInput) GoSetFade(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceSinkInput) SetFade(flags dbus.Flags, value float64) error {
+func (v *MockInterfaceSinkInput) SetFade(flags dbus.Flags, value float64) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -810,7 +814,7 @@ func (v *mockInterfaceSinkInput) SetFade(flags dbus.Flags, value float64) error 
 
 // method SetMute
 
-func (v *mockInterfaceSinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
+func (v *MockInterfaceSinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -821,7 +825,7 @@ func (v *mockInterfaceSinkInput) GoSetMute(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceSinkInput) SetMute(flags dbus.Flags, value bool) error {
+func (v *MockInterfaceSinkInput) SetMute(flags dbus.Flags, value bool) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -829,7 +833,7 @@ func (v *mockInterfaceSinkInput) SetMute(flags dbus.Flags, value bool) error {
 
 // method SetVolume
 
-func (v *mockInterfaceSinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
+func (v *MockInterfaceSinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Call, value float64, isPlay bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value, isPlay)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -840,7 +844,7 @@ func (v *mockInterfaceSinkInput) GoSetVolume(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceSinkInput) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
+func (v *MockInterfaceSinkInput) SetVolume(flags dbus.Flags, value float64, isPlay bool) error {
 	mockArgs := v.Called(flags, value, isPlay)
 
 	return mockArgs.Error(0)
@@ -848,7 +852,7 @@ func (v *mockInterfaceSinkInput) SetVolume(flags dbus.Flags, value float64, isPl
 
 // property Volume d
 
-func (v *mockInterfaceSinkInput) Volume() proxy.PropDouble {
+func (v *MockInterfaceSinkInput) Volume() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -861,7 +865,7 @@ func (v *mockInterfaceSinkInput) Volume() proxy.PropDouble {
 
 // property Balance d
 
-func (v *mockInterfaceSinkInput) Balance() proxy.PropDouble {
+func (v *MockInterfaceSinkInput) Balance() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -874,7 +878,7 @@ func (v *mockInterfaceSinkInput) Balance() proxy.PropDouble {
 
 // property SupportBalance b
 
-func (v *mockInterfaceSinkInput) SupportBalance() proxy.PropBool {
+func (v *MockInterfaceSinkInput) SupportBalance() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -887,7 +891,7 @@ func (v *mockInterfaceSinkInput) SupportBalance() proxy.PropBool {
 
 // property Fade d
 
-func (v *mockInterfaceSinkInput) Fade() proxy.PropDouble {
+func (v *MockInterfaceSinkInput) Fade() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -900,7 +904,7 @@ func (v *mockInterfaceSinkInput) Fade() proxy.PropDouble {
 
 // property SupportFade b
 
-func (v *mockInterfaceSinkInput) SupportFade() proxy.PropBool {
+func (v *MockInterfaceSinkInput) SupportFade() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -913,7 +917,7 @@ func (v *mockInterfaceSinkInput) SupportFade() proxy.PropBool {
 
 // property Name s
 
-func (v *mockInterfaceSinkInput) Name() proxy.PropString {
+func (v *MockInterfaceSinkInput) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -926,7 +930,7 @@ func (v *mockInterfaceSinkInput) Name() proxy.PropString {
 
 // property Icon s
 
-func (v *mockInterfaceSinkInput) Icon() proxy.PropString {
+func (v *MockInterfaceSinkInput) Icon() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -939,7 +943,7 @@ func (v *mockInterfaceSinkInput) Icon() proxy.PropString {
 
 // property Mute b
 
-func (v *mockInterfaceSinkInput) Mute() proxy.PropBool {
+func (v *MockInterfaceSinkInput) Mute() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockOutputManagement struct {
-	mockInterfaceOutputManagement // interface com.deepin.daemon.KWayland.Output
+	MockInterfaceOutputManagement // interface com.deepin.daemon.KWayland.Output
+	proxy.MockObject
 }
 
-type mockInterfaceOutputManagement struct {
+type MockInterfaceOutputManagement struct {
 	mock.Mock
 }
 
 // method ListOutput
 
-func (v *mockInterfaceOutputManagement) GoListOutput(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceOutputManagement) GoListOutput(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceOutputManagement) GoListOutput(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceOutputManagement) ListOutput(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceOutputManagement) ListOutput(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -44,7 +46,7 @@ func (v *mockInterfaceOutputManagement) ListOutput(flags dbus.Flags) (string, er
 
 // method GetOutput
 
-func (v *mockInterfaceOutputManagement) GoGetOutput(flags dbus.Flags, ch chan *dbus.Call, arg1 string) *dbus.Call {
+func (v *MockInterfaceOutputManagement) GoGetOutput(flags dbus.Flags, ch chan *dbus.Call, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceOutputManagement) GoGetOutput(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceOutputManagement) GetOutput(flags dbus.Flags, arg1 string) (string, error) {
+func (v *MockInterfaceOutputManagement) GetOutput(flags dbus.Flags, arg1 string) (string, error) {
 	mockArgs := v.Called(flags, arg1)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -68,7 +70,7 @@ func (v *mockInterfaceOutputManagement) GetOutput(flags dbus.Flags, arg1 string)
 
 // method Apply
 
-func (v *mockInterfaceOutputManagement) GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call {
+func (v *MockInterfaceOutputManagement) GoApply(flags dbus.Flags, ch chan *dbus.Call, outputs string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, outputs)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceOutputManagement) GoApply(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceOutputManagement) Apply(flags dbus.Flags, outputs string) error {
+func (v *MockInterfaceOutputManagement) Apply(flags dbus.Flags, outputs string) error {
 	mockArgs := v.Called(flags, outputs)
 
 	return mockArgs.Error(0)
@@ -87,7 +89,7 @@ func (v *mockInterfaceOutputManagement) Apply(flags dbus.Flags, outputs string) 
 
 // signal OutputAdded
 
-func (v *mockInterfaceOutputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceOutputManagement) ConnectOutputAdded(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -100,7 +102,7 @@ func (v *mockInterfaceOutputManagement) ConnectOutputAdded(cb func(output string
 
 // signal OutputRemoved
 
-func (v *mockInterfaceOutputManagement) ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceOutputManagement) ConnectOutputRemoved(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -113,7 +115,7 @@ func (v *mockInterfaceOutputManagement) ConnectOutputRemoved(cb func(output stri
 
 // signal OutputChanged
 
-func (v *mockInterfaceOutputManagement) ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceOutputManagement) ConnectOutputChanged(cb func(output string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -125,16 +127,17 @@ func (v *mockInterfaceOutputManagement) ConnectOutputChanged(cb func(output stri
 }
 
 type MockWindowManager struct {
-	mockInterfaceWindowManager // interface com.deepin.daemon.KWayland.WindowManager
+	MockInterfaceWindowManager // interface com.deepin.daemon.KWayland.WindowManager
+	proxy.MockObject
 }
 
-type mockInterfaceWindowManager struct {
+type MockInterfaceWindowManager struct {
 	mock.Mock
 }
 
 // method ActiveWindow
 
-func (v *mockInterfaceWindowManager) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindowManager) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -145,7 +148,7 @@ func (v *mockInterfaceWindowManager) GoActiveWindow(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceWindowManager) ActiveWindow(flags dbus.Flags) (uint32, error) {
+func (v *MockInterfaceWindowManager) ActiveWindow(flags dbus.Flags) (uint32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -158,7 +161,7 @@ func (v *mockInterfaceWindowManager) ActiveWindow(flags dbus.Flags) (uint32, err
 
 // method Windows
 
-func (v *mockInterfaceWindowManager) GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindowManager) GoWindows(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -169,7 +172,7 @@ func (v *mockInterfaceWindowManager) GoWindows(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWindowManager) Windows(flags dbus.Flags) ([]dbus.Variant, error) {
+func (v *MockInterfaceWindowManager) Windows(flags dbus.Flags) ([]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]dbus.Variant)
@@ -182,7 +185,7 @@ func (v *mockInterfaceWindowManager) Windows(flags dbus.Flags) ([]dbus.Variant, 
 
 // signal WindowCreated
 
-func (v *mockInterfaceWindowManager) ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindowManager) ConnectWindowCreated(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -195,7 +198,7 @@ func (v *mockInterfaceWindowManager) ConnectWindowCreated(cb func(ObjPath string
 
 // signal WindowRemove
 
-func (v *mockInterfaceWindowManager) ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindowManager) ConnectWindowRemove(cb func(ObjPath string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -208,7 +211,7 @@ func (v *mockInterfaceWindowManager) ConnectWindowRemove(cb func(ObjPath string)
 
 // signal ActiveWindowChanged
 
-func (v *mockInterfaceWindowManager) ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindowManager) ConnectActiveWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -220,16 +223,17 @@ func (v *mockInterfaceWindowManager) ConnectActiveWindowChanged(cb func()) (dbus
 }
 
 type MockWindow struct {
-	mockInterfaceWindow // interface com.deepin.daemon.KWayland.PlasmaWindow
+	MockInterfaceWindow // interface com.deepin.daemon.KWayland.PlasmaWindow
+	proxy.MockObject
 }
 
-type mockInterfaceWindow struct {
+type MockInterfaceWindow struct {
 	mock.Mock
 }
 
 // method AppId
 
-func (v *mockInterfaceWindow) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -240,7 +244,7 @@ func (v *mockInterfaceWindow) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceWindow) AppId(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWindow) AppId(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -253,7 +257,7 @@ func (v *mockInterfaceWindow) AppId(flags dbus.Flags) (string, error) {
 
 // method Geometry
 
-func (v *mockInterfaceWindow) GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -264,7 +268,7 @@ func (v *mockInterfaceWindow) GoGeometry(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceWindow) Geometry(flags dbus.Flags) (Rect, error) {
+func (v *MockInterfaceWindow) Geometry(flags dbus.Flags) (Rect, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(Rect)
@@ -277,7 +281,7 @@ func (v *mockInterfaceWindow) Geometry(flags dbus.Flags) (Rect, error) {
 
 // method Icon
 
-func (v *mockInterfaceWindow) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -288,7 +292,7 @@ func (v *mockInterfaceWindow) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfaceWindow) Icon(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWindow) Icon(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -301,7 +305,7 @@ func (v *mockInterfaceWindow) Icon(flags dbus.Flags) (string, error) {
 
 // method InternalId
 
-func (v *mockInterfaceWindow) GoInternalId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoInternalId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -312,7 +316,7 @@ func (v *mockInterfaceWindow) GoInternalId(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceWindow) InternalId(flags dbus.Flags) (uint32, error) {
+func (v *MockInterfaceWindow) InternalId(flags dbus.Flags) (uint32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -325,7 +329,7 @@ func (v *mockInterfaceWindow) InternalId(flags dbus.Flags) (uint32, error) {
 
 // method IsActive
 
-func (v *mockInterfaceWindow) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -336,7 +340,7 @@ func (v *mockInterfaceWindow) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsActive(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsActive(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -349,7 +353,7 @@ func (v *mockInterfaceWindow) IsActive(flags dbus.Flags) (bool, error) {
 
 // method IsCloseable
 
-func (v *mockInterfaceWindow) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -360,7 +364,7 @@ func (v *mockInterfaceWindow) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsCloseable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsCloseable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -373,7 +377,7 @@ func (v *mockInterfaceWindow) IsCloseable(flags dbus.Flags) (bool, error) {
 
 // method IsDemandingAttention
 
-func (v *mockInterfaceWindow) GoIsDemandingAttention(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsDemandingAttention(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -384,7 +388,7 @@ func (v *mockInterfaceWindow) GoIsDemandingAttention(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsDemandingAttention(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsDemandingAttention(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -397,7 +401,7 @@ func (v *mockInterfaceWindow) IsDemandingAttention(flags dbus.Flags) (bool, erro
 
 // method IsFullscreen
 
-func (v *mockInterfaceWindow) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -408,7 +412,7 @@ func (v *mockInterfaceWindow) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsFullscreen(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsFullscreen(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -421,7 +425,7 @@ func (v *mockInterfaceWindow) IsFullscreen(flags dbus.Flags) (bool, error) {
 
 // method IsFullscreenable
 
-func (v *mockInterfaceWindow) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -432,7 +436,7 @@ func (v *mockInterfaceWindow) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsFullscreenable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsFullscreenable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -445,7 +449,7 @@ func (v *mockInterfaceWindow) IsFullscreenable(flags dbus.Flags) (bool, error) {
 
 // method IsKeepAbove
 
-func (v *mockInterfaceWindow) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -456,7 +460,7 @@ func (v *mockInterfaceWindow) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsKeepAbove(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsKeepAbove(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -469,7 +473,7 @@ func (v *mockInterfaceWindow) IsKeepAbove(flags dbus.Flags) (bool, error) {
 
 // method IsMaximizeable
 
-func (v *mockInterfaceWindow) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -480,7 +484,7 @@ func (v *mockInterfaceWindow) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsMaximizeable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsMaximizeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -493,7 +497,7 @@ func (v *mockInterfaceWindow) IsMaximizeable(flags dbus.Flags) (bool, error) {
 
 // method IsMaximized
 
-func (v *mockInterfaceWindow) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -504,7 +508,7 @@ func (v *mockInterfaceWindow) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsMaximized(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsMaximized(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -517,7 +521,7 @@ func (v *mockInterfaceWindow) IsMaximized(flags dbus.Flags) (bool, error) {
 
 // method IsMinimizeable
 
-func (v *mockInterfaceWindow) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -528,7 +532,7 @@ func (v *mockInterfaceWindow) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsMinimizeable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsMinimizeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -541,7 +545,7 @@ func (v *mockInterfaceWindow) IsMinimizeable(flags dbus.Flags) (bool, error) {
 
 // method IsMinimized
 
-func (v *mockInterfaceWindow) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -552,7 +556,7 @@ func (v *mockInterfaceWindow) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsMinimized(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsMinimized(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -565,7 +569,7 @@ func (v *mockInterfaceWindow) IsMinimized(flags dbus.Flags) (bool, error) {
 
 // method IsMovable
 
-func (v *mockInterfaceWindow) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -576,7 +580,7 @@ func (v *mockInterfaceWindow) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsMovable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsMovable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -589,7 +593,7 @@ func (v *mockInterfaceWindow) IsMovable(flags dbus.Flags) (bool, error) {
 
 // method IsOnAllDesktops
 
-func (v *mockInterfaceWindow) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -600,7 +604,7 @@ func (v *mockInterfaceWindow) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsOnAllDesktops(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsOnAllDesktops(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -613,7 +617,7 @@ func (v *mockInterfaceWindow) IsOnAllDesktops(flags dbus.Flags) (bool, error) {
 
 // method IsResizable
 
-func (v *mockInterfaceWindow) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -624,7 +628,7 @@ func (v *mockInterfaceWindow) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsResizable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsResizable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -637,7 +641,7 @@ func (v *mockInterfaceWindow) IsResizable(flags dbus.Flags) (bool, error) {
 
 // method IsShadeable
 
-func (v *mockInterfaceWindow) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -648,7 +652,7 @@ func (v *mockInterfaceWindow) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsShadeable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsShadeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -661,7 +665,7 @@ func (v *mockInterfaceWindow) IsShadeable(flags dbus.Flags) (bool, error) {
 
 // method IsShaded
 
-func (v *mockInterfaceWindow) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -672,7 +676,7 @@ func (v *mockInterfaceWindow) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsShaded(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsShaded(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -685,7 +689,7 @@ func (v *mockInterfaceWindow) IsShaded(flags dbus.Flags) (bool, error) {
 
 // method IsValid
 
-func (v *mockInterfaceWindow) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -696,7 +700,7 @@ func (v *mockInterfaceWindow) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsValid(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsValid(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -709,7 +713,7 @@ func (v *mockInterfaceWindow) IsValid(flags dbus.Flags) (bool, error) {
 
 // method IsVirtualDesktopChangeable
 
-func (v *mockInterfaceWindow) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -720,7 +724,7 @@ func (v *mockInterfaceWindow) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceWindow) IsVirtualDesktopChangeable(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) IsVirtualDesktopChangeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -733,7 +737,7 @@ func (v *mockInterfaceWindow) IsVirtualDesktopChangeable(flags dbus.Flags) (bool
 
 // method Pid
 
-func (v *mockInterfaceWindow) GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -744,7 +748,7 @@ func (v *mockInterfaceWindow) GoPid(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWindow) Pid(flags dbus.Flags) (uint32, error) {
+func (v *MockInterfaceWindow) Pid(flags dbus.Flags) (uint32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -757,7 +761,7 @@ func (v *mockInterfaceWindow) Pid(flags dbus.Flags) (uint32, error) {
 
 // method RequestActivate
 
-func (v *mockInterfaceWindow) GoRequestActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestActivate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -768,7 +772,7 @@ func (v *mockInterfaceWindow) GoRequestActivate(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestActivate(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestActivate(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -776,7 +780,7 @@ func (v *mockInterfaceWindow) RequestActivate(flags dbus.Flags) error {
 
 // method RequestClose
 
-func (v *mockInterfaceWindow) GoRequestClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -787,7 +791,7 @@ func (v *mockInterfaceWindow) GoRequestClose(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestClose(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestClose(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -795,7 +799,7 @@ func (v *mockInterfaceWindow) RequestClose(flags dbus.Flags) error {
 
 // method RequestEnterNewVirtualDesktop
 
-func (v *mockInterfaceWindow) GoRequestEnterNewVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestEnterNewVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -806,7 +810,7 @@ func (v *mockInterfaceWindow) GoRequestEnterNewVirtualDesktop(flags dbus.Flags, 
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestEnterNewVirtualDesktop(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestEnterNewVirtualDesktop(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -814,7 +818,7 @@ func (v *mockInterfaceWindow) RequestEnterNewVirtualDesktop(flags dbus.Flags) er
 
 // method RequestEnterVirtualDesktop
 
-func (v *mockInterfaceWindow) GoRequestEnterVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestEnterVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, argin0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -825,7 +829,7 @@ func (v *mockInterfaceWindow) GoRequestEnterVirtualDesktop(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestEnterVirtualDesktop(flags dbus.Flags, argin0 string) error {
+func (v *MockInterfaceWindow) RequestEnterVirtualDesktop(flags dbus.Flags, argin0 string) error {
 	mockArgs := v.Called(flags, argin0)
 
 	return mockArgs.Error(0)
@@ -833,7 +837,7 @@ func (v *mockInterfaceWindow) RequestEnterVirtualDesktop(flags dbus.Flags, argin
 
 // method RequestLeaveVirtualDesktop
 
-func (v *mockInterfaceWindow) GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, argin0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -844,7 +848,7 @@ func (v *mockInterfaceWindow) GoRequestLeaveVirtualDesktop(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestLeaveVirtualDesktop(flags dbus.Flags, argin0 string) error {
+func (v *MockInterfaceWindow) RequestLeaveVirtualDesktop(flags dbus.Flags, argin0 string) error {
 	mockArgs := v.Called(flags, argin0)
 
 	return mockArgs.Error(0)
@@ -852,7 +856,7 @@ func (v *mockInterfaceWindow) RequestLeaveVirtualDesktop(flags dbus.Flags, argin
 
 // method RequestMove
 
-func (v *mockInterfaceWindow) GoRequestMove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestMove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -863,7 +867,7 @@ func (v *mockInterfaceWindow) GoRequestMove(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestMove(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestMove(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -871,7 +875,7 @@ func (v *mockInterfaceWindow) RequestMove(flags dbus.Flags) error {
 
 // method RequestResize
 
-func (v *mockInterfaceWindow) GoRequestResize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestResize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -882,7 +886,7 @@ func (v *mockInterfaceWindow) GoRequestResize(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestResize(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestResize(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -890,7 +894,7 @@ func (v *mockInterfaceWindow) RequestResize(flags dbus.Flags) error {
 
 // method RequestToggleKeepAbove
 
-func (v *mockInterfaceWindow) GoRequestToggleKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestToggleKeepAbove(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -901,7 +905,7 @@ func (v *mockInterfaceWindow) GoRequestToggleKeepAbove(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestToggleKeepAbove(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestToggleKeepAbove(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -909,7 +913,7 @@ func (v *mockInterfaceWindow) RequestToggleKeepAbove(flags dbus.Flags) error {
 
 // method RequestToggleKeepBelow
 
-func (v *mockInterfaceWindow) GoRequestToggleKeepBelow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestToggleKeepBelow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -920,7 +924,7 @@ func (v *mockInterfaceWindow) GoRequestToggleKeepBelow(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestToggleKeepBelow(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestToggleKeepBelow(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -928,7 +932,7 @@ func (v *mockInterfaceWindow) RequestToggleKeepBelow(flags dbus.Flags) error {
 
 // method RequestToggleMaximized
 
-func (v *mockInterfaceWindow) GoRequestToggleMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestToggleMaximized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -939,7 +943,7 @@ func (v *mockInterfaceWindow) GoRequestToggleMaximized(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestToggleMaximized(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestToggleMaximized(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -947,7 +951,7 @@ func (v *mockInterfaceWindow) RequestToggleMaximized(flags dbus.Flags) error {
 
 // method RequestToggleMinimized
 
-func (v *mockInterfaceWindow) GoRequestToggleMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestToggleMinimized(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -958,7 +962,7 @@ func (v *mockInterfaceWindow) GoRequestToggleMinimized(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestToggleMinimized(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestToggleMinimized(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -966,7 +970,7 @@ func (v *mockInterfaceWindow) RequestToggleMinimized(flags dbus.Flags) error {
 
 // method RequestToggleShaded
 
-func (v *mockInterfaceWindow) GoRequestToggleShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestToggleShaded(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -977,7 +981,7 @@ func (v *mockInterfaceWindow) GoRequestToggleShaded(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestToggleShaded(flags dbus.Flags) error {
+func (v *MockInterfaceWindow) RequestToggleShaded(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -985,7 +989,7 @@ func (v *mockInterfaceWindow) RequestToggleShaded(flags dbus.Flags) error {
 
 // method RequestVirtualDesktop
 
-func (v *mockInterfaceWindow) GoRequestVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 uint32) *dbus.Call {
+func (v *MockInterfaceWindow) GoRequestVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call, argin0 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, argin0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -996,7 +1000,7 @@ func (v *mockInterfaceWindow) GoRequestVirtualDesktop(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceWindow) RequestVirtualDesktop(flags dbus.Flags, argin0 uint32) error {
+func (v *MockInterfaceWindow) RequestVirtualDesktop(flags dbus.Flags, argin0 uint32) error {
 	mockArgs := v.Called(flags, argin0)
 
 	return mockArgs.Error(0)
@@ -1004,7 +1008,7 @@ func (v *mockInterfaceWindow) RequestVirtualDesktop(flags dbus.Flags, argin0 uin
 
 // method SkipSwitcher
 
-func (v *mockInterfaceWindow) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1015,7 +1019,7 @@ func (v *mockInterfaceWindow) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceWindow) SkipSwitcher(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) SkipSwitcher(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -1028,7 +1032,7 @@ func (v *mockInterfaceWindow) SkipSwitcher(flags dbus.Flags) (bool, error) {
 
 // method SkipTaskbar
 
-func (v *mockInterfaceWindow) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1039,7 +1043,7 @@ func (v *mockInterfaceWindow) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceWindow) SkipTaskbar(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWindow) SkipTaskbar(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -1052,7 +1056,7 @@ func (v *mockInterfaceWindow) SkipTaskbar(flags dbus.Flags) (bool, error) {
 
 // method Title
 
-func (v *mockInterfaceWindow) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1063,7 +1067,7 @@ func (v *mockInterfaceWindow) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceWindow) Title(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWindow) Title(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -1076,7 +1080,7 @@ func (v *mockInterfaceWindow) Title(flags dbus.Flags) (string, error) {
 
 // method VirtualDesktop
 
-func (v *mockInterfaceWindow) GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWindow) GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -1087,7 +1091,7 @@ func (v *mockInterfaceWindow) GoVirtualDesktop(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceWindow) VirtualDesktop(flags dbus.Flags) (uint32, error) {
+func (v *MockInterfaceWindow) VirtualDesktop(flags dbus.Flags) (uint32, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -1100,7 +1104,7 @@ func (v *mockInterfaceWindow) VirtualDesktop(flags dbus.Flags) (uint32, error) {
 
 // signal ActiveChanged
 
-func (v *mockInterfaceWindow) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectActiveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1113,7 +1117,7 @@ func (v *mockInterfaceWindow) ConnectActiveChanged(cb func()) (dbusutil.SignalHa
 
 // signal AppIdChanged
 
-func (v *mockInterfaceWindow) ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectAppIdChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1126,7 +1130,7 @@ func (v *mockInterfaceWindow) ConnectAppIdChanged(cb func()) (dbusutil.SignalHan
 
 // signal CloseableChanged
 
-func (v *mockInterfaceWindow) ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectCloseableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1139,7 +1143,7 @@ func (v *mockInterfaceWindow) ConnectCloseableChanged(cb func()) (dbusutil.Signa
 
 // signal DemandsAttentionChanged
 
-func (v *mockInterfaceWindow) ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectDemandsAttentionChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1152,7 +1156,7 @@ func (v *mockInterfaceWindow) ConnectDemandsAttentionChanged(cb func()) (dbusuti
 
 // signal FullscreenableChanged
 
-func (v *mockInterfaceWindow) ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectFullscreenableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1165,7 +1169,7 @@ func (v *mockInterfaceWindow) ConnectFullscreenableChanged(cb func()) (dbusutil.
 
 // signal FullscreenChanged
 
-func (v *mockInterfaceWindow) ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectFullscreenChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1178,7 +1182,7 @@ func (v *mockInterfaceWindow) ConnectFullscreenChanged(cb func()) (dbusutil.Sign
 
 // signal GeometryChanged
 
-func (v *mockInterfaceWindow) ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectGeometryChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1191,7 +1195,7 @@ func (v *mockInterfaceWindow) ConnectGeometryChanged(cb func()) (dbusutil.Signal
 
 // signal IconChanged
 
-func (v *mockInterfaceWindow) ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectIconChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1204,7 +1208,7 @@ func (v *mockInterfaceWindow) ConnectIconChanged(cb func()) (dbusutil.SignalHand
 
 // signal KeepAboveChanged
 
-func (v *mockInterfaceWindow) ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectKeepAboveChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1217,7 +1221,7 @@ func (v *mockInterfaceWindow) ConnectKeepAboveChanged(cb func()) (dbusutil.Signa
 
 // signal KeepBelowChanged
 
-func (v *mockInterfaceWindow) ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectKeepBelowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1230,7 +1234,7 @@ func (v *mockInterfaceWindow) ConnectKeepBelowChanged(cb func()) (dbusutil.Signa
 
 // signal MaximizeableChanged
 
-func (v *mockInterfaceWindow) ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectMaximizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1243,7 +1247,7 @@ func (v *mockInterfaceWindow) ConnectMaximizeableChanged(cb func()) (dbusutil.Si
 
 // signal MaximizedChanged
 
-func (v *mockInterfaceWindow) ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectMaximizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1256,7 +1260,7 @@ func (v *mockInterfaceWindow) ConnectMaximizedChanged(cb func()) (dbusutil.Signa
 
 // signal MinimizeableChanged
 
-func (v *mockInterfaceWindow) ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectMinimizeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1269,7 +1273,7 @@ func (v *mockInterfaceWindow) ConnectMinimizeableChanged(cb func()) (dbusutil.Si
 
 // signal MinimizedChanged
 
-func (v *mockInterfaceWindow) ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectMinimizedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1282,7 +1286,7 @@ func (v *mockInterfaceWindow) ConnectMinimizedChanged(cb func()) (dbusutil.Signa
 
 // signal MovableChanged
 
-func (v *mockInterfaceWindow) ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectMovableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1295,7 +1299,7 @@ func (v *mockInterfaceWindow) ConnectMovableChanged(cb func()) (dbusutil.SignalH
 
 // signal OnAllDesktopsChanged
 
-func (v *mockInterfaceWindow) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1308,7 +1312,7 @@ func (v *mockInterfaceWindow) ConnectOnAllDesktopsChanged(cb func()) (dbusutil.S
 
 // signal ParentWindowChanged
 
-func (v *mockInterfaceWindow) ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectParentWindowChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1321,7 +1325,7 @@ func (v *mockInterfaceWindow) ConnectParentWindowChanged(cb func()) (dbusutil.Si
 
 // signal ResizableChanged
 
-func (v *mockInterfaceWindow) ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectResizableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1334,7 +1338,7 @@ func (v *mockInterfaceWindow) ConnectResizableChanged(cb func()) (dbusutil.Signa
 
 // signal ShadeableChanged
 
-func (v *mockInterfaceWindow) ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectShadeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1347,7 +1351,7 @@ func (v *mockInterfaceWindow) ConnectShadeableChanged(cb func()) (dbusutil.Signa
 
 // signal ShadedChanged
 
-func (v *mockInterfaceWindow) ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectShadedChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1360,7 +1364,7 @@ func (v *mockInterfaceWindow) ConnectShadedChanged(cb func()) (dbusutil.SignalHa
 
 // signal SkipSwitcherChanged
 
-func (v *mockInterfaceWindow) ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectSkipSwitcherChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1373,7 +1377,7 @@ func (v *mockInterfaceWindow) ConnectSkipSwitcherChanged(cb func()) (dbusutil.Si
 
 // signal SkipTaskbarChanged
 
-func (v *mockInterfaceWindow) ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectSkipTaskbarChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1386,7 +1390,7 @@ func (v *mockInterfaceWindow) ConnectSkipTaskbarChanged(cb func()) (dbusutil.Sig
 
 // signal TitleChanged
 
-func (v *mockInterfaceWindow) ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectTitleChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1399,7 +1403,7 @@ func (v *mockInterfaceWindow) ConnectTitleChanged(cb func()) (dbusutil.SignalHan
 
 // signal Unmapped
 
-func (v *mockInterfaceWindow) ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectUnmapped(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1412,7 +1416,7 @@ func (v *mockInterfaceWindow) ConnectUnmapped(cb func()) (dbusutil.SignalHandler
 
 // signal VirtualDesktopChangeableChanged
 
-func (v *mockInterfaceWindow) ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectVirtualDesktopChangeableChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -1425,7 +1429,7 @@ func (v *mockInterfaceWindow) ConnectVirtualDesktopChangeableChanged(cb func()) 
 
 // signal VirtualDesktopChanged
 
-func (v *mockInterfaceWindow) ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWindow) ConnectVirtualDesktopChanged(cb func()) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

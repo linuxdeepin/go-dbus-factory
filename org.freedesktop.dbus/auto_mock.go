@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockDBus struct {
-	mockInterfaceDbusIfc // interface org.freedesktop.DBus
+	MockInterfaceDbusIfc // interface org.freedesktop.DBus
+	proxy.MockObject
 }
 
-type mockInterfaceDbusIfc struct {
+type MockInterfaceDbusIfc struct {
 	mock.Mock
 }
 
 // method Hello
 
-func (v *mockInterfaceDbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceDbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) Hello(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceDbusIfc) Hello(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -44,7 +46,7 @@ func (v *mockInterfaceDbusIfc) Hello(flags dbus.Flags) (string, error) {
 
 // method RequestName
 
-func (v *mockInterfaceDbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceDbusIfc) GoRequestName(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
+func (v *MockInterfaceDbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -68,7 +70,7 @@ func (v *mockInterfaceDbusIfc) RequestName(flags dbus.Flags, arg0 string, arg1 u
 
 // method ReleaseName
 
-func (v *mockInterfaceDbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceDbusIfc) GoReleaseName(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (uint32, error) {
+func (v *MockInterfaceDbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (uint32, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -92,7 +94,7 @@ func (v *mockInterfaceDbusIfc) ReleaseName(flags dbus.Flags, arg0 string) (uint3
 
 // method StartServiceByName
 
-func (v *mockInterfaceDbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -103,7 +105,7 @@ func (v *mockInterfaceDbusIfc) GoStartServiceByName(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
+func (v *MockInterfaceDbusIfc) StartServiceByName(flags dbus.Flags, arg0 string, arg1 uint32) (uint32, error) {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -116,7 +118,7 @@ func (v *mockInterfaceDbusIfc) StartServiceByName(flags dbus.Flags, arg0 string,
 
 // method UpdateActivationEnvironment
 
-func (v *mockInterfaceDbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, ch chan *dbus.Call, arg0 map[string]string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -127,7 +129,7 @@ func (v *mockInterfaceDbusIfc) GoUpdateActivationEnvironment(flags dbus.Flags, c
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error {
+func (v *MockInterfaceDbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg0 map[string]string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -135,7 +137,7 @@ func (v *mockInterfaceDbusIfc) UpdateActivationEnvironment(flags dbus.Flags, arg
 
 // method NameHasOwner
 
-func (v *mockInterfaceDbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -146,7 +148,7 @@ func (v *mockInterfaceDbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (bool, error) {
+func (v *MockInterfaceDbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (bool, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -159,7 +161,7 @@ func (v *mockInterfaceDbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (bool
 
 // method ListNames
 
-func (v *mockInterfaceDbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -170,7 +172,7 @@ func (v *mockInterfaceDbusIfc) GoListNames(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) ListNames(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceDbusIfc) ListNames(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -183,7 +185,7 @@ func (v *mockInterfaceDbusIfc) ListNames(flags dbus.Flags) ([]string, error) {
 
 // method ListActivatableNames
 
-func (v *mockInterfaceDbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -194,7 +196,7 @@ func (v *mockInterfaceDbusIfc) GoListActivatableNames(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) ListActivatableNames(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceDbusIfc) ListActivatableNames(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -207,7 +209,7 @@ func (v *mockInterfaceDbusIfc) ListActivatableNames(flags dbus.Flags) ([]string,
 
 // method AddMatch
 
-func (v *mockInterfaceDbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -218,7 +220,7 @@ func (v *mockInterfaceDbusIfc) GoAddMatch(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceDbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -226,7 +228,7 @@ func (v *mockInterfaceDbusIfc) AddMatch(flags dbus.Flags, arg0 string) error {
 
 // method RemoveMatch
 
-func (v *mockInterfaceDbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -237,7 +239,7 @@ func (v *mockInterfaceDbusIfc) GoRemoveMatch(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceDbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -245,7 +247,7 @@ func (v *mockInterfaceDbusIfc) RemoveMatch(flags dbus.Flags, arg0 string) error 
 
 // method GetNameOwner
 
-func (v *mockInterfaceDbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -256,7 +258,7 @@ func (v *mockInterfaceDbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (string, error) {
+func (v *MockInterfaceDbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -269,7 +271,7 @@ func (v *mockInterfaceDbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (stri
 
 // method ListQueuedOwners
 
-func (v *mockInterfaceDbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -280,7 +282,7 @@ func (v *mockInterfaceDbusIfc) GoListQueuedOwners(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) ([]string, error) {
+func (v *MockInterfaceDbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) ([]string, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -293,7 +295,7 @@ func (v *mockInterfaceDbusIfc) ListQueuedOwners(flags dbus.Flags, arg0 string) (
 
 // method GetConnectionUnixUser
 
-func (v *mockInterfaceDbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -304,7 +306,7 @@ func (v *mockInterfaceDbusIfc) GoGetConnectionUnixUser(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 string) (uint32, error) {
+func (v *MockInterfaceDbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 string) (uint32, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -317,7 +319,7 @@ func (v *mockInterfaceDbusIfc) GetConnectionUnixUser(flags dbus.Flags, arg0 stri
 
 // method GetConnectionUnixProcessID
 
-func (v *mockInterfaceDbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -328,7 +330,7 @@ func (v *mockInterfaceDbusIfc) GoGetConnectionUnixProcessID(flags dbus.Flags, ch
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (uint32, error) {
+func (v *MockInterfaceDbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0 string) (uint32, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(uint32)
@@ -341,7 +343,7 @@ func (v *mockInterfaceDbusIfc) GetConnectionUnixProcessID(flags dbus.Flags, arg0
 
 // method GetAdtAuditSessionData
 
-func (v *mockInterfaceDbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -352,7 +354,7 @@ func (v *mockInterfaceDbusIfc) GoGetAdtAuditSessionData(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 string) ([]uint8, error) {
+func (v *MockInterfaceDbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 string) ([]uint8, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).([]uint8)
@@ -365,7 +367,7 @@ func (v *mockInterfaceDbusIfc) GetAdtAuditSessionData(flags dbus.Flags, arg0 str
 
 // method GetConnectionSELinuxSecurityContext
 
-func (v *mockInterfaceDbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -376,7 +378,7 @@ func (v *mockInterfaceDbusIfc) GoGetConnectionSELinuxSecurityContext(flags dbus.
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 string) ([]uint8, error) {
+func (v *MockInterfaceDbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Flags, arg0 string) ([]uint8, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).([]uint8)
@@ -389,7 +391,7 @@ func (v *mockInterfaceDbusIfc) GetConnectionSELinuxSecurityContext(flags dbus.Fl
 
 // method ReloadConfig
 
-func (v *mockInterfaceDbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -400,7 +402,7 @@ func (v *mockInterfaceDbusIfc) GoReloadConfig(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) ReloadConfig(flags dbus.Flags) error {
+func (v *MockInterfaceDbusIfc) ReloadConfig(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -408,7 +410,7 @@ func (v *mockInterfaceDbusIfc) ReloadConfig(flags dbus.Flags) error {
 
 // method GetId
 
-func (v *mockInterfaceDbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -419,7 +421,7 @@ func (v *mockInterfaceDbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetId(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceDbusIfc) GetId(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -432,7 +434,7 @@ func (v *mockInterfaceDbusIfc) GetId(flags dbus.Flags) (string, error) {
 
 // method GetConnectionCredentials
 
-func (v *mockInterfaceDbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -443,7 +445,7 @@ func (v *mockInterfaceDbusIfc) GoGetConnectionCredentials(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceDbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 string) (map[string]dbus.Variant, error) {
+func (v *MockInterfaceDbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 string) (map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags, arg0)
 
 	ret0, ok := mockArgs.Get(0).(map[string]dbus.Variant)
@@ -456,7 +458,7 @@ func (v *mockInterfaceDbusIfc) GetConnectionCredentials(flags dbus.Flags, arg0 s
 
 // signal NameOwnerChanged
 
-func (v *mockInterfaceDbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1 string, arg2 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -469,7 +471,7 @@ func (v *mockInterfaceDbusIfc) ConnectNameOwnerChanged(cb func(arg0 string, arg1
 
 // signal NameLost
 
-func (v *mockInterfaceDbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -482,7 +484,7 @@ func (v *mockInterfaceDbusIfc) ConnectNameLost(cb func(arg0 string)) (dbusutil.S
 
 // signal NameAcquired
 
-func (v *mockInterfaceDbusIfc) ConnectNameAcquired(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDbusIfc) ConnectNameAcquired(cb func(arg0 string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

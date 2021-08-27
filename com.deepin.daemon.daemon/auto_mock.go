@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockDaemon struct {
-	mockInterfaceDaemon // interface com.deepin.daemon.Daemon
+	MockInterfaceDaemon // interface com.deepin.daemon.Daemon
+	proxy.MockObject
 }
 
-type mockInterfaceDaemon struct {
+type MockInterfaceDaemon struct {
 	mock.Mock
 }
 
 // method BluetoothGetDeviceTechnologies
 
-func (v *mockInterfaceDaemon) GoBluetoothGetDeviceTechnologies(flags dbus.Flags, ch chan *dbus.Call, adapter string, device string) *dbus.Call {
+func (v *MockInterfaceDaemon) GoBluetoothGetDeviceTechnologies(flags dbus.Flags, ch chan *dbus.Call, adapter string, device string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, adapter, device)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceDaemon) GoBluetoothGetDeviceTechnologies(flags dbus.Flags,
 	return ret
 }
 
-func (v *mockInterfaceDaemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error) {
+func (v *MockInterfaceDaemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error) {
 	mockArgs := v.Called(flags, adapter, device)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -44,7 +46,7 @@ func (v *mockInterfaceDaemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, a
 
 // method IsPidVirtualMachine
 
-func (v *mockInterfaceDaemon) GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
+func (v *MockInterfaceDaemon) GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, pid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceDaemon) GoIsPidVirtualMachine(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceDaemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) (bool, error) {
+func (v *MockInterfaceDaemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) (bool, error) {
 	mockArgs := v.Called(flags, pid)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -68,7 +70,7 @@ func (v *mockInterfaceDaemon) IsPidVirtualMachine(flags dbus.Flags, pid uint32) 
 
 // method ClearTtys
 
-func (v *mockInterfaceDaemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDaemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceDaemon) GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) 
 	return ret
 }
 
-func (v *mockInterfaceDaemon) ClearTtys(flags dbus.Flags) error {
+func (v *MockInterfaceDaemon) ClearTtys(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -87,7 +89,7 @@ func (v *mockInterfaceDaemon) ClearTtys(flags dbus.Flags) error {
 
 // method ClearTty
 
-func (v *mockInterfaceDaemon) GoClearTty(flags dbus.Flags, ch chan *dbus.Call, num uint32) *dbus.Call {
+func (v *MockInterfaceDaemon) GoClearTty(flags dbus.Flags, ch chan *dbus.Call, num uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, num)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -98,7 +100,7 @@ func (v *mockInterfaceDaemon) GoClearTty(flags dbus.Flags, ch chan *dbus.Call, n
 	return ret
 }
 
-func (v *mockInterfaceDaemon) ClearTty(flags dbus.Flags, num uint32) error {
+func (v *MockInterfaceDaemon) ClearTty(flags dbus.Flags, num uint32) error {
 	mockArgs := v.Called(flags, num)
 
 	return mockArgs.Error(0)
@@ -106,7 +108,7 @@ func (v *mockInterfaceDaemon) ClearTty(flags dbus.Flags, num uint32) error {
 
 // method NetworkGetConnections
 
-func (v *mockInterfaceDaemon) GoNetworkGetConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDaemon) GoNetworkGetConnections(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -117,7 +119,7 @@ func (v *mockInterfaceDaemon) GoNetworkGetConnections(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceDaemon) NetworkGetConnections(flags dbus.Flags) ([]uint8, error) {
+func (v *MockInterfaceDaemon) NetworkGetConnections(flags dbus.Flags) ([]uint8, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]uint8)
@@ -130,7 +132,7 @@ func (v *mockInterfaceDaemon) NetworkGetConnections(flags dbus.Flags) ([]uint8, 
 
 // method NetworkSetConnections
 
-func (v *mockInterfaceDaemon) GoNetworkSetConnections(flags dbus.Flags, ch chan *dbus.Call, data []uint8) *dbus.Call {
+func (v *MockInterfaceDaemon) GoNetworkSetConnections(flags dbus.Flags, ch chan *dbus.Call, data []uint8) *dbus.Call {
 	mockArgs := v.Called(flags, ch, data)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -141,7 +143,7 @@ func (v *mockInterfaceDaemon) GoNetworkSetConnections(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceDaemon) NetworkSetConnections(flags dbus.Flags, data []uint8) error {
+func (v *MockInterfaceDaemon) NetworkSetConnections(flags dbus.Flags, data []uint8) error {
 	mockArgs := v.Called(flags, data)
 
 	return mockArgs.Error(0)
@@ -149,7 +151,7 @@ func (v *mockInterfaceDaemon) NetworkSetConnections(flags dbus.Flags, data []uin
 
 // method ScalePlymouth
 
-func (v *mockInterfaceDaemon) GoScalePlymouth(flags dbus.Flags, ch chan *dbus.Call, scale uint32) *dbus.Call {
+func (v *MockInterfaceDaemon) GoScalePlymouth(flags dbus.Flags, ch chan *dbus.Call, scale uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, scale)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -160,7 +162,7 @@ func (v *mockInterfaceDaemon) GoScalePlymouth(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDaemon) ScalePlymouth(flags dbus.Flags, scale uint32) error {
+func (v *MockInterfaceDaemon) ScalePlymouth(flags dbus.Flags, scale uint32) error {
 	mockArgs := v.Called(flags, scale)
 
 	return mockArgs.Error(0)
@@ -168,7 +170,7 @@ func (v *mockInterfaceDaemon) ScalePlymouth(flags dbus.Flags, scale uint32) erro
 
 // method SetLongPressDuration
 
-func (v *mockInterfaceDaemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
+func (v *MockInterfaceDaemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, duration)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -179,7 +181,7 @@ func (v *mockInterfaceDaemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceDaemon) SetLongPressDuration(flags dbus.Flags, duration uint32) error {
+func (v *MockInterfaceDaemon) SetLongPressDuration(flags dbus.Flags, duration uint32) error {
 	mockArgs := v.Called(flags, duration)
 
 	return mockArgs.Error(0)
@@ -187,7 +189,7 @@ func (v *mockInterfaceDaemon) SetLongPressDuration(flags dbus.Flags, duration ui
 
 // signal HandleForSleep
 
-func (v *mockInterfaceDaemon) ConnectHandleForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceDaemon) ConnectHandleForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

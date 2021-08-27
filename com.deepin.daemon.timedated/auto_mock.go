@@ -11,16 +11,17 @@ import (
 )
 
 type MockTimedated struct {
-	mockInterfaceTimedated // interface com.deepin.daemon.Timedated
+	MockInterfaceTimedated // interface com.deepin.daemon.Timedated
+	proxy.MockObject
 }
 
-type mockInterfaceTimedated struct {
+type MockInterfaceTimedated struct {
 	mock.Mock
 }
 
 // method SetLocalRTC
 
-func (v *mockInterfaceTimedated) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, enabled bool, fixSystem bool, message string) *dbus.Call {
+func (v *MockInterfaceTimedated) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.Call, enabled bool, fixSystem bool, message string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled, fixSystem, message)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceTimedated) GoSetLocalRTC(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceTimedated) SetLocalRTC(flags dbus.Flags, enabled bool, fixSystem bool, message string) error {
+func (v *MockInterfaceTimedated) SetLocalRTC(flags dbus.Flags, enabled bool, fixSystem bool, message string) error {
 	mockArgs := v.Called(flags, enabled, fixSystem, message)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceTimedated) SetLocalRTC(flags dbus.Flags, enabled bool, fix
 
 // method SetNTP
 
-func (v *mockInterfaceTimedated) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, enabled bool, message string) *dbus.Call {
+func (v *MockInterfaceTimedated) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, enabled bool, message string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, enabled, message)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceTimedated) GoSetNTP(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfaceTimedated) SetNTP(flags dbus.Flags, enabled bool, message string) error {
+func (v *MockInterfaceTimedated) SetNTP(flags dbus.Flags, enabled bool, message string) error {
 	mockArgs := v.Called(flags, enabled, message)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceTimedated) SetNTP(flags dbus.Flags, enabled bool, message 
 
 // method SetNTPServer
 
-func (v *mockInterfaceTimedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call {
+func (v *MockInterfaceTimedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.Call, server string, message string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, server, message)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceTimedated) GoSetNTPServer(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceTimedated) SetNTPServer(flags dbus.Flags, server string, message string) error {
+func (v *MockInterfaceTimedated) SetNTPServer(flags dbus.Flags, server string, message string) error {
 	mockArgs := v.Called(flags, server, message)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceTimedated) SetNTPServer(flags dbus.Flags, server string, m
 
 // method SetTime
 
-func (v *mockInterfaceTimedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call {
+func (v *MockInterfaceTimedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call, usec int64, relative bool, message string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, usec, relative, message)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceTimedated) GoSetTime(flags dbus.Flags, ch chan *dbus.Call,
 	return ret
 }
 
-func (v *mockInterfaceTimedated) SetTime(flags dbus.Flags, usec int64, relative bool, message string) error {
+func (v *MockInterfaceTimedated) SetTime(flags dbus.Flags, usec int64, relative bool, message string) error {
 	mockArgs := v.Called(flags, usec, relative, message)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceTimedated) SetTime(flags dbus.Flags, usec int64, relative 
 
 // method SetTimezone
 
-func (v *mockInterfaceTimedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone string, message string) *dbus.Call {
+func (v *MockInterfaceTimedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.Call, timezone string, message string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, timezone, message)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +108,7 @@ func (v *mockInterfaceTimedated) GoSetTimezone(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceTimedated) SetTimezone(flags dbus.Flags, timezone string, message string) error {
+func (v *MockInterfaceTimedated) SetTimezone(flags dbus.Flags, timezone string, message string) error {
 	mockArgs := v.Called(flags, timezone, message)
 
 	return mockArgs.Error(0)
@@ -115,7 +116,7 @@ func (v *mockInterfaceTimedated) SetTimezone(flags dbus.Flags, timezone string, 
 
 // property NTPServer s
 
-func (v *mockInterfaceTimedated) NTPServer() proxy.PropString {
+func (v *MockInterfaceTimedated) NTPServer() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -128,7 +129,7 @@ func (v *mockInterfaceTimedated) NTPServer() proxy.PropString {
 
 // property Timezone s
 
-func (v *mockInterfaceTimedated) Timezone() proxy.PropString {
+func (v *MockInterfaceTimedated) Timezone() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

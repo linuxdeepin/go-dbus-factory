@@ -8,19 +8,21 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockWMSwitcher struct {
-	mockInterfaceWmSwitcher // interface com.deepin.WMSwitcher
+	MockInterfaceWmSwitcher // interface com.deepin.WMSwitcher
+	proxy.MockObject
 }
 
-type mockInterfaceWmSwitcher struct {
+type MockInterfaceWmSwitcher struct {
 	mock.Mock
 }
 
 // method AllowSwitch
 
-func (v *mockInterfaceWmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +33,7 @@ func (v *mockInterfaceWmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceWmSwitcher) AllowSwitch(flags dbus.Flags) (bool, error) {
+func (v *MockInterfaceWmSwitcher) AllowSwitch(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(bool)
@@ -44,7 +46,7 @@ func (v *mockInterfaceWmSwitcher) AllowSwitch(flags dbus.Flags) (bool, error) {
 
 // method CurrentWM
 
-func (v *mockInterfaceWmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -55,7 +57,7 @@ func (v *mockInterfaceWmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceWmSwitcher) CurrentWM(flags dbus.Flags) (string, error) {
+func (v *MockInterfaceWmSwitcher) CurrentWM(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -68,7 +70,7 @@ func (v *mockInterfaceWmSwitcher) CurrentWM(flags dbus.Flags) (string, error) {
 
 // method RequestSwitchWM
 
-func (v *mockInterfaceWmSwitcher) GoRequestSwitchWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceWmSwitcher) GoRequestSwitchWM(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -79,7 +81,7 @@ func (v *mockInterfaceWmSwitcher) GoRequestSwitchWM(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceWmSwitcher) RequestSwitchWM(flags dbus.Flags) error {
+func (v *MockInterfaceWmSwitcher) RequestSwitchWM(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -87,7 +89,7 @@ func (v *mockInterfaceWmSwitcher) RequestSwitchWM(flags dbus.Flags) error {
 
 // signal WMChanged
 
-func (v *mockInterfaceWmSwitcher) ConnectWMChanged(cb func(wmName string)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceWmSwitcher) ConnectWMChanged(cb func(wmName string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

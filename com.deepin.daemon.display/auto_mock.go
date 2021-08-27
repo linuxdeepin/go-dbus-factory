@@ -11,16 +11,17 @@ import (
 )
 
 type MockDisplay struct {
-	mockInterfaceDisplay // interface com.deepin.daemon.Display
+	MockInterfaceDisplay // interface com.deepin.daemon.Display
+	proxy.MockObject
 }
 
-type mockInterfaceDisplay struct {
+type MockInterfaceDisplay struct {
 	mock.Mock
 }
 
 // method ApplyChanges
 
-func (v *mockInterfaceDisplay) GoApplyChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoApplyChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -31,7 +32,7 @@ func (v *mockInterfaceDisplay) GoApplyChanges(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ApplyChanges(flags dbus.Flags) error {
+func (v *MockInterfaceDisplay) ApplyChanges(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -39,7 +40,7 @@ func (v *mockInterfaceDisplay) ApplyChanges(flags dbus.Flags) error {
 
 // method AssociateTouch
 
-func (v *mockInterfaceDisplay) GoAssociateTouch(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+func (v *MockInterfaceDisplay) GoAssociateTouch(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -50,7 +51,7 @@ func (v *mockInterfaceDisplay) GoAssociateTouch(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceDisplay) AssociateTouch(flags dbus.Flags, arg0 string, arg1 string) error {
+func (v *MockInterfaceDisplay) AssociateTouch(flags dbus.Flags, arg0 string, arg1 string) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -58,7 +59,7 @@ func (v *mockInterfaceDisplay) AssociateTouch(flags dbus.Flags, arg0 string, arg
 
 // method ChangeBrightness
 
-func (v *mockInterfaceDisplay) GoChangeBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+func (v *MockInterfaceDisplay) GoChangeBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -69,7 +70,7 @@ func (v *mockInterfaceDisplay) GoChangeBrightness(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ChangeBrightness(flags dbus.Flags, arg0 bool) error {
+func (v *MockInterfaceDisplay) ChangeBrightness(flags dbus.Flags, arg0 bool) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -77,7 +78,7 @@ func (v *mockInterfaceDisplay) ChangeBrightness(flags dbus.Flags, arg0 bool) err
 
 // method DeleteCustomMode
 
-func (v *mockInterfaceDisplay) GoDeleteCustomMode(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDisplay) GoDeleteCustomMode(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -88,7 +89,7 @@ func (v *mockInterfaceDisplay) GoDeleteCustomMode(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceDisplay) DeleteCustomMode(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceDisplay) DeleteCustomMode(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -96,7 +97,7 @@ func (v *mockInterfaceDisplay) DeleteCustomMode(flags dbus.Flags, arg0 string) e
 
 // method GetBrightness
 
-func (v *mockInterfaceDisplay) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoGetBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -107,7 +108,7 @@ func (v *mockInterfaceDisplay) GoGetBrightness(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceDisplay) GetBrightness(flags dbus.Flags) (map[string]float64, error) {
+func (v *MockInterfaceDisplay) GetBrightness(flags dbus.Flags) (map[string]float64, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).(map[string]float64)
@@ -120,7 +121,7 @@ func (v *mockInterfaceDisplay) GetBrightness(flags dbus.Flags) (map[string]float
 
 // method ListOutputNames
 
-func (v *mockInterfaceDisplay) GoListOutputNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoListOutputNames(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -131,7 +132,7 @@ func (v *mockInterfaceDisplay) GoListOutputNames(flags dbus.Flags, ch chan *dbus
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ListOutputNames(flags dbus.Flags) ([]string, error) {
+func (v *MockInterfaceDisplay) ListOutputNames(flags dbus.Flags) ([]string, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -144,7 +145,7 @@ func (v *mockInterfaceDisplay) ListOutputNames(flags dbus.Flags) ([]string, erro
 
 // method ListOutputsCommonModes
 
-func (v *mockInterfaceDisplay) GoListOutputsCommonModes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoListOutputsCommonModes(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -155,7 +156,7 @@ func (v *mockInterfaceDisplay) GoListOutputsCommonModes(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ListOutputsCommonModes(flags dbus.Flags) ([]ModeInfo, error) {
+func (v *MockInterfaceDisplay) ListOutputsCommonModes(flags dbus.Flags) ([]ModeInfo, error) {
 	mockArgs := v.Called(flags)
 
 	ret0, ok := mockArgs.Get(0).([]ModeInfo)
@@ -168,7 +169,7 @@ func (v *mockInterfaceDisplay) ListOutputsCommonModes(flags dbus.Flags) ([]ModeI
 
 // method ModifyConfigName
 
-func (v *mockInterfaceDisplay) GoModifyConfigName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
+func (v *MockInterfaceDisplay) GoModifyConfigName(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -179,7 +180,7 @@ func (v *mockInterfaceDisplay) GoModifyConfigName(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ModifyConfigName(flags dbus.Flags, arg0 string, arg1 string) error {
+func (v *MockInterfaceDisplay) ModifyConfigName(flags dbus.Flags, arg0 string, arg1 string) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -187,7 +188,7 @@ func (v *mockInterfaceDisplay) ModifyConfigName(flags dbus.Flags, arg0 string, a
 
 // method RefreshBrightness
 
-func (v *mockInterfaceDisplay) GoRefreshBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoRefreshBrightness(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -198,7 +199,7 @@ func (v *mockInterfaceDisplay) GoRefreshBrightness(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *mockInterfaceDisplay) RefreshBrightness(flags dbus.Flags) error {
+func (v *MockInterfaceDisplay) RefreshBrightness(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -206,7 +207,7 @@ func (v *mockInterfaceDisplay) RefreshBrightness(flags dbus.Flags) error {
 
 // method Reset
 
-func (v *mockInterfaceDisplay) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -217,7 +218,7 @@ func (v *mockInterfaceDisplay) GoReset(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *mockInterfaceDisplay) Reset(flags dbus.Flags) error {
+func (v *MockInterfaceDisplay) Reset(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -225,7 +226,7 @@ func (v *mockInterfaceDisplay) Reset(flags dbus.Flags) error {
 
 // method ResetChanges
 
-func (v *mockInterfaceDisplay) GoResetChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoResetChanges(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -236,7 +237,7 @@ func (v *mockInterfaceDisplay) GoResetChanges(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDisplay) ResetChanges(flags dbus.Flags) error {
+func (v *MockInterfaceDisplay) ResetChanges(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -244,7 +245,7 @@ func (v *mockInterfaceDisplay) ResetChanges(flags dbus.Flags) error {
 
 // method Save
 
-func (v *mockInterfaceDisplay) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDisplay) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -255,7 +256,7 @@ func (v *mockInterfaceDisplay) GoSave(flags dbus.Flags, ch chan *dbus.Call) *dbu
 	return ret
 }
 
-func (v *mockInterfaceDisplay) Save(flags dbus.Flags) error {
+func (v *MockInterfaceDisplay) Save(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -263,7 +264,7 @@ func (v *mockInterfaceDisplay) Save(flags dbus.Flags) error {
 
 // method SetAndSaveBrightness
 
-func (v *mockInterfaceDisplay) GoSetAndSaveBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
+func (v *MockInterfaceDisplay) GoSetAndSaveBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -274,7 +275,7 @@ func (v *mockInterfaceDisplay) GoSetAndSaveBrightness(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceDisplay) SetAndSaveBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
+func (v *MockInterfaceDisplay) SetAndSaveBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -282,7 +283,7 @@ func (v *mockInterfaceDisplay) SetAndSaveBrightness(flags dbus.Flags, arg0 strin
 
 // method SetBrightness
 
-func (v *mockInterfaceDisplay) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
+func (v *MockInterfaceDisplay) GoSetBrightness(flags dbus.Flags, ch chan *dbus.Call, arg0 string, arg1 float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -293,7 +294,7 @@ func (v *mockInterfaceDisplay) GoSetBrightness(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceDisplay) SetBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
+func (v *MockInterfaceDisplay) SetBrightness(flags dbus.Flags, arg0 string, arg1 float64) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -301,7 +302,7 @@ func (v *mockInterfaceDisplay) SetBrightness(flags dbus.Flags, arg0 string, arg1
 
 // method SetPrimary
 
-func (v *mockInterfaceDisplay) GoSetPrimary(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
+func (v *MockInterfaceDisplay) GoSetPrimary(flags dbus.Flags, ch chan *dbus.Call, arg0 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -312,7 +313,7 @@ func (v *mockInterfaceDisplay) GoSetPrimary(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceDisplay) SetPrimary(flags dbus.Flags, arg0 string) error {
+func (v *MockInterfaceDisplay) SetPrimary(flags dbus.Flags, arg0 string) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -320,7 +321,7 @@ func (v *mockInterfaceDisplay) SetPrimary(flags dbus.Flags, arg0 string) error {
 
 // method SwitchMode
 
-func (v *mockInterfaceDisplay) GoSwitchMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint8, arg1 string) *dbus.Call {
+func (v *MockInterfaceDisplay) GoSwitchMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint8, arg1 string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -331,7 +332,7 @@ func (v *mockInterfaceDisplay) GoSwitchMode(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceDisplay) SwitchMode(flags dbus.Flags, arg0 uint8, arg1 string) error {
+func (v *MockInterfaceDisplay) SwitchMode(flags dbus.Flags, arg0 uint8, arg1 string) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -339,7 +340,7 @@ func (v *mockInterfaceDisplay) SwitchMode(flags dbus.Flags, arg0 uint8, arg1 str
 
 // property HasChanged b
 
-func (v *mockInterfaceDisplay) HasChanged() proxy.PropBool {
+func (v *MockInterfaceDisplay) HasChanged() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -352,7 +353,7 @@ func (v *mockInterfaceDisplay) HasChanged() proxy.PropBool {
 
 // property DisplayMode y
 
-func (v *mockInterfaceDisplay) DisplayMode() proxy.PropByte {
+func (v *MockInterfaceDisplay) DisplayMode() proxy.PropByte {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropByte)
@@ -365,7 +366,7 @@ func (v *mockInterfaceDisplay) DisplayMode() proxy.PropByte {
 
 // property ScreenWidth q
 
-func (v *mockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
+func (v *MockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -378,7 +379,7 @@ func (v *mockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
 
 // property ScreenHeight q
 
-func (v *mockInterfaceDisplay) ScreenHeight() proxy.PropUint16 {
+func (v *MockInterfaceDisplay) ScreenHeight() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -391,7 +392,7 @@ func (v *mockInterfaceDisplay) ScreenHeight() proxy.PropUint16 {
 
 // property Primary s
 
-func (v *mockInterfaceDisplay) Primary() proxy.PropString {
+func (v *MockInterfaceDisplay) Primary() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -404,7 +405,7 @@ func (v *mockInterfaceDisplay) Primary() proxy.PropString {
 
 // property CurrentCustomId s
 
-func (v *mockInterfaceDisplay) CurrentCustomId() proxy.PropString {
+func (v *MockInterfaceDisplay) CurrentCustomId() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -417,7 +418,7 @@ func (v *mockInterfaceDisplay) CurrentCustomId() proxy.PropString {
 
 // property CustomIdList as
 
-func (v *mockInterfaceDisplay) CustomIdList() proxy.PropStringArray {
+func (v *MockInterfaceDisplay) CustomIdList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -460,7 +461,7 @@ func (p MockPropDisplayPrimaryRect) ConnectChanged(cb func(hasValue bool, value 
 
 // property PrimaryRect (nnqq)
 
-func (v *mockInterfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
+func (v *MockInterfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropDisplayPrimaryRect)
@@ -473,7 +474,7 @@ func (v *mockInterfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
 
 // property Monitors ao
 
-func (v *mockInterfaceDisplay) Monitors() proxy.PropObjectPathArray {
+func (v *MockInterfaceDisplay) Monitors() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -516,7 +517,7 @@ func (p MockPropDisplayBrightness) ConnectChanged(cb func(hasValue bool, value m
 
 // property Brightness a{sd}
 
-func (v *mockInterfaceDisplay) Brightness() PropDisplayBrightness {
+func (v *MockInterfaceDisplay) Brightness() PropDisplayBrightness {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropDisplayBrightness)
@@ -559,7 +560,7 @@ func (p MockPropDisplayTouchMap) ConnectChanged(cb func(hasValue bool, value map
 
 // property TouchMap a{ss}
 
-func (v *mockInterfaceDisplay) TouchMap() PropDisplayTouchMap {
+func (v *MockInterfaceDisplay) TouchMap() PropDisplayTouchMap {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropDisplayTouchMap)
@@ -602,7 +603,7 @@ func (p MockPropTouchscreens) ConnectChanged(cb func(hasValue bool, value []Touc
 
 // property Touchscreens a(isss)
 
-func (v *mockInterfaceDisplay) Touchscreens() PropTouchscreens {
+func (v *MockInterfaceDisplay) Touchscreens() PropTouchscreens {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropTouchscreens)
@@ -615,7 +616,7 @@ func (v *mockInterfaceDisplay) Touchscreens() PropTouchscreens {
 
 // property MaxBacklightBrightness u
 
-func (v *mockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
+func (v *MockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -628,7 +629,7 @@ func (v *mockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
 
 // property ColorTemperatureMode i
 
-func (v *mockInterfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
+func (v *MockInterfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -641,7 +642,7 @@ func (v *mockInterfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
 
 // property ColorTemperatureManual i
 
-func (v *mockInterfaceDisplay) ColorTemperatureManual() proxy.PropInt32 {
+func (v *MockInterfaceDisplay) ColorTemperatureManual() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
@@ -653,16 +654,17 @@ func (v *mockInterfaceDisplay) ColorTemperatureManual() proxy.PropInt32 {
 }
 
 type MockMonitor struct {
-	mockInterfaceMonitor // interface com.deepin.daemon.Display.Monitor
+	MockInterfaceMonitor // interface com.deepin.daemon.Display.Monitor
+	proxy.MockObject
 }
 
-type mockInterfaceMonitor struct {
+type MockInterfaceMonitor struct {
 	mock.Mock
 }
 
 // method Enable
 
-func (v *mockInterfaceMonitor) GoEnable(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
+func (v *MockInterfaceMonitor) GoEnable(flags dbus.Flags, ch chan *dbus.Call, arg0 bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -673,7 +675,7 @@ func (v *mockInterfaceMonitor) GoEnable(flags dbus.Flags, ch chan *dbus.Call, ar
 	return ret
 }
 
-func (v *mockInterfaceMonitor) Enable(flags dbus.Flags, arg0 bool) error {
+func (v *MockInterfaceMonitor) Enable(flags dbus.Flags, arg0 bool) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -681,7 +683,7 @@ func (v *mockInterfaceMonitor) Enable(flags dbus.Flags, arg0 bool) error {
 
 // method SetMode
 
-func (v *mockInterfaceMonitor) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, arg0 uint32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -692,7 +694,7 @@ func (v *mockInterfaceMonitor) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, a
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetMode(flags dbus.Flags, arg0 uint32) error {
+func (v *MockInterfaceMonitor) SetMode(flags dbus.Flags, arg0 uint32) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -700,7 +702,7 @@ func (v *mockInterfaceMonitor) SetMode(flags dbus.Flags, arg0 uint32) error {
 
 // method SetModeBySize
 
-func (v *mockInterfaceMonitor) GoSetModeBySize(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16, arg1 uint16) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetModeBySize(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16, arg1 uint16) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -711,7 +713,7 @@ func (v *mockInterfaceMonitor) GoSetModeBySize(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetModeBySize(flags dbus.Flags, arg0 uint16, arg1 uint16) error {
+func (v *MockInterfaceMonitor) SetModeBySize(flags dbus.Flags, arg0 uint16, arg1 uint16) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -719,7 +721,7 @@ func (v *mockInterfaceMonitor) SetModeBySize(flags dbus.Flags, arg0 uint16, arg1
 
 // method SetPosition
 
-func (v *mockInterfaceMonitor) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, arg0 int16, arg1 int16) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetPosition(flags dbus.Flags, ch chan *dbus.Call, arg0 int16, arg1 int16) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0, arg1)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -730,7 +732,7 @@ func (v *mockInterfaceMonitor) GoSetPosition(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetPosition(flags dbus.Flags, arg0 int16, arg1 int16) error {
+func (v *MockInterfaceMonitor) SetPosition(flags dbus.Flags, arg0 int16, arg1 int16) error {
 	mockArgs := v.Called(flags, arg0, arg1)
 
 	return mockArgs.Error(0)
@@ -738,7 +740,7 @@ func (v *mockInterfaceMonitor) SetPosition(flags dbus.Flags, arg0 int16, arg1 in
 
 // method SetReflect
 
-func (v *mockInterfaceMonitor) GoSetReflect(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetReflect(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -749,7 +751,7 @@ func (v *mockInterfaceMonitor) GoSetReflect(flags dbus.Flags, ch chan *dbus.Call
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetReflect(flags dbus.Flags, arg0 uint16) error {
+func (v *MockInterfaceMonitor) SetReflect(flags dbus.Flags, arg0 uint16) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -757,7 +759,7 @@ func (v *mockInterfaceMonitor) SetReflect(flags dbus.Flags, arg0 uint16) error {
 
 // method SetRefreshRate
 
-func (v *mockInterfaceMonitor) GoSetRefreshRate(flags dbus.Flags, ch chan *dbus.Call, arg0 float64) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetRefreshRate(flags dbus.Flags, ch chan *dbus.Call, arg0 float64) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -768,7 +770,7 @@ func (v *mockInterfaceMonitor) GoSetRefreshRate(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetRefreshRate(flags dbus.Flags, arg0 float64) error {
+func (v *MockInterfaceMonitor) SetRefreshRate(flags dbus.Flags, arg0 float64) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -776,7 +778,7 @@ func (v *mockInterfaceMonitor) SetRefreshRate(flags dbus.Flags, arg0 float64) er
 
 // method SetRotation
 
-func (v *mockInterfaceMonitor) GoSetRotation(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
+func (v *MockInterfaceMonitor) GoSetRotation(flags dbus.Flags, ch chan *dbus.Call, arg0 uint16) *dbus.Call {
 	mockArgs := v.Called(flags, ch, arg0)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -787,7 +789,7 @@ func (v *mockInterfaceMonitor) GoSetRotation(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *mockInterfaceMonitor) SetRotation(flags dbus.Flags, arg0 uint16) error {
+func (v *MockInterfaceMonitor) SetRotation(flags dbus.Flags, arg0 uint16) error {
 	mockArgs := v.Called(flags, arg0)
 
 	return mockArgs.Error(0)
@@ -795,7 +797,7 @@ func (v *mockInterfaceMonitor) SetRotation(flags dbus.Flags, arg0 uint16) error 
 
 // property Name s
 
-func (v *mockInterfaceMonitor) Name() proxy.PropString {
+func (v *MockInterfaceMonitor) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -808,7 +810,7 @@ func (v *mockInterfaceMonitor) Name() proxy.PropString {
 
 // property Enabled b
 
-func (v *mockInterfaceMonitor) Enabled() proxy.PropBool {
+func (v *MockInterfaceMonitor) Enabled() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -821,7 +823,7 @@ func (v *mockInterfaceMonitor) Enabled() proxy.PropBool {
 
 // property Connected b
 
-func (v *mockInterfaceMonitor) Connected() proxy.PropBool {
+func (v *MockInterfaceMonitor) Connected() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -834,7 +836,7 @@ func (v *mockInterfaceMonitor) Connected() proxy.PropBool {
 
 // property X n
 
-func (v *mockInterfaceMonitor) X() proxy.PropInt16 {
+func (v *MockInterfaceMonitor) X() proxy.PropInt16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt16)
@@ -847,7 +849,7 @@ func (v *mockInterfaceMonitor) X() proxy.PropInt16 {
 
 // property Y n
 
-func (v *mockInterfaceMonitor) Y() proxy.PropInt16 {
+func (v *MockInterfaceMonitor) Y() proxy.PropInt16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt16)
@@ -860,7 +862,7 @@ func (v *mockInterfaceMonitor) Y() proxy.PropInt16 {
 
 // property Width q
 
-func (v *mockInterfaceMonitor) Width() proxy.PropUint16 {
+func (v *MockInterfaceMonitor) Width() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -873,7 +875,7 @@ func (v *mockInterfaceMonitor) Width() proxy.PropUint16 {
 
 // property Height q
 
-func (v *mockInterfaceMonitor) Height() proxy.PropUint16 {
+func (v *MockInterfaceMonitor) Height() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -886,7 +888,7 @@ func (v *mockInterfaceMonitor) Height() proxy.PropUint16 {
 
 // property Rotation q
 
-func (v *mockInterfaceMonitor) Rotation() proxy.PropUint16 {
+func (v *MockInterfaceMonitor) Rotation() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -899,7 +901,7 @@ func (v *mockInterfaceMonitor) Rotation() proxy.PropUint16 {
 
 // property Reflect q
 
-func (v *mockInterfaceMonitor) Reflect() proxy.PropUint16 {
+func (v *MockInterfaceMonitor) Reflect() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -912,7 +914,7 @@ func (v *mockInterfaceMonitor) Reflect() proxy.PropUint16 {
 
 // property RefreshRate d
 
-func (v *mockInterfaceMonitor) RefreshRate() proxy.PropDouble {
+func (v *MockInterfaceMonitor) RefreshRate() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -925,7 +927,7 @@ func (v *mockInterfaceMonitor) RefreshRate() proxy.PropDouble {
 
 // property Rotations aq
 
-func (v *mockInterfaceMonitor) Rotations() proxy.PropUint16Array {
+func (v *MockInterfaceMonitor) Rotations() proxy.PropUint16Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
@@ -938,7 +940,7 @@ func (v *mockInterfaceMonitor) Rotations() proxy.PropUint16Array {
 
 // property Reflects aq
 
-func (v *mockInterfaceMonitor) Reflects() proxy.PropUint16Array {
+func (v *MockInterfaceMonitor) Reflects() proxy.PropUint16Array {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
@@ -951,7 +953,7 @@ func (v *mockInterfaceMonitor) Reflects() proxy.PropUint16Array {
 
 // property BestMode (uqqd)
 
-func (v *mockInterfaceMonitor) BestMode() PropModeInfo {
+func (v *MockInterfaceMonitor) BestMode() PropModeInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
@@ -964,7 +966,7 @@ func (v *mockInterfaceMonitor) BestMode() PropModeInfo {
 
 // property CurrentMode (uqqd)
 
-func (v *mockInterfaceMonitor) CurrentMode() PropModeInfo {
+func (v *MockInterfaceMonitor) CurrentMode() PropModeInfo {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
@@ -977,7 +979,7 @@ func (v *mockInterfaceMonitor) CurrentMode() PropModeInfo {
 
 // property Modes a(uqqd)
 
-func (v *mockInterfaceMonitor) Modes() PropModeInfoSlice {
+func (v *MockInterfaceMonitor) Modes() PropModeInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)
@@ -990,7 +992,7 @@ func (v *mockInterfaceMonitor) Modes() PropModeInfoSlice {
 
 // property PreferredModes a(uqqd)
 
-func (v *mockInterfaceMonitor) PreferredModes() PropModeInfoSlice {
+func (v *MockInterfaceMonitor) PreferredModes() PropModeInfoSlice {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)

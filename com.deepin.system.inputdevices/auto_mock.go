@@ -12,16 +12,17 @@ import (
 )
 
 type MockInputDevices struct {
-	mockInterfaceInputDevices // interface com.deepin.system.InputDevices
+	MockInterfaceInputDevices // interface com.deepin.system.InputDevices
+	proxy.MockObject
 }
 
-type mockInterfaceInputDevices struct {
+type MockInterfaceInputDevices struct {
 	mock.Mock
 }
 
 // signal TouchscreenAdded
 
-func (v *mockInterfaceInputDevices) ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceInputDevices) ConnectTouchscreenAdded(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -34,7 +35,7 @@ func (v *mockInterfaceInputDevices) ConnectTouchscreenAdded(cb func(path dbus.Ob
 
 // signal TouchscreenRemoved
 
-func (v *mockInterfaceInputDevices) ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfaceInputDevices) ConnectTouchscreenRemoved(cb func(path dbus.ObjectPath)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -47,7 +48,7 @@ func (v *mockInterfaceInputDevices) ConnectTouchscreenRemoved(cb func(path dbus.
 
 // property Touchscreens ao
 
-func (v *mockInterfaceInputDevices) Touchscreens() proxy.PropObjectPathArray {
+func (v *MockInterfaceInputDevices) Touchscreens() proxy.PropObjectPathArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
@@ -59,16 +60,17 @@ func (v *mockInterfaceInputDevices) Touchscreens() proxy.PropObjectPathArray {
 }
 
 type MockTouchscreen struct {
-	mockInterfaceTouchscreen // interface com.deepin.system.InputDevices.Touchscreen
+	MockInterfaceTouchscreen // interface com.deepin.system.InputDevices.Touchscreen
+	proxy.MockObject
 }
 
-type mockInterfaceTouchscreen struct {
+type MockInterfaceTouchscreen struct {
 	mock.Mock
 }
 
 // property DevNode s
 
-func (v *mockInterfaceTouchscreen) DevNode() proxy.PropString {
+func (v *MockInterfaceTouchscreen) DevNode() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -81,7 +83,7 @@ func (v *mockInterfaceTouchscreen) DevNode() proxy.PropString {
 
 // property BusType s
 
-func (v *mockInterfaceTouchscreen) BusType() proxy.PropString {
+func (v *MockInterfaceTouchscreen) BusType() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -94,7 +96,7 @@ func (v *mockInterfaceTouchscreen) BusType() proxy.PropString {
 
 // property UUID s
 
-func (v *mockInterfaceTouchscreen) UUID() proxy.PropString {
+func (v *MockInterfaceTouchscreen) UUID() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -107,7 +109,7 @@ func (v *mockInterfaceTouchscreen) UUID() proxy.PropString {
 
 // property Phys s
 
-func (v *mockInterfaceTouchscreen) Phys() proxy.PropString {
+func (v *MockInterfaceTouchscreen) Phys() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -120,7 +122,7 @@ func (v *mockInterfaceTouchscreen) Phys() proxy.PropString {
 
 // property OutputName s
 
-func (v *mockInterfaceTouchscreen) OutputName() proxy.PropString {
+func (v *MockInterfaceTouchscreen) OutputName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -133,7 +135,7 @@ func (v *mockInterfaceTouchscreen) OutputName() proxy.PropString {
 
 // property Width d
 
-func (v *mockInterfaceTouchscreen) Width() proxy.PropDouble {
+func (v *MockInterfaceTouchscreen) Width() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -146,7 +148,7 @@ func (v *mockInterfaceTouchscreen) Width() proxy.PropDouble {
 
 // property Height d
 
-func (v *mockInterfaceTouchscreen) Height() proxy.PropDouble {
+func (v *MockInterfaceTouchscreen) Height() proxy.PropDouble {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
@@ -159,7 +161,7 @@ func (v *mockInterfaceTouchscreen) Height() proxy.PropDouble {
 
 // property Name s
 
-func (v *mockInterfaceTouchscreen) Name() proxy.PropString {
+func (v *MockInterfaceTouchscreen) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -172,7 +174,7 @@ func (v *mockInterfaceTouchscreen) Name() proxy.PropString {
 
 // property Serial s
 
-func (v *mockInterfaceTouchscreen) Serial() proxy.PropString {
+func (v *MockInterfaceTouchscreen) Serial() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

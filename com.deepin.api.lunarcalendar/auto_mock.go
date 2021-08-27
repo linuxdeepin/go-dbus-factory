@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockLunarCalendar struct {
-	mockInterfaceLunarCalendar // interface com.deepin.api.LunarCalendar
+	MockInterfaceLunarCalendar // interface com.deepin.api.LunarCalendar
+	proxy.MockObject
 }
 
-type mockInterfaceLunarCalendar struct {
+type MockInterfaceLunarCalendar struct {
 	mock.Mock
 }
 
 // method GetFestivalMonth
 
-func (v *mockInterfaceLunarCalendar) GoGetFestivalMonth(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32) *dbus.Call {
+func (v *MockInterfaceLunarCalendar) GoGetFestivalMonth(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, year, month)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfaceLunarCalendar) GoGetFestivalMonth(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceLunarCalendar) GetFestivalMonth(flags dbus.Flags, year int32, month int32) (string, error) {
+func (v *MockInterfaceLunarCalendar) GetFestivalMonth(flags dbus.Flags, year int32, month int32) (string, error) {
 	mockArgs := v.Called(flags, year, month)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -43,7 +45,7 @@ func (v *mockInterfaceLunarCalendar) GetFestivalMonth(flags dbus.Flags, year int
 
 // method GetFestivalsInRange
 
-func (v *mockInterfaceLunarCalendar) GoGetFestivalsInRange(flags dbus.Flags, ch chan *dbus.Call, startDate string, endDate string) *dbus.Call {
+func (v *MockInterfaceLunarCalendar) GoGetFestivalsInRange(flags dbus.Flags, ch chan *dbus.Call, startDate string, endDate string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, startDate, endDate)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -54,7 +56,7 @@ func (v *mockInterfaceLunarCalendar) GoGetFestivalsInRange(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceLunarCalendar) GetFestivalsInRange(flags dbus.Flags, startDate string, endDate string) ([]DayFestival, error) {
+func (v *MockInterfaceLunarCalendar) GetFestivalsInRange(flags dbus.Flags, startDate string, endDate string) ([]DayFestival, error) {
 	mockArgs := v.Called(flags, startDate, endDate)
 
 	ret0, ok := mockArgs.Get(0).([]DayFestival)
@@ -67,7 +69,7 @@ func (v *mockInterfaceLunarCalendar) GetFestivalsInRange(flags dbus.Flags, start
 
 // method GetHuangLiDay
 
-func (v *mockInterfaceLunarCalendar) GoGetHuangLiDay(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32, day int32) *dbus.Call {
+func (v *MockInterfaceLunarCalendar) GoGetHuangLiDay(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32, day int32) *dbus.Call {
 	mockArgs := v.Called(flags, ch, year, month, day)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -78,7 +80,7 @@ func (v *mockInterfaceLunarCalendar) GoGetHuangLiDay(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *mockInterfaceLunarCalendar) GetHuangLiDay(flags dbus.Flags, year int32, month int32, day int32) (string, error) {
+func (v *MockInterfaceLunarCalendar) GetHuangLiDay(flags dbus.Flags, year int32, month int32, day int32) (string, error) {
 	mockArgs := v.Called(flags, year, month, day)
 
 	ret0, ok := mockArgs.Get(0).(string)
@@ -91,7 +93,7 @@ func (v *mockInterfaceLunarCalendar) GetHuangLiDay(flags dbus.Flags, year int32,
 
 // method GetHuangLiMonth
 
-func (v *mockInterfaceLunarCalendar) GoGetHuangLiMonth(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32, fill bool) *dbus.Call {
+func (v *MockInterfaceLunarCalendar) GoGetHuangLiMonth(flags dbus.Flags, ch chan *dbus.Call, year int32, month int32, fill bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, year, month, fill)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -102,7 +104,7 @@ func (v *mockInterfaceLunarCalendar) GoGetHuangLiMonth(flags dbus.Flags, ch chan
 	return ret
 }
 
-func (v *mockInterfaceLunarCalendar) GetHuangLiMonth(flags dbus.Flags, year int32, month int32, fill bool) (string, error) {
+func (v *MockInterfaceLunarCalendar) GetHuangLiMonth(flags dbus.Flags, year int32, month int32, fill bool) (string, error) {
 	mockArgs := v.Called(flags, year, month, fill)
 
 	ret0, ok := mockArgs.Get(0).(string)

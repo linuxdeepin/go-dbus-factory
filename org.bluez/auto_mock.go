@@ -13,21 +13,23 @@ import (
 
 type MockObjectManager struct {
 	object_manager.MockInterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.MockObject
 }
 
 type MockManager struct {
-	mockInterfaceAgentManager   // interface org.bluez.AgentManager1
-	mockInterfaceHealthManager  // interface org.bluez.HealthManager1
-	mockInterfaceProfileManager // interface org.bluez.ProfileManager1
+	MockInterfaceAgentManager   // interface org.bluez.AgentManager1
+	MockInterfaceHealthManager  // interface org.bluez.HealthManager1
+	MockInterfaceProfileManager // interface org.bluez.ProfileManager1
+	proxy.MockObject
 }
 
-type mockInterfaceAgentManager struct {
+type MockInterfaceAgentManager struct {
 	mock.Mock
 }
 
 // method RegisterAgent
 
-func (v *mockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call {
+func (v *MockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath, capability string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, agent, capability)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -38,7 +40,7 @@ func (v *mockInterfaceAgentManager) GoRegisterAgent(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error {
+func (v *MockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.ObjectPath, capability string) error {
 	mockArgs := v.Called(flags, agent, capability)
 
 	return mockArgs.Error(0)
@@ -46,7 +48,7 @@ func (v *mockInterfaceAgentManager) RegisterAgent(flags dbus.Flags, agent dbus.O
 
 // method UnregisterAgent
 
-func (v *mockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, agent)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -57,7 +59,7 @@ func (v *mockInterfaceAgentManager) GoUnregisterAgent(flags dbus.Flags, ch chan 
 	return ret
 }
 
-func (v *mockInterfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *MockInterfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, agent)
 
 	return mockArgs.Error(0)
@@ -65,7 +67,7 @@ func (v *mockInterfaceAgentManager) UnregisterAgent(flags dbus.Flags, agent dbus
 
 // method RequestDefaultAgent
 
-func (v *mockInterfaceAgentManager) GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceAgentManager) GoRequestDefaultAgent(flags dbus.Flags, ch chan *dbus.Call, agent dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, agent)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -76,19 +78,19 @@ func (v *mockInterfaceAgentManager) GoRequestDefaultAgent(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceAgentManager) RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
+func (v *MockInterfaceAgentManager) RequestDefaultAgent(flags dbus.Flags, agent dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, agent)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceHealthManager struct {
+type MockInterfaceHealthManager struct {
 	mock.Mock
 }
 
 // method CreateApplication
 
-func (v *mockInterfaceHealthManager) GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceHealthManager) GoCreateApplication(flags dbus.Flags, ch chan *dbus.Call, config map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, config)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -99,7 +101,7 @@ func (v *mockInterfaceHealthManager) GoCreateApplication(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceHealthManager) CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (dbus.ObjectPath, error) {
+func (v *MockInterfaceHealthManager) CreateApplication(flags dbus.Flags, config map[string]dbus.Variant) (dbus.ObjectPath, error) {
 	mockArgs := v.Called(flags, config)
 
 	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
@@ -112,7 +114,7 @@ func (v *mockInterfaceHealthManager) CreateApplication(flags dbus.Flags, config 
 
 // method DestroyApplication
 
-func (v *mockInterfaceHealthManager) GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceHealthManager) GoDestroyApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, application)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -123,19 +125,19 @@ func (v *mockInterfaceHealthManager) GoDestroyApplication(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceHealthManager) DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error {
+func (v *MockInterfaceHealthManager) DestroyApplication(flags dbus.Flags, application dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, application)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceProfileManager struct {
+type MockInterfaceProfileManager struct {
 	mock.Mock
 }
 
 // method RegisterProfile
 
-func (v *mockInterfaceProfileManager) GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceProfileManager) GoRegisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, profile, UUID, options)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -146,7 +148,7 @@ func (v *mockInterfaceProfileManager) GoRegisterProfile(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *mockInterfaceProfileManager) RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error {
+func (v *MockInterfaceProfileManager) RegisterProfile(flags dbus.Flags, profile dbus.ObjectPath, UUID string, options map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, profile, UUID, options)
 
 	return mockArgs.Error(0)
@@ -154,7 +156,7 @@ func (v *mockInterfaceProfileManager) RegisterProfile(flags dbus.Flags, profile 
 
 // method UnregisterProfile
 
-func (v *mockInterfaceProfileManager) GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceProfileManager) GoUnregisterProfile(flags dbus.Flags, ch chan *dbus.Call, profile dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, profile)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -165,26 +167,27 @@ func (v *mockInterfaceProfileManager) GoUnregisterProfile(flags dbus.Flags, ch c
 	return ret
 }
 
-func (v *mockInterfaceProfileManager) UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error {
+func (v *MockInterfaceProfileManager) UnregisterProfile(flags dbus.Flags, profile dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, profile)
 
 	return mockArgs.Error(0)
 }
 
 type MockHCI struct {
-	mockInterfaceAdapter       // interface org.bluez.Adapter1
-	mockInterfaceGattManager   // interface org.bluez.GattManager1
-	mockInterfaceMedia         // interface org.bluez.Media1
-	mockInterfaceNetworkServer // interface org.bluez.NetworkServer1
+	MockInterfaceAdapter       // interface org.bluez.Adapter1
+	MockInterfaceGattManager   // interface org.bluez.GattManager1
+	MockInterfaceMedia         // interface org.bluez.Media1
+	MockInterfaceNetworkServer // interface org.bluez.NetworkServer1
+	proxy.MockObject
 }
 
-type mockInterfaceAdapter struct {
+type MockInterfaceAdapter struct {
 	mock.Mock
 }
 
 // method StartDiscovery
 
-func (v *mockInterfaceAdapter) GoStartDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAdapter) GoStartDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -195,7 +198,7 @@ func (v *mockInterfaceAdapter) GoStartDiscovery(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceAdapter) StartDiscovery(flags dbus.Flags) error {
+func (v *MockInterfaceAdapter) StartDiscovery(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -203,7 +206,7 @@ func (v *mockInterfaceAdapter) StartDiscovery(flags dbus.Flags) error {
 
 // method SetDiscoveryFilter
 
-func (v *mockInterfaceAdapter) GoSetDiscoveryFilter(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceAdapter) GoSetDiscoveryFilter(flags dbus.Flags, ch chan *dbus.Call, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -214,7 +217,7 @@ func (v *mockInterfaceAdapter) GoSetDiscoveryFilter(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *mockInterfaceAdapter) SetDiscoveryFilter(flags dbus.Flags, properties map[string]dbus.Variant) error {
+func (v *MockInterfaceAdapter) SetDiscoveryFilter(flags dbus.Flags, properties map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, properties)
 
 	return mockArgs.Error(0)
@@ -222,7 +225,7 @@ func (v *mockInterfaceAdapter) SetDiscoveryFilter(flags dbus.Flags, properties m
 
 // method StopDiscovery
 
-func (v *mockInterfaceAdapter) GoStopDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceAdapter) GoStopDiscovery(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -233,7 +236,7 @@ func (v *mockInterfaceAdapter) GoStopDiscovery(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceAdapter) StopDiscovery(flags dbus.Flags) error {
+func (v *MockInterfaceAdapter) StopDiscovery(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -241,7 +244,7 @@ func (v *mockInterfaceAdapter) StopDiscovery(flags dbus.Flags) error {
 
 // method RemoveDevice
 
-func (v *mockInterfaceAdapter) GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Call, device dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceAdapter) GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Call, device dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, device)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -252,7 +255,7 @@ func (v *mockInterfaceAdapter) GoRemoveDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceAdapter) RemoveDevice(flags dbus.Flags, device dbus.ObjectPath) error {
+func (v *MockInterfaceAdapter) RemoveDevice(flags dbus.Flags, device dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, device)
 
 	return mockArgs.Error(0)
@@ -260,7 +263,7 @@ func (v *mockInterfaceAdapter) RemoveDevice(flags dbus.Flags, device dbus.Object
 
 // property Address s
 
-func (v *mockInterfaceAdapter) Address() proxy.PropString {
+func (v *MockInterfaceAdapter) Address() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -273,7 +276,7 @@ func (v *mockInterfaceAdapter) Address() proxy.PropString {
 
 // property Name s
 
-func (v *mockInterfaceAdapter) Name() proxy.PropString {
+func (v *MockInterfaceAdapter) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -286,7 +289,7 @@ func (v *mockInterfaceAdapter) Name() proxy.PropString {
 
 // property Alias s
 
-func (v *mockInterfaceAdapter) Alias() proxy.PropString {
+func (v *MockInterfaceAdapter) Alias() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -299,7 +302,7 @@ func (v *mockInterfaceAdapter) Alias() proxy.PropString {
 
 // property Class u
 
-func (v *mockInterfaceAdapter) Class() proxy.PropUint32 {
+func (v *MockInterfaceAdapter) Class() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -312,7 +315,7 @@ func (v *mockInterfaceAdapter) Class() proxy.PropUint32 {
 
 // property Powered b
 
-func (v *mockInterfaceAdapter) Powered() proxy.PropBool {
+func (v *MockInterfaceAdapter) Powered() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -325,7 +328,7 @@ func (v *mockInterfaceAdapter) Powered() proxy.PropBool {
 
 // property Discoverable b
 
-func (v *mockInterfaceAdapter) Discoverable() proxy.PropBool {
+func (v *MockInterfaceAdapter) Discoverable() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -338,7 +341,7 @@ func (v *mockInterfaceAdapter) Discoverable() proxy.PropBool {
 
 // property DiscoverableTimeout u
 
-func (v *mockInterfaceAdapter) DiscoverableTimeout() proxy.PropUint32 {
+func (v *MockInterfaceAdapter) DiscoverableTimeout() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -351,7 +354,7 @@ func (v *mockInterfaceAdapter) DiscoverableTimeout() proxy.PropUint32 {
 
 // property Pairable b
 
-func (v *mockInterfaceAdapter) Pairable() proxy.PropBool {
+func (v *MockInterfaceAdapter) Pairable() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -364,7 +367,7 @@ func (v *mockInterfaceAdapter) Pairable() proxy.PropBool {
 
 // property PairableTimeout u
 
-func (v *mockInterfaceAdapter) PairableTimeout() proxy.PropUint32 {
+func (v *MockInterfaceAdapter) PairableTimeout() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -377,7 +380,7 @@ func (v *mockInterfaceAdapter) PairableTimeout() proxy.PropUint32 {
 
 // property Discovering b
 
-func (v *mockInterfaceAdapter) Discovering() proxy.PropBool {
+func (v *MockInterfaceAdapter) Discovering() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -390,7 +393,7 @@ func (v *mockInterfaceAdapter) Discovering() proxy.PropBool {
 
 // property UUIDs as
 
-func (v *mockInterfaceAdapter) UUIDs() proxy.PropStringArray {
+func (v *MockInterfaceAdapter) UUIDs() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -403,7 +406,7 @@ func (v *mockInterfaceAdapter) UUIDs() proxy.PropStringArray {
 
 // property Modalias s
 
-func (v *mockInterfaceAdapter) Modalias() proxy.PropString {
+func (v *MockInterfaceAdapter) Modalias() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -414,13 +417,13 @@ func (v *mockInterfaceAdapter) Modalias() proxy.PropString {
 	return ret0
 }
 
-type mockInterfaceGattManager struct {
+type MockInterfaceGattManager struct {
 	mock.Mock
 }
 
 // method RegisterApplication
 
-func (v *mockInterfaceGattManager) GoRegisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath, options map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceGattManager) GoRegisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath, options map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, application, options)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -431,7 +434,7 @@ func (v *mockInterfaceGattManager) GoRegisterApplication(flags dbus.Flags, ch ch
 	return ret
 }
 
-func (v *mockInterfaceGattManager) RegisterApplication(flags dbus.Flags, application dbus.ObjectPath, options map[string]dbus.Variant) error {
+func (v *MockInterfaceGattManager) RegisterApplication(flags dbus.Flags, application dbus.ObjectPath, options map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, application, options)
 
 	return mockArgs.Error(0)
@@ -439,7 +442,7 @@ func (v *mockInterfaceGattManager) RegisterApplication(flags dbus.Flags, applica
 
 // method UnregisterApplication
 
-func (v *mockInterfaceGattManager) GoUnregisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceGattManager) GoUnregisterApplication(flags dbus.Flags, ch chan *dbus.Call, application dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, application)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -450,19 +453,19 @@ func (v *mockInterfaceGattManager) GoUnregisterApplication(flags dbus.Flags, ch 
 	return ret
 }
 
-func (v *mockInterfaceGattManager) UnregisterApplication(flags dbus.Flags, application dbus.ObjectPath) error {
+func (v *MockInterfaceGattManager) UnregisterApplication(flags dbus.Flags, application dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, application)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceMedia struct {
+type MockInterfaceMedia struct {
 	mock.Mock
 }
 
 // method RegisterEndpoint
 
-func (v *mockInterfaceMedia) GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceMedia) GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, endpoint, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -473,7 +476,7 @@ func (v *mockInterfaceMedia) GoRegisterEndpoint(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceMedia) RegisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) error {
+func (v *MockInterfaceMedia) RegisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath, properties map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, endpoint, properties)
 
 	return mockArgs.Error(0)
@@ -481,7 +484,7 @@ func (v *mockInterfaceMedia) RegisterEndpoint(flags dbus.Flags, endpoint dbus.Ob
 
 // method UnregisterEndpoint
 
-func (v *mockInterfaceMedia) GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceMedia) GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbus.Call, endpoint dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, endpoint)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -492,7 +495,7 @@ func (v *mockInterfaceMedia) GoUnregisterEndpoint(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceMedia) UnregisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath) error {
+func (v *MockInterfaceMedia) UnregisterEndpoint(flags dbus.Flags, endpoint dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, endpoint)
 
 	return mockArgs.Error(0)
@@ -500,7 +503,7 @@ func (v *mockInterfaceMedia) UnregisterEndpoint(flags dbus.Flags, endpoint dbus.
 
 // method RegisterPlayer
 
-func (v *mockInterfaceMedia) GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
+func (v *MockInterfaceMedia) GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath, properties map[string]dbus.Variant) *dbus.Call {
 	mockArgs := v.Called(flags, ch, player, properties)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -511,7 +514,7 @@ func (v *mockInterfaceMedia) GoRegisterPlayer(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceMedia) RegisterPlayer(flags dbus.Flags, player dbus.ObjectPath, properties map[string]dbus.Variant) error {
+func (v *MockInterfaceMedia) RegisterPlayer(flags dbus.Flags, player dbus.ObjectPath, properties map[string]dbus.Variant) error {
 	mockArgs := v.Called(flags, player, properties)
 
 	return mockArgs.Error(0)
@@ -519,7 +522,7 @@ func (v *mockInterfaceMedia) RegisterPlayer(flags dbus.Flags, player dbus.Object
 
 // method UnregisterPlayer
 
-func (v *mockInterfaceMedia) GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath) *dbus.Call {
+func (v *MockInterfaceMedia) GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.Call, player dbus.ObjectPath) *dbus.Call {
 	mockArgs := v.Called(flags, ch, player)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -530,19 +533,19 @@ func (v *mockInterfaceMedia) GoUnregisterPlayer(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceMedia) UnregisterPlayer(flags dbus.Flags, player dbus.ObjectPath) error {
+func (v *MockInterfaceMedia) UnregisterPlayer(flags dbus.Flags, player dbus.ObjectPath) error {
 	mockArgs := v.Called(flags, player)
 
 	return mockArgs.Error(0)
 }
 
-type mockInterfaceNetworkServer struct {
+type MockInterfaceNetworkServer struct {
 	mock.Mock
 }
 
 // method Register
 
-func (v *mockInterfaceNetworkServer) GoRegister(flags dbus.Flags, ch chan *dbus.Call, uuid string, bridge string) *dbus.Call {
+func (v *MockInterfaceNetworkServer) GoRegister(flags dbus.Flags, ch chan *dbus.Call, uuid string, bridge string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uuid, bridge)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -553,7 +556,7 @@ func (v *mockInterfaceNetworkServer) GoRegister(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *mockInterfaceNetworkServer) Register(flags dbus.Flags, uuid string, bridge string) error {
+func (v *MockInterfaceNetworkServer) Register(flags dbus.Flags, uuid string, bridge string) error {
 	mockArgs := v.Called(flags, uuid, bridge)
 
 	return mockArgs.Error(0)
@@ -561,7 +564,7 @@ func (v *mockInterfaceNetworkServer) Register(flags dbus.Flags, uuid string, bri
 
 // method Unregister
 
-func (v *mockInterfaceNetworkServer) GoUnregister(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
+func (v *MockInterfaceNetworkServer) GoUnregister(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, uuid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -572,23 +575,24 @@ func (v *mockInterfaceNetworkServer) GoUnregister(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) error {
+func (v *MockInterfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) error {
 	mockArgs := v.Called(flags, uuid)
 
 	return mockArgs.Error(0)
 }
 
 type MockDevice struct {
-	mockInterfaceDevice // interface org.bluez.Device1
+	MockInterfaceDevice // interface org.bluez.Device1
+	proxy.MockObject
 }
 
-type mockInterfaceDevice struct {
+type MockInterfaceDevice struct {
 	mock.Mock
 }
 
 // method Disconnect
 
-func (v *mockInterfaceDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -599,7 +603,7 @@ func (v *mockInterfaceDevice) GoDisconnect(flags dbus.Flags, ch chan *dbus.Call)
 	return ret
 }
 
-func (v *mockInterfaceDevice) Disconnect(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) Disconnect(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -607,7 +611,7 @@ func (v *mockInterfaceDevice) Disconnect(flags dbus.Flags) error {
 
 // method Connect
 
-func (v *mockInterfaceDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -618,7 +622,7 @@ func (v *mockInterfaceDevice) GoConnect(flags dbus.Flags, ch chan *dbus.Call) *d
 	return ret
 }
 
-func (v *mockInterfaceDevice) Connect(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) Connect(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -626,7 +630,7 @@ func (v *mockInterfaceDevice) Connect(flags dbus.Flags) error {
 
 // method ConnectProfile
 
-func (v *mockInterfaceDevice) GoConnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
+func (v *MockInterfaceDevice) GoConnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, UUID)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -637,7 +641,7 @@ func (v *mockInterfaceDevice) GoConnectProfile(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *mockInterfaceDevice) ConnectProfile(flags dbus.Flags, UUID string) error {
+func (v *MockInterfaceDevice) ConnectProfile(flags dbus.Flags, UUID string) error {
 	mockArgs := v.Called(flags, UUID)
 
 	return mockArgs.Error(0)
@@ -645,7 +649,7 @@ func (v *mockInterfaceDevice) ConnectProfile(flags dbus.Flags, UUID string) erro
 
 // method DisconnectProfile
 
-func (v *mockInterfaceDevice) GoDisconnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
+func (v *MockInterfaceDevice) GoDisconnectProfile(flags dbus.Flags, ch chan *dbus.Call, UUID string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, UUID)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -656,7 +660,7 @@ func (v *mockInterfaceDevice) GoDisconnectProfile(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *mockInterfaceDevice) DisconnectProfile(flags dbus.Flags, UUID string) error {
+func (v *MockInterfaceDevice) DisconnectProfile(flags dbus.Flags, UUID string) error {
 	mockArgs := v.Called(flags, UUID)
 
 	return mockArgs.Error(0)
@@ -664,7 +668,7 @@ func (v *mockInterfaceDevice) DisconnectProfile(flags dbus.Flags, UUID string) e
 
 // method Pair
 
-func (v *mockInterfaceDevice) GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -675,7 +679,7 @@ func (v *mockInterfaceDevice) GoPair(flags dbus.Flags, ch chan *dbus.Call) *dbus
 	return ret
 }
 
-func (v *mockInterfaceDevice) Pair(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) Pair(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -683,7 +687,7 @@ func (v *mockInterfaceDevice) Pair(flags dbus.Flags) error {
 
 // method CancelPairing
 
-func (v *mockInterfaceDevice) GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceDevice) GoCancelPairing(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -694,7 +698,7 @@ func (v *mockInterfaceDevice) GoCancelPairing(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *mockInterfaceDevice) CancelPairing(flags dbus.Flags) error {
+func (v *MockInterfaceDevice) CancelPairing(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
@@ -702,7 +706,7 @@ func (v *mockInterfaceDevice) CancelPairing(flags dbus.Flags) error {
 
 // property Address s
 
-func (v *mockInterfaceDevice) Address() proxy.PropString {
+func (v *MockInterfaceDevice) Address() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -715,7 +719,7 @@ func (v *mockInterfaceDevice) Address() proxy.PropString {
 
 // property AddressType s
 
-func (v *mockInterfaceDevice) AddressType() proxy.PropString {
+func (v *MockInterfaceDevice) AddressType() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -728,7 +732,7 @@ func (v *mockInterfaceDevice) AddressType() proxy.PropString {
 
 // property Name s
 
-func (v *mockInterfaceDevice) Name() proxy.PropString {
+func (v *MockInterfaceDevice) Name() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -741,7 +745,7 @@ func (v *mockInterfaceDevice) Name() proxy.PropString {
 
 // property Alias s
 
-func (v *mockInterfaceDevice) Alias() proxy.PropString {
+func (v *MockInterfaceDevice) Alias() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -754,7 +758,7 @@ func (v *mockInterfaceDevice) Alias() proxy.PropString {
 
 // property Class u
 
-func (v *mockInterfaceDevice) Class() proxy.PropUint32 {
+func (v *MockInterfaceDevice) Class() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
@@ -767,7 +771,7 @@ func (v *mockInterfaceDevice) Class() proxy.PropUint32 {
 
 // property Appearance q
 
-func (v *mockInterfaceDevice) Appearance() proxy.PropUint16 {
+func (v *MockInterfaceDevice) Appearance() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
@@ -780,7 +784,7 @@ func (v *mockInterfaceDevice) Appearance() proxy.PropUint16 {
 
 // property Icon s
 
-func (v *mockInterfaceDevice) Icon() proxy.PropString {
+func (v *MockInterfaceDevice) Icon() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -793,7 +797,7 @@ func (v *mockInterfaceDevice) Icon() proxy.PropString {
 
 // property Paired b
 
-func (v *mockInterfaceDevice) Paired() proxy.PropBool {
+func (v *MockInterfaceDevice) Paired() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -806,7 +810,7 @@ func (v *mockInterfaceDevice) Paired() proxy.PropBool {
 
 // property Trusted b
 
-func (v *mockInterfaceDevice) Trusted() proxy.PropBool {
+func (v *MockInterfaceDevice) Trusted() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -819,7 +823,7 @@ func (v *mockInterfaceDevice) Trusted() proxy.PropBool {
 
 // property Blocked b
 
-func (v *mockInterfaceDevice) Blocked() proxy.PropBool {
+func (v *MockInterfaceDevice) Blocked() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -832,7 +836,7 @@ func (v *mockInterfaceDevice) Blocked() proxy.PropBool {
 
 // property LegacyPairing b
 
-func (v *mockInterfaceDevice) LegacyPairing() proxy.PropBool {
+func (v *MockInterfaceDevice) LegacyPairing() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -845,7 +849,7 @@ func (v *mockInterfaceDevice) LegacyPairing() proxy.PropBool {
 
 // property RSSI n
 
-func (v *mockInterfaceDevice) RSSI() proxy.PropInt16 {
+func (v *MockInterfaceDevice) RSSI() proxy.PropInt16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt16)
@@ -858,7 +862,7 @@ func (v *mockInterfaceDevice) RSSI() proxy.PropInt16 {
 
 // property Connected b
 
-func (v *mockInterfaceDevice) Connected() proxy.PropBool {
+func (v *MockInterfaceDevice) Connected() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -871,7 +875,7 @@ func (v *mockInterfaceDevice) Connected() proxy.PropBool {
 
 // property UUIDs as
 
-func (v *mockInterfaceDevice) UUIDs() proxy.PropStringArray {
+func (v *MockInterfaceDevice) UUIDs() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -884,7 +888,7 @@ func (v *mockInterfaceDevice) UUIDs() proxy.PropStringArray {
 
 // property Modalias s
 
-func (v *mockInterfaceDevice) Modalias() proxy.PropString {
+func (v *MockInterfaceDevice) Modalias() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -897,7 +901,7 @@ func (v *mockInterfaceDevice) Modalias() proxy.PropString {
 
 // property Adapter o
 
-func (v *mockInterfaceDevice) Adapter() proxy.PropObjectPath {
+func (v *MockInterfaceDevice) Adapter() proxy.PropObjectPath {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPath)
@@ -940,7 +944,7 @@ func (p MockPropDeviceManufacturerData) ConnectChanged(cb func(hasValue bool, va
 
 // property ManufacturerData a{qv}
 
-func (v *mockInterfaceDevice) ManufacturerData() PropDeviceManufacturerData {
+func (v *MockInterfaceDevice) ManufacturerData() PropDeviceManufacturerData {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropDeviceManufacturerData)
@@ -983,7 +987,7 @@ func (p MockPropDeviceServiceData) ConnectChanged(cb func(hasValue bool, value m
 
 // property ServiceData a{sv}
 
-func (v *mockInterfaceDevice) ServiceData() PropDeviceServiceData {
+func (v *MockInterfaceDevice) ServiceData() PropDeviceServiceData {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*MockPropDeviceServiceData)
@@ -996,7 +1000,7 @@ func (v *mockInterfaceDevice) ServiceData() PropDeviceServiceData {
 
 // property TxPower n
 
-func (v *mockInterfaceDevice) TxPower() proxy.PropInt16 {
+func (v *MockInterfaceDevice) TxPower() proxy.PropInt16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt16)
@@ -1009,7 +1013,7 @@ func (v *mockInterfaceDevice) TxPower() proxy.PropInt16 {
 
 // property ServicesResolved b
 
-func (v *mockInterfaceDevice) ServicesResolved() proxy.PropBool {
+func (v *MockInterfaceDevice) ServicesResolved() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)

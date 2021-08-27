@@ -10,16 +10,17 @@ import (
 )
 
 type MockTimesync1 struct {
-	mockInterfaceTimesync1 // interface org.freedesktop.timesync1.Manager
+	MockInterfaceTimesync1 // interface org.freedesktop.timesync1.Manager
+	proxy.MockObject
 }
 
-type mockInterfaceTimesync1 struct {
+type MockInterfaceTimesync1 struct {
 	mock.Mock
 }
 
 // property LinkNTPServers as
 
-func (v *mockInterfaceTimesync1) LinkNTPServers() proxy.PropStringArray {
+func (v *MockInterfaceTimesync1) LinkNTPServers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -32,7 +33,7 @@ func (v *mockInterfaceTimesync1) LinkNTPServers() proxy.PropStringArray {
 
 // property SystemNTPServers as
 
-func (v *mockInterfaceTimesync1) SystemNTPServers() proxy.PropStringArray {
+func (v *MockInterfaceTimesync1) SystemNTPServers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -45,7 +46,7 @@ func (v *mockInterfaceTimesync1) SystemNTPServers() proxy.PropStringArray {
 
 // property FallbackNTPServers as
 
-func (v *mockInterfaceTimesync1) FallbackNTPServers() proxy.PropStringArray {
+func (v *MockInterfaceTimesync1) FallbackNTPServers() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -58,7 +59,7 @@ func (v *mockInterfaceTimesync1) FallbackNTPServers() proxy.PropStringArray {
 
 // property ServerName s
 
-func (v *mockInterfaceTimesync1) ServerName() proxy.PropString {
+func (v *MockInterfaceTimesync1) ServerName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -71,7 +72,7 @@ func (v *mockInterfaceTimesync1) ServerName() proxy.PropString {
 
 // property RootDistanceMaxUSec t
 
-func (v *mockInterfaceTimesync1) RootDistanceMaxUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimesync1) RootDistanceMaxUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -84,7 +85,7 @@ func (v *mockInterfaceTimesync1) RootDistanceMaxUSec() proxy.PropUint64 {
 
 // property PollIntervalMinUSec t
 
-func (v *mockInterfaceTimesync1) PollIntervalMinUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimesync1) PollIntervalMinUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -97,7 +98,7 @@ func (v *mockInterfaceTimesync1) PollIntervalMinUSec() proxy.PropUint64 {
 
 // property PollIntervalMaxUSec t
 
-func (v *mockInterfaceTimesync1) PollIntervalMaxUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimesync1) PollIntervalMaxUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -110,7 +111,7 @@ func (v *mockInterfaceTimesync1) PollIntervalMaxUSec() proxy.PropUint64 {
 
 // property PollIntervalUSec t
 
-func (v *mockInterfaceTimesync1) PollIntervalUSec() proxy.PropUint64 {
+func (v *MockInterfaceTimesync1) PollIntervalUSec() proxy.PropUint64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
@@ -123,7 +124,7 @@ func (v *mockInterfaceTimesync1) PollIntervalUSec() proxy.PropUint64 {
 
 // property Frequency x
 
-func (v *mockInterfaceTimesync1) Frequency() proxy.PropInt64 {
+func (v *MockInterfaceTimesync1) Frequency() proxy.PropInt64 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt64)

@@ -7,19 +7,21 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/mock"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 type MockPinyin struct {
-	mockInterfacePinyin // interface com.deepin.api.Pinyin
+	MockInterfacePinyin // interface com.deepin.api.Pinyin
+	proxy.MockObject
 }
 
-type mockInterfacePinyin struct {
+type MockInterfacePinyin struct {
 	mock.Mock
 }
 
 // method Query
 
-func (v *mockInterfacePinyin) GoQuery(flags dbus.Flags, ch chan *dbus.Call, hans string) *dbus.Call {
+func (v *MockInterfacePinyin) GoQuery(flags dbus.Flags, ch chan *dbus.Call, hans string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, hans)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +32,7 @@ func (v *mockInterfacePinyin) GoQuery(flags dbus.Flags, ch chan *dbus.Call, hans
 	return ret
 }
 
-func (v *mockInterfacePinyin) Query(flags dbus.Flags, hans string) ([]string, error) {
+func (v *MockInterfacePinyin) Query(flags dbus.Flags, hans string) ([]string, error) {
 	mockArgs := v.Called(flags, hans)
 
 	ret0, ok := mockArgs.Get(0).([]string)
@@ -43,7 +45,7 @@ func (v *mockInterfacePinyin) Query(flags dbus.Flags, hans string) ([]string, er
 
 // method QueryList
 
-func (v *mockInterfacePinyin) GoQueryList(flags dbus.Flags, ch chan *dbus.Call, hansList []string) *dbus.Call {
+func (v *MockInterfacePinyin) GoQueryList(flags dbus.Flags, ch chan *dbus.Call, hansList []string) *dbus.Call {
 	mockArgs := v.Called(flags, ch, hansList)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -54,7 +56,7 @@ func (v *mockInterfacePinyin) GoQueryList(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *mockInterfacePinyin) QueryList(flags dbus.Flags, hansList []string) (string, error) {
+func (v *MockInterfacePinyin) QueryList(flags dbus.Flags, hansList []string) (string, error) {
 	mockArgs := v.Called(flags, hansList)
 
 	ret0, ok := mockArgs.Get(0).(string)
