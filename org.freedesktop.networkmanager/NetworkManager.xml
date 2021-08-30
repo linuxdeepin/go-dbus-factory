@@ -206,11 +206,11 @@
 
         The overall networking state as determined by the NetworkManager daemon,
         based on the state of network devices under it's management.
-    -->
+    
     <method name="state">
       <arg name="state" type="u" direction="out"/>
     </method>
-
+    -->
     <!--
         CheckpointCreate:
         @devices: A list of device paths for which a checkpoint should be created. An empty list means all devices.
