@@ -16,7 +16,15 @@
       "Interfaces": [
         {
           "Name": "com.deepin.daemon.Accounts.User",
-          "Type": "user"
+          "Type": "user",
+          "Fixes": {
+            "m/GetReminderInfo": [
+              {
+                "Name": "info",
+                "Type": "LoginReminderInfo"
+              }
+            ]
+          }
         }
       ]
     },
