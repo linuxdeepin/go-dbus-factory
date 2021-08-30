@@ -20,3 +20,9 @@ type Touchscreen struct {
 	DeviceNode string
 	Serial     string
 }
+
+type FillModeInfo struct {
+	Width    uint16
+	Height   uint16
+	FillMode string
+}
