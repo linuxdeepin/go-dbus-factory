@@ -49,6 +49,9 @@
             "p/CurrentMode": {
               "RefType": "PropModeInfo"
             },
+            "p/CurrentFillMode": {
+              "RefType": "PropCurrentFillMode"
+            },
             "p/Modes": {
               "RefType": "PropModeInfoSlice"
             },
@@ -69,6 +72,11 @@
     {
       "Type": "PropModeInfoSlice",
       "ValueType": "[]ModeInfo"
+    },
+    {
+      "Type": "PropCurrentFillMode",
+      "ValueType": "FillModeInfo",
+      "EmptyValue": "$T{}"
     }
   ]
 }
