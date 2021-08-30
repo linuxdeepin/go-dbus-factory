@@ -320,8 +320,8 @@ func (v *MockInterfaceUser) DeleteGroup(flags dbus.Flags, group string) error {
 
 // method DeleteIconFile
 
-func (v *MockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, iconFile)
+func (v *MockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Call, icon string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, icon)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -331,8 +331,8 @@ func (v *MockInterfaceUser) GoDeleteIconFile(flags dbus.Flags, ch chan *dbus.Cal
 	return ret
 }
 
-func (v *MockInterfaceUser) DeleteIconFile(flags dbus.Flags, iconFile string) error {
-	mockArgs := v.Called(flags, iconFile)
+func (v *MockInterfaceUser) DeleteIconFile(flags dbus.Flags, icon string) error {
+	mockArgs := v.Called(flags, icon)
 
 	return mockArgs.Error(0)
 }
@@ -356,6 +356,83 @@ func (v *MockInterfaceUser) EnableNoPasswdLogin(flags dbus.Flags, enabled bool) 
 	return mockArgs.Error(0)
 }
 
+// method GetReminderInfo
+
+func (v *MockInterfaceUser) GoGetReminderInfo(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) GetReminderInfo(flags dbus.Flags) (LoginReminderInfo, error) {
+	mockArgs := v.Called(flags)
+
+	ret0, ok := mockArgs.Get(0).(LoginReminderInfo)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method IsPasswordExpired
+
+func (v *MockInterfaceUser) GoIsPasswordExpired(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) IsPasswordExpired(flags dbus.Flags) (bool, error) {
+	mockArgs := v.Called(flags)
+
+	ret0, ok := mockArgs.Get(0).(bool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method PasswordExpiredInfo
+
+func (v *MockInterfaceUser) GoPasswordExpiredInfo(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) PasswordExpiredInfo(flags dbus.Flags) (int32, int64, error) {
+	mockArgs := v.Called(flags)
+
+	ret0, ok := mockArgs.Get(0).(int32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	ret1, ok := mockArgs.Get(1).(int64)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
+	}
+
+	return ret0, ret1, mockArgs.Error(2)
+}
+
 // method SetAutomaticLogin
 
 func (v *MockInterfaceUser) GoSetAutomaticLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call {
@@ -375,10 +452,10 @@ func (v *MockInterfaceUser) SetAutomaticLogin(flags dbus.Flags, enabled bool) er
 	return mockArgs.Error(0)
 }
 
-// method SetDesktopBackgrounds
+// method SetCurrentWorkspace
 
-func (v *MockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *dbus.Call, backgrounds []string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, backgrounds)
+func (v *MockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, currentWorkspace int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, currentWorkspace)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -388,8 +465,27 @@ func (v *MockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *d
 	return ret
 }
 
-func (v *MockInterfaceUser) SetDesktopBackgrounds(flags dbus.Flags, backgrounds []string) error {
-	mockArgs := v.Called(flags, backgrounds)
+func (v *MockInterfaceUser) SetCurrentWorkspace(flags dbus.Flags, currentWorkspace int32) error {
+	mockArgs := v.Called(flags, currentWorkspace)
+
+	return mockArgs.Error(0)
+}
+
+// method SetDesktopBackgrounds
+
+func (v *MockInterfaceUser) GoSetDesktopBackgrounds(flags dbus.Flags, ch chan *dbus.Call, val []string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, val)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) SetDesktopBackgrounds(flags dbus.Flags, val []string) error {
+	mockArgs := v.Called(flags, val)
 
 	return mockArgs.Error(0)
 }
@@ -415,8 +511,8 @@ func (v *MockInterfaceUser) SetFullName(flags dbus.Flags, name string) error {
 
 // method SetGreeterBackground
 
-func (v *MockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *dbus.Call, background string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, background)
+func (v *MockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *dbus.Call, bg string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, bg)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -426,16 +522,16 @@ func (v *MockInterfaceUser) GoSetGreeterBackground(flags dbus.Flags, ch chan *db
 	return ret
 }
 
-func (v *MockInterfaceUser) SetGreeterBackground(flags dbus.Flags, background string) error {
-	mockArgs := v.Called(flags, background)
+func (v *MockInterfaceUser) SetGreeterBackground(flags dbus.Flags, bg string) error {
+	mockArgs := v.Called(flags, bg)
 
 	return mockArgs.Error(0)
 }
 
-// method SetCurrentWorkspace
+// method SetGroups
 
-func (v *MockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbus.Call, currentWorkspace int32) *dbus.Call {
-	mockArgs := v.Called(flags, ch, currentWorkspace)
+func (v *MockInterfaceUser) GoSetGroups(flags dbus.Flags, ch chan *dbus.Call, groups []string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, groups)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -445,16 +541,16 @@ func (v *MockInterfaceUser) GoSetCurrentWorkspace(flags dbus.Flags, ch chan *dbu
 	return ret
 }
 
-func (v *MockInterfaceUser) SetCurrentWorkspace(flags dbus.Flags, currentWorkspace int32) error {
-	mockArgs := v.Called(flags, currentWorkspace)
+func (v *MockInterfaceUser) SetGroups(flags dbus.Flags, groups []string) error {
+	mockArgs := v.Called(flags, groups)
 
 	return mockArgs.Error(0)
 }
 
 // method SetHistoryLayout
 
-func (v *MockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.Call, layouts []string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, layouts)
+func (v *MockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.Call, list []string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, list)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -464,8 +560,8 @@ func (v *MockInterfaceUser) GoSetHistoryLayout(flags dbus.Flags, ch chan *dbus.C
 	return ret
 }
 
-func (v *MockInterfaceUser) SetHistoryLayout(flags dbus.Flags, layouts []string) error {
-	mockArgs := v.Called(flags, layouts)
+func (v *MockInterfaceUser) SetHistoryLayout(flags dbus.Flags, list []string) error {
+	mockArgs := v.Called(flags, list)
 
 	return mockArgs.Error(0)
 }
@@ -491,8 +587,8 @@ func (v *MockInterfaceUser) SetHomeDir(flags dbus.Flags, home string) error {
 
 // method SetIconFile
 
-func (v *MockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, iconFile string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, iconFile)
+func (v *MockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, iconURI string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, iconURI)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -502,8 +598,8 @@ func (v *MockInterfaceUser) GoSetIconFile(flags dbus.Flags, ch chan *dbus.Call, 
 	return ret
 }
 
-func (v *MockInterfaceUser) SetIconFile(flags dbus.Flags, iconFile string) error {
-	mockArgs := v.Called(flags, iconFile)
+func (v *MockInterfaceUser) SetIconFile(flags dbus.Flags, iconURI string) error {
+	mockArgs := v.Called(flags, iconURI)
 
 	return mockArgs.Error(0)
 }
@@ -565,6 +661,63 @@ func (v *MockInterfaceUser) SetLocked(flags dbus.Flags, locked bool) error {
 	return mockArgs.Error(0)
 }
 
+// method SetLongDateFormat
+
+func (v *MockInterfaceUser) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, value)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) SetLongDateFormat(flags dbus.Flags, value int32) error {
+	mockArgs := v.Called(flags, value)
+
+	return mockArgs.Error(0)
+}
+
+// method SetLongTimeFormat
+
+func (v *MockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, value)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) SetLongTimeFormat(flags dbus.Flags, value int32) error {
+	mockArgs := v.Called(flags, value)
+
+	return mockArgs.Error(0)
+}
+
+// method SetMaxPasswordAge
+
+func (v *MockInterfaceUser) GoSetMaxPasswordAge(flags dbus.Flags, ch chan *dbus.Call, nDays int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, nDays)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceUser) SetMaxPasswordAge(flags dbus.Flags, nDays int32) error {
+	mockArgs := v.Called(flags, nDays)
+
+	return mockArgs.Error(0)
+}
+
 // method SetPassword
 
 func (v *MockInterfaceUser) GoSetPassword(flags dbus.Flags, ch chan *dbus.Call, password string) *dbus.Call {
@@ -603,44 +756,6 @@ func (v *MockInterfaceUser) SetShell(flags dbus.Flags, shell string) error {
 	return mockArgs.Error(0)
 }
 
-// method SetUse24HourFormat
-
-func (v *MockInterfaceUser) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
-	mockArgs := v.Called(flags, ch, value)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceUser) SetUse24HourFormat(flags dbus.Flags, value bool) error {
-	mockArgs := v.Called(flags, value)
-
-	return mockArgs.Error(0)
-}
-
-// method SetWeekdayFormat
-
-func (v *MockInterfaceUser) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
-	mockArgs := v.Called(flags, ch, value)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceUser) SetWeekdayFormat(flags dbus.Flags, value int32) error {
-	mockArgs := v.Called(flags, value)
-
-	return mockArgs.Error(0)
-}
-
 // method SetShortDateFormat
 
 func (v *MockInterfaceUser) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
@@ -655,25 +770,6 @@ func (v *MockInterfaceUser) GoSetShortDateFormat(flags dbus.Flags, ch chan *dbus
 }
 
 func (v *MockInterfaceUser) SetShortDateFormat(flags dbus.Flags, value int32) error {
-	mockArgs := v.Called(flags, value)
-
-	return mockArgs.Error(0)
-}
-
-// method SetLongDateFormat
-
-func (v *MockInterfaceUser) GoSetLongDateFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
-	mockArgs := v.Called(flags, ch, value)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceUser) SetLongDateFormat(flags dbus.Flags, value int32) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -698,9 +794,9 @@ func (v *MockInterfaceUser) SetShortTimeFormat(flags dbus.Flags, value int32) er
 	return mockArgs.Error(0)
 }
 
-// method SetLongTimeFormat
+// method SetUse24HourFormat
 
-func (v *MockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+func (v *MockInterfaceUser) GoSetUse24HourFormat(flags dbus.Flags, ch chan *dbus.Call, value bool) *dbus.Call {
 	mockArgs := v.Called(flags, ch, value)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -711,7 +807,7 @@ func (v *MockInterfaceUser) GoSetLongTimeFormat(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *MockInterfaceUser) SetLongTimeFormat(flags dbus.Flags, value int32) error {
+func (v *MockInterfaceUser) SetUse24HourFormat(flags dbus.Flags, value bool) error {
 	mockArgs := v.Called(flags, value)
 
 	return mockArgs.Error(0)
@@ -736,207 +832,31 @@ func (v *MockInterfaceUser) SetWeekBegins(flags dbus.Flags, value int32) error {
 	return mockArgs.Error(0)
 }
 
-// property HistoryLayout as
+// method SetWeekdayFormat
 
-func (v *MockInterfaceUser) HistoryLayout() proxy.PropStringArray {
-	mockArgs := v.Called()
+func (v *MockInterfaceUser) GoSetWeekdayFormat(flags dbus.Flags, ch chan *dbus.Call, value int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, value)
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
 	}
 
-	return ret0
+	return ret
 }
 
-// property Gid s
+func (v *MockInterfaceUser) SetWeekdayFormat(flags dbus.Flags, value int32) error {
+	mockArgs := v.Called(flags, value)
 
-func (v *MockInterfaceUser) Gid() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
+	return mockArgs.Error(0)
 }
 
-// property Groups as
+// property ShortDateFormat i
 
-func (v *MockInterfaceUser) Groups() proxy.PropStringArray {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property XSession s
-
-func (v *MockInterfaceUser) XSession() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property PasswordStatus s
-
-func (v *MockInterfaceUser) PasswordStatus() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property LoginTime t
-
-func (v *MockInterfaceUser) LoginTime() proxy.PropUint64 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property GreeterBackground s
-
-func (v *MockInterfaceUser) GreeterBackground() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property CreatedTime t
-
-func (v *MockInterfaceUser) CreatedTime() proxy.PropUint64 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property UserName s
-
-func (v *MockInterfaceUser) UserName() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Shell s
-
-func (v *MockInterfaceUser) Shell() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Layout s
-
-func (v *MockInterfaceUser) Layout() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property IconFile s
-
-func (v *MockInterfaceUser) IconFile() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Use24HourFormat b
-
-func (v *MockInterfaceUser) Use24HourFormat() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property AccountType i
-
-func (v *MockInterfaceUser) AccountType() proxy.PropInt32 {
+func (v *MockInterfaceUser) ShortDateFormat() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property HomeDir s
-
-func (v *MockInterfaceUser) HomeDir() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Locale s
-
-func (v *MockInterfaceUser) Locale() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -957,35 +877,9 @@ func (v *MockInterfaceUser) DesktopBackgrounds() proxy.PropStringArray {
 	return ret0
 }
 
-// property Locked b
+// property Groups as
 
-func (v *MockInterfaceUser) Locked() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property NoPasswdLogin b
-
-func (v *MockInterfaceUser) NoPasswdLogin() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property IconList as
-
-func (v *MockInterfaceUser) IconList() proxy.PropStringArray {
+func (v *MockInterfaceUser) Groups() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
@@ -996,9 +890,35 @@ func (v *MockInterfaceUser) IconList() proxy.PropStringArray {
 	return ret0
 }
 
-// property UUID s
+// property GreeterBackground s
 
-func (v *MockInterfaceUser) UUID() proxy.PropString {
+func (v *MockInterfaceUser) GreeterBackground() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property HistoryLayout as
+
+func (v *MockInterfaceUser) HistoryLayout() proxy.PropStringArray {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property UserName s
+
+func (v *MockInterfaceUser) UserName() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
@@ -1022,12 +942,116 @@ func (v *MockInterfaceUser) FullName() proxy.PropString {
 	return ret0
 }
 
-// property Uid s
+// property Use24HourFormat b
 
-func (v *MockInterfaceUser) Uid() proxy.PropString {
+func (v *MockInterfaceUser) Use24HourFormat() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property UUID s
+
+func (v *MockInterfaceUser) UUID() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property IconFile s
+
+func (v *MockInterfaceUser) IconFile() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property LongDateFormat i
+
+func (v *MockInterfaceUser) LongDateFormat() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property PasswordLastChange i
+
+func (v *MockInterfaceUser) PasswordLastChange() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property LoginTime t
+
+func (v *MockInterfaceUser) LoginTime() proxy.PropUint64 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Gid s
+
+func (v *MockInterfaceUser) Gid() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property PasswordStatus s
+
+func (v *MockInterfaceUser) PasswordStatus() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property MaxPasswordAge i
+
+func (v *MockInterfaceUser) MaxPasswordAge() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1048,9 +1072,22 @@ func (v *MockInterfaceUser) AutomaticLogin() proxy.PropBool {
 	return ret0
 }
 
-// property SystemAccount b
+// property Workspace i
 
-func (v *MockInterfaceUser) SystemAccount() proxy.PropBool {
+func (v *MockInterfaceUser) Workspace() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property NoPasswdLogin b
+
+func (v *MockInterfaceUser) NoPasswdLogin() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
@@ -1061,38 +1098,12 @@ func (v *MockInterfaceUser) SystemAccount() proxy.PropBool {
 	return ret0
 }
 
-// property WeekdayFormat i
+// property Shell s
 
-func (v *MockInterfaceUser) WeekdayFormat() proxy.PropInt32 {
+func (v *MockInterfaceUser) Shell() proxy.PropString {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property ShortDateFormat i
-
-func (v *MockInterfaceUser) ShortDateFormat() proxy.PropInt32 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property LongDateFormat i
-
-func (v *MockInterfaceUser) LongDateFormat() proxy.PropInt32 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1126,9 +1137,152 @@ func (v *MockInterfaceUser) LongTimeFormat() proxy.PropInt32 {
 	return ret0
 }
 
+// property Layout s
+
+func (v *MockInterfaceUser) Layout() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property WeekdayFormat i
+
+func (v *MockInterfaceUser) WeekdayFormat() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property CreatedTime t
+
+func (v *MockInterfaceUser) CreatedTime() proxy.PropUint64 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint64)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property XSession s
+
+func (v *MockInterfaceUser) XSession() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Locked b
+
+func (v *MockInterfaceUser) Locked() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property HomeDir s
+
+func (v *MockInterfaceUser) HomeDir() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Locale s
+
+func (v *MockInterfaceUser) Locale() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property WeekBegins i
 
 func (v *MockInterfaceUser) WeekBegins() proxy.PropInt32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property IconList as
+
+func (v *MockInterfaceUser) IconList() proxy.PropStringArray {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Uid s
+
+func (v *MockInterfaceUser) Uid() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property SystemAccount b
+
+func (v *MockInterfaceUser) SystemAccount() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property AccountType i
+
+func (v *MockInterfaceUser) AccountType() proxy.PropInt32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
