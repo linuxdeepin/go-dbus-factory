@@ -34,6 +34,10 @@ type powerManager interface {
 	CanSuspend(flags dbus.Flags) (bool, error)
 	GoCanHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	CanHibernate(flags dbus.Flags) (bool, error)
+	GoCanSuspendToHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	CanSuspendToHibernate(flags dbus.Flags) (bool, error)
+	GoSetSuspendToHibernateTime(flags dbus.Flags, ch chan *dbus.Call, timeMinute int32) *dbus.Call
+	SetSuspendToHibernateTime(flags dbus.Flags, timeMinute int32) error
 }
 
 type interfacePowerManager struct{}
@@ -108,4 +112,30 @@ func (*interfacePowerManager) StoreCanHibernate(call *dbus.Call) (can bool, err 
 func (v *interfacePowerManager) CanHibernate(flags dbus.Flags) (bool, error) {
 	return v.StoreCanHibernate(
 		<-v.GoCanHibernate(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method CanSuspendToHibernate
+
+func (v *interfacePowerManager) GoCanSuspendToHibernate(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanSuspendToHibernate", flags, ch)
+}
+
+func (*interfacePowerManager) StoreCanSuspendToHibernate(call *dbus.Call) (can bool, err error) {
+	err = call.Store(&can)
+	return
+}
+
+func (v *interfacePowerManager) CanSuspendToHibernate(flags dbus.Flags) (bool, error) {
+	return v.StoreCanSuspendToHibernate(
+		<-v.GoCanSuspendToHibernate(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method SetSuspendToHibernateTime
+
+func (v *interfacePowerManager) GoSetSuspendToHibernateTime(flags dbus.Flags, ch chan *dbus.Call, timeMinute int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSuspendToHibernateTime", flags, ch, timeMinute)
+}
+
+func (v *interfacePowerManager) SetSuspendToHibernateTime(flags dbus.Flags, timeMinute int32) error {
+	return (<-v.GoSetSuspendToHibernateTime(flags, make(chan *dbus.Call, 1), timeMinute).Done).Err
 }
