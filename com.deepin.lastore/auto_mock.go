@@ -151,12 +151,7 @@ func (v *MockInterfaceManager) GoPackageDesktopPath(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceManager) PackageDesktopPath(flags dbus.Flags, pkgId string) (string, error) {
 	mockArgs := v.Called(flags, pkgId)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method PackageExists
@@ -175,12 +170,7 @@ func (v *MockInterfaceManager) GoPackageExists(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceManager) PackageExists(flags dbus.Flags, pkgId string) (bool, error) {
 	mockArgs := v.Called(flags, pkgId)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method PackageInstallable
@@ -199,12 +189,7 @@ func (v *MockInterfaceManager) GoPackageInstallable(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceManager) PackageInstallable(flags dbus.Flags, pkgId string) (bool, error) {
 	mockArgs := v.Called(flags, pkgId)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method PackagesDownloadSize
@@ -705,12 +690,7 @@ func (v *MockInterfaceJob) GoString(flags dbus.Flags, ch chan *dbus.Call) *dbus.
 func (v *MockInterfaceJob) String(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // property Id s

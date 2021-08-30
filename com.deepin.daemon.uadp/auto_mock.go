@@ -54,10 +54,5 @@ func (v *MockInterfaceUadp) GoGetDataKey(flags dbus.Flags, ch chan *dbus.Call, e
 func (v *MockInterfaceUadp) GetDataKey(flags dbus.Flags, exePath string, keyName string, keyringKey string) (string, error) {
 	mockArgs := v.Called(flags, exePath, keyName, keyringKey)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }

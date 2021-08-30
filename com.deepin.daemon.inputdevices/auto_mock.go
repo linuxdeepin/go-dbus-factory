@@ -130,12 +130,7 @@ func (v *MockInterfaceKeyboard) GoGetLayoutDesc(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceKeyboard) GetLayoutDesc(flags dbus.Flags, layout string) (string, error) {
 	mockArgs := v.Called(flags, layout)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method LayoutList

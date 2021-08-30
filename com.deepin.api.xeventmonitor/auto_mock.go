@@ -36,12 +36,7 @@ func (v *MockInterfaceXEventMonitor) GoRegisterArea(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceXEventMonitor) RegisterArea(flags dbus.Flags, x1 int32, y1 int32, x2 int32, y2 int32, flag int32) (string, error) {
 	mockArgs := v.Called(flags, x1, y1, x2, y2, flag)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RegisterAreas
@@ -60,12 +55,7 @@ func (v *MockInterfaceXEventMonitor) GoRegisterAreas(flags dbus.Flags, ch chan *
 func (v *MockInterfaceXEventMonitor) RegisterAreas(flags dbus.Flags, areas []CoordinateRange, flag int32) (string, error) {
 	mockArgs := v.Called(flags, areas, flag)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RegisterFullScreen
@@ -84,12 +74,7 @@ func (v *MockInterfaceXEventMonitor) GoRegisterFullScreen(flags dbus.Flags, ch c
 func (v *MockInterfaceXEventMonitor) RegisterFullScreen(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method UnregisterArea
@@ -108,12 +93,7 @@ func (v *MockInterfaceXEventMonitor) GoUnregisterArea(flags dbus.Flags, ch chan 
 func (v *MockInterfaceXEventMonitor) UnregisterArea(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // signal CancelAllArea

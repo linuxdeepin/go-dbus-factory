@@ -816,12 +816,7 @@ func (v *MockInterfaceManager) GoDump(flags dbus.Flags, ch chan *dbus.Call) *dbu
 func (v *MockInterfaceManager) Dump(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method DumpByFileDescriptor
@@ -1121,12 +1116,7 @@ func (v *MockInterfaceManager) GoGetUnitFileState(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceManager) GetUnitFileState(flags dbus.Flags, unit string) (string, error) {
 	mockArgs := v.Called(flags, unit)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method EnableUnitFiles
@@ -1145,17 +1135,12 @@ func (v *MockInterfaceManager) GoEnableUnitFiles(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceManager) EnableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	mockArgs := v.Called(flags, files, runtime, force)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]UnitFileChange)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.Bool(0), ret1, mockArgs.Error(2)
 }
 
 // method DisableUnitFiles
@@ -1198,17 +1183,12 @@ func (v *MockInterfaceManager) GoReenableUnitFiles(flags dbus.Flags, ch chan *db
 func (v *MockInterfaceManager) ReenableUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	mockArgs := v.Called(flags, files, runtime, force)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]UnitFileChange)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.Bool(0), ret1, mockArgs.Error(2)
 }
 
 // method LinkUnitFiles
@@ -1251,17 +1231,12 @@ func (v *MockInterfaceManager) GoPresetUnitFiles(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceManager) PresetUnitFiles(flags dbus.Flags, files []string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	mockArgs := v.Called(flags, files, runtime, force)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]UnitFileChange)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.Bool(0), ret1, mockArgs.Error(2)
 }
 
 // method PresetUnitFilesWithMode
@@ -1280,17 +1255,12 @@ func (v *MockInterfaceManager) GoPresetUnitFilesWithMode(flags dbus.Flags, ch ch
 func (v *MockInterfaceManager) PresetUnitFilesWithMode(flags dbus.Flags, files []string, mode string, runtime bool, force bool) (bool, []UnitFileChange, error) {
 	mockArgs := v.Called(flags, files, mode, runtime, force)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]UnitFileChange)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.Bool(0), ret1, mockArgs.Error(2)
 }
 
 // method MaskUnitFiles
@@ -1405,12 +1375,7 @@ func (v *MockInterfaceManager) GoGetDefaultTarget(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceManager) GetDefaultTarget(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method PresetAllUnitFiles
@@ -1544,12 +1509,7 @@ func (v *MockInterfaceManager) GoLookupDynamicUserByUID(flags dbus.Flags, ch cha
 func (v *MockInterfaceManager) LookupDynamicUserByUID(flags dbus.Flags, uid uint32) (string, error) {
 	mockArgs := v.Called(flags, uid)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetDynamicUsers

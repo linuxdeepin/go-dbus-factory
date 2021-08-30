@@ -36,12 +36,7 @@ func (v *MockInterfaceAuthenticate) GoAuthenticate(flags dbus.Flags, ch chan *db
 func (v *MockInterfaceAuthenticate) Authenticate(flags dbus.Flags, username string, authFlags int32, appType int32) (string, error) {
 	mockArgs := v.Called(flags, username, authFlags, appType)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetLimits
@@ -60,12 +55,7 @@ func (v *MockInterfaceAuthenticate) GoGetLimits(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceAuthenticate) GetLimits(flags dbus.Flags, username string) (string, error) {
 	mockArgs := v.Called(flags, username)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method PreOneKeyLogin
@@ -84,12 +74,7 @@ func (v *MockInterfaceAuthenticate) GoPreOneKeyLogin(flags dbus.Flags, ch chan *
 func (v *MockInterfaceAuthenticate) PreOneKeyLogin(flags dbus.Flags, flag int32) (string, error) {
 	mockArgs := v.Called(flags, flag)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal LimitUpdated
@@ -419,12 +404,7 @@ func (v *MockInterfaceUkey) GoConstructVerification(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceUkey) ConstructVerification(flags dbus.Flags, serviceName string, username string, useDefaultService bool) (string, error) {
 	mockArgs := v.Called(flags, serviceName, username, useDefaultService)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetPINLength

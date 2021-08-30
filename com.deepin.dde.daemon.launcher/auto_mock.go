@@ -84,12 +84,7 @@ func (v *MockInterfaceLauncher) GoGetDisableScaling(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceLauncher) GetDisableScaling(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method GetItemInfo
@@ -132,12 +127,7 @@ func (v *MockInterfaceLauncher) GoGetUseProxy(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceLauncher) GetUseProxy(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsItemOnDesktop
@@ -156,12 +146,7 @@ func (v *MockInterfaceLauncher) GoIsItemOnDesktop(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceLauncher) IsItemOnDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method MarkLaunched
@@ -199,12 +184,7 @@ func (v *MockInterfaceLauncher) GoRequestRemoveFromDesktop(flags dbus.Flags, ch 
 func (v *MockInterfaceLauncher) RequestRemoveFromDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method RequestSendToDesktop
@@ -223,12 +203,7 @@ func (v *MockInterfaceLauncher) GoRequestSendToDesktop(flags dbus.Flags, ch chan
 func (v *MockInterfaceLauncher) RequestSendToDesktop(flags dbus.Flags, id string) (bool, error) {
 	mockArgs := v.Called(flags, id)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method RequestUninstall
