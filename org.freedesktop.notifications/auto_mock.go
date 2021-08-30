@@ -103,27 +103,7 @@ func (v *MockInterfaceNotifications) GoGetServerInformation(flags dbus.Flags, ch
 func (v *MockInterfaceNotifications) GetServerInformation(flags dbus.Flags) (string, string, string, string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	ret2, ok := mockArgs.Get(2).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
-	}
-
-	ret3, ok := mockArgs.Get(3).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 3, mockArgs.Get(3)))
-	}
-
-	return ret0, ret1, ret2, ret3, mockArgs.Error(4)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.String(2), mockArgs.String(3), mockArgs.Error(4)
 }
 
 // signal NotificationClosed

@@ -296,12 +296,7 @@ func (v *MockInterfaceModem) GoCommand(flags dbus.Flags, ch chan *dbus.Call, cmd
 func (v *MockInterfaceModem) Command(flags dbus.Flags, cmd string, timeout uint32) (string, error) {
 	mockArgs := v.Called(flags, cmd, timeout)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal StateChanged
@@ -864,17 +859,12 @@ func (v *MockInterfaceModemFirmware) GoList(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceModemFirmware) List(flags dbus.Flags) (string, []map[string]dbus.Variant, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]map[string]dbus.Variant)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.String(0), ret1, mockArgs.Error(2)
 }
 
 // method Select
@@ -1245,12 +1235,7 @@ func (v *MockInterfaceModem3gppUssd) GoInitiate(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceModem3gppUssd) Initiate(flags dbus.Flags, command string) (string, error) {
 	mockArgs := v.Called(flags, command)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Respond
@@ -1269,12 +1254,7 @@ func (v *MockInterfaceModem3gppUssd) GoRespond(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceModem3gppUssd) Respond(flags dbus.Flags, response string) (string, error) {
 	mockArgs := v.Called(flags, response)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Cancel
@@ -1973,12 +1953,7 @@ func (v *MockInterfaceModemTime) GoGetNetworkTime(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceModemTime) GetNetworkTime(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal NetworkTimeChanged

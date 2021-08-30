@@ -79,27 +79,7 @@ func (v *MockInterfaceNotification) GoGetServerInformation(flags dbus.Flags, ch 
 func (v *MockInterfaceNotification) GetServerInformation(flags dbus.Flags) (string, string, string, string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	ret2, ok := mockArgs.Get(2).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
-	}
-
-	ret3, ok := mockArgs.Get(3).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 3, mockArgs.Get(3)))
-	}
-
-	return ret0, ret1, ret2, ret3, mockArgs.Error(4)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.String(2), mockArgs.String(3), mockArgs.Error(4)
 }
 
 // method Notify
@@ -142,12 +122,7 @@ func (v *MockInterfaceNotification) GoGetAllRecords(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceNotification) GetAllRecords(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetRecordById
@@ -166,12 +141,7 @@ func (v *MockInterfaceNotification) GoGetRecordById(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceNotification) GetRecordById(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetRecordsFromId
@@ -190,12 +160,7 @@ func (v *MockInterfaceNotification) GoGetRecordsFromId(flags dbus.Flags, ch chan
 func (v *MockInterfaceNotification) GetRecordsFromId(flags dbus.Flags, arg0 int32, arg1 string) (string, error) {
 	mockArgs := v.Called(flags, arg0, arg1)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RemoveRecord
@@ -252,12 +217,7 @@ func (v *MockInterfaceNotification) GoGetAppSetting(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceNotification) GetAppSetting(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Toggle

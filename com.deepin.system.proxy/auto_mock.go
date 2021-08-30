@@ -112,12 +112,7 @@ func (v *MockInterfaceApp) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *dbu
 func (v *MockInterfaceApp) GetProxy(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetProxies
@@ -155,12 +150,7 @@ func (v *MockInterfaceApp) GoGetCGroups(flags dbus.Flags, ch chan *dbus.Call) *d
 func (v *MockInterfaceApp) GetCGroups(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method AddProc
@@ -296,12 +286,7 @@ func (v *MockInterfaceGlobal) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call) *
 func (v *MockInterfaceGlobal) GetProxy(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method IgnoreProxyApps

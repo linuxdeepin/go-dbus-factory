@@ -36,12 +36,7 @@ func (v *MockInterfaceDbusIfc) GoHello(flags dbus.Flags, ch chan *dbus.Call) *db
 func (v *MockInterfaceDbusIfc) Hello(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RequestName
@@ -151,12 +146,7 @@ func (v *MockInterfaceDbusIfc) GoNameHasOwner(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceDbusIfc) NameHasOwner(flags dbus.Flags, arg0 string) (bool, error) {
 	mockArgs := v.Called(flags, arg0)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method ListNames
@@ -261,12 +251,7 @@ func (v *MockInterfaceDbusIfc) GoGetNameOwner(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceDbusIfc) GetNameOwner(flags dbus.Flags, arg0 string) (string, error) {
 	mockArgs := v.Called(flags, arg0)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method ListQueuedOwners
@@ -424,12 +409,7 @@ func (v *MockInterfaceDbusIfc) GoGetId(flags dbus.Flags, ch chan *dbus.Call) *db
 func (v *MockInterfaceDbusIfc) GetId(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetConnectionCredentials

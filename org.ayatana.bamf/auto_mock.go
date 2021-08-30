@@ -255,12 +255,7 @@ func (v *MockInterfaceMatcher) GoPathForApplication(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceMatcher) PathForApplication(flags dbus.Flags, desktop_file string) (string, error) {
 	mockArgs := v.Called(flags, desktop_file)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method WindowPaths
@@ -327,12 +322,7 @@ func (v *MockInterfaceMatcher) GoApplicationIsRunning(flags dbus.Flags, ch chan 
 func (v *MockInterfaceMatcher) ApplicationIsRunning(flags dbus.Flags, desktop_file string) (bool, error) {
 	mockArgs := v.Called(flags, desktop_file)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method ApplicationForXid
@@ -351,12 +341,7 @@ func (v *MockInterfaceMatcher) GoApplicationForXid(flags dbus.Flags, ch chan *db
 func (v *MockInterfaceMatcher) ApplicationForXid(flags dbus.Flags, xid uint32) (string, error) {
 	mockArgs := v.Called(flags, xid)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method ActiveWindow
@@ -375,12 +360,7 @@ func (v *MockInterfaceMatcher) GoActiveWindow(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceMatcher) ActiveWindow(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method ActiveApplication
@@ -399,12 +379,7 @@ func (v *MockInterfaceMatcher) GoActiveApplication(flags dbus.Flags, ch chan *db
 func (v *MockInterfaceMatcher) ActiveApplication(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method WindowStackForMonitor
@@ -535,12 +510,7 @@ func (v *MockInterfaceApplication) GoShowStubs(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceApplication) ShowStubs(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Xids
@@ -583,12 +553,7 @@ func (v *MockInterfaceApplication) GoDesktopFile(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceApplication) DesktopFile(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SupportedMimeTypes
@@ -631,12 +596,7 @@ func (v *MockInterfaceApplication) GoApplicationType(flags dbus.Flags, ch chan *
 func (v *MockInterfaceApplication) ApplicationType(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method ApplicationMenu
@@ -655,17 +615,7 @@ func (v *MockInterfaceApplication) GoApplicationMenu(flags dbus.Flags, ch chan *
 func (v *MockInterfaceApplication) ApplicationMenu(flags dbus.Flags) (string, string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.Error(2)
 }
 
 // method FocusableChild
@@ -684,12 +634,7 @@ func (v *MockInterfaceApplication) GoFocusableChild(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceApplication) FocusableChild(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal WindowRemoved
@@ -764,12 +709,7 @@ func (v *MockInterfaceView) GoViewType(flags dbus.Flags, ch chan *dbus.Call) *db
 func (v *MockInterfaceView) ViewType(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Icon
@@ -788,12 +728,7 @@ func (v *MockInterfaceView) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 func (v *MockInterfaceView) Icon(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Name
@@ -812,12 +747,7 @@ func (v *MockInterfaceView) GoName(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 func (v *MockInterfaceView) Name(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method UserVisible
@@ -836,12 +766,7 @@ func (v *MockInterfaceView) GoUserVisible(flags dbus.Flags, ch chan *dbus.Call) 
 func (v *MockInterfaceView) UserVisible(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsUrgent
@@ -860,12 +785,7 @@ func (v *MockInterfaceView) GoIsUrgent(flags dbus.Flags, ch chan *dbus.Call) *db
 func (v *MockInterfaceView) IsUrgent(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsRunning
@@ -884,12 +804,7 @@ func (v *MockInterfaceView) GoIsRunning(flags dbus.Flags, ch chan *dbus.Call) *d
 func (v *MockInterfaceView) IsRunning(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsActive
@@ -908,12 +823,7 @@ func (v *MockInterfaceView) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *db
 func (v *MockInterfaceView) IsActive(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Parents
@@ -1233,12 +1143,7 @@ func (v *MockInterfaceWindow) GoTransient(flags dbus.Flags, ch chan *dbus.Call) 
 func (v *MockInterfaceWindow) Transient(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method WindowType
@@ -1281,12 +1186,7 @@ func (v *MockInterfaceWindow) GoXprop(flags dbus.Flags, ch chan *dbus.Call, xpro
 func (v *MockInterfaceWindow) Xprop(flags dbus.Flags, xprop string) (string, error) {
 	mockArgs := v.Called(flags, xprop)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Monitor

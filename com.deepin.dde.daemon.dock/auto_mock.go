@@ -117,12 +117,7 @@ func (v *MockInterfaceDock) GoIsDocked(flags dbus.Flags, ch chan *dbus.Call, des
 func (v *MockInterfaceDock) IsDocked(flags dbus.Flags, desktopFile string) (bool, error) {
 	mockArgs := v.Called(flags, desktopFile)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsOnDock
@@ -141,12 +136,7 @@ func (v *MockInterfaceDock) GoIsOnDock(flags dbus.Flags, ch chan *dbus.Call, des
 func (v *MockInterfaceDock) IsOnDock(flags dbus.Flags, desktopFile string) (bool, error) {
 	mockArgs := v.Called(flags, desktopFile)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method MakeWindowAbove
@@ -279,12 +269,7 @@ func (v *MockInterfaceDock) GoQueryWindowIdentifyMethod(flags dbus.Flags, ch cha
 func (v *MockInterfaceDock) QueryWindowIdentifyMethod(flags dbus.Flags, win uint32) (string, error) {
 	mockArgs := v.Called(flags, win)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RequestDock
@@ -303,12 +288,7 @@ func (v *MockInterfaceDock) GoRequestDock(flags dbus.Flags, ch chan *dbus.Call, 
 func (v *MockInterfaceDock) RequestDock(flags dbus.Flags, desktopFile string, index int32) (bool, error) {
 	mockArgs := v.Called(flags, desktopFile, index)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method RequestUndock
@@ -327,12 +307,7 @@ func (v *MockInterfaceDock) GoRequestUndock(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceDock) RequestUndock(flags dbus.Flags, desktopFile string) (bool, error) {
 	mockArgs := v.Called(flags, desktopFile)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method SetFrontendWindowRect

@@ -715,12 +715,7 @@ func (v *MockInterfaceInterface1) GoTDLSStatus(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceInterface1) TDLSStatus(flags dbus.Flags, peer_address string) (string, error) {
 	mockArgs := v.Called(flags, peer_address)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method TDLSTeardown
@@ -3301,12 +3296,7 @@ func (v *MockInterfaceInterfaceP2PDevice) GoConnect(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceInterfaceP2PDevice) Connect(flags dbus.Flags, args map[string]dbus.Variant) (string, error) {
 	mockArgs := v.Called(flags, args)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GroupAdd

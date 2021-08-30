@@ -137,12 +137,7 @@ func (v *MockInterfaceSession) GoGetCapabilities(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceSession) GetCapabilities(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // property Source s

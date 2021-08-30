@@ -36,12 +36,7 @@ func (v *MockInterfaceAbRecovery) GoCanBackup(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceAbRecovery) CanBackup(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method CanRestore
@@ -60,12 +55,7 @@ func (v *MockInterfaceAbRecovery) GoCanRestore(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceAbRecovery) CanRestore(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method StartBackup
