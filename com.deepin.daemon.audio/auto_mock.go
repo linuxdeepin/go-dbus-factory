@@ -111,12 +111,7 @@ func (v *MockInterfaceAudio) GoIsPortEnabled(flags dbus.Flags, ch chan *dbus.Cal
 func (v *MockInterfaceAudio) IsPortEnabled(flags dbus.Flags, cardId uint32, portName string) (bool, error) {
 	mockArgs := v.Called(flags, cardId, portName)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // property MaxUIVolume d

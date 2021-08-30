@@ -35,12 +35,7 @@ func (v *MockInterfacePowerManager) GoCanShutdown(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfacePowerManager) CanShutdown(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method CanReboot
@@ -59,12 +54,7 @@ func (v *MockInterfacePowerManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfacePowerManager) CanReboot(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method CanSuspend
@@ -83,12 +73,7 @@ func (v *MockInterfacePowerManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfacePowerManager) CanSuspend(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method CanHibernate
@@ -107,10 +92,5 @@ func (v *MockInterfacePowerManager) GoCanHibernate(flags dbus.Flags, ch chan *db
 func (v *MockInterfacePowerManager) CanHibernate(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }

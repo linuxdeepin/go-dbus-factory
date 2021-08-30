@@ -283,12 +283,7 @@ func (v *MockInterfaceWm) GoGetCurrentWorkspaceBackground(flags dbus.Flags, ch c
 func (v *MockInterfaceWm) GetCurrentWorkspaceBackground(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetCurrentWorkspaceBackground
@@ -326,12 +321,7 @@ func (v *MockInterfaceWm) GoGetWorkspaceBackground(flags dbus.Flags, ch chan *db
 func (v *MockInterfaceWm) GetWorkspaceBackground(flags dbus.Flags, index int32) (string, error) {
 	mockArgs := v.Called(flags, index)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetWorkspaceBackground
@@ -388,12 +378,7 @@ func (v *MockInterfaceWm) GoGetCurrentWorkspaceBackgroundForMonitor(flags dbus.F
 func (v *MockInterfaceWm) GetCurrentWorkspaceBackgroundForMonitor(flags dbus.Flags, strMonitorName string) (string, error) {
 	mockArgs := v.Called(flags, strMonitorName)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetCurrentWorkspaceBackgroundForMonitor
@@ -431,12 +416,7 @@ func (v *MockInterfaceWm) GoGetWorkspaceBackgroundForMonitor(flags dbus.Flags, c
 func (v *MockInterfaceWm) GetWorkspaceBackgroundForMonitor(flags dbus.Flags, index int32, strMonitorName string) (string, error) {
 	mockArgs := v.Called(flags, index, strMonitorName)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetWorkspaceBackgroundForMonitor
@@ -598,12 +578,7 @@ func (v *MockInterfaceWm) GoGetAllAccels(flags dbus.Flags, ch chan *dbus.Call) *
 func (v *MockInterfaceWm) GetAllAccels(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetAccel
@@ -670,12 +645,7 @@ func (v *MockInterfaceWm) GoSetAccel(flags dbus.Flags, ch chan *dbus.Call, data 
 func (v *MockInterfaceWm) SetAccel(flags dbus.Flags, data string) (bool, error) {
 	mockArgs := v.Called(flags, data)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method RemoveAccel
@@ -827,12 +797,7 @@ func (v *MockInterfaceWm) GoGetIsShowDesktop(flags dbus.Flags, ch chan *dbus.Cal
 func (v *MockInterfaceWm) GetIsShowDesktop(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method GetMultiTaskingStatus
@@ -851,12 +816,7 @@ func (v *MockInterfaceWm) GoGetMultiTaskingStatus(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceWm) GetMultiTaskingStatus(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // signal WorkspaceBackgroundChanged

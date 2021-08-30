@@ -36,12 +36,7 @@ func (v *MockInterfaceOutputManagement) GoListOutput(flags dbus.Flags, ch chan *
 func (v *MockInterfaceOutputManagement) ListOutput(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetOutput
@@ -60,12 +55,7 @@ func (v *MockInterfaceOutputManagement) GoGetOutput(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceOutputManagement) GetOutput(flags dbus.Flags, arg1 string) (string, error) {
 	mockArgs := v.Called(flags, arg1)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Apply
@@ -247,12 +237,7 @@ func (v *MockInterfaceWindow) GoAppId(flags dbus.Flags, ch chan *dbus.Call) *dbu
 func (v *MockInterfaceWindow) AppId(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Geometry
@@ -295,12 +280,7 @@ func (v *MockInterfaceWindow) GoIcon(flags dbus.Flags, ch chan *dbus.Call) *dbus
 func (v *MockInterfaceWindow) Icon(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method InternalId
@@ -343,12 +323,7 @@ func (v *MockInterfaceWindow) GoIsActive(flags dbus.Flags, ch chan *dbus.Call) *
 func (v *MockInterfaceWindow) IsActive(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsCloseable
@@ -367,12 +342,7 @@ func (v *MockInterfaceWindow) GoIsCloseable(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsCloseable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsDemandingAttention
@@ -391,12 +361,7 @@ func (v *MockInterfaceWindow) GoIsDemandingAttention(flags dbus.Flags, ch chan *
 func (v *MockInterfaceWindow) IsDemandingAttention(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsFullscreen
@@ -415,12 +380,7 @@ func (v *MockInterfaceWindow) GoIsFullscreen(flags dbus.Flags, ch chan *dbus.Cal
 func (v *MockInterfaceWindow) IsFullscreen(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsFullscreenable
@@ -439,12 +399,7 @@ func (v *MockInterfaceWindow) GoIsFullscreenable(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceWindow) IsFullscreenable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsKeepAbove
@@ -463,12 +418,7 @@ func (v *MockInterfaceWindow) GoIsKeepAbove(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsKeepAbove(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsMaximizeable
@@ -487,12 +437,7 @@ func (v *MockInterfaceWindow) GoIsMaximizeable(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceWindow) IsMaximizeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsMaximized
@@ -511,12 +456,7 @@ func (v *MockInterfaceWindow) GoIsMaximized(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsMaximized(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsMinimizeable
@@ -535,12 +475,7 @@ func (v *MockInterfaceWindow) GoIsMinimizeable(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceWindow) IsMinimizeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsMinimized
@@ -559,12 +494,7 @@ func (v *MockInterfaceWindow) GoIsMinimized(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsMinimized(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsMovable
@@ -583,12 +513,7 @@ func (v *MockInterfaceWindow) GoIsMovable(flags dbus.Flags, ch chan *dbus.Call) 
 func (v *MockInterfaceWindow) IsMovable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsOnAllDesktops
@@ -607,12 +532,7 @@ func (v *MockInterfaceWindow) GoIsOnAllDesktops(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceWindow) IsOnAllDesktops(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsResizable
@@ -631,12 +551,7 @@ func (v *MockInterfaceWindow) GoIsResizable(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsResizable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsShadeable
@@ -655,12 +570,7 @@ func (v *MockInterfaceWindow) GoIsShadeable(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) IsShadeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsShaded
@@ -679,12 +589,7 @@ func (v *MockInterfaceWindow) GoIsShaded(flags dbus.Flags, ch chan *dbus.Call) *
 func (v *MockInterfaceWindow) IsShaded(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsValid
@@ -703,12 +608,7 @@ func (v *MockInterfaceWindow) GoIsValid(flags dbus.Flags, ch chan *dbus.Call) *d
 func (v *MockInterfaceWindow) IsValid(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsVirtualDesktopChangeable
@@ -727,12 +627,7 @@ func (v *MockInterfaceWindow) GoIsVirtualDesktopChangeable(flags dbus.Flags, ch 
 func (v *MockInterfaceWindow) IsVirtualDesktopChangeable(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Pid
@@ -1022,12 +917,7 @@ func (v *MockInterfaceWindow) GoSkipSwitcher(flags dbus.Flags, ch chan *dbus.Cal
 func (v *MockInterfaceWindow) SkipSwitcher(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method SkipTaskbar
@@ -1046,12 +936,7 @@ func (v *MockInterfaceWindow) GoSkipTaskbar(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceWindow) SkipTaskbar(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Title
@@ -1070,12 +955,7 @@ func (v *MockInterfaceWindow) GoTitle(flags dbus.Flags, ch chan *dbus.Call) *dbu
 func (v *MockInterfaceWindow) Title(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method VirtualDesktop

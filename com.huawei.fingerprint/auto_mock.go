@@ -36,12 +36,7 @@ func (v *MockInterfaceFingerprint) GoSearchDevice(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceFingerprint) SearchDevice(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Identify

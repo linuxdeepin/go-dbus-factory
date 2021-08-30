@@ -203,12 +203,7 @@ func (v *MockInterfaceNetwork) GoGetAccessPoints(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceNetwork) GetAccessPoints(flags dbus.Flags, path dbus.ObjectPath) (string, error) {
 	mockArgs := v.Called(flags, path)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetActiveConnectionInfo
@@ -227,12 +222,7 @@ func (v *MockInterfaceNetwork) GoGetActiveConnectionInfo(flags dbus.Flags, ch ch
 func (v *MockInterfaceNetwork) GetActiveConnectionInfo(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetAutoProxy
@@ -251,12 +241,7 @@ func (v *MockInterfaceNetwork) GoGetAutoProxy(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceNetwork) GetAutoProxy(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetProxy
@@ -275,17 +260,7 @@ func (v *MockInterfaceNetwork) GoGetProxy(flags dbus.Flags, ch chan *dbus.Call, 
 func (v *MockInterfaceNetwork) GetProxy(flags dbus.Flags, proxyType string) (string, string, error) {
 	mockArgs := v.Called(flags, proxyType)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.Error(2)
 }
 
 // method GetProxyIgnoreHosts
@@ -304,12 +279,7 @@ func (v *MockInterfaceNetwork) GoGetProxyIgnoreHosts(flags dbus.Flags, ch chan *
 func (v *MockInterfaceNetwork) GetProxyIgnoreHosts(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetProxyMethod
@@ -328,12 +298,7 @@ func (v *MockInterfaceNetwork) GoGetProxyMethod(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceNetwork) GetProxyMethod(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetSupportedConnectionTypes
@@ -376,12 +341,7 @@ func (v *MockInterfaceNetwork) GoIsDeviceEnabled(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceNetwork) IsDeviceEnabled(flags dbus.Flags, devPath dbus.ObjectPath) (bool, error) {
 	mockArgs := v.Called(flags, devPath)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method IsWirelessHotspotModeEnabled
@@ -400,12 +360,7 @@ func (v *MockInterfaceNetwork) GoIsWirelessHotspotModeEnabled(flags dbus.Flags, 
 func (v *MockInterfaceNetwork) IsWirelessHotspotModeEnabled(flags dbus.Flags, devPath dbus.ObjectPath) (bool, error) {
 	mockArgs := v.Called(flags, devPath)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method ListDeviceConnections

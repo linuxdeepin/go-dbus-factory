@@ -55,12 +55,7 @@ func (v *MockInterfaceAccounts) GoCreateGuestAccount(flags dbus.Flags, ch chan *
 func (v *MockInterfaceAccounts) CreateGuestAccount(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method CreateUser
@@ -122,12 +117,7 @@ func (v *MockInterfaceAccounts) GoFindUserById(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceAccounts) FindUserById(flags dbus.Flags, uid string) (string, error) {
 	mockArgs := v.Called(flags, uid)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method FindUserByName
@@ -146,12 +136,7 @@ func (v *MockInterfaceAccounts) GoFindUserByName(flags dbus.Flags, ch chan *dbus
 func (v *MockInterfaceAccounts) FindUserByName(flags dbus.Flags, name string) (string, error) {
 	mockArgs := v.Called(flags, name)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method IsPasswordValid
@@ -170,22 +155,12 @@ func (v *MockInterfaceAccounts) GoIsPasswordValid(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceAccounts) IsPasswordValid(flags dbus.Flags, password string) (bool, string, int32, error) {
 	mockArgs := v.Called(flags, password)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
 	ret2, ok := mockArgs.Get(2).(int32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
 	}
 
-	return ret0, ret1, ret2, mockArgs.Error(3)
+	return mockArgs.Bool(0), mockArgs.String(1), ret2, mockArgs.Error(3)
 }
 
 // method IsUsernameValid
@@ -204,22 +179,12 @@ func (v *MockInterfaceAccounts) GoIsUsernameValid(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceAccounts) IsUsernameValid(flags dbus.Flags, name string) (bool, string, int32, error) {
 	mockArgs := v.Called(flags, name)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
 	ret2, ok := mockArgs.Get(2).(int32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
 	}
 
-	return ret0, ret1, ret2, mockArgs.Error(3)
+	return mockArgs.Bool(0), mockArgs.String(1), ret2, mockArgs.Error(3)
 }
 
 // method RandUserIcon
@@ -238,12 +203,7 @@ func (v *MockInterfaceAccounts) GoRandUserIcon(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceAccounts) RandUserIcon(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal UserAdded
@@ -436,12 +396,7 @@ func (v *MockInterfaceUser) GoIsPasswordExpired(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceUser) IsPasswordExpired(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method PasswordExpiredInfo
@@ -1377,12 +1332,7 @@ func (v *MockInterfaceImageBlur) GoGet(flags dbus.Flags, ch chan *dbus.Call, sou
 func (v *MockInterfaceImageBlur) Get(flags dbus.Flags, source string) (string, error) {
 	mockArgs := v.Called(flags, source)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // signal BlurDone

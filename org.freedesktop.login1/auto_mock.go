@@ -252,19 +252,9 @@ func (v *MockInterfaceManager) GoCreateSession(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid uint32, service string, type0 string, class string, desktop string, seatId string, vtnr uint32, tty string, display string, remote bool, remoteUser string, remoteHost string, properties [][]interface{}) (string, dbus.ObjectPath, string, dbus.UnixFD, uint32, string, uint32, bool, error) {
 	mockArgs := v.Called(flags, uid, pid, service, type0, class, desktop, seatId, vtnr, tty, display, remote, remoteUser, remoteHost, properties)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).(dbus.ObjectPath)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	ret2, ok := mockArgs.Get(2).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 2, mockArgs.Get(2)))
 	}
 
 	ret3, ok := mockArgs.Get(3).(dbus.UnixFD)
@@ -277,22 +267,12 @@ func (v *MockInterfaceManager) CreateSession(flags dbus.Flags, uid uint32, pid u
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 4, mockArgs.Get(4)))
 	}
 
-	ret5, ok := mockArgs.Get(5).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 5, mockArgs.Get(5)))
-	}
-
 	ret6, ok := mockArgs.Get(6).(uint32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 6, mockArgs.Get(6)))
 	}
 
-	ret7, ok := mockArgs.Get(7).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 7, mockArgs.Get(7)))
-	}
-
-	return ret0, ret1, ret2, ret3, ret4, ret5, ret6, ret7, mockArgs.Error(8)
+	return mockArgs.String(0), ret1, mockArgs.String(2), ret3, ret4, mockArgs.String(5), ret6, mockArgs.Bool(7), mockArgs.Error(8)
 }
 
 // method ReleaseSession
@@ -691,12 +671,7 @@ func (v *MockInterfaceManager) GoCanPowerOff(flags dbus.Flags, ch chan *dbus.Cal
 func (v *MockInterfaceManager) CanPowerOff(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method CanReboot
@@ -715,12 +690,7 @@ func (v *MockInterfaceManager) GoCanReboot(flags dbus.Flags, ch chan *dbus.Call)
 func (v *MockInterfaceManager) CanReboot(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method CanSuspend
@@ -739,12 +709,7 @@ func (v *MockInterfaceManager) GoCanSuspend(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceManager) CanSuspend(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method CanHibernate
@@ -763,12 +728,7 @@ func (v *MockInterfaceManager) GoCanHibernate(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceManager) CanHibernate(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method CanHybridSleep
@@ -787,12 +747,7 @@ func (v *MockInterfaceManager) GoCanHybridSleep(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceManager) CanHybridSleep(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method ScheduleShutdown
@@ -830,12 +785,7 @@ func (v *MockInterfaceManager) GoCancelScheduledShutdown(flags dbus.Flags, ch ch
 func (v *MockInterfaceManager) CancelScheduledShutdown(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method Inhibit
@@ -878,12 +828,7 @@ func (v *MockInterfaceManager) GoCanRebootToFirmwareSetup(flags dbus.Flags, ch c
 func (v *MockInterfaceManager) CanRebootToFirmwareSetup(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method SetRebootToFirmwareSetup
@@ -1896,12 +1841,7 @@ func (v *MockInterfaceSession) TakeDevice(flags dbus.Flags, major uint32, minor 
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
 
-	ret1, ok := mockArgs.Get(1).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	return ret0, ret1, mockArgs.Error(2)
+	return ret0, mockArgs.Bool(1), mockArgs.Error(2)
 }
 
 // method ReleaseDevice

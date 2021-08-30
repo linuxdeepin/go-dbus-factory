@@ -1320,17 +1320,7 @@ func (v *MockInterfaceManager) GoGetLogging(flags dbus.Flags, ch chan *dbus.Call
 func (v *MockInterfaceManager) GetLogging(flags dbus.Flags) (string, string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.Error(2)
 }
 
 // method CheckConnectivity
@@ -1798,17 +1788,7 @@ func (v *MockInterfacePpp) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.Call) *
 func (v *MockInterfacePpp) NeedSecrets(flags dbus.Flags) (string, string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	ret1, ok := mockArgs.Get(1).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
-	}
-
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.Error(2)
 }
 
 // method SetIp4Config
@@ -2283,17 +2263,12 @@ func (v *MockInterfaceSettings) GoLoadConnections(flags dbus.Flags, ch chan *dbu
 func (v *MockInterfaceSettings) LoadConnections(flags dbus.Flags, filenames []string) (bool, []string, error) {
 	mockArgs := v.Called(flags, filenames)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
 	ret1, ok := mockArgs.Get(1).([]string)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 1, mockArgs.Get(1)))
 	}
 
-	return ret0, ret1, mockArgs.Error(2)
+	return mockArgs.Bool(0), ret1, mockArgs.Error(2)
 }
 
 // method ReloadConnections
@@ -2312,12 +2287,7 @@ func (v *MockInterfaceSettings) GoReloadConnections(flags dbus.Flags, ch chan *d
 func (v *MockInterfaceSettings) ReloadConnections(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method SaveHostname
@@ -2541,12 +2511,7 @@ func (v *MockInterfaceVpnPlugin) GoNeedSecrets(flags dbus.Flags, ch chan *dbus.C
 func (v *MockInterfaceVpnPlugin) NeedSecrets(flags dbus.Flags, settings map[string]map[string]dbus.Variant) (string, error) {
 	mockArgs := v.Called(flags, settings)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method Disconnect

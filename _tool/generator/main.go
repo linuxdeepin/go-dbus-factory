@@ -474,14 +474,23 @@ func writeMethodMock(sb *SourceBody, method introspect.Method, ifcCfg *Interface
 
 	var rets []string
 	for i, a := range outArgs {
-		retName := fmt.Sprintf("ret%d", i)
-		sb.Pn("%s, ok := mockArgs.Get(%d).(%s)", retName, i, getArgType(a, argFixes))
-		sb.Pn(`if !ok {
-				panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", %[1]d, mockArgs.Get(%[1]d)))
-			}
-			`, i)
+		argType := getArgType(a, argFixes)
+		switch argType {
+		case "string", "int", "bool":
+			ret := fmt.Sprintf("mockArgs.%s(%d)", strings.Title(argType), i)
+			rets = append(rets, ret)
+		default:
+			retName := fmt.Sprintf("ret%d", i)
 
-		rets = append(rets, retName)
+			sb.Pn("%s, ok := mockArgs.Get(%d).(%s)", retName, i, argType)
+			sb.Pn(`if !ok {
+					panic(fmt.Sprintf("assert: arguments: %%d failed because object wasn't correct type: %%v", %[1]d, mockArgs.Get(%[1]d)))
+				}
+				`, i)
+
+			rets = append(rets, retName)
+		}
+
 	}
 
 	rets = append(rets, fmt.Sprintf("mockArgs.Error(%d)", len(outArgs)))

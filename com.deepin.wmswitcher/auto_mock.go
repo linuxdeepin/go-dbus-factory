@@ -36,12 +36,7 @@ func (v *MockInterfaceWmSwitcher) GoAllowSwitch(flags dbus.Flags, ch chan *dbus.
 func (v *MockInterfaceWmSwitcher) AllowSwitch(flags dbus.Flags) (bool, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(bool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Bool(0), mockArgs.Error(1)
 }
 
 // method CurrentWM
@@ -60,12 +55,7 @@ func (v *MockInterfaceWmSwitcher) GoCurrentWM(flags dbus.Flags, ch chan *dbus.Ca
 func (v *MockInterfaceWmSwitcher) CurrentWM(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method RequestSwitchWM

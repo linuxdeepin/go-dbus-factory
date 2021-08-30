@@ -35,12 +35,7 @@ func (v *MockInterfaceLunarCalendar) GoGetFestivalMonth(flags dbus.Flags, ch cha
 func (v *MockInterfaceLunarCalendar) GetFestivalMonth(flags dbus.Flags, year int32, month int32) (string, error) {
 	mockArgs := v.Called(flags, year, month)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetFestivalsInRange
@@ -83,12 +78,7 @@ func (v *MockInterfaceLunarCalendar) GoGetHuangLiDay(flags dbus.Flags, ch chan *
 func (v *MockInterfaceLunarCalendar) GetHuangLiDay(flags dbus.Flags, year int32, month int32, day int32) (string, error) {
 	mockArgs := v.Called(flags, year, month, day)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetHuangLiMonth
@@ -107,10 +97,5 @@ func (v *MockInterfaceLunarCalendar) GoGetHuangLiMonth(flags dbus.Flags, ch chan
 func (v *MockInterfaceLunarCalendar) GetHuangLiMonth(flags dbus.Flags, year int32, month int32, fill bool) (string, error) {
 	mockArgs := v.Called(flags, year, month, fill)
 
-	ret0, ok := mockArgs.Get(0).(string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
