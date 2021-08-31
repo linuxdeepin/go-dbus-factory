@@ -15,7 +15,7 @@
             <arg name="enabled" type="b" direction="in"></arg>
         </method>
         <method name="GetReminderInfo">
-            <arg name="info" type="((iii)(sssss)(sssss)i)" direction="out"></arg>
+            <arg name="info" type="(s(iiiiii)(sssss)(sssss)i)" direction="out"></arg>
         </method>
         <method name="IsPasswordExpired">
             <arg name="expired" type="b" direction="out"></arg>

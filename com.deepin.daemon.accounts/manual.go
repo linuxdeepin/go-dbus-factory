@@ -12,7 +12,10 @@ type LoginReminderInfo struct {
 	Username string
 	Spent    struct {
 		LastChange int
+		Min        int
+		Max        int
 		Warn       int
+		Inactive   int
 		Expire     int
 	}
 	CurrentLogin            LoginUtmpx
