@@ -462,12 +462,12 @@ func (v *MockInterfaceDisplay) SwitchMode(flags dbus.Flags, mode uint8, name str
 	return mockArgs.Error(0)
 }
 
-// property ScreenWidth q
+// property ColorTemperatureMode i
 
-func (v *MockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
+func (v *MockInterfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -475,12 +475,12 @@ func (v *MockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
 	return ret0
 }
 
-// property MaxBacklightBrightness u
+// property HasChanged b
 
-func (v *MockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
+func (v *MockInterfaceDisplay) HasChanged() proxy.PropBool {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -531,12 +531,42 @@ func (v *MockInterfaceDisplay) TouchMap() PropDisplayTouchMap {
 	return ret0
 }
 
-// property CurrentCustomId s
+type MockPropDisplayPrimaryRect struct {
+	mock.Mock
+}
 
-func (v *MockInterfaceDisplay) CurrentCustomId() proxy.PropString {
+func (p MockPropDisplayPrimaryRect) Get(flags dbus.Flags) (value Rectangle, err error) {
+	args := p.Called(flags)
+
+	var ok bool
+	value, ok = args.Get(0).(Rectangle)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
+	}
+
+	err = args.Error(1)
+
+	return
+}
+
+func (p MockPropDisplayPrimaryRect) Set(flags dbus.Flags, value Rectangle) error {
+	args := p.Called(flags, value)
+
+	return args.Error(0)
+}
+
+func (p MockPropDisplayPrimaryRect) ConnectChanged(cb func(hasValue bool, value Rectangle)) error {
+	args := p.Called(cb)
+
+	return args.Error(0)
+}
+
+// property PrimaryRect (nnqq)
+
+func (v *MockInterfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	ret0, ok := mockArgs.Get(0).(*MockPropDisplayPrimaryRect)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -544,12 +574,25 @@ func (v *MockInterfaceDisplay) CurrentCustomId() proxy.PropString {
 	return ret0
 }
 
-// property ScreenHeight q
+// property ScreenWidth q
 
-func (v *MockInterfaceDisplay) ScreenHeight() proxy.PropUint16 {
+func (v *MockInterfaceDisplay) ScreenWidth() proxy.PropUint16 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property MaxBacklightBrightness u
+
+func (v *MockInterfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -583,42 +626,12 @@ func (v *MockInterfaceDisplay) DisplayMode() proxy.PropByte {
 	return ret0
 }
 
-type MockPropDisplayBrightness struct {
-	mock.Mock
-}
+// property CustomIdList as
 
-func (p MockPropDisplayBrightness) Get(flags dbus.Flags) (value map[string]float64, err error) {
-	args := p.Called(flags)
-
-	var ok bool
-	value, ok = args.Get(0).(map[string]float64)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
-	}
-
-	err = args.Error(1)
-
-	return
-}
-
-func (p MockPropDisplayBrightness) Set(flags dbus.Flags, value map[string]float64) error {
-	args := p.Called(flags, value)
-
-	return args.Error(0)
-}
-
-func (p MockPropDisplayBrightness) ConnectChanged(cb func(hasValue bool, value map[string]float64)) error {
-	args := p.Called(cb)
-
-	return args.Error(0)
-}
-
-// property Brightness a{sd}
-
-func (v *MockInterfaceDisplay) Brightness() PropDisplayBrightness {
+func (v *MockInterfaceDisplay) CustomIdList() proxy.PropStringArray {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*MockPropDisplayBrightness)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -626,12 +639,38 @@ func (v *MockInterfaceDisplay) Brightness() PropDisplayBrightness {
 	return ret0
 }
 
-// property HasChanged b
+// property CurrentCustomId s
 
-func (v *MockInterfaceDisplay) HasChanged() proxy.PropBool {
+func (v *MockInterfaceDisplay) CurrentCustomId() proxy.PropString {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property ScreenHeight q
+
+func (v *MockInterfaceDisplay) ScreenHeight() proxy.PropUint16 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Monitors ao
+
+func (v *MockInterfaceDisplay) Monitors() proxy.PropObjectPathArray {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -695,41 +734,15 @@ func (v *MockInterfaceDisplay) Primary() proxy.PropString {
 	return ret0
 }
 
-// property Monitors ao
-
-func (v *MockInterfaceDisplay) Monitors() proxy.PropObjectPathArray {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropObjectPathArray)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property CustomIdList as
-
-func (v *MockInterfaceDisplay) CustomIdList() proxy.PropStringArray {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-type MockPropDisplayPrimaryRect struct {
+type MockPropDisplayBrightness struct {
 	mock.Mock
 }
 
-func (p MockPropDisplayPrimaryRect) Get(flags dbus.Flags) (value Rectangle, err error) {
+func (p MockPropDisplayBrightness) Get(flags dbus.Flags) (value map[string]float64, err error) {
 	args := p.Called(flags)
 
 	var ok bool
-	value, ok = args.Get(0).(Rectangle)
+	value, ok = args.Get(0).(map[string]float64)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
 	}
@@ -739,37 +752,24 @@ func (p MockPropDisplayPrimaryRect) Get(flags dbus.Flags) (value Rectangle, err 
 	return
 }
 
-func (p MockPropDisplayPrimaryRect) Set(flags dbus.Flags, value Rectangle) error {
+func (p MockPropDisplayBrightness) Set(flags dbus.Flags, value map[string]float64) error {
 	args := p.Called(flags, value)
 
 	return args.Error(0)
 }
 
-func (p MockPropDisplayPrimaryRect) ConnectChanged(cb func(hasValue bool, value Rectangle)) error {
+func (p MockPropDisplayBrightness) ConnectChanged(cb func(hasValue bool, value map[string]float64)) error {
 	args := p.Called(cb)
 
 	return args.Error(0)
 }
 
-// property PrimaryRect (nnqq)
+// property Brightness a{sd}
 
-func (v *MockInterfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
+func (v *MockInterfaceDisplay) Brightness() PropDisplayBrightness {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*MockPropDisplayPrimaryRect)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property ColorTemperatureMode i
-
-func (v *MockInterfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropInt32)
+	ret0, ok := mockArgs.Get(0).(*MockPropDisplayBrightness)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -919,142 +919,12 @@ func (v *MockInterfaceMonitor) SetRotation(flags dbus.Flags, value uint16) error
 	return mockArgs.Error(0)
 }
 
-// property Reflect q
-
-func (v *MockInterfaceMonitor) Reflect() proxy.PropUint16 {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Brightness d
-
-func (v *MockInterfaceMonitor) Brightness() proxy.PropDouble {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Model s
-
-func (v *MockInterfaceMonitor) Model() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Reflects aq
-
-func (v *MockInterfaceMonitor) Reflects() proxy.PropUint16Array {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property BestMode (uqqd)
-
-func (v *MockInterfaceMonitor) BestMode() PropModeInfo {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property PreferredModes a(uqqd)
-
-func (v *MockInterfaceMonitor) PreferredModes() PropModeInfoSlice {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
 // property MmHeight u
 
 func (v *MockInterfaceMonitor) MmHeight() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Enabled b
-
-func (v *MockInterfaceMonitor) Enabled() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Connected b
-
-func (v *MockInterfaceMonitor) Connected() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Manufacturer s
-
-func (v *MockInterfaceMonitor) Manufacturer() proxy.PropString {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property Modes a(uqqd)
-
-func (v *MockInterfaceMonitor) Modes() PropModeInfoSlice {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1101,12 +971,12 @@ func (v *MockInterfaceMonitor) RefreshRate() proxy.PropDouble {
 	return ret0
 }
 
-// property Name s
+// property CurrentRotateMode y
 
-func (v *MockInterfaceMonitor) Name() proxy.PropString {
+func (v *MockInterfaceMonitor) CurrentRotateMode() proxy.PropByte {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropByte)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1114,51 +984,12 @@ func (v *MockInterfaceMonitor) Name() proxy.PropString {
 	return ret0
 }
 
-// property Rotations aq
+// property AvailableFillModes as
 
-func (v *MockInterfaceMonitor) Rotations() proxy.PropUint16Array {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property AvailableFillMode as
-
-func (v *MockInterfaceMonitor) AvailableFillMode() proxy.PropStringArray {
+func (v *MockInterfaceMonitor) AvailableFillModes() proxy.PropStringArray {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property SupportFillMode b
-
-func (v *MockInterfaceMonitor) SupportFillMode() proxy.PropBool {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0
-}
-
-// property CurrentFillMode (qqs)
-
-func (v *MockInterfaceMonitor) CurrentFillMode() PropCurrentFillMode {
-	mockArgs := v.Called()
-
-	ret0, ok := mockArgs.Get(0).(*MockPropCurrentFillMode)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1179,12 +1010,90 @@ func (v *MockInterfaceMonitor) ID() proxy.PropUint32 {
 	return ret0
 }
 
+// property Rotations aq
+
+func (v *MockInterfaceMonitor) Rotations() proxy.PropUint16Array {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property BestMode (uqqd)
+
+func (v *MockInterfaceMonitor) BestMode() PropModeInfo {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property MmWidth u
 
 func (v *MockInterfaceMonitor) MmWidth() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Brightness d
+
+func (v *MockInterfaceMonitor) Brightness() proxy.PropDouble {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropDouble)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property CurrentMode (uqqd)
+
+func (v *MockInterfaceMonitor) CurrentMode() PropModeInfo {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Name s
+
+func (v *MockInterfaceMonitor) Name() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Manufacturer s
+
+func (v *MockInterfaceMonitor) Manufacturer() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1231,12 +1140,103 @@ func (v *MockInterfaceMonitor) Height() proxy.PropUint16 {
 	return ret0
 }
 
-// property CurrentMode (uqqd)
+// property CurrentFillMode s
 
-func (v *MockInterfaceMonitor) CurrentMode() PropModeInfo {
+func (v *MockInterfaceMonitor) CurrentFillMode() proxy.PropString {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*MockPropModeInfo)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Connected b
+
+func (v *MockInterfaceMonitor) Connected() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Model s
+
+func (v *MockInterfaceMonitor) Model() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Reflects aq
+
+func (v *MockInterfaceMonitor) Reflects() proxy.PropUint16Array {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16Array)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Modes a(uqqd)
+
+func (v *MockInterfaceMonitor) Modes() PropModeInfoSlice {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property PreferredModes a(uqqd)
+
+func (v *MockInterfaceMonitor) PreferredModes() PropModeInfoSlice {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*MockPropModeInfoSlice)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Enabled b
+
+func (v *MockInterfaceMonitor) Enabled() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Reflect q
+
+func (v *MockInterfaceMonitor) Reflect() proxy.PropUint16 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint16)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -1299,36 +1299,6 @@ func (p MockPropModeInfoSlice) Set(flags dbus.Flags, value []ModeInfo) error {
 }
 
 func (p MockPropModeInfoSlice) ConnectChanged(cb func(hasValue bool, value []ModeInfo)) error {
-	args := p.Called(cb)
-
-	return args.Error(0)
-}
-
-type MockPropCurrentFillMode struct {
-	mock.Mock
-}
-
-func (p MockPropCurrentFillMode) Get(flags dbus.Flags) (value FillModeInfo, err error) {
-	args := p.Called(flags)
-
-	var ok bool
-	value, ok = args.Get(0).(FillModeInfo)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, args.Get(0)))
-	}
-
-	err = args.Error(1)
-
-	return
-}
-
-func (p MockPropCurrentFillMode) Set(flags dbus.Flags, value FillModeInfo) error {
-	args := p.Called(flags, value)
-
-	return args.Error(0)
-}
-
-func (p MockPropCurrentFillMode) ConnectChanged(cb func(hasValue bool, value FillModeInfo)) error {
 	args := p.Called(cb)
 
 	return args.Error(0)

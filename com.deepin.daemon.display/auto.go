@@ -71,21 +71,21 @@ type display interface {
 	SetPrimary(flags dbus.Flags, outputName string) error
 	GoSwitchMode(flags dbus.Flags, ch chan *dbus.Call, mode uint8, name string) *dbus.Call
 	SwitchMode(flags dbus.Flags, mode uint8, name string) error
+	ColorTemperatureMode() proxy.PropInt32
+	HasChanged() proxy.PropBool
+	TouchMap() PropDisplayTouchMap
+	PrimaryRect() PropDisplayPrimaryRect
 	ScreenWidth() proxy.PropUint16
 	MaxBacklightBrightness() proxy.PropUint32
-	TouchMap() PropDisplayTouchMap
-	CurrentCustomId() proxy.PropString
-	ScreenHeight() proxy.PropUint16
 	ColorTemperatureManual() proxy.PropInt32
 	DisplayMode() proxy.PropByte
-	Brightness() PropDisplayBrightness
-	HasChanged() proxy.PropBool
+	CustomIdList() proxy.PropStringArray
+	CurrentCustomId() proxy.PropString
+	ScreenHeight() proxy.PropUint16
+	Monitors() proxy.PropObjectPathArray
 	Touchscreens() PropTouchscreens
 	Primary() proxy.PropString
-	Monitors() proxy.PropObjectPathArray
-	CustomIdList() proxy.PropStringArray
-	PrimaryRect() PropDisplayPrimaryRect
-	ColorTemperatureMode() proxy.PropInt32
+	Brightness() PropDisplayBrightness
 }
 
 type interfaceDisplay struct{}
@@ -360,21 +360,21 @@ func (v *interfaceDisplay) SwitchMode(flags dbus.Flags, mode uint8, name string)
 	return (<-v.GoSwitchMode(flags, make(chan *dbus.Call, 1), mode, name).Done).Err
 }
 
-// property ScreenWidth q
+// property ColorTemperatureMode i
 
-func (v *interfaceDisplay) ScreenWidth() proxy.PropUint16 {
-	return &proxy.ImplPropUint16{
+func (v *interfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
+	return &proxy.ImplPropInt32{
 		Impl: v,
-		Name: "ScreenWidth",
+		Name: "ColorTemperatureMode",
 	}
 }
 
-// property MaxBacklightBrightness u
+// property HasChanged b
 
-func (v *interfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
-	return &proxy.ImplPropUint32{
+func (v *interfaceDisplay) HasChanged() proxy.PropBool {
+	return &proxy.ImplPropBool{
 		Impl: v,
-		Name: "MaxBacklightBrightness",
+		Name: "HasChanged",
 	}
 }
 
@@ -428,21 +428,71 @@ func (v *interfaceDisplay) TouchMap() PropDisplayTouchMap {
 	}
 }
 
-// property CurrentCustomId s
+type PropDisplayPrimaryRect interface {
+	Get(flags dbus.Flags) (value Rectangle, err error)
+	Set(flags dbus.Flags, value Rectangle) error
+	ConnectChanged(cb func(hasValue bool, value Rectangle)) error
+}
 
-func (v *interfaceDisplay) CurrentCustomId() proxy.PropString {
-	return &proxy.ImplPropString{
+type implPropDisplayPrimaryRect struct {
+	Impl proxy.Implementer
+	Name string
+}
+
+func (p implPropDisplayPrimaryRect) Get(flags dbus.Flags) (value Rectangle, err error) {
+	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
+		p.Name, &value)
+	return
+}
+
+func (p implPropDisplayPrimaryRect) Set(flags dbus.Flags, value Rectangle) error {
+	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
+}
+
+func (p implPropDisplayPrimaryRect) ConnectChanged(cb func(hasValue bool, value Rectangle)) error {
+	if cb == nil {
+		return errors.New("nil callback")
+	}
+	cb0 := func(hasValue bool, value interface{}) {
+		if hasValue {
+			var v Rectangle
+			err := dbus.Store([]interface{}{value}, &v)
+			if err != nil {
+				return
+			}
+			cb(true, v)
+		} else {
+			cb(false, Rectangle{})
+		}
+	}
+	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
+		p.Name, cb0)
+}
+
+// property PrimaryRect (nnqq)
+
+func (v *interfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
+	return &implPropDisplayPrimaryRect{
 		Impl: v,
-		Name: "CurrentCustomId",
+		Name: "PrimaryRect",
 	}
 }
 
-// property ScreenHeight q
+// property ScreenWidth q
 
-func (v *interfaceDisplay) ScreenHeight() proxy.PropUint16 {
+func (v *interfaceDisplay) ScreenWidth() proxy.PropUint16 {
 	return &proxy.ImplPropUint16{
 		Impl: v,
-		Name: "ScreenHeight",
+		Name: "ScreenWidth",
+	}
+}
+
+// property MaxBacklightBrightness u
+
+func (v *interfaceDisplay) MaxBacklightBrightness() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
+		Impl: v,
+		Name: "MaxBacklightBrightness",
 	}
 }
 
@@ -464,62 +514,39 @@ func (v *interfaceDisplay) DisplayMode() proxy.PropByte {
 	}
 }
 
-type PropDisplayBrightness interface {
-	Get(flags dbus.Flags) (value map[string]float64, err error)
-	Set(flags dbus.Flags, value map[string]float64) error
-	ConnectChanged(cb func(hasValue bool, value map[string]float64)) error
-}
+// property CustomIdList as
 
-type implPropDisplayBrightness struct {
-	Impl proxy.Implementer
-	Name string
-}
-
-func (p implPropDisplayBrightness) Get(flags dbus.Flags) (value map[string]float64, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		p.Name, &value)
-	return
-}
-
-func (p implPropDisplayBrightness) Set(flags dbus.Flags, value map[string]float64) error {
-	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
-}
-
-func (p implPropDisplayBrightness) ConnectChanged(cb func(hasValue bool, value map[string]float64)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v map[string]float64
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		p.Name, cb0)
-}
-
-// property Brightness a{sd}
-
-func (v *interfaceDisplay) Brightness() PropDisplayBrightness {
-	return &implPropDisplayBrightness{
+func (v *interfaceDisplay) CustomIdList() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
 		Impl: v,
-		Name: "Brightness",
+		Name: "CustomIdList",
 	}
 }
 
-// property HasChanged b
+// property CurrentCustomId s
 
-func (v *interfaceDisplay) HasChanged() proxy.PropBool {
-	return &proxy.ImplPropBool{
+func (v *interfaceDisplay) CurrentCustomId() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
-		Name: "HasChanged",
+		Name: "CurrentCustomId",
+	}
+}
+
+// property ScreenHeight q
+
+func (v *interfaceDisplay) ScreenHeight() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
+		Impl: v,
+		Name: "ScreenHeight",
+	}
+}
+
+// property Monitors ao
+
+func (v *interfaceDisplay) Monitors() proxy.PropObjectPathArray {
+	return &proxy.ImplPropObjectPathArray{
+		Impl: v,
+		Name: "Monitors",
 	}
 }
 
@@ -582,80 +609,53 @@ func (v *interfaceDisplay) Primary() proxy.PropString {
 	}
 }
 
-// property Monitors ao
-
-func (v *interfaceDisplay) Monitors() proxy.PropObjectPathArray {
-	return &proxy.ImplPropObjectPathArray{
-		Impl: v,
-		Name: "Monitors",
-	}
+type PropDisplayBrightness interface {
+	Get(flags dbus.Flags) (value map[string]float64, err error)
+	Set(flags dbus.Flags, value map[string]float64) error
+	ConnectChanged(cb func(hasValue bool, value map[string]float64)) error
 }
 
-// property CustomIdList as
-
-func (v *interfaceDisplay) CustomIdList() proxy.PropStringArray {
-	return &proxy.ImplPropStringArray{
-		Impl: v,
-		Name: "CustomIdList",
-	}
-}
-
-type PropDisplayPrimaryRect interface {
-	Get(flags dbus.Flags) (value Rectangle, err error)
-	Set(flags dbus.Flags, value Rectangle) error
-	ConnectChanged(cb func(hasValue bool, value Rectangle)) error
-}
-
-type implPropDisplayPrimaryRect struct {
+type implPropDisplayBrightness struct {
 	Impl proxy.Implementer
 	Name string
 }
 
-func (p implPropDisplayPrimaryRect) Get(flags dbus.Flags) (value Rectangle, err error) {
+func (p implPropDisplayBrightness) Get(flags dbus.Flags) (value map[string]float64, err error) {
 	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
 		p.Name, &value)
 	return
 }
 
-func (p implPropDisplayPrimaryRect) Set(flags dbus.Flags, value Rectangle) error {
+func (p implPropDisplayBrightness) Set(flags dbus.Flags, value map[string]float64) error {
 	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
 }
 
-func (p implPropDisplayPrimaryRect) ConnectChanged(cb func(hasValue bool, value Rectangle)) error {
+func (p implPropDisplayBrightness) ConnectChanged(cb func(hasValue bool, value map[string]float64)) error {
 	if cb == nil {
 		return errors.New("nil callback")
 	}
 	cb0 := func(hasValue bool, value interface{}) {
 		if hasValue {
-			var v Rectangle
+			var v map[string]float64
 			err := dbus.Store([]interface{}{value}, &v)
 			if err != nil {
 				return
 			}
 			cb(true, v)
 		} else {
-			cb(false, Rectangle{})
+			cb(false, nil)
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
 		p.Name, cb0)
 }
 
-// property PrimaryRect (nnqq)
+// property Brightness a{sd}
 
-func (v *interfaceDisplay) PrimaryRect() PropDisplayPrimaryRect {
-	return &implPropDisplayPrimaryRect{
+func (v *interfaceDisplay) Brightness() PropDisplayBrightness {
+	return &implPropDisplayBrightness{
 		Impl: v,
-		Name: "PrimaryRect",
-	}
-}
-
-// property ColorTemperatureMode i
-
-func (v *interfaceDisplay) ColorTemperatureMode() proxy.PropInt32 {
-	return &proxy.ImplPropInt32{
-		Impl: v,
-		Name: "ColorTemperatureMode",
+		Name: "Brightness",
 	}
 }
 
@@ -693,31 +693,31 @@ type monitor interface {
 	SetRefreshRate(flags dbus.Flags, value float64) error
 	GoSetRotation(flags dbus.Flags, ch chan *dbus.Call, value uint16) *dbus.Call
 	SetRotation(flags dbus.Flags, value uint16) error
-	Reflect() proxy.PropUint16
-	Brightness() proxy.PropDouble
-	Model() proxy.PropString
-	Reflects() proxy.PropUint16Array
-	BestMode() PropModeInfo
-	PreferredModes() PropModeInfoSlice
 	MmHeight() proxy.PropUint32
-	Enabled() proxy.PropBool
-	Connected() proxy.PropBool
-	Manufacturer() proxy.PropString
-	Modes() PropModeInfoSlice
 	Width() proxy.PropUint16
 	Rotation() proxy.PropUint16
 	RefreshRate() proxy.PropDouble
-	Name() proxy.PropString
-	Rotations() proxy.PropUint16Array
-	AvailableFillMode() proxy.PropStringArray
-	SupportFillMode() proxy.PropBool
-	CurrentFillMode() PropCurrentFillMode
+	CurrentRotateMode() proxy.PropByte
+	AvailableFillModes() proxy.PropStringArray
 	ID() proxy.PropUint32
+	Rotations() proxy.PropUint16Array
+	BestMode() PropModeInfo
 	MmWidth() proxy.PropUint32
+	Brightness() proxy.PropDouble
+	CurrentMode() PropModeInfo
+	Name() proxy.PropString
+	Manufacturer() proxy.PropString
 	X() proxy.PropInt16
 	Y() proxy.PropInt16
 	Height() proxy.PropUint16
-	CurrentMode() PropModeInfo
+	CurrentFillMode() proxy.PropString
+	Connected() proxy.PropBool
+	Model() proxy.PropString
+	Reflects() proxy.PropUint16Array
+	Modes() PropModeInfoSlice
+	PreferredModes() PropModeInfoSlice
+	Enabled() proxy.PropBool
+	Reflect() proxy.PropUint16
 }
 
 type interfaceMonitor struct{}
@@ -800,102 +800,12 @@ func (v *interfaceMonitor) SetRotation(flags dbus.Flags, value uint16) error {
 	return (<-v.GoSetRotation(flags, make(chan *dbus.Call, 1), value).Done).Err
 }
 
-// property Reflect q
-
-func (v *interfaceMonitor) Reflect() proxy.PropUint16 {
-	return &proxy.ImplPropUint16{
-		Impl: v,
-		Name: "Reflect",
-	}
-}
-
-// property Brightness d
-
-func (v *interfaceMonitor) Brightness() proxy.PropDouble {
-	return &proxy.ImplPropDouble{
-		Impl: v,
-		Name: "Brightness",
-	}
-}
-
-// property Model s
-
-func (v *interfaceMonitor) Model() proxy.PropString {
-	return &proxy.ImplPropString{
-		Impl: v,
-		Name: "Model",
-	}
-}
-
-// property Reflects aq
-
-func (v *interfaceMonitor) Reflects() proxy.PropUint16Array {
-	return &proxy.ImplPropUint16Array{
-		Impl: v,
-		Name: "Reflects",
-	}
-}
-
-// property BestMode (uqqd)
-
-func (v *interfaceMonitor) BestMode() PropModeInfo {
-	return &implPropModeInfo{
-		Impl: v,
-		Name: "BestMode",
-	}
-}
-
-// property PreferredModes a(uqqd)
-
-func (v *interfaceMonitor) PreferredModes() PropModeInfoSlice {
-	return &implPropModeInfoSlice{
-		Impl: v,
-		Name: "PreferredModes",
-	}
-}
-
 // property MmHeight u
 
 func (v *interfaceMonitor) MmHeight() proxy.PropUint32 {
 	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MmHeight",
-	}
-}
-
-// property Enabled b
-
-func (v *interfaceMonitor) Enabled() proxy.PropBool {
-	return &proxy.ImplPropBool{
-		Impl: v,
-		Name: "Enabled",
-	}
-}
-
-// property Connected b
-
-func (v *interfaceMonitor) Connected() proxy.PropBool {
-	return &proxy.ImplPropBool{
-		Impl: v,
-		Name: "Connected",
-	}
-}
-
-// property Manufacturer s
-
-func (v *interfaceMonitor) Manufacturer() proxy.PropString {
-	return &proxy.ImplPropString{
-		Impl: v,
-		Name: "Manufacturer",
-	}
-}
-
-// property Modes a(uqqd)
-
-func (v *interfaceMonitor) Modes() PropModeInfoSlice {
-	return &implPropModeInfoSlice{
-		Impl: v,
-		Name: "Modes",
 	}
 }
 
@@ -926,48 +836,21 @@ func (v *interfaceMonitor) RefreshRate() proxy.PropDouble {
 	}
 }
 
-// property Name s
+// property CurrentRotateMode y
 
-func (v *interfaceMonitor) Name() proxy.PropString {
-	return &proxy.ImplPropString{
+func (v *interfaceMonitor) CurrentRotateMode() proxy.PropByte {
+	return &proxy.ImplPropByte{
 		Impl: v,
-		Name: "Name",
+		Name: "CurrentRotateMode",
 	}
 }
 
-// property Rotations aq
+// property AvailableFillModes as
 
-func (v *interfaceMonitor) Rotations() proxy.PropUint16Array {
-	return &proxy.ImplPropUint16Array{
-		Impl: v,
-		Name: "Rotations",
-	}
-}
-
-// property AvailableFillMode as
-
-func (v *interfaceMonitor) AvailableFillMode() proxy.PropStringArray {
+func (v *interfaceMonitor) AvailableFillModes() proxy.PropStringArray {
 	return &proxy.ImplPropStringArray{
 		Impl: v,
-		Name: "AvailableFillMode",
-	}
-}
-
-// property SupportFillMode b
-
-func (v *interfaceMonitor) SupportFillMode() proxy.PropBool {
-	return &proxy.ImplPropBool{
-		Impl: v,
-		Name: "SupportFillMode",
-	}
-}
-
-// property CurrentFillMode (qqs)
-
-func (v *interfaceMonitor) CurrentFillMode() PropCurrentFillMode {
-	return &implPropCurrentFillMode{
-		Impl: v,
-		Name: "CurrentFillMode",
+		Name: "AvailableFillModes",
 	}
 }
 
@@ -980,12 +863,66 @@ func (v *interfaceMonitor) ID() proxy.PropUint32 {
 	}
 }
 
+// property Rotations aq
+
+func (v *interfaceMonitor) Rotations() proxy.PropUint16Array {
+	return &proxy.ImplPropUint16Array{
+		Impl: v,
+		Name: "Rotations",
+	}
+}
+
+// property BestMode (uqqd)
+
+func (v *interfaceMonitor) BestMode() PropModeInfo {
+	return &implPropModeInfo{
+		Impl: v,
+		Name: "BestMode",
+	}
+}
+
 // property MmWidth u
 
 func (v *interfaceMonitor) MmWidth() proxy.PropUint32 {
 	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "MmWidth",
+	}
+}
+
+// property Brightness d
+
+func (v *interfaceMonitor) Brightness() proxy.PropDouble {
+	return &proxy.ImplPropDouble{
+		Impl: v,
+		Name: "Brightness",
+	}
+}
+
+// property CurrentMode (uqqd)
+
+func (v *interfaceMonitor) CurrentMode() PropModeInfo {
+	return &implPropModeInfo{
+		Impl: v,
+		Name: "CurrentMode",
+	}
+}
+
+// property Name s
+
+func (v *interfaceMonitor) Name() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "Name",
+	}
+}
+
+// property Manufacturer s
+
+func (v *interfaceMonitor) Manufacturer() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "Manufacturer",
 	}
 }
 
@@ -1016,12 +953,75 @@ func (v *interfaceMonitor) Height() proxy.PropUint16 {
 	}
 }
 
-// property CurrentMode (uqqd)
+// property CurrentFillMode s
 
-func (v *interfaceMonitor) CurrentMode() PropModeInfo {
-	return &implPropModeInfo{
+func (v *interfaceMonitor) CurrentFillMode() proxy.PropString {
+	return &proxy.ImplPropString{
 		Impl: v,
-		Name: "CurrentMode",
+		Name: "CurrentFillMode",
+	}
+}
+
+// property Connected b
+
+func (v *interfaceMonitor) Connected() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "Connected",
+	}
+}
+
+// property Model s
+
+func (v *interfaceMonitor) Model() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "Model",
+	}
+}
+
+// property Reflects aq
+
+func (v *interfaceMonitor) Reflects() proxy.PropUint16Array {
+	return &proxy.ImplPropUint16Array{
+		Impl: v,
+		Name: "Reflects",
+	}
+}
+
+// property Modes a(uqqd)
+
+func (v *interfaceMonitor) Modes() PropModeInfoSlice {
+	return &implPropModeInfoSlice{
+		Impl: v,
+		Name: "Modes",
+	}
+}
+
+// property PreferredModes a(uqqd)
+
+func (v *interfaceMonitor) PreferredModes() PropModeInfoSlice {
+	return &implPropModeInfoSlice{
+		Impl: v,
+		Name: "PreferredModes",
+	}
+}
+
+// property Enabled b
+
+func (v *interfaceMonitor) Enabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "Enabled",
+	}
+}
+
+// property Reflect q
+
+func (v *interfaceMonitor) Reflect() proxy.PropUint16 {
+	return &proxy.ImplPropUint16{
+		Impl: v,
+		Name: "Reflect",
 	}
 }
 
@@ -1101,47 +1101,6 @@ func (p implPropModeInfoSlice) ConnectChanged(cb func(hasValue bool, value []Mod
 			cb(true, v)
 		} else {
 			cb(false, nil)
-		}
-	}
-	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
-		p.Name, cb0)
-}
-
-type PropCurrentFillMode interface {
-	Get(flags dbus.Flags) (value FillModeInfo, err error)
-	Set(flags dbus.Flags, value FillModeInfo) error
-	ConnectChanged(cb func(hasValue bool, value FillModeInfo)) error
-}
-
-type implPropCurrentFillMode struct {
-	Impl proxy.Implementer
-	Name string
-}
-
-func (p implPropCurrentFillMode) Get(flags dbus.Flags) (value FillModeInfo, err error) {
-	err = p.Impl.GetObject_().GetProperty_(flags, p.Impl.GetInterfaceName_(),
-		p.Name, &value)
-	return
-}
-
-func (p implPropCurrentFillMode) Set(flags dbus.Flags, value FillModeInfo) error {
-	return p.Impl.GetObject_().SetProperty_(flags, p.Impl.GetInterfaceName_(), p.Name, value)
-}
-
-func (p implPropCurrentFillMode) ConnectChanged(cb func(hasValue bool, value FillModeInfo)) error {
-	if cb == nil {
-		return errors.New("nil callback")
-	}
-	cb0 := func(hasValue bool, value interface{}) {
-		if hasValue {
-			var v FillModeInfo
-			err := dbus.Store([]interface{}{value}, &v)
-			if err != nil {
-				return
-			}
-			cb(true, v)
-		} else {
-			cb(false, FillModeInfo{})
 		}
 	}
 	return p.Impl.GetObject_().ConnectPropertyChanged_(p.Impl.GetInterfaceName_(),
