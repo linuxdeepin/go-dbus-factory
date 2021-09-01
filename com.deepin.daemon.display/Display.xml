@@ -63,21 +63,21 @@
             <arg name="mode" type="y" direction="in"></arg>
             <arg name="name" type="s" direction="in"></arg>
         </method>
+        <property name="ColorTemperatureMode" type="i" access="read"></property>
+        <property name="HasChanged" type="b" access="read"></property>
+        <property name="TouchMap" type="a{ss}" access="read"></property>
+        <property name="PrimaryRect" type="(nnqq)" access="read"></property>
         <property name="ScreenWidth" type="q" access="read"></property>
         <property name="MaxBacklightBrightness" type="u" access="read"></property>
-        <property name="TouchMap" type="a{ss}" access="read"></property>
-        <property name="CurrentCustomId" type="s" access="read"></property>
-        <property name="ScreenHeight" type="q" access="read"></property>
         <property name="ColorTemperatureManual" type="i" access="read"></property>
         <property name="DisplayMode" type="y" access="read"></property>
-        <property name="Brightness" type="a{sd}" access="read"></property>
-        <property name="HasChanged" type="b" access="read"></property>
+        <property name="CustomIdList" type="as" access="read"></property>
+        <property name="CurrentCustomId" type="s" access="read"></property>
+        <property name="ScreenHeight" type="q" access="read"></property>
+        <property name="Monitors" type="ao" access="read"></property>
         <property name="Touchscreens" type="a(isss)" access="read"></property>
         <property name="Primary" type="s" access="read"></property>
-        <property name="Monitors" type="ao" access="read"></property>
-        <property name="CustomIdList" type="as" access="read"></property>
-        <property name="PrimaryRect" type="(nnqq)" access="read"></property>
-        <property name="ColorTemperatureMode" type="i" access="read"></property>
+        <property name="Brightness" type="a{sd}" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
@@ -111,7 +111,7 @@
             <arg name="machine_uuid" type="s" direction="out"></arg>
         </method>
     </interface>
+    <node name="Monitor_67"></node>
     <node name="Monitor_65"></node>
     <node name="Monitor_66"></node>
-    <node name="Monitor_67"></node>
 </node>

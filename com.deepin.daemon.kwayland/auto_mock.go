@@ -2,14 +2,11 @@
 
 package kwayland
 
-import (
-	"fmt"
-
-	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-)
+import "fmt"
+import "github.com/godbus/dbus"
+import "github.com/stretchr/testify/mock"
+import "pkg.deepin.io/lib/dbusutil"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 
 type MockOutputManagement struct {
 	MockInterfaceOutputManagement // interface com.deepin.daemon.KWayland.Output
