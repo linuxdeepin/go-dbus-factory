@@ -33,8 +33,14 @@ func (v *udcpCache) GetObject_() *proxy.Object {
 	return (*proxy.Object)(unsafe.Pointer(v))
 }
 
-func (*udcpCache) GetInterfaceName_() string {
-	return "com.deepin.udcp.iam"
+func (v *udcpCache) SetInterfaceName_(name string) {
+	v.GetObject_().SetExtra("customIfc", name)
+}
+
+func (v *udcpCache) GetInterfaceName_() string {
+	ifcName, _ := v.GetObject_().GetExtra("customIfc")
+	ifcNameStr, _ := ifcName.(string)
+	return ifcNameStr
 }
 
 // method GetUserIdList
