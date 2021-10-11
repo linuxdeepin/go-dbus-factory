@@ -2,15 +2,13 @@
 
 package abrecovery
 
-import (
-	"errors"
-	"fmt"
-	"unsafe"
+import "errors"
+import "fmt"
+import "github.com/godbus/dbus"
 
-	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-)
+import "pkg.deepin.io/lib/dbusutil"
+import "pkg.deepin.io/lib/dbusutil/proxy"
+import "unsafe"
 
 type ABRecovery interface {
 	abRecovery // interface com.deepin.ABRecovery
@@ -41,6 +39,7 @@ type abRecovery interface {
 	BackingUp() proxy.PropBool
 	Restoring() proxy.PropBool
 	ConfigValid() proxy.PropBool
+	HasBackedUp() proxy.PropBool
 }
 
 type interfaceAbRecovery struct{}
@@ -157,5 +156,14 @@ func (v *interfaceAbRecovery) ConfigValid() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "ConfigValid",
+	}
+}
+
+// property HasBackedUp b
+
+func (v *interfaceAbRecovery) HasBackedUp() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "HasBackedUp",
 	}
 }

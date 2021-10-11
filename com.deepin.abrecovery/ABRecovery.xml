@@ -18,6 +18,7 @@
         <property name="BackingUp" type="b" access="read"></property>
         <property name="Restoring" type="b" access="read"></property>
         <property name="ConfigValid" type="b" access="read"></property>
+        <property name="HasBackedUp" type="b" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

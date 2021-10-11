@@ -2,14 +2,11 @@
 
 package abrecovery
 
-import (
-	"fmt"
-
-	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-)
+import "fmt"
+import "github.com/godbus/dbus"
+import "github.com/stretchr/testify/mock"
+import "pkg.deepin.io/lib/dbusutil"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 
 type MockABRecovery struct {
 	MockInterfaceAbRecovery // interface com.deepin.ABRecovery
@@ -138,6 +135,19 @@ func (v *MockInterfaceAbRecovery) Restoring() proxy.PropBool {
 // property ConfigValid b
 
 func (v *MockInterfaceAbRecovery) ConfigValid() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property HasBackedUp b
+
+func (v *MockInterfaceAbRecovery) HasBackedUp() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
