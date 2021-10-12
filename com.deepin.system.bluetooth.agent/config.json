@@ -1,0 +1,15 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "Agent",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.Bluetooth.Agent",
+          "Type": "agent"
+        }
+      ]
+    }
+  ]
+}

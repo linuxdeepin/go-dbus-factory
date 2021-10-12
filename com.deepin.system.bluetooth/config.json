@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.system.Bluetooth",
+  "Objects": [
+    {
+      "Type": "Bluetooth",
+      "Path": "/com/deepin/system/Bluetooth",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.Bluetooth",
+          "Type": "bluetooth"
+        }
+      ]
+    }
+  ]
+}
