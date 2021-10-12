@@ -88,6 +88,13 @@
     <property name="ActiveAccessPoint" type="o" access="read"/>
 
     <!--
+        LastScan:
+
+        The timestamp (in CLOCK_BOOTTIME milliseconds) for the last finished network scan. A value of -1 means the device never scanned for access points.
+    -->
+    <property name="LastScan" type="x" access="read"/>
+
+    <!--
         WirelessCapabilities:
 
         The capabilities of the wireless device.
