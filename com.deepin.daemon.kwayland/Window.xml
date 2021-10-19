@@ -1,2 +1,167 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd"><node><interface name="com.deepin.daemon.KWayland.PlasmaWindow"><method name="AppId"><arg name="argout0" type="s" direction="out"></arg></method><method name="Geometry"><arg name="argout0" type="(iiii)" direction="out"></arg></method><method name="Icon"><arg name="argout0" type="s" direction="out"></arg></method><method name="InternalId"><arg name="argout0" type="u" direction="out"></arg></method><method name="IsActive"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsCloseable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsDemandingAttention"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsFullscreen"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsFullscreenable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsKeepAbove"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsMaximizeable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsMaximized"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsMinimizeable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsMinimized"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsMovable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsOnAllDesktops"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsResizable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsShadeable"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsShaded"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsValid"><arg name="argout0" type="b" direction="out"></arg></method><method name="IsVirtualDesktopChangeable"><arg name="argout0" type="b" direction="out"></arg></method><method name="Pid"><arg name="argout0" type="u" direction="out"></arg></method><method name="RequestActivate"></method><method name="RequestClose"></method><method name="RequestEnterNewVirtualDesktop"></method><method name="RequestEnterVirtualDesktop"><arg name="argin0" type="s" direction="in"></arg></method><method name="RequestLeaveVirtualDesktop"><arg name="argin0" type="s" direction="in"></arg></method><method name="RequestMove"></method><method name="RequestResize"></method><method name="RequestToggleKeepAbove"></method><method name="RequestToggleKeepBelow"></method><method name="RequestToggleMaximized"></method><method name="RequestToggleMinimized"></method><method name="RequestToggleShaded"></method><method name="RequestVirtualDesktop"><arg name="argin0" type="u" direction="in"></arg></method><method name="SkipSwitcher"><arg name="argout0" type="b" direction="out"></arg></method><method name="SkipTaskbar"><arg name="argout0" type="b" direction="out"></arg></method><method name="Title"><arg name="argout0" type="s" direction="out"></arg></method><method name="VirtualDesktop"><arg name="argout0" type="u" direction="out"></arg></method><signal name="ActiveChanged"></signal><signal name="AppIdChanged"></signal><signal name="CloseableChanged"></signal><signal name="DemandsAttentionChanged"></signal><signal name="FullscreenableChanged"></signal><signal name="FullscreenChanged"></signal><signal name="GeometryChanged"></signal><signal name="IconChanged"></signal><signal name="KeepAboveChanged"></signal><signal name="KeepBelowChanged"></signal><signal name="MaximizeableChanged"></signal><signal name="MaximizedChanged"></signal><signal name="MinimizeableChanged"></signal><signal name="MinimizedChanged"></signal><signal name="MovableChanged"></signal><signal name="OnAllDesktopsChanged"></signal><signal name="ParentWindowChanged"></signal><signal name="ResizableChanged"></signal><signal name="ShadeableChanged"></signal><signal name="ShadedChanged"></signal><signal name="SkipSwitcherChanged"></signal><signal name="SkipTaskbarChanged"></signal><signal name="TitleChanged"></signal><signal name="Unmapped"></signal><signal name="VirtualDesktopChangeableChanged"></signal><signal name="VirtualDesktopChanged"></signal></interface><interface name="org.freedesktop.DBus.Introspectable"><method name="Introspect"><arg name="out" type="s" direction="out"></arg></method></interface><interface name="org.freedesktop.DBus.Properties"><method name="Get"><arg name="interface" type="s" direction="in"></arg><arg name="property" type="s" direction="in"></arg><arg name="value" type="v" direction="out"></arg></method><method name="GetAll"><arg name="interface" type="s" direction="in"></arg><arg name="props" type="a{sv}" direction="out"></arg></method><method name="Set"><arg name="interface" type="s" direction="in"></arg><arg name="property" type="s" direction="in"></arg><arg name="value" type="v" direction="in"></arg></method><signal name="PropertiesChanged"><arg name="interface" type="s" direction="out"></arg><arg name="changed_properties" type="a{sv}" direction="out"></arg><arg name="invalidates_properties" type="as" direction="out"></arg></signal></interface><interface name="org.freedesktop.DBus.Peer"><method name="Ping"></method><method name="GetMachineId"><arg name="machine_uuid" type="s" direction="out"></arg></method></interface></node>
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+	<interface name="com.deepin.daemon.KWayland.PlasmaWindow">
+		<method name="AppId">
+			<arg name="argout0" type="s" direction="out"></arg>
+		</method>
+		<method name="Geometry">
+			<arg name="argout0" type="(iiii)" direction="out"></arg>
+		</method>
+		<method name="Icon">
+			<arg name="argout0" type="s" direction="out"></arg>
+		</method>
+		<method name="InternalId">
+			<arg name="argout0" type="u" direction="out"></arg>
+		</method>
+		<method name="IsActive">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsCloseable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsDemandingAttention">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsFullscreen">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsFullscreenable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsKeepAbove">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsMaximizeable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsMaximized">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsMinimizeable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsMinimized">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsMovable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsOnAllDesktops">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsResizable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsShadeable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsShaded">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsValid">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="IsVirtualDesktopChangeable">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="Pid">
+			<arg name="argout0" type="u" direction="out"></arg>
+		</method>
+		<method name="RequestActivate"></method>
+		<method name="RequestClose"></method>
+		<method name="RequestEnterNewVirtualDesktop"></method>
+		<method name="RequestEnterVirtualDesktop">
+			<arg name="argin0" type="s" direction="in"></arg>
+		</method>
+		<method name="RequestLeaveVirtualDesktop">
+			<arg name="argin0" type="s" direction="in"></arg>
+		</method>
+		<method name="RequestMove"></method>
+		<method name="RequestResize"></method>
+		<method name="RequestToggleKeepAbove"></method>
+		<method name="RequestToggleKeepBelow"></method>
+		<method name="RequestToggleMaximized"></method>
+		<method name="RequestToggleMinimized"></method>
+		<method name="RequestToggleShaded"></method>
+		<method name="RequestVirtualDesktop">
+			<arg name="argin0" type="u" direction="in"></arg>
+		</method>
+		<method name="SkipSwitcher">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="SkipTaskbar">
+			<arg name="argout0" type="b" direction="out"></arg>
+		</method>
+		<method name="Title">
+			<arg name="argout0" type="s" direction="out"></arg>
+		</method>
+		<method name="VirtualDesktop">
+			<arg name="argout0" type="u" direction="out"></arg>
+		</method>
+		<method name="WindowId">
+			<arg name="argout0" type="u" direction="out"></arg>
+		</method>
+		<signal name="ActiveChanged"></signal>
+		<signal name="AppIdChanged"></signal>
+		<signal name="CloseableChanged"></signal>
+		<signal name="DemandsAttentionChanged"></signal>
+		<signal name="FullscreenableChanged"></signal>
+		<signal name="FullscreenChanged"></signal>
+		<signal name="GeometryChanged"></signal>
+		<signal name="IconChanged"></signal>
+		<signal name="KeepAboveChanged"></signal>
+		<signal name="KeepBelowChanged"></signal>
+		<signal name="MaximizeableChanged"></signal>
+		<signal name="MaximizedChanged"></signal>
+		<signal name="MinimizeableChanged"></signal>
+		<signal name="MinimizedChanged"></signal>
+		<signal name="MovableChanged"></signal>
+		<signal name="OnAllDesktopsChanged"></signal>
+		<signal name="ParentWindowChanged"></signal>
+		<signal name="ResizableChanged"></signal>
+		<signal name="ShadeableChanged"></signal>
+		<signal name="ShadedChanged"></signal>
+		<signal name="SkipSwitcherChanged"></signal>
+		<signal name="SkipTaskbarChanged"></signal>
+		<signal name="TitleChanged"></signal>
+		<signal name="Unmapped"></signal>
+		<signal name="VirtualDesktopChangeableChanged"></signal>
+		<signal name="VirtualDesktopChanged"></signal>
+		<signal name="WindowIdChanged">
+			<arg name="wid" type="u" direction="in"></arg>
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg name="out" type="s" direction="out"></arg>
+		</method>
+	</interface>
+	<interface name="org.freedesktop.DBus.Properties">
+		<method name="Get">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="out"></arg>
+		</method>
+		<method name="GetAll">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="props" type="a{sv}" direction="out"></arg>
+		</method>
+		<method name="Set">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="in"></arg>
+		</method>
+		<signal name="PropertiesChanged">
+			<arg name="interface" type="s" direction="out"></arg>
+			<arg name="changed_properties" type="a{sv}" direction="out"></arg>
+			<arg name="invalidates_properties" type="as" direction="out"></arg>
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Peer">
+		<method name="Ping"></method>
+		<method name="GetMachineId">
+			<arg name="machine_uuid" type="s" direction="out"></arg>
+		</method>
+	</interface>
+</node>
