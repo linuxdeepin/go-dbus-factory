@@ -20,25 +20,6 @@ type MockInterfaceBluetooth struct {
 	mock.Mock
 }
 
-// method CanSendFile
-
-func (v *MockInterfaceBluetooth) GoCanSendFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	mockArgs := v.Called(flags, ch)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceBluetooth) CanSendFile(flags dbus.Flags) (bool, error) {
-	mockArgs := v.Called(flags)
-
-	return mockArgs.Bool(0), mockArgs.Error(1)
-}
-
 // method ClearUnpairedDevice
 
 func (v *MockInterfaceBluetooth) GoClearUnpairedDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -446,6 +427,19 @@ func (v *MockInterfaceBluetooth) State() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property CanSendFile b
+
+func (v *MockInterfaceBluetooth) CanSendFile() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}

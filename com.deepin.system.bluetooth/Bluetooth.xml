@@ -2,9 +2,6 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name="com.deepin.system.Bluetooth">
-        <method name="CanSendFile">
-            <arg name="can" type="b" direction="out"></arg>
-        </method>
         <method name="ClearUnpairedDevice"></method>
         <method name="ConnectDevice">
             <arg name="devPath" type="o" direction="in"></arg>
@@ -83,6 +80,7 @@
             <arg name="devJSON" type="s"></arg>
         </signal>
         <property name="State" type="u" access="read"></property>
+        <property name="CanSendFile" type="b" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">

@@ -29,8 +29,6 @@ func NewBluetooth(conn *dbus.Conn) Bluetooth {
 }
 
 type bluetooth interface {
-	GoCanSendFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
-	CanSendFile(flags dbus.Flags) (bool, error)
 	GoClearUnpairedDevice(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	ClearUnpairedDevice(flags dbus.Flags) error
 	GoConnectDevice(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath, adapterPath dbus.ObjectPath) *dbus.Call
@@ -72,6 +70,7 @@ type bluetooth interface {
 	ConnectDeviceRemoved(cb func(devJSON string)) (dbusutil.SignalHandlerId, error)
 	ConnectDevicePropertiesChanged(cb func(devJSON string)) (dbusutil.SignalHandlerId, error)
 	State() proxy.PropUint32
+	CanSendFile() proxy.PropBool
 }
 
 type interfaceBluetooth struct{}
@@ -82,22 +81,6 @@ func (v *interfaceBluetooth) GetObject_() *proxy.ImplObject {
 
 func (*interfaceBluetooth) GetInterfaceName_() string {
 	return "com.deepin.system.Bluetooth"
-}
-
-// method CanSendFile
-
-func (v *interfaceBluetooth) GoCanSendFile(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".CanSendFile", flags, ch)
-}
-
-func (*interfaceBluetooth) StoreCanSendFile(call *dbus.Call) (can bool, err error) {
-	err = call.Store(&can)
-	return
-}
-
-func (v *interfaceBluetooth) CanSendFile(flags dbus.Flags) (bool, error) {
-	return v.StoreCanSendFile(
-		<-v.GoCanSendFile(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method ClearUnpairedDevice
@@ -450,5 +433,14 @@ func (v *interfaceBluetooth) State() proxy.PropUint32 {
 	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
+	}
+}
+
+// property CanSendFile b
+
+func (v *interfaceBluetooth) CanSendFile() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "CanSendFile",
 	}
 }
