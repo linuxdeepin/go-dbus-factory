@@ -37,7 +37,8 @@
         <property name="CpuGovernor" type="s" access="read"></property>
         <property name="CpuBoost" type="b" access="read"></property>
         <property name="IsBoostSupported" type="b" access="read"></property>
-        <method name="SetCpuGovernor">
+        <property name="IsHighPerformanceSupported" type="b" access="read"></property>
+	<method name="SetCpuGovernor">
             <arg name="governor" type="s" direction="in"></arg>
         </method>
          <method name="SetCpuBoost">
