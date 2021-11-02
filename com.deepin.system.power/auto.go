@@ -2,15 +2,13 @@
 
 package power
 
-import (
-	"errors"
-	"fmt"
-	"unsafe"
+import "errors"
+import "fmt"
+import "github.com/godbus/dbus"
 
-	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-)
+import "pkg.deepin.io/lib/dbusutil"
+import "pkg.deepin.io/lib/dbusutil/proxy"
+import "unsafe"
 
 type Power interface {
 	power // interface com.deepin.system.Power
@@ -66,6 +64,7 @@ type power interface {
 	CpuGovernor() proxy.PropString
 	CpuBoost() proxy.PropBool
 	IsBoostSupported() proxy.PropBool
+	IsHighPerformanceSupported() proxy.PropBool
 	Mode() proxy.PropString
 }
 
@@ -445,6 +444,15 @@ func (v *interfacePower) IsBoostSupported() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsBoostSupported",
+	}
+}
+
+// property IsHighPerformanceSupported b
+
+func (v *interfacePower) IsHighPerformanceSupported() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "IsHighPerformanceSupported",
 	}
 }
 
