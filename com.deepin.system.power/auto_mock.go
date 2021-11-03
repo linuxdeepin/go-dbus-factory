@@ -136,6 +136,25 @@ func (v *MockInterfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 	return mockArgs.Error(0)
 }
 
+// method SetMode
+
+func (v *MockInterfacePower) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, mode)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePower) SetMode(flags dbus.Flags, mode string) error {
+	mockArgs := v.Called(flags, mode)
+
+	return mockArgs.Error(0)
+}
+
 // method LockCpuFreq
 
 func (v *MockInterfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {
@@ -434,6 +453,19 @@ func (v *MockInterfacePower) IsHighPerformanceSupported() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Mode s
+
+func (v *MockInterfacePower) Mode() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}

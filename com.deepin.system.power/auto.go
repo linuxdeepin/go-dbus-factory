@@ -39,6 +39,8 @@ type power interface {
 	SetCpuGovernor(flags dbus.Flags, governor string) error
 	GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call
 	SetCpuBoost(flags dbus.Flags, enabled bool) error
+	GoSetMode(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
+	SetMode(flags dbus.Flags, mode string) error
 	GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call
 	LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error
 	ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error)
@@ -63,6 +65,7 @@ type power interface {
 	CpuBoost() proxy.PropBool
 	IsBoostSupported() proxy.PropBool
 	IsHighPerformanceSupported() proxy.PropBool
+	Mode() proxy.PropString
 }
 
 type interfacePower struct{}
@@ -139,6 +142,16 @@ func (v *interfacePower) GoSetCpuBoost(flags dbus.Flags, ch chan *dbus.Call, ena
 
 func (v *interfacePower) SetCpuBoost(flags dbus.Flags, enabled bool) error {
 	return (<-v.GoSetCpuBoost(flags, make(chan *dbus.Call, 1), enabled).Done).Err
+}
+
+// method SetMode
+
+func (v *interfacePower) GoSetMode(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetMode", flags, ch, mode)
+}
+
+func (v *interfacePower) SetMode(flags dbus.Flags, mode string) error {
+	return (<-v.GoSetMode(flags, make(chan *dbus.Call, 1), mode).Done).Err
 }
 
 // method LockCpuFreq
@@ -440,6 +453,15 @@ func (v *interfacePower) IsHighPerformanceSupported() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "IsHighPerformanceSupported",
+	}
+}
+
+// property Mode s
+
+func (v *interfacePower) Mode() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "Mode",
 	}
 }
 

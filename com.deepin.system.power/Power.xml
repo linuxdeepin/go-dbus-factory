@@ -38,11 +38,15 @@
         <property name="CpuBoost" type="b" access="read"></property>
         <property name="IsBoostSupported" type="b" access="read"></property>
         <property name="IsHighPerformanceSupported" type="b" access="read"></property>
-	<method name="SetCpuGovernor">
+        <property name="Mode" type="s" access="read"></property>
+        <method name="SetCpuGovernor">
             <arg name="governor" type="s" direction="in"></arg>
         </method>
-         <method name="SetCpuBoost">
+        <method name="SetCpuBoost">
             <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="SetMode">
+            <arg name="mode" type="s" direction="in"></arg>
         </method>
         <method name="LockCpuFreq">
             <arg name="governor" type="s" direction="in"></arg>
