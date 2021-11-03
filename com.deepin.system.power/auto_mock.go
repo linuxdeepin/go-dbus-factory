@@ -2,14 +2,11 @@
 
 package power
 
-import (
-	"fmt"
-
-	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-)
+import "fmt"
+import "github.com/godbus/dbus"
+import "github.com/stretchr/testify/mock"
+import "pkg.deepin.io/lib/dbusutil"
+import "pkg.deepin.io/lib/dbusutil/proxy"
 
 type MockPower struct {
 	MockInterfacePower // interface com.deepin.system.Power
@@ -440,6 +437,19 @@ func (v *MockInterfacePower) CpuBoost() proxy.PropBool {
 // property IsBoostSupported b
 
 func (v *MockInterfacePower) IsBoostSupported() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property IsHighPerformanceSupported b
+
+func (v *MockInterfacePower) IsHighPerformanceSupported() proxy.PropBool {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
