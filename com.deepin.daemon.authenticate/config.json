@@ -44,6 +44,17 @@
           "Accessor": "Face"
         }
       ]
+    },
+    {
+      "Type": "CharaManger",
+      "Path": "/com/deepin/daemon/Authenticate/CharaManger",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Authenticate.CharaManger",
+          "Type": "charaManger",
+          "Accessor": "CharaManger"
+        }
+      ]
     }
   ]
 }

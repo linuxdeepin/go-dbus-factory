@@ -907,3 +907,164 @@ func (v *MockInterfaceFace) ServiceList() proxy.PropString {
 
 	return ret0
 }
+
+type MockCharaManger struct {
+	MockInterfaceCharaManger // interface com.deepin.daemon.Authenticate.CharaManger
+	proxy.MockObject
+}
+
+type MockInterfaceCharaManger struct {
+	mock.Mock
+}
+
+// method Delete
+
+func (v *MockInterfaceCharaManger) GoDelete(flags dbus.Flags, ch chan *dbus.Call, charaType int32, charaName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, charaType, charaName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceCharaManger) Delete(flags dbus.Flags, charaType int32, charaName string) error {
+	mockArgs := v.Called(flags, charaType, charaName)
+
+	return mockArgs.Error(0)
+}
+
+// method EnrollStart
+
+func (v *MockInterfaceCharaManger) GoEnrollStart(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32, charaName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, driverName, charaType, charaName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceCharaManger) EnrollStart(flags dbus.Flags, driverName string, charaType int32, charaName string) (dbus.UnixFD, error) {
+	mockArgs := v.Called(flags, driverName, charaType, charaName)
+
+	ret0, ok := mockArgs.Get(0).(dbus.UnixFD)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method EnrollStop
+
+func (v *MockInterfaceCharaManger) GoEnrollStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceCharaManger) EnrollStop(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
+// method List
+
+func (v *MockInterfaceCharaManger) GoList(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, driverName, charaType)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceCharaManger) List(flags dbus.Flags, driverName string, charaType int32) (string, error) {
+	mockArgs := v.Called(flags, driverName, charaType)
+
+	return mockArgs.String(0), mockArgs.Error(1)
+}
+
+// method Rename
+
+func (v *MockInterfaceCharaManger) GoRename(flags dbus.Flags, ch chan *dbus.Call, charaType int32, oldName string, newName string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, charaType, oldName, newName)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceCharaManger) Rename(flags dbus.Flags, charaType int32, oldName string, newName string) error {
+	mockArgs := v.Called(flags, charaType, oldName, newName)
+
+	return mockArgs.Error(0)
+}
+
+// signal EnrollStatus
+
+func (v *MockInterfaceCharaManger) ConnectEnrollStatus(cb func(Sender string, Code int32, Msg string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// signal CharaUpdated
+
+func (v *MockInterfaceCharaManger) ConnectCharaUpdated(cb func(DriverName string, CharaType int32)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// signal DriverChanged
+
+func (v *MockInterfaceCharaManger) ConnectDriverChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// property DriverInfo s
+
+func (v *MockInterfaceCharaManger) DriverInfo() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}

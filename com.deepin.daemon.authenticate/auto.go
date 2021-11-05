@@ -922,3 +922,194 @@ func (v *interfaceFace) ServiceList() proxy.PropString {
 		Name: "ServiceList",
 	}
 }
+
+type CharaManger interface {
+	charaManger // interface com.deepin.daemon.Authenticate.CharaManger
+	proxy.Object
+}
+
+type objectCharaManger struct {
+	interfaceCharaManger // interface com.deepin.daemon.Authenticate.CharaManger
+	proxy.ImplObject
+}
+
+func NewCharaManger(conn *dbus.Conn) CharaManger {
+	obj := new(objectCharaManger)
+	obj.ImplObject.Init_(conn, "com.deepin.daemon.Authenticate", "/com/deepin/daemon/Authenticate/CharaManger")
+	return obj
+}
+
+type charaManger interface {
+	GoDelete(flags dbus.Flags, ch chan *dbus.Call, charaType int32, charaName string) *dbus.Call
+	Delete(flags dbus.Flags, charaType int32, charaName string) error
+	GoEnrollStart(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32, charaName string) *dbus.Call
+	EnrollStart(flags dbus.Flags, driverName string, charaType int32, charaName string) (dbus.UnixFD, error)
+	GoEnrollStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	EnrollStop(flags dbus.Flags) error
+	GoList(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32) *dbus.Call
+	List(flags dbus.Flags, driverName string, charaType int32) (string, error)
+	GoRename(flags dbus.Flags, ch chan *dbus.Call, charaType int32, oldName string, newName string) *dbus.Call
+	Rename(flags dbus.Flags, charaType int32, oldName string, newName string) error
+	ConnectEnrollStatus(cb func(Sender string, Code int32, Msg string)) (dbusutil.SignalHandlerId, error)
+	ConnectCharaUpdated(cb func(DriverName string, CharaType int32)) (dbusutil.SignalHandlerId, error)
+	ConnectDriverChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	DriverInfo() proxy.PropString
+}
+
+type interfaceCharaManger struct{}
+
+func (v *interfaceCharaManger) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceCharaManger) GetInterfaceName_() string {
+	return "com.deepin.daemon.Authenticate.CharaManger"
+}
+
+// method Delete
+
+func (v *interfaceCharaManger) GoDelete(flags dbus.Flags, ch chan *dbus.Call, charaType int32, charaName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Delete", flags, ch, charaType, charaName)
+}
+
+func (v *interfaceCharaManger) Delete(flags dbus.Flags, charaType int32, charaName string) error {
+	return (<-v.GoDelete(flags, make(chan *dbus.Call, 1), charaType, charaName).Done).Err
+}
+
+// method EnrollStart
+
+func (v *interfaceCharaManger) GoEnrollStart(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32, charaName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnrollStart", flags, ch, driverName, charaType, charaName)
+}
+
+func (*interfaceCharaManger) StoreEnrollStart(call *dbus.Call) (outArg0 dbus.UnixFD, err error) {
+	err = call.Store(&outArg0)
+	return
+}
+
+func (v *interfaceCharaManger) EnrollStart(flags dbus.Flags, driverName string, charaType int32, charaName string) (dbus.UnixFD, error) {
+	return v.StoreEnrollStart(
+		<-v.GoEnrollStart(flags, make(chan *dbus.Call, 1), driverName, charaType, charaName).Done)
+}
+
+// method EnrollStop
+
+func (v *interfaceCharaManger) GoEnrollStop(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnrollStop", flags, ch)
+}
+
+func (v *interfaceCharaManger) EnrollStop(flags dbus.Flags) error {
+	return (<-v.GoEnrollStop(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method List
+
+func (v *interfaceCharaManger) GoList(flags dbus.Flags, ch chan *dbus.Call, driverName string, charaType int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".List", flags, ch, driverName, charaType)
+}
+
+func (*interfaceCharaManger) StoreList(call *dbus.Call) (outArg0 string, err error) {
+	err = call.Store(&outArg0)
+	return
+}
+
+func (v *interfaceCharaManger) List(flags dbus.Flags, driverName string, charaType int32) (string, error) {
+	return v.StoreList(
+		<-v.GoList(flags, make(chan *dbus.Call, 1), driverName, charaType).Done)
+}
+
+// method Rename
+
+func (v *interfaceCharaManger) GoRename(flags dbus.Flags, ch chan *dbus.Call, charaType int32, oldName string, newName string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".Rename", flags, ch, charaType, oldName, newName)
+}
+
+func (v *interfaceCharaManger) Rename(flags dbus.Flags, charaType int32, oldName string, newName string) error {
+	return (<-v.GoRename(flags, make(chan *dbus.Call, 1), charaType, oldName, newName).Done).Err
+}
+
+// signal EnrollStatus
+
+func (v *interfaceCharaManger) ConnectEnrollStatus(cb func(Sender string, Code int32, Msg string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "EnrollStatus", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".EnrollStatus",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var Sender string
+		var Code int32
+		var Msg string
+		err := dbus.Store(sig.Body, &Sender, &Code, &Msg)
+		if err == nil {
+			cb(Sender, Code, Msg)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal CharaUpdated
+
+func (v *interfaceCharaManger) ConnectCharaUpdated(cb func(DriverName string, CharaType int32)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "CharaUpdated", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".CharaUpdated",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var DriverName string
+		var CharaType int32
+		err := dbus.Store(sig.Body, &DriverName, &CharaType)
+		if err == nil {
+			cb(DriverName, CharaType)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal DriverChanged
+
+func (v *interfaceCharaManger) ConnectDriverChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DriverChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DriverChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// property DriverInfo s
+
+func (v *interfaceCharaManger) DriverInfo() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "DriverInfo",
+	}
+}
