@@ -77,6 +77,25 @@ func (v *MockInterfaceAuthenticate) PreOneKeyLogin(flags dbus.Flags, flag int32)
 	return mockArgs.String(0), mockArgs.Error(1)
 }
 
+// method ResetLimits
+
+func (v *MockInterfaceAuthenticate) GoResetLimits(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, username)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceAuthenticate) ResetLimits(flags dbus.Flags, username string) error {
+	mockArgs := v.Called(flags, username)
+
+	return mockArgs.Error(0)
+}
+
 // signal LimitUpdated
 
 func (v *MockInterfaceAuthenticate) ConnectLimitUpdated(cb func(username string)) (dbusutil.SignalHandlerId, error) {

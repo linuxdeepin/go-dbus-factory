@@ -35,6 +35,8 @@ type authenticate interface {
 	GetLimits(flags dbus.Flags, username string) (string, error)
 	GoPreOneKeyLogin(flags dbus.Flags, ch chan *dbus.Call, flag int32) *dbus.Call
 	PreOneKeyLogin(flags dbus.Flags, flag int32) (string, error)
+	GoResetLimits(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call
+	ResetLimits(flags dbus.Flags, username string) error
 	ConnectLimitUpdated(cb func(username string)) (dbusutil.SignalHandlerId, error)
 	SupportEncrypts() proxy.PropString
 	FrameworkState() proxy.PropInt32
@@ -97,6 +99,16 @@ func (*interfaceAuthenticate) StorePreOneKeyLogin(call *dbus.Call) (result strin
 func (v *interfaceAuthenticate) PreOneKeyLogin(flags dbus.Flags, flag int32) (string, error) {
 	return v.StorePreOneKeyLogin(
 		<-v.GoPreOneKeyLogin(flags, make(chan *dbus.Call, 1), flag).Done)
+}
+
+// method ResetLimits
+
+func (v *interfaceAuthenticate) GoResetLimits(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".ResetLimits", flags, ch, username)
+}
+
+func (v *interfaceAuthenticate) ResetLimits(flags dbus.Flags, username string) error {
+	return (<-v.GoResetLimits(flags, make(chan *dbus.Call, 1), username).Done).Err
 }
 
 // signal LimitUpdated
