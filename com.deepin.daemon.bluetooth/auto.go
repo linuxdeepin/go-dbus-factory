@@ -24,8 +24,8 @@ func NewBluetooth(conn *dbus.Conn) Bluetooth {
 }
 
 type bluetooth interface {
-	GoDisConnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
-	DisConnectAllDevices(flags dbus.Flags) error
+	GoDisconnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DisconnectAllDevices(flags dbus.Flags) error
 }
 
 type interfaceBluetooth struct{}
@@ -38,12 +38,12 @@ func (*interfaceBluetooth) GetInterfaceName_() string {
 	return "com.deepin.daemon.Bluetooth"
 }
 
-// method DisConnectAllDevices
+// method DisconnectAllDevices
 
-func (v *interfaceBluetooth) GoDisConnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisConnectAllDevices", flags, ch)
+func (v *interfaceBluetooth) GoDisconnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisconnectAllDevices", flags, ch)
 }
 
-func (v *interfaceBluetooth) DisConnectAllDevices(flags dbus.Flags) error {
-	return (<-v.GoDisConnectAllDevices(flags, make(chan *dbus.Call, 1)).Done).Err
+func (v *interfaceBluetooth) DisconnectAllDevices(flags dbus.Flags) error {
+	return (<-v.GoDisconnectAllDevices(flags, make(chan *dbus.Call, 1)).Done).Err
 }

@@ -17,9 +17,9 @@ type MockInterfaceBluetooth struct {
 	mock.Mock
 }
 
-// method DisConnectAllDevices
+// method DisconnectAllDevices
 
-func (v *MockInterfaceBluetooth) GoDisConnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+func (v *MockInterfaceBluetooth) GoDisconnectAllDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
 	mockArgs := v.Called(flags, ch)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
@@ -30,7 +30,7 @@ func (v *MockInterfaceBluetooth) GoDisConnectAllDevices(flags dbus.Flags, ch cha
 	return ret
 }
 
-func (v *MockInterfaceBluetooth) DisConnectAllDevices(flags dbus.Flags) error {
+func (v *MockInterfaceBluetooth) DisconnectAllDevices(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.Error(0)
