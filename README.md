@@ -89,7 +89,6 @@ ArgFixes 用于对方法或信号的某个参数的的类型修正，ArgFix 的 
 
 PropertyFix 用与对属性的类型进行修正。
 
-
 ```go
 type ArgFixes []ArgFix
 
