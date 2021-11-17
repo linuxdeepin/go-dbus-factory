@@ -1,14 +1,14 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-    <interface name="com.deepin.system.DisplayCfg">
-        <method name="Get">
+    <interface name="com.deepin.system.Display">
+        <method name="GetConfig">
             <arg name="cfgStr" type="s" direction="out"></arg>
         </method>
-        <method name="Set">
+        <method name="SetConfig">
             <arg name="cfgStr" type="s" direction="in"></arg>
         </method>
-        <signal name="Updated">
+        <signal name="ConfigUpdated">
             <arg name="updateAt" type="s"></arg>
         </signal>
     </interface>

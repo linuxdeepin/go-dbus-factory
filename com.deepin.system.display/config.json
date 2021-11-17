@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.system.Display",
+  "Objects": [
+    {
+      "Type": "Display",
+      "Path": "/com/deepin/system/Display",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.system.Display",
+          "Type": "display"
+        }
+      ]
+    }
+  ]
+}
