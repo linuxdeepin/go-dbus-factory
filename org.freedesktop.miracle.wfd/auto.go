@@ -8,7 +8,7 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-dbus-factory/object_manager"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 type Wfd interface {

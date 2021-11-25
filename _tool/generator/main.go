@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus/introspect"
-	"pkg.deepin.io/lib/strv"
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/strv"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 var reservedSignals = strv.Strv{
@@ -45,14 +45,14 @@ func main() {
 	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
 	sf.AddGoImport("github.com/godbus/dbus")
-	sf.AddGoImport("pkg.deepin.io/lib/dbusutil")
-	sf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
+	sf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil")
+	sf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil/proxy")
 	sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
 
 	msf.AddGoImport("fmt")
 	msf.AddGoImport("github.com/godbus/dbus")
-	msf.AddGoImport("pkg.deepin.io/lib/dbusutil")
-	msf.AddGoImport("pkg.deepin.io/lib/dbusutil/proxy")
+	msf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil")
+	msf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil/proxy")
 	msf.AddGoImport("github.com/stretchr/testify/mock")
 
 	srvCfg.autoFill()

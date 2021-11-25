@@ -7,7 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 type Display interface {

@@ -6,7 +6,7 @@ Build-Depends:
  debhelper-compat (= 11),
  dh-golang,
  golang-any,
- golang-dlib-dev,
+ golang-github-linuxdeepin-go-lib-dev,
  golang-github-stretchr-testify-dev,
  golang-golang-x-tools,
 Standards-Version: 4.5.1
@@ -17,7 +17,7 @@ Testsuite: autopkgtest-pkg-go
 Package: golang-github-linuxdeepin-go-dbus-factory-dev
 Architecture: all
 Depends:
- golang-dlib-dev,
+ golang-github-linuxdeepin-go-lib-dev,
  golang-github-stretchr-testify-dev,
  ${misc:Depends},
  ${shlibs:Depends},

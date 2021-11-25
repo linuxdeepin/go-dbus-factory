@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/stretchr/testify/mock"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 type MockInterfaceObjectManager struct {

@@ -5,8 +5,8 @@ package abrecovery
 import "fmt"
 import "github.com/godbus/dbus"
 import "github.com/stretchr/testify/mock"
-import "pkg.deepin.io/lib/dbusutil"
-import "pkg.deepin.io/lib/dbusutil/proxy"
+import "github.com/linuxdeepin/go-lib/dbusutil"
+import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 type MockABRecovery struct {
 	MockInterfaceAbRecovery // interface com.deepin.ABRecovery
