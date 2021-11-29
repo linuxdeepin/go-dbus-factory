@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.devicemanager",
+  "Objects": [
+    {
+      "Type": "DeviceManager",
+      "Path": "/com/deepin/devicemanager",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.devicemanager",
+          "Type": "devicemanager"
+        }
+      ]
+    }
+  ]
+}
