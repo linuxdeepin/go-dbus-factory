@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.license",
+  "Objects": [
+    {
+      "Type": "License",
+      "Path": "/com/deepin/license/Info",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.license.Info",
+          "Type": "license"
+        }
+      ]
+    }
+  ]
+}
