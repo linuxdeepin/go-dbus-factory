@@ -2886,6 +2886,19 @@ func (v *MockInterfaceDevice) Interface() proxy.PropString {
 	return ret0
 }
 
+// property InterfaceFlags u
+
+func (v *MockInterfaceDevice) InterfaceFlags() proxy.PropUint32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property IpInterface s
 
 func (v *MockInterfaceDevice) IpInterface() proxy.PropString {

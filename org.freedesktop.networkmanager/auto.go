@@ -3028,6 +3028,7 @@ type device interface {
 	ConnectStateChanged(cb func(new_state uint32, old_state uint32, reason uint32)) (dbusutil.SignalHandlerId, error)
 	Udi() proxy.PropString
 	Interface() proxy.PropString
+	InterfaceFlags() proxy.PropUint32
 	IpInterface() proxy.PropString
 	Driver() proxy.PropString
 	DriverVersion() proxy.PropString
@@ -3153,6 +3154,15 @@ func (v *interfaceDevice) Interface() proxy.PropString {
 	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "Interface",
+	}
+}
+
+// property InterfaceFlags u
+
+func (v *interfaceDevice) InterfaceFlags() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
+		Impl: v,
+		Name: "InterfaceFlags",
 	}
 }
 

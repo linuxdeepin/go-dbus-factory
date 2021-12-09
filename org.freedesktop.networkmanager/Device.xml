@@ -38,6 +38,16 @@
     <property name="Interface" type="s" access="read"/>
 
     <!--
+        InterfaceFlags:
+
+        The flags of the network interface. See NMDeviceInterfaceFlags for the currently defined flags.
+        Note that non UTF-8 characters are backslash escaped, so the
+        resulting name may be longer then 15 characters. Use g_strcompress()
+        to revert the escaping.
+    -->
+    <property name="InterfaceFlags" type="u" access="read"/>
+
+    <!--
         IpInterface:
 
         The name of the device's data interface when available. This property may
