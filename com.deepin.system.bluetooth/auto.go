@@ -35,6 +35,8 @@ type bluetooth interface {
 	ConnectDevice(flags dbus.Flags, devPath dbus.ObjectPath, adapterPath dbus.ObjectPath) error
 	GoDebugInfo(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	DebugInfo(flags dbus.Flags) (string, error)
+	GoDisconnectAudioDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DisconnectAudioDevices(flags dbus.Flags) error
 	GoDisconnectDevice(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath) *dbus.Call
 	DisconnectDevice(flags dbus.Flags, devPath dbus.ObjectPath) error
 	GoGetAdapters(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
@@ -69,8 +71,8 @@ type bluetooth interface {
 	ConnectDeviceAdded(cb func(devJSON string)) (dbusutil.SignalHandlerId, error)
 	ConnectDeviceRemoved(cb func(devJSON string)) (dbusutil.SignalHandlerId, error)
 	ConnectDevicePropertiesChanged(cb func(devJSON string)) (dbusutil.SignalHandlerId, error)
-	State() proxy.PropUint32
 	CanSendFile() proxy.PropBool
+	State() proxy.PropUint32
 }
 
 type interfaceBluetooth struct{}
@@ -117,6 +119,16 @@ func (*interfaceBluetooth) StoreDebugInfo(call *dbus.Call) (info string, err err
 func (v *interfaceBluetooth) DebugInfo(flags dbus.Flags) (string, error) {
 	return v.StoreDebugInfo(
 		<-v.GoDebugInfo(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method DisconnectAudioDevices
+
+func (v *interfaceBluetooth) GoDisconnectAudioDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DisconnectAudioDevices", flags, ch)
+}
+
+func (v *interfaceBluetooth) DisconnectAudioDevices(flags dbus.Flags) error {
+	return (<-v.GoDisconnectAudioDevices(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method DisconnectDevice
@@ -427,20 +439,20 @@ func (v *interfaceBluetooth) ConnectDevicePropertiesChanged(cb func(devJSON stri
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property State u
-
-func (v *interfaceBluetooth) State() proxy.PropUint32 {
-	return &proxy.ImplPropUint32{
-		Impl: v,
-		Name: "State",
-	}
-}
-
 // property CanSendFile b
 
 func (v *interfaceBluetooth) CanSendFile() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "CanSendFile",
+	}
+}
+
+// property State u
+
+func (v *interfaceBluetooth) State() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
+		Impl: v,
+		Name: "State",
 	}
 }

@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
 )
 
 type MockBluetooth struct {
@@ -75,6 +75,25 @@ func (v *MockInterfaceBluetooth) DebugInfo(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
 	return mockArgs.String(0), mockArgs.Error(1)
+}
+
+// method DisconnectAudioDevices
+
+func (v *MockInterfaceBluetooth) GoDisconnectAudioDevices(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceBluetooth) DisconnectAudioDevices(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
 }
 
 // method DisconnectDevice
@@ -421,12 +440,12 @@ func (v *MockInterfaceBluetooth) ConnectDevicePropertiesChanged(cb func(devJSON 
 	return ret0, mockArgs.Error(1)
 }
 
-// property State u
+// property CanSendFile b
 
-func (v *MockInterfaceBluetooth) State() proxy.PropUint32 {
+func (v *MockInterfaceBluetooth) CanSendFile() proxy.PropBool {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
@@ -434,12 +453,12 @@ func (v *MockInterfaceBluetooth) State() proxy.PropUint32 {
 	return ret0
 }
 
-// property CanSendFile b
+// property State u
 
-func (v *MockInterfaceBluetooth) CanSendFile() proxy.PropBool {
+func (v *MockInterfaceBluetooth) State() proxy.PropUint32 {
 	mockArgs := v.Called()
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}

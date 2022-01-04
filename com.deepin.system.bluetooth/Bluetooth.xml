@@ -10,6 +10,7 @@
         <method name="DebugInfo">
             <arg name="info" type="s" direction="out"></arg>
         </method>
+        <method name="DisconnectAudioDevices"></method>
         <method name="DisconnectDevice">
             <arg name="devPath" type="o" direction="in"></arg>
         </method>
@@ -79,8 +80,8 @@
         <signal name="DevicePropertiesChanged">
             <arg name="devJSON" type="s"></arg>
         </signal>
-        <property name="State" type="u" access="read"></property>
         <property name="CanSendFile" type="b" access="read"></property>
+        <property name="State" type="u" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
