@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
 )
 
 type MockSoundThemePlayer struct {
@@ -17,6 +17,25 @@ type MockSoundThemePlayer struct {
 
 type MockInterfaceSoundThemePlayer struct {
 	mock.Mock
+}
+
+// method EnableSound
+
+func (v *MockInterfaceSoundThemePlayer) GoEnableSound(flags dbus.Flags, ch chan *dbus.Call, name string, enabled bool) *dbus.Call {
+	mockArgs := v.Called(flags, ch, name, enabled)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceSoundThemePlayer) EnableSound(flags dbus.Flags, name string, enabled bool) error {
+	mockArgs := v.Called(flags, name, enabled)
+
+	return mockArgs.Error(0)
 }
 
 // method EnableSoundDesktopLogin
@@ -72,6 +91,25 @@ func (v *MockInterfaceSoundThemePlayer) GoPlaySoundDesktopLogin(flags dbus.Flags
 
 func (v *MockInterfaceSoundThemePlayer) PlaySoundDesktopLogin(flags dbus.Flags) error {
 	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
+// method PrepareShutdownSound
+
+func (v *MockInterfaceSoundThemePlayer) GoPrepareShutdownSound(flags dbus.Flags, ch chan *dbus.Call, uid int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uid)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceSoundThemePlayer) PrepareShutdownSound(flags dbus.Flags, uid int32) error {
+	mockArgs := v.Called(flags, uid)
 
 	return mockArgs.Error(0)
 }

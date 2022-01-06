@@ -26,12 +26,16 @@ func NewSoundThemePlayer(conn *dbus.Conn) SoundThemePlayer {
 }
 
 type soundThemePlayer interface {
+	GoEnableSound(flags dbus.Flags, ch chan *dbus.Call, name string, enabled bool) *dbus.Call
+	EnableSound(flags dbus.Flags, name string, enabled bool) error
 	GoEnableSoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call, enabled bool) *dbus.Call
 	EnableSoundDesktopLogin(flags dbus.Flags, enabled bool) error
 	GoPlay(flags dbus.Flags, ch chan *dbus.Call, theme string, event string, device string) *dbus.Call
 	Play(flags dbus.Flags, theme string, event string, device string) error
 	GoPlaySoundDesktopLogin(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	PlaySoundDesktopLogin(flags dbus.Flags) error
+	GoPrepareShutdownSound(flags dbus.Flags, ch chan *dbus.Call, uid int32) *dbus.Call
+	PrepareShutdownSound(flags dbus.Flags, uid int32) error
 	GoSaveAudioState(flags dbus.Flags, ch chan *dbus.Call, activePlayback map[string]dbus.Variant) *dbus.Call
 	SaveAudioState(flags dbus.Flags, activePlayback map[string]dbus.Variant) error
 	GoSetSoundTheme(flags dbus.Flags, ch chan *dbus.Call, theme string) *dbus.Call
@@ -46,6 +50,16 @@ func (v *interfaceSoundThemePlayer) GetObject_() *proxy.ImplObject {
 
 func (*interfaceSoundThemePlayer) GetInterfaceName_() string {
 	return "com.deepin.api.SoundThemePlayer"
+}
+
+// method EnableSound
+
+func (v *interfaceSoundThemePlayer) GoEnableSound(flags dbus.Flags, ch chan *dbus.Call, name string, enabled bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableSound", flags, ch, name, enabled)
+}
+
+func (v *interfaceSoundThemePlayer) EnableSound(flags dbus.Flags, name string, enabled bool) error {
+	return (<-v.GoEnableSound(flags, make(chan *dbus.Call, 1), name, enabled).Done).Err
 }
 
 // method EnableSoundDesktopLogin
@@ -76,6 +90,16 @@ func (v *interfaceSoundThemePlayer) GoPlaySoundDesktopLogin(flags dbus.Flags, ch
 
 func (v *interfaceSoundThemePlayer) PlaySoundDesktopLogin(flags dbus.Flags) error {
 	return (<-v.GoPlaySoundDesktopLogin(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method PrepareShutdownSound
+
+func (v *interfaceSoundThemePlayer) GoPrepareShutdownSound(flags dbus.Flags, ch chan *dbus.Call, uid int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".PrepareShutdownSound", flags, ch, uid)
+}
+
+func (v *interfaceSoundThemePlayer) PrepareShutdownSound(flags dbus.Flags, uid int32) error {
+	return (<-v.GoPrepareShutdownSound(flags, make(chan *dbus.Call, 1), uid).Done).Err
 }
 
 // method SaveAudioState
