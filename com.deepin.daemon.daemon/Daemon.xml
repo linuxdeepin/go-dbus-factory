@@ -7,11 +7,11 @@
             <arg name="device" type="s" direction="in"></arg>
             <arg name="technologies" type="as" direction="out"></arg>
         </method>
-	<method name="IsPidVirtualMachine">
+	    <method name="IsPidVirtualMachine">
             <arg name="pid" type="u" direction="in"></arg>
             <arg name="ret" type="b" direction="out"></arg>
         </method>
-	<method name="ClearTtys">
+	    <method name="ClearTtys">
         </method>
         <method name="ClearTty">
             <arg name="num" type="u" direction="in"></arg>
@@ -27,6 +27,19 @@
         </method>
         <method name="SetLongPressDuration">
             <arg name="duration" type="u" direction="in"></arg>
+        </method>
+        <method name="SaveCustomWallPaper">
+            <arg name="username" type="s" direction="in"></arg>
+            <arg name="file" type="s" direction="in"></arg>
+            <arg name="path" type="s" direction="out"></arg>
+        </method>
+        <method name="GetCustomWallPapers">
+            <arg name="username" type="s" direction="in"></arg>
+            <arg name="files" type="as" direction="out"></arg>
+        </method>
+        <method name="DeleteCustomWallPaper">
+            <arg name="username" type="s" direction="in"></arg>
+            <arg name="file" type="s" direction="in"></arg>
         </method>
         <signal name="HandleForSleep">
             <arg name="start" type="b"></arg>
