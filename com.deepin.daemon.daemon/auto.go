@@ -45,6 +45,12 @@ type daemon interface {
 	ScalePlymouth(flags dbus.Flags, scale uint32) error
 	GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus.Call, duration uint32) *dbus.Call
 	SetLongPressDuration(flags dbus.Flags, duration uint32) error
+	GoSaveCustomWallPaper(flags dbus.Flags, ch chan *dbus.Call, username string, file string) *dbus.Call
+	SaveCustomWallPaper(flags dbus.Flags, username string, file string) (string, error)
+	GoGetCustomWallPapers(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call
+	GetCustomWallPapers(flags dbus.Flags, username string) ([]string, error)
+	GoDeleteCustomWallPaper(flags dbus.Flags, ch chan *dbus.Call, username string, file string) *dbus.Call
+	DeleteCustomWallPaper(flags dbus.Flags, username string, file string) error
 	ConnectHandleForSleep(cb func(start bool)) (dbusutil.SignalHandlerId, error)
 }
 
@@ -154,6 +160,48 @@ func (v *interfaceDaemon) GoSetLongPressDuration(flags dbus.Flags, ch chan *dbus
 
 func (v *interfaceDaemon) SetLongPressDuration(flags dbus.Flags, duration uint32) error {
 	return (<-v.GoSetLongPressDuration(flags, make(chan *dbus.Call, 1), duration).Done).Err
+}
+
+// method SaveCustomWallPaper
+
+func (v *interfaceDaemon) GoSaveCustomWallPaper(flags dbus.Flags, ch chan *dbus.Call, username string, file string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SaveCustomWallPaper", flags, ch, username, file)
+}
+
+func (*interfaceDaemon) StoreSaveCustomWallPaper(call *dbus.Call) (path string, err error) {
+	err = call.Store(&path)
+	return
+}
+
+func (v *interfaceDaemon) SaveCustomWallPaper(flags dbus.Flags, username string, file string) (string, error) {
+	return v.StoreSaveCustomWallPaper(
+		<-v.GoSaveCustomWallPaper(flags, make(chan *dbus.Call, 1), username, file).Done)
+}
+
+// method GetCustomWallPapers
+
+func (v *interfaceDaemon) GoGetCustomWallPapers(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetCustomWallPapers", flags, ch, username)
+}
+
+func (*interfaceDaemon) StoreGetCustomWallPapers(call *dbus.Call) (files []string, err error) {
+	err = call.Store(&files)
+	return
+}
+
+func (v *interfaceDaemon) GetCustomWallPapers(flags dbus.Flags, username string) ([]string, error) {
+	return v.StoreGetCustomWallPapers(
+		<-v.GoGetCustomWallPapers(flags, make(chan *dbus.Call, 1), username).Done)
+}
+
+// method DeleteCustomWallPaper
+
+func (v *interfaceDaemon) GoDeleteCustomWallPaper(flags dbus.Flags, ch chan *dbus.Call, username string, file string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeleteCustomWallPaper", flags, ch, username, file)
+}
+
+func (v *interfaceDaemon) DeleteCustomWallPaper(flags dbus.Flags, username string, file string) error {
+	return (<-v.GoDeleteCustomWallPaper(flags, make(chan *dbus.Call, 1), username, file).Done).Err
 }
 
 // signal HandleForSleep
