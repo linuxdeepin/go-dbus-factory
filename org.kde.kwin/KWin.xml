@@ -1,0 +1,90 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.KWin">
+    <method name="cascadeDesktop">
+      <annotation value="true" name="org.freedesktop.DBus.Method.NoReply"/>
+    </method>
+    <method name="unclutterDesktop">
+      <annotation value="true" name="org.freedesktop.DBus.Method.NoReply"/>
+    </method>
+    <method name="reconfigure">
+      <annotation value="true" name="org.freedesktop.DBus.Method.NoReply"/>
+    </method>
+    <method name="killWindow">
+      <annotation value="true" name="org.freedesktop.DBus.Method.NoReply"/>
+    </method>
+    <method name="setCurrentDesktop">
+      <arg direction="in" type="i" name="desktop"/>
+      <arg direction="out" type="b" name="result"/>
+    </method>
+    <method name="setRepeatRateAndDelay">
+      <arg direction="in" type="i" name="rate"/>
+      <arg direction="in" type="i" name="delay"/>
+    </method>
+    <method name="currentDesktop">
+      <arg direction="out" type="i"/>
+    </method>
+    <method name="nextDesktop"/>
+    <method name="previousDesktop"/>
+    <signal name="reloadConfig"/>
+    <method name="stopActivity">
+      <arg direction="in" type="s"/>
+      <arg direction="out" type="b"/>
+    </method>
+    <method name="startActivity">
+      <arg direction="in" type="s"/>
+      <arg direction="out" type="b"/>
+    </method>
+    <method name="supportInformation">
+      <arg direction="out" type="s"/>
+    </method>
+    <method name="showDebugConsole"/>
+    <method name="queryWindowInfo">
+      <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.Out0"/>
+      <arg direction="out" type="a{sv}"/>
+    </method>
+    <method name="getWindowInfo">
+      <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.Out0"/>
+      <arg direction="in" type="s"/>
+      <arg direction="out" type="a{sv}"/>
+    </method>
+    <method name="previewWindows">
+      <arg direction="in" type="au"/>
+      <annotation value="QList&lt;uint&gt;" name="org.qtproject.QtDBus.QtTypeName.In0"/>
+    </method>
+    <method name="quitPreviewWindows"/>
+    <method name="globalShortcutsDisabled">
+      <arg direction="out" type="b"/>
+    </method>
+    <method name="disableGlobalShortcutsForClient">
+      <arg direction="in" type="b"/>
+    </method>
+    <method name="disableHotKeysForClient">
+      <arg direction="in" type="b"/>
+    </method>
+    <method name="disableGestureForClient">
+      <arg direction="in" type="b"/>
+    </method>
+    <method name="xwaylandGrabed">
+      <arg direction="out" type="b"/>
+    </method>
+    <method name="cursorImage">
+      <arg direction="out" type="ay"/>
+    </method>
+    <method name="setKWinLogOutput">
+      <arg direction="in" type="b"/>
+    </method>
+    <method name="printKwinFps">
+      <arg direction="in" type="b"/>
+    </method>
+    <method name="dumpOutputBuffer"/>
+    <method name="setTouchDeviceToScreenId">
+      <arg direction="in" type="s" name="touchDeviceSysName"/>
+      <arg direction="in" type="i" name="screenId"/>
+    </method>
+    <method name="getTouchDeviceToScreenInfo">
+      <arg direction="out" type="s"/>
+    </method>
+  </interface>
+</node>
