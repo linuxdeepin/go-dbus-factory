@@ -1,0 +1,22 @@
+{
+  "Service": "org.desktopspec.ConfigManager",
+  "Objects": [
+    {
+      "Type": "ConfigManager",
+      "Path": "/",
+      "Interfaces": [
+        {
+          "Name": "org.desktopspec.ConfigManager"
+        }
+      ]
+    },
+    {
+      "Type": "Manager",
+      "Interfaces": [
+        {
+          "Name": "org.desktopspec.ConfigManager.Manager"
+        }
+      ]
+    }
+  ]
+}
