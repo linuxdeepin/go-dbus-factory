@@ -2,13 +2,15 @@
 
 package power
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type Power interface {
 	power // interface com.deepin.system.Power
@@ -61,6 +63,7 @@ type power interface {
 	PowerSavingModeEnabled() proxy.PropBool
 	PowerSavingModeAutoWhenBatteryLow() proxy.PropBool
 	PowerSavingModeBrightnessDropPercent() proxy.PropUint32
+	PowerSavingModeBrightnessData() proxy.PropString
 	CpuGovernor() proxy.PropString
 	CpuBoost() proxy.PropBool
 	IsBoostSupported() proxy.PropBool
@@ -417,6 +420,15 @@ func (v *interfacePower) PowerSavingModeBrightnessDropPercent() proxy.PropUint32
 	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "PowerSavingModeBrightnessDropPercent",
+	}
+}
+
+// property PowerSavingModeBrightnessData s
+
+func (v *interfacePower) PowerSavingModeBrightnessData() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "PowerSavingModeBrightnessData",
 	}
 }
 
