@@ -34,6 +34,7 @@
         <property name="PowerSavingModeEnabled" type="b" access="readwrite"></property>
         <property name="PowerSavingModeAutoWhenBatteryLow" type="b" access="readwrite"></property>
         <property name="PowerSavingModeBrightnessDropPercent" type="u" access="read"></property>
+        <property name="PowerSavingModeBrightnessData" type="s" access="readwrite"></property>
         <property name="CpuGovernor" type="s" access="read"></property>
         <property name="CpuBoost" type="b" access="read"></property>
         <property name="IsBoostSupported" type="b" access="read"></property>
