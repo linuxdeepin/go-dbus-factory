@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.0.0) unstable; urgency=low
+
+  * release 2.0.0.0
+
+ --  <fanpengcheng@uniontech.com>  Tue, 14 June 2022 17:08:13 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (1.0.0-1) unstable; urgency=low
 
   * Auto Version update.
