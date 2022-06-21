@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
 )
 
 type MockManager struct {
@@ -212,8 +212,8 @@ func (v *MockInterfaceDevice) DeleteEnrolledFingers(flags dbus.Flags, username s
 
 // method DeleteEnrolledFinger
 
-func (v *MockInterfaceDevice) GoDeleteEnrolledFinger(flags dbus.Flags, ch chan *dbus.Call, username string, finger_name string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, username, finger_name)
+func (v *MockInterfaceDevice) GoDeleteEnrolledFinger(flags dbus.Flags, ch chan *dbus.Call, finger_name string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, finger_name)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -223,8 +223,8 @@ func (v *MockInterfaceDevice) GoDeleteEnrolledFinger(flags dbus.Flags, ch chan *
 	return ret
 }
 
-func (v *MockInterfaceDevice) DeleteEnrolledFinger(flags dbus.Flags, username string, finger_name string) error {
-	mockArgs := v.Called(flags, username, finger_name)
+func (v *MockInterfaceDevice) DeleteEnrolledFinger(flags dbus.Flags, finger_name string) error {
+	mockArgs := v.Called(flags, finger_name)
 
 	return mockArgs.Error(0)
 }
