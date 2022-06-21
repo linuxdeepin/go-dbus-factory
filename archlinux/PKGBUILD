@@ -11,20 +11,16 @@ makedepends=('git' 'go')
 provides=('golang-github-linuxdeepin-go-dbus-factory')
 conflicts=('golang-github-linuxdeepin-go-dbus-factory')
 groups=('deepin-git')
-source=("$pkgname-$pkgver::source.tar.gz")
+source=('source.tar.gz')
 sha512sums=('SKIP')
-pkgver() {
-    cd $pkgname-$pkgver
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
 
 prepare() {
-  cd $pkgname-$pkgver
+    cd $deepin_source_name
 
   export GOPATH="$srcdir/build:/usr/share/gocode"
   export GO111MODULE=off
   mkdir -p "$srcdir"/build/src/github.com/linuxdeepin
-  cp -a "$srcdir/$pkgname" "$srcdir"/build/src/github.com/linuxdeepin/go-dbus-factory
+  cp -a "$srcdir/$deepin_source_name" "$srcdir"/build/src/github.com/linuxdeepin/go-dbus-factory
   go get -v github.com/fsnotify/fsnotify
   go get -v github.com/godbus/dbus
   go get -v github.com/godbus/dbus/introspect
