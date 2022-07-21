@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.daemon.Greeter1",
+  "Objects": [
+    {
+      "Type": "Greeter",
+      "Path": "/org/deepin/daemon/Greeter1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.daemon.Greeter1",
+          "Type": "greeter"
+        }
+      ]
+    }
+  ]
+}

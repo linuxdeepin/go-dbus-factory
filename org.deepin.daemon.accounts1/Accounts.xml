@@ -1,0 +1,88 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.deepin.daemon.Accounts1">
+        <method name="AllowGuestAccount">
+            <arg name="allow" type="b" direction="in"></arg>
+        </method>
+        <method name="CreateGuestAccount">
+            <arg name="user" type="s" direction="out"></arg>
+        </method>
+        <method name="CreateUser">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="fullName" type="s" direction="in"></arg>
+            <arg name="type" type="i" direction="in"></arg>
+            <arg name="user" type="o" direction="out"></arg>
+        </method>
+        <method name="DeleteUser">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="rmFiles" type="b" direction="in"></arg>
+        </method>
+        <method name="FindUserById">
+            <arg name="uid" type="s" direction="in"></arg>
+            <arg name="user" type="s" direction="out"></arg>
+        </method>
+        <method name="FindUserByName">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="user" type="s" direction="out"></arg>
+        </method>
+        <method name="IsPasswordValid">
+            <arg name="password" type="s" direction="in"></arg>
+            <arg name="ok" type="b" direction="out"></arg>
+            <arg name="errReason" type="s" direction="out"></arg>
+            <arg name="errCode" type="i" direction="out"></arg>
+        </method>
+        <method name="IsUsernameValid">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="ok" type="b" direction="out"></arg>
+            <arg name="errReason" type="s" direction="out"></arg>
+            <arg name="errCode" type="i" direction="out"></arg>
+        </method>
+        <method name="RandUserIcon">
+            <arg name="iconFile" type="s" direction="out"></arg>
+        </method>
+        <signal name="UserAdded">
+            <arg name="objPath" type="s"></arg>
+        </signal>
+        <signal name="UserDeleted">
+            <arg name="objPath" type="s"></arg>
+        </signal>
+        <property name="UserList" type="as" access="read"></property>
+        <property name="GuestIcon" type="s" access="read"></property>
+        <property name="AllowGuest" type="b" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <node name="User1000"></node>
+    <node name="User1001"></node>
+</node>

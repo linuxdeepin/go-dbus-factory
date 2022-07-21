@@ -1,3 +1,9 @@
 .idea
 local_test
 generator
+obj-x86_64-linux-gnu
+debian/.debhelper
+debian/debhelper-build-stamp
+debian/files
+debian/golang-github-linuxdeepin-go-dbus-factory-dev.substvars
+debian/golang-github-linuxdeepin-go-dbus-factory-dev

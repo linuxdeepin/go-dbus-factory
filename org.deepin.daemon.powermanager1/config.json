@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.daemon.PowerManager1",
+  "Objects": [
+    {
+      "Type": "PowerManager",
+      "Path": "/org/deepin/daemon/PowerManager1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.daemon.PowerManager1",
+          "Type": "powerManager"
+        }
+      ]
+    }
+  ]
+}

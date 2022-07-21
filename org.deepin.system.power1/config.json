@@ -1,0 +1,24 @@
+{
+  "Service": "org.deepin.system.Power1",
+  "Objects": [
+    {
+      "Type": "Power",
+      "Path": "/org/deepin/system/Power1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.system.Power1",
+          "Type": "power"
+        }
+      ]
+    },
+    {
+      "Type":"Battery",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.system.Power1.Battery",
+          "Type": "battery"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "Service": "org.deepin.lastore1",
+  "Objects": [
+    {
+      "Type": "Lastore",
+      "Path": "/org/deepin/lastore1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.lastore1.Manager",
+          "Type": "manager",
+          "Accessor": "Manager"
+        },
+        {
+          "Name": "org.deepin.lastore1.Updater",
+          "Type": "updater",
+          "Accessor": "Updater",
+          "Fixes": {
+            "m/ApplicationUpdateInfos": [
+              {
+                "Name": "arg1",
+                "Type": "[]ApplicationUpdateInfo"
+              }
+            ],
+            "m/ListMirrorSources": [
+              {
+                "Name": "arg1",
+                "Type": "[]MirrorSource"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Job",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.lastore1.Job",
+          "Type": "job"
+        }
+      ]
+    }
+  ]
+}

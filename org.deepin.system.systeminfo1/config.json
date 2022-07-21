@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.system.SystemInfo1",
+  "Objects": [
+    {
+      "Type": "SystemInfo",
+      "Path": "/org/deepin/system/SystemInfo1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.system.SystemInfo1",
+          "Type": "systemInfo"
+        }
+      ]
+    }
+  ]
+}

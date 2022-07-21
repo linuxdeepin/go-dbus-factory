@@ -1,0 +1,24 @@
+{
+  "Service": "org.deepin.daemon.Fprintd1",
+  "Objects": [
+    {
+      "Type": "Fprintd",
+      "Path": "/org/deepin/daemon/Fprintd1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.daemon.Fprintd1",
+          "Type": "fprintd"
+        }
+      ]
+    },
+    {
+      "Type": "Device",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.daemon.Fprintd1.Device",
+          "Type": "device"
+        }
+      ]
+    }
+  ]
+}

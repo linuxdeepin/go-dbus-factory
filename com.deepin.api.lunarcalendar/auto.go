@@ -2,12 +2,9 @@
 
 package lunarcalendar
 
-import (
-	"unsafe"
-
-	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-)
+import "github.com/godbus/dbus"
+import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
+import "unsafe"
 
 type LunarCalendar interface {
 	lunarCalendar // interface com.deepin.api.LunarCalendar

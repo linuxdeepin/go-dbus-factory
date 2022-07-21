@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Clipboard1",
+  "Objects": [
+    {
+      "Type": "Clipboard",
+      "Path": "/org/deepin/dde/Clipboard1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Clipboard1",
+          "Type": "clipboard"
+        }
+      ]
+    }
+  ]
+}
