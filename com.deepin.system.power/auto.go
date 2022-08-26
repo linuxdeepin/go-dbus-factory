@@ -68,6 +68,8 @@ type power interface {
 	CpuBoost() proxy.PropBool
 	IsBoostSupported() proxy.PropBool
 	IsHighPerformanceSupported() proxy.PropBool
+	IsBalanceSupported() proxy.PropBool
+	IsPowerSaveSupported() proxy.PropBool
 	Mode() proxy.PropString
 }
 
@@ -466,6 +468,24 @@ func (v *interfacePower) IsHighPerformanceSupported() proxy.PropBool {
 		Impl: v,
 		Name: "IsHighPerformanceSupported",
 	}
+}
+
+// property IsBalanceSupported b
+
+func (v *interfacePower) IsBalanceSupported() proxy.PropBool {
+    return &proxy.ImplPropBool{
+        Impl: v,
+        Name: "IsBalanceSupported",
+    }
+}
+
+// property IsPowerSaveSupported b
+
+func (v *interfacePower) IsPowerSaveSupported() proxy.PropBool {
+    return &proxy.ImplPropBool{
+        Impl: v,
+        Name: "IsPowerSaveSupported",
+    }
 }
 
 // property Mode s
