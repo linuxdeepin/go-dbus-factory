@@ -7,6 +7,10 @@
             <arg name="name" type="s" direction="in"></arg>
             <arg name="value" type="i" direction="in"></arg>
         </method>
+        <method name="CheckCfgSupport">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="value" type="b" direction="out"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
