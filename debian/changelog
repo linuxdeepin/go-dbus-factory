@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (1.10.23) unstable; urgency=low
+
+  * Version update.
+
+ -- lichangze <lichangze@uniontech.com>  Fri, 2 Sep 2022 01:40:10 +0000
+
 golang-github-linuxdeepin-go-dbus-factory (1.10.21) unstable; urgency=low
 
   * Version update.
