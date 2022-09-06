@@ -56,7 +56,13 @@ func (v *SourceFile) WriteTo(w io.Writer) (n int64, err error) {
 	if err != nil {
 		return
 	}
-
+	wn, err = io.WriteString(w, `// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later`+"\n")
+	n += int64(wn)
+	if err != nil {
+		return
+	}
 	wn, err = io.WriteString(w, "package "+v.Pkg+"\n")
 	n += int64(wn)
 	if err != nil {
