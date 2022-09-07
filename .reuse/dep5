@@ -1,0 +1,49 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: go-dbus-factory
+Upstream-Contact: UnionTech Software Technology Co., Ltd.  <>
+Source: https://github.com/linuxdeepin/go-dbus-factory
+
+# gitignore
+Files: .gitignore 
+Copyright: None
+License: CC0-1.0
+
+# ci
+Files: .github/* .gitlab-ci.yml
+Copyright: None
+License: CC0-1.0
+
+# debian rpm archlinux
+Files: debian/* rpm/* archlinux/*
+Copyright: None
+License: CC0-1.0
+
+# README
+Files: README.md README.zh_CN.md CHANGELOG.md
+Copyright: UnionTech Software Technology Co., Ltd.
+License: CC-BY-4.0
+
+# xml json yaml
+Files: *.xml *.json *.yaml
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
+
+# docs
+Files: docs/*
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
+
+# Project file
+Files: Makefile 
+Copyright: None
+License: CC0-1.0
+
+# sh
+Files: gen.sh _tool/prop_gen/gen.sh
+Copyright: None
+License: CC0-1.0
+
+# auto generation files
+Files: auto.go auto_mock.go
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
