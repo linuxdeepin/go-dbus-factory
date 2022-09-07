@@ -1,4 +1,4 @@
-package lastore
+package lastore1
 
 type ApplicationUpdateInfo struct {
 	Id             string
