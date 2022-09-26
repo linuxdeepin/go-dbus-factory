@@ -4,7 +4,7 @@ Upstream-Contact: UnionTech Software Technology Co., Ltd.  <>
 Source: https://github.com/linuxdeepin/go-dbus-factory
 
 # gitignore
-Files: .gitignore 
+Files: .gitignore
 Copyright: None
 License: CC0-1.0
 
@@ -23,10 +23,25 @@ Files: README.md README.zh_CN.md CHANGELOG.md
 Copyright: UnionTech Software Technology Co., Ltd.
 License: CC-BY-4.0
 
-# xml json yaml
-Files: *.xml *.json *.yaml
+# json yaml
+Files: *.json *.yaml
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
+
+# org.freedesktop.modemmanager1 project file
+Files: org.freedesktop.modemmanager1/manual.go
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
+
+# xml
+Files: *.xml
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
+
+# org.freedesktop.modemmanager1 xml
+Files: org.freedesktop.modemmanager1/*.xml
+Copyright: 2011-2013 Red Hat, Inc. 2011-2013 Google, Inc. 2011-2013 Lanedo GmbH. 2015 Marco Bascetta <marco.bascetta@sadel.it>
+License: GFDL-1.3-or-later
 
 # docs
 Files: docs/*
@@ -34,14 +49,14 @@ Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
 # Project file
-Files: Makefile 
+Files: Makefile
 Copyright: None
 License: CC0-1.0
 
 # sh
 Files: gen.sh _tool/prop_gen/gen.sh
 Copyright: None
-License: CC0-1.0
+License: GPL-3.0-or-later
 
 # auto generation files
 Files: auto.go auto_mock.go
