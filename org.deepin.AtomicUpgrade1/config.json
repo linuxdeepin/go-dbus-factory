@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.AtomicUpgrade1",
+  "Objects": [
+    {
+      "Type": "AtomicUpgrade1",
+      "Path": "/org/deepin/AtomicUpgrade1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.AtomicUpgrade1",
+          "Type": "atomicUpgrade1"
+        }
+      ]
+    }
+  ]
+}
