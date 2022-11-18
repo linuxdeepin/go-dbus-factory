@@ -1,0 +1,17 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "Face",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Authenticate1.Face.Device",
+          "CustomInterfaceName": true,
+          "Type": "face",
+          "Accessor": "Face"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.SessionWatcher1",
+  "Objects": [
+    {
+      "Type": "SessionWatcher",
+      "Path": "/org/deepin/dde/SessionWatcher1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.SessionWatcher1",
+          "Type": "sessionWatcher"
+        }
+      ]
+    }
+  ]
+}

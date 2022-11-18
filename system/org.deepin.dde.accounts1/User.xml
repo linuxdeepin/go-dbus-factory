@@ -1,0 +1,160 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.deepin.dde.Accounts1.User">
+        <method name="AddGroup">
+            <arg name="group" type="s" direction="in"></arg>
+        </method>
+        <method name="DeleteGroup">
+            <arg name="group" type="s" direction="in"></arg>
+        </method>
+        <method name="DeleteIconFile">
+            <arg name="icon" type="s" direction="in"></arg>
+        </method>
+        <method name="EnableNoPasswdLogin">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="GetReminderInfo">
+            <arg name="info" type="(s(iiiiii)(sssss)(sssss)i)" direction="out"></arg>
+        </method>
+        <method name="IsPasswordExpired">
+            <arg name="expired" type="b" direction="out"></arg>
+        </method>
+        <method name="PasswordExpiredInfo">
+            <arg name="expiredStatus" type="i" direction="out"></arg>
+            <arg name="dayLeft" type="x" direction="out"></arg>
+        </method>
+        <method name="SetAutomaticLogin">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="SetCurrentWorkspace">
+            <arg name="currentWorkspace" type="i" direction="in"></arg>
+        </method>
+        <method name="SetDesktopBackgrounds">
+            <arg name="val" type="as" direction="in"></arg>
+        </method>
+        <method name="SetFullName">
+            <arg name="name" type="s" direction="in"></arg>
+        </method>
+        <method name="SetGreeterBackground">
+            <arg name="bg" type="s" direction="in"></arg>
+        </method>
+        <method name="SetGroups">
+            <arg name="groups" type="as" direction="in"></arg>
+        </method>
+        <method name="SetHistoryLayout">
+            <arg name="list" type="as" direction="in"></arg>
+        </method>
+        <method name="SetHomeDir">
+            <arg name="home" type="s" direction="in"></arg>
+        </method>
+        <method name="SetIconFile">
+            <arg name="iconURI" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLayout">
+            <arg name="layout" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLocale">
+            <arg name="locale" type="s" direction="in"></arg>
+        </method>
+        <method name="SetLocked">
+            <arg name="locked" type="b" direction="in"></arg>
+        </method>
+        <method name="SetLongDateFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetLongTimeFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetMaxPasswordAge">
+            <arg name="nDays" type="i" direction="in"></arg>
+        </method>
+        <method name="SetPassword">
+            <arg name="password" type="s" direction="in"></arg>
+        </method>
+        <method name="SetShell">
+            <arg name="shell" type="s" direction="in"></arg>
+        </method>
+        <method name="SetShortDateFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetShortTimeFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetUse24HourFormat">
+            <arg name="value" type="b" direction="in"></arg>
+        </method>
+        <method name="SetWeekBegins">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetWeekdayFormat">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <property name="ShortDateFormat" type="i" access="read"></property>
+        <property name="DesktopBackgrounds" type="as" access="read"></property>
+        <property name="Groups" type="as" access="read"></property>
+        <property name="GreeterBackground" type="s" access="read"></property>
+        <property name="HistoryLayout" type="as" access="read"></property>
+        <property name="UserName" type="s" access="read"></property>
+        <property name="FullName" type="s" access="read"></property>
+        <property name="Use24HourFormat" type="b" access="read"></property>
+        <property name="UUID" type="s" access="read"></property>
+        <property name="IconFile" type="s" access="read"></property>
+        <property name="LongDateFormat" type="i" access="read"></property>
+        <property name="PasswordLastChange" type="i" access="read"></property>
+        <property name="LoginTime" type="t" access="read"></property>
+        <property name="Gid" type="s" access="read"></property>
+        <property name="PasswordStatus" type="s" access="read"></property>
+        <property name="MaxPasswordAge" type="i" access="read"></property>
+        <property name="AutomaticLogin" type="b" access="read"></property>
+        <property name="Workspace" type="i" access="read"></property>
+        <property name="NoPasswdLogin" type="b" access="read"></property>
+        <property name="Shell" type="s" access="read"></property>
+        <property name="ShortTimeFormat" type="i" access="read"></property>
+        <property name="LongTimeFormat" type="i" access="read"></property>
+        <property name="Layout" type="s" access="read"></property>
+        <property name="WeekdayFormat" type="i" access="read"></property>
+        <property name="CreatedTime" type="t" access="read"></property>
+        <property name="XSession" type="s" access="read"></property>
+        <property name="Locked" type="b" access="read"></property>
+        <property name="HomeDir" type="s" access="read"></property>
+        <property name="Locale" type="s" access="read"></property>
+        <property name="WeekBegins" type="i" access="read"></property>
+        <property name="IconList" type="as" access="read"></property>
+        <property name="Uid" type="s" access="read"></property>
+        <property name="SystemAccount" type="b" access="read"></property>
+        <property name="AccountType" type="i" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>

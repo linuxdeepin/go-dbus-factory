@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.WMSwitcher1",
+  "Objects": [
+    {
+      "Type": "WMSwitcher",
+      "Path": "/org/deepin/dde/WMSwitcher1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.WMSwitcher1",
+          "Type": "wmSwitcher"
+        }
+      ]
+    }
+  ]
+}

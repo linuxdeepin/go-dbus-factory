@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.SoundThemePlayer1",
+  "Objects": [
+    {
+      "Type": "SoundThemePlayer",
+      "Path": "/org/deepin/dde/SoundThemePlayer1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.SoundThemePlayer1",
+          "Type": "soundThemePlayer"
+        }
+      ]
+    }
+  ]
+}

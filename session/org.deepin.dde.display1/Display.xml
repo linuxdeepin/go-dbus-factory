@@ -1,0 +1,117 @@
+<node>
+    <interface name="org.deepin.dde.Display1">
+        <method name="ApplyChanges"></method>
+        <method name="AssociateTouch">
+            <arg name="outputName" type="s" direction="in"></arg>
+            <arg name="touchSerial" type="s" direction="in"></arg>
+        </method>
+        <method name="CanRotate">
+            <arg name="outArg0" type="b" direction="out"></arg>
+        </method>
+        <method name="CanSetBrightness">
+            <arg name="outputName" type="s" direction="in"></arg>
+            <arg name="outArg0" type="b" direction="out"></arg>
+        </method>
+        <method name="ChangeBrightness">
+            <arg name="raised" type="b" direction="in"></arg>
+        </method>
+        <method name="DeleteCustomMode">
+            <arg name="name" type="s" direction="in"></arg>
+        </method>
+        <method name="GetBrightness">
+            <arg name="outArg0" type="a{sd}" direction="out"></arg>
+        </method>
+        <method name="GetBuiltinMonitor">
+            <arg name="outArg0" type="s" direction="out"></arg>
+            <arg name="outArg1" type="o" direction="out"></arg>
+        </method>
+        <method name="GetRealDisplayMode">
+            <arg name="outArg0" type="y" direction="out"></arg>
+        </method>
+        <method name="ListOutputNames">
+            <arg name="outArg0" type="as" direction="out"></arg>
+        </method>
+        <method name="ListOutputsCommonModes">
+            <arg name="outArg0" type="a(uqqd)" direction="out"></arg>
+        </method>
+        <method name="ModifyConfigName">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="newName" type="s" direction="in"></arg>
+        </method>
+        <method name="RefreshBrightness"></method>
+        <method name="Reset"></method>
+        <method name="ResetChanges"></method>
+        <method name="Save"></method>
+        <method name="SetAndSaveBrightness">
+            <arg name="outputName" type="s" direction="in"></arg>
+            <arg name="value" type="d" direction="in"></arg>
+        </method>
+        <method name="SetBrightness">
+            <arg name="outputName" type="s" direction="in"></arg>
+            <arg name="value" type="d" direction="in"></arg>
+        </method>
+        <method name="SetColorTemperature">
+            <arg name="value" type="i" direction="in"></arg>
+        </method>
+        <method name="SetMethodAdjustCCT">
+            <arg name="adjustMethod" type="i" direction="in"></arg>
+        </method>
+        <method name="SetPrimary">
+            <arg name="outputName" type="s" direction="in"></arg>
+        </method>
+        <method name="SwitchMode">
+            <arg name="mode" type="y" direction="in"></arg>
+            <arg name="name" type="s" direction="in"></arg>
+        </method>
+        <property name="ColorTemperatureMode" type="i" access="read"></property>
+        <property name="HasChanged" type="b" access="read"></property>
+        <property name="TouchMap" type="a{ss}" access="read"></property>
+        <property name="PrimaryRect" type="(nnqq)" access="read"></property>
+        <property name="ScreenWidth" type="q" access="read"></property>
+        <property name="MaxBacklightBrightness" type="u" access="read"></property>
+        <property name="ColorTemperatureManual" type="i" access="read"></property>
+        <property name="DisplayMode" type="y" access="read"></property>
+        <property name="CustomIdList" type="as" access="read"></property>
+        <property name="CurrentCustomId" type="s" access="read"></property>
+        <property name="ScreenHeight" type="q" access="read"></property>
+        <property name="Monitors" type="ao" access="read"></property>
+        <property name="Touchscreens" type="a(isss)" access="read"></property>
+        <property name="Primary" type="s" access="read"></property>
+        <property name="Brightness" type="a{sd}" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <node name="Monitor_67"></node>
+    <node name="Monitor_65"></node>
+    <node name="Monitor_66"></node>
+</node>

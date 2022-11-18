@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Display1",
+  "Objects": [
+    {
+      "Type": "Display",
+      "Path": "/org/deepin/dde/Display1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Display1",
+          "Type": "display"
+        }
+      ]
+    }
+  ]
+}

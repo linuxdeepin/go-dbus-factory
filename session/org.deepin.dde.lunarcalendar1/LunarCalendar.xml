@@ -1,0 +1,74 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.deepin.dde.LunarCalendar1">
+        <method name="GetFestivalMonth">
+            <arg name="year" type="i" direction="in"></arg>
+            <arg name="month" type="i" direction="in"></arg>
+            <arg name="json" type="s" direction="out"></arg>
+        </method>
+        <method name="GetFestivalsInRange">
+            <arg name="startDate" type="s" direction="in"></arg>
+            <arg name="endDate" type="s" direction="in"></arg>
+            <arg name="result" type="a(iiias)" direction="out"></arg>
+        </method>
+        <method name="GetHuangLiDay">
+            <arg name="year" type="i" direction="in"></arg>
+            <arg name="month" type="i" direction="in"></arg>
+            <arg name="day" type="i" direction="in"></arg>
+            <arg name="json" type="s" direction="out"></arg>
+        </method>
+        <method name="GetHuangLiMonth">
+            <arg name="year" type="i" direction="in"></arg>
+            <arg name="month" type="i" direction="in"></arg>
+            <arg name="fill" type="b" direction="in"></arg>
+            <arg name="json" type="s" direction="out"></arg>
+        </method>
+<!--        <method name="GetLunarInfoBySolar">-->
+<!--            <arg name="year" type="i" direction="in"></arg>-->
+<!--            <arg name="month" type="i" direction="in"></arg>-->
+<!--            <arg name="day" type="i" direction="in"></arg>-->
+<!--            <arg name="lunarDay" type="(sssssissssi)" direction="out"></arg>-->
+<!--            <arg name="ok" type="b" direction="out"></arg>-->
+<!--        </method>-->
+<!--        <method name="GetLunarMonthCalendar">-->
+<!--            <arg name="year" type="i" direction="in"></arg>-->
+<!--            <arg name="month" type="i" direction="in"></arg>-->
+<!--            <arg name="fill" type="b" direction="in"></arg>-->
+<!--            <arg name="lunarMonth" type="(iia(sssssissssi))" direction="out"></arg>-->
+<!--            <arg name="ok" type="b" direction="out"></arg>-->
+<!--        </method>-->
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>

@@ -1,0 +1,53 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+
+<node>
+  <interface name="org.deepin.dde.Procs1">
+    <signal name="ExecProc">
+      <arg name="ExecPath" type="s"/>
+      <arg name="CGroupPath" type="s"/>
+      <arg name="Pid" type="s"/>
+      <arg name="PPid" type="s"/>
+    </signal>
+    <signal name="ExitProc">
+      <arg name="ExecPath" type="s"/>
+      <arg name="CGroupPath" type="s"/>
+      <arg name="Pid" type="s"/>
+      <arg name="PPid" type="s"/>
+    </signal>
+    <property name="Procs" type="a{s(ssss)}" access="read"/>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="out" type="s" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface" type="s" direction="in"/>
+      <arg name="property" type="s" direction="in"/>
+      <arg name="value" type="v" direction="out"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface" type="s" direction="in"/>
+      <arg name="props" type="a{sv}" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg name="interface" type="s" direction="in"/>
+      <arg name="property" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg name="interface" type="s" direction="out"/>
+      <arg name="changed_properties" type="a{sv}" direction="out"/>
+      <arg name="invalidates_properties" type="as" direction="out"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg name="machine_uuid" type="s" direction="out"/>
+    </method>
+  </interface>
+</node>
+

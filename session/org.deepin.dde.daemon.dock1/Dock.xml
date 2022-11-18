@@ -1,0 +1,113 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.deepin.dde.daemon.Dock1">
+        <method name="ActivateWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="CancelPreviewWindow"></method>
+        <method name="CloseWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="GetEntryIDs">
+            <arg name="list" type="as" direction="out"></arg>
+        </method>
+        <method name="IsDocked">
+            <arg name="desktopFile" type="s" direction="in"></arg>
+            <arg name="value" type="b" direction="out"></arg>
+        </method>
+        <method name="IsOnDock">
+            <arg name="desktopFile" type="s" direction="in"></arg>
+            <arg name="value" type="b" direction="out"></arg>
+        </method>
+        <method name="MakeWindowAbove">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="MaximizeWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="MinimizeWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="MoveEntry">
+            <arg name="index" type="i" direction="in"></arg>
+            <arg name="newIndex" type="i" direction="in"></arg>
+        </method>
+        <method name="MoveWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="PreviewWindow">
+            <arg name="win" type="u" direction="in"></arg>
+        </method>
+        <method name="QueryWindowIdentifyMethod">
+            <arg name="win" type="u" direction="in"></arg>
+            <arg name="identifyMethod" type="s" direction="out"></arg>
+        </method>
+        <method name="RequestDock">
+            <arg name="desktopFile" type="s" direction="in"></arg>
+            <arg name="index" type="i" direction="in"></arg>
+            <arg name="ok" type="b" direction="out"></arg>
+        </method>
+        <method name="RequestUndock">
+            <arg name="desktopFile" type="s" direction="in"></arg>
+            <arg name="ok" type="b" direction="out"></arg>
+        </method>
+        <method name="SetFrontendWindowRect">
+            <arg name="x" type="i" direction="in"></arg>
+            <arg name="y" type="i" direction="in"></arg>
+            <arg name="width" type="u" direction="in"></arg>
+            <arg name="height" type="u" direction="in"></arg>
+        </method>
+        <signal name="ServiceRestarted"></signal>
+        <signal name="EntryAdded">
+            <arg name="path" type="o"></arg>
+            <arg name="index" type="i"></arg>
+        </signal>
+        <signal name="EntryRemoved">
+            <arg name="entryId" type="s"></arg>
+        </signal>
+        <property name="ShowTimeout" type="u" access="readwrite"></property>
+        <property name="HideTimeout" type="u" access="readwrite"></property>
+        <property name="FrontendWindowRect" type="(iiuu)" access="read"></property>
+        <property name="Entries" type="ao" access="read"></property>
+        <property name="HideMode" type="i" access="readwrite"></property>
+        <property name="DisplayMode" type="i" access="readwrite"></property>
+        <property name="HideState" type="i" access="read"></property>
+        <property name="Position" type="i" access="readwrite"></property>
+        <property name="IconSize" type="u" access="readwrite"></property>
+        <property name="DockedApps" type="as" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <node name="entries"></node>
+</node>

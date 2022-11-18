@@ -1,0 +1,74 @@
+{
+  "Service": "org.deepin.dde.Display1",
+  "Objects": [
+    {
+      "Type": "Display",
+      "Path": "/org/deepin/dde/Display1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Display1",
+          "Type": "display",
+          "Fixes": {
+            "m/ListOutputsCommonModes": [
+              {
+                "Name": "arg0",
+                "Type": "[]ModeInfo"
+              }
+            ],
+            "p/PrimaryRect": {
+              "Type": "PropDisplayPrimaryRect",
+              "ValueType": "Rectangle",
+              "EmptyValue": "$T{}"
+            },
+            "p/Brightness": {
+              "Type": "PropDisplayBrightness",
+              "ValueType": "map[string]float64"
+            },
+            "p/TouchMap": {
+              "Type": "PropDisplayTouchMap",
+              "ValueType": "map[string]string"
+            },
+            "p/Touchscreens":{
+              "Type": "PropTouchscreens",
+              "ValueType": "[]Touchscreen"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Monitor",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Display1.Monitor",
+          "Type":"monitor",
+          "Fixes": {
+            "p/BestMode": {
+              "RefType": "PropModeInfo"
+            },
+            "p/CurrentMode": {
+              "RefType": "PropModeInfo"
+            },
+            "p/Modes": {
+              "RefType": "PropModeInfoSlice"
+            },
+            "p/PreferredModes": {
+              "RefType": "PropModeInfoSlice"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropModeInfo",
+      "ValueType": "ModeInfo",
+      "EmptyValue": "$T{}"
+    },
+    {
+      "Type": "PropModeInfoSlice",
+      "ValueType": "[]ModeInfo"
+    }
+  ]
+}

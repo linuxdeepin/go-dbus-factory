@@ -1,0 +1,25 @@
+{
+  "Service": "org.deepin.dde.InputDevices1",
+  "Objects": [
+    {
+      "Type": "Keyboard",
+      "Path": "/org/deepin/dde/InputDevice1/Keyboard",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.InputDevice1.Keyboard",
+          "Type": "keyboard"
+        }
+      ]
+    },
+    {
+      "Type": "TouchPad",
+      "Path": "/org/deepin/dde/InputDevice1/TouchPad",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.InputDevice1.TouchPad",
+          "Type": "touchPad"
+        }
+      ]
+    }
+  ]
+}

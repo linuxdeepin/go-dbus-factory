@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.KeyEvent1",
+  "Objects": [
+    {
+      "Type": "KeyEvent",
+      "Path": "/org/deepin/dde/KeyEvent1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.KeyEvent1",
+          "Type": "keyEvent"
+        }
+      ]
+    }
+  ]
+}

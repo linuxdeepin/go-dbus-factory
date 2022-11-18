@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.StartManager1",
+  "Objects": [
+    {
+      "Type": "StartManager",
+      "Path": "/org/deepin/dde/StartManager1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.StartManager1",
+          "Type": "startManager"
+        }
+      ]
+    }
+  ]
+}

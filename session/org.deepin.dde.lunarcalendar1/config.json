@@ -1,0 +1,24 @@
+{
+  "Service": "org.deepin.dde.LunarCalendar1",
+  "Objects": [
+    {
+      "Type": "LunarCalendar",
+      "Path": "/org/deepin/dde/LunarCalendar1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.LunarCalendar1",
+          "Type": "lunarCalendar",
+          "Accessor": "LunarCalendar",
+          "Fixes": {
+            "m/GetFestivalsInRange": [
+              {
+                "Name" : "result",
+                "Type": "[]DayFestival"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

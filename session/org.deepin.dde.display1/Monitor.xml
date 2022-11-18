@@ -1,0 +1,84 @@
+<node>
+    <interface name="org.deepin.dde.Display1.Monitor">
+        <method name="Enable">
+            <arg name="enabled" type="b" direction="in"></arg>
+        </method>
+        <method name="SetMode">
+            <arg name="mode" type="u" direction="in"></arg>
+        </method>
+        <method name="SetModeBySize">
+            <arg name="width" type="q" direction="in"></arg>
+            <arg name="height" type="q" direction="in"></arg>
+        </method>
+        <method name="SetPosition">
+            <arg name="X" type="n" direction="in"></arg>
+            <arg name="y" type="n" direction="in"></arg>
+        </method>
+        <method name="SetReflect">
+            <arg name="value" type="q" direction="in"></arg>
+        </method>
+        <method name="SetRefreshRate">
+            <arg name="value" type="d" direction="in"></arg>
+        </method>
+        <method name="SetRotation">
+            <arg name="value" type="q" direction="in"></arg>
+        </method>
+        <property name="MmHeight" type="u" access="read"></property>
+        <property name="Width" type="q" access="read"></property>
+        <property name="Rotation" type="q" access="read"></property>
+        <property name="RefreshRate" type="d" access="read"></property>
+        <property name="CurrentRotateMode" type="y" access="read"></property>
+        <property name="AvailableFillModes" type="as" access="read"></property>
+        <property name="ID" type="u" access="read"></property>
+        <property name="Rotations" type="aq" access="read"></property>
+        <property name="BestMode" type="(uqqd)" access="read"></property>
+        <property name="MmWidth" type="u" access="read"></property>
+        <property name="Brightness" type="d" access="read"></property>
+        <property name="CurrentMode" type="(uqqd)" access="read"></property>
+        <property name="Name" type="s" access="read"></property>
+        <property name="Manufacturer" type="s" access="read"></property>
+        <property name="X" type="n" access="read"></property>
+        <property name="Y" type="n" access="read"></property>
+        <property name="Height" type="q" access="read"></property>
+        <property name="CurrentFillMode" type="s" access="readwrite"></property>
+        <property name="Connected" type="b" access="read"></property>
+        <property name="Model" type="s" access="read"></property>
+        <property name="Reflects" type="aq" access="read"></property>
+        <property name="Modes" type="a(uqqd)" access="read"></property>
+        <property name="PreferredModes" type="a(uqqd)" access="read"></property>
+        <property name="Enabled" type="b" access="read"></property>
+        <property name="Reflect" type="q" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+</node>

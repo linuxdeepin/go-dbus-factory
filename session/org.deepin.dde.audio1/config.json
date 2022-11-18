@@ -1,0 +1,69 @@
+{
+  "Service": "org.deepin.dde.Audio1",
+  "Objects": [
+    {
+      "Type": "Audio",
+      "Path": "/org/deepin/dde/Audio1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Audio1",
+          "Type": "audio"
+        }
+      ]
+    },
+    {
+      "Type":"Sink",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Audio1.Sink",
+          "Type": "sink",
+          "Fixes": {
+            "p/Ports": {
+              "RefType": "PropPortInfoSlice"
+            },
+            "p/ActivePort": {
+              "RefType": "PropPortInfo"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type":"Source",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Audio1.Source",
+          "Type": "source",
+          "Fixes": {
+            "p/Ports": {
+              "RefType": "PropPortInfoSlice"
+            },
+            "p/ActivePort": {
+              "RefType": "PropPortInfo"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type":"SinkInput",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Audio1.SinkInput",
+          "Type": "sinkInput"
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropPortInfoSlice",
+      "ValueType": "[]PortInfo"
+    },
+    {
+      "Type": "PropPortInfo",
+      "ValueType": "PortInfo",
+      "EmptyValue": "$T{}"
+    }
+  ]
+}

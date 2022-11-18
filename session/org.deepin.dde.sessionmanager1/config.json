@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.SessionManager1",
+  "Objects": [
+    {
+      "Type": "SessionManager",
+      "Path": "/org/deepin/dde/SessionManager1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.SessionManager1",
+          "Type": "sessionManager"
+        }
+      ]
+    }
+  ]
+}

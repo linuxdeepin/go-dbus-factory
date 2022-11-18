@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Osd1",
+  "Objects": [
+    {
+      "Type": "Notification",
+      "Path": "/org/deepin/dde/Notification1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Notification1",
+          "Type": "notification"
+        }
+      ]
+    }
+  ]
+}

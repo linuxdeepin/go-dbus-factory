@@ -1,0 +1,17 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "BiometricsDriver",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Authenticate1.BiometricsDriver",
+          "CustomInterfaceName": true,
+          "Type": "biometricsDriver",
+          "Accessor": "BiometricsDriver"
+        }
+      ]
+    }
+  ]
+}

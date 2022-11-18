@@ -1,0 +1,38 @@
+{
+  "Service": "org.deepin.dde.daemon.Dock1",
+  "Objects": [
+    {
+      "Type": "Dock",
+      "Path": "/org/deepin/dde/daemon/Dock1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.daemon.Dock1",
+          "Type": "dock",
+          "Fixes": {
+            "p/FrontendWindowRect": {
+              "Type": "PropDockFrontendWindowRect",
+              "ValueType": "FrontendWindowRect",
+              "EmptyValue": "$T{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "Type": "Entry",
+      "Path":"",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.daemon.Dock1.Entry",
+          "Type": "entry",
+          "Fixes": {
+            "p/WindowInfos": {
+              "Type": "PropEntryWindowInfos",
+              "ValueType": "map[uint32]WindowInfo"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

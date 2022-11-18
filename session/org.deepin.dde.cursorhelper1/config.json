@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.CursorHelper1",
+  "Objects": [
+    {
+      "Type": "CursorHelper",
+      "Path": "/org/deepin/dde/CursorHelper1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.CursorHelper1",
+          "Type": "cursorHelper"
+        }
+      ]
+    }
+  ]
+}
