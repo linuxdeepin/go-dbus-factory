@@ -14,6 +14,24 @@
             <arg name="keyringKey" type="s" direction="in"></arg>
             <arg name="dataKey" type="s" direction="out"></arg>
         </method>
+        <method name="Available">
+            <arg name="outArg0" type="b" direction="out"></arg>
+        </method>
+        <method name="Delete">
+            <arg name="name" type="s" direction="in"></arg>
+        </method>
+        <method name="Get">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="outArg0" type="ay" direction="out"></arg>
+        </method>
+        <method name="ListName">
+            <arg name="outArg0" type="as" direction="out"></arg>
+        </method>
+        <method name="Release"></method>
+        <method name="Set">
+            <arg name="name" type="s" direction="in"></arg>
+            <arg name="data" type="ay" direction="in"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
