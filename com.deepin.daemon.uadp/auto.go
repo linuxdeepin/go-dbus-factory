@@ -4,13 +4,13 @@
 //
 // License-Identifier: GPL-3.0-or-later
 package uadp
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+
+import (
+    "github.com/godbus/dbus"
+    "github.com/linuxdeepin/go-lib/dbusutil/proxy"
+    "unsafe"
+)
+
 type Uadp interface {
 uadp // interface com.deepin.daemon.Uadp
 proxy.Object
