@@ -7,9 +7,20 @@
       "Interfaces": [
         {
           "Name": "com.deepin.system.SystemInfo",
-          "Type": "systemInfo"
+          "Type": "systemInfo",
+          "Fixes": {
+            "p/DMIInfo": {
+              "RefType": "PropDMIInfo"
+            }
+          }
         }
       ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropDMIInfo",
+      "ValueType": "DMIInfo"
     }
   ]
 }
