@@ -1,0 +1,15 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "Agent",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.lastore.Agent",
+          "Type": "agent"
+        }
+      ]
+    }
+  ]
+}
