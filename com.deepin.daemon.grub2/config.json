@@ -1,0 +1,15 @@
+{
+  "Service": "com.deepin.daemon.Grub2",
+  "Objects": [
+    {
+      "Type": "Grub2",
+      "Path": "/com/deepin/daemon/Grub2",
+      "Interfaces": [
+        {
+          "Name": "com.deepin.daemon.Grub2",
+          "Type": "grub2"
+        }
+      ]
+    }
+  ]
+}
