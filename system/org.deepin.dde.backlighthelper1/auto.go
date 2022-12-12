@@ -19,7 +19,7 @@ type objectBacklight struct {
 
 func NewBacklight(conn *dbus.Conn) Backlight {
 	obj := new(objectBacklight)
-	obj.ImplObject.Init_(conn, "org.deepin.dde.BacklightHelper1", "/org/deepin/daemon/BacklightHelper1")
+	obj.ImplObject.Init_(conn, "org.deepin.dde.BacklightHelper1", "/org/deepin/dde/BacklightHelper1")
 	return obj
 }
 
@@ -60,7 +60,7 @@ type objectDDCCI struct {
 
 func NewDDCCI(conn *dbus.Conn) DDCCI {
 	obj := new(objectDDCCI)
-	obj.ImplObject.Init_(conn, "org.deepin.dde.BacklightHelper1", "/org/deepin/daemon/BacklightHelper1/DDCCI")
+	obj.ImplObject.Init_(conn, "org.deepin.dde.BacklightHelper1", "/org/deepin/dde/BacklightHelper1/DDCCI")
 	return obj
 }
 

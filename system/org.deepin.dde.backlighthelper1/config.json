@@ -3,7 +3,7 @@
   "Objects": [
     {
       "Type": "Backlight",
-      "Path": "/org/deepin/daemon/BacklightHelper1",
+      "Path": "/org/deepin/dde/BacklightHelper1",
       "Interfaces": [
         {
           "Name": "org.deepin.dde.BacklightHelper1",
@@ -13,7 +13,7 @@
     },
     {
       "Type": "DDCCI",
-      "Path": "/org/deepin/daemon/BacklightHelper1/DDCCI",
+      "Path": "/org/deepin/dde/BacklightHelper1/DDCCI",
       "Interfaces": [
         {
           "Name": "org.deepin.dde.BacklightHelper1.DDCCI",
