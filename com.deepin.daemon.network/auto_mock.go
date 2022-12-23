@@ -87,6 +87,25 @@ func (v *MockInterfaceNetwork) DeactivateConnection(flags dbus.Flags, uuid strin
 	return mockArgs.Error(0)
 }
 
+// method DebugChangeAPChannel
+
+func (v *MockInterfaceNetwork) GoDebugChangeAPChannel(flags dbus.Flags, ch chan *dbus.Call, band string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, band)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceNetwork) DebugChangeAPChannel(flags dbus.Flags, band string) error {
+	mockArgs := v.Called(flags, band)
+
+	return mockArgs.Error(0)
+}
+
 // method DeleteConnection
 
 func (v *MockInterfaceNetwork) GoDeleteConnection(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
@@ -157,15 +176,10 @@ func (v *MockInterfaceNetwork) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *MockInterfaceNetwork) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) (dbus.ObjectPath, error) {
+func (v *MockInterfaceNetwork) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) error {
 	mockArgs := v.Called(flags, devPath, enabled)
 
-	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
+	return mockArgs.Error(0)
 }
 
 // method EnableWirelessHotspotMode
@@ -261,6 +275,25 @@ func (v *MockInterfaceNetwork) GetProxy(flags dbus.Flags, proxyType string) (str
 	mockArgs := v.Called(flags, proxyType)
 
 	return mockArgs.String(0), mockArgs.String(1), mockArgs.Error(2)
+}
+
+// method GetProxyAuthentication
+
+func (v *MockInterfaceNetwork) GoGetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, proxyType)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceNetwork) GetProxyAuthentication(flags dbus.Flags, proxyType string) (string, string, bool, error) {
+	mockArgs := v.Called(flags, proxyType)
+
+	return mockArgs.String(0), mockArgs.String(1), mockArgs.Bool(2), mockArgs.Error(3)
 }
 
 // method GetProxyIgnoreHosts
@@ -387,6 +420,25 @@ func (v *MockInterfaceNetwork) ListDeviceConnections(flags dbus.Flags, devPath d
 	return ret0, mockArgs.Error(1)
 }
 
+// method RequestIPConflictCheck
+
+func (v *MockInterfaceNetwork) GoRequestIPConflictCheck(flags dbus.Flags, ch chan *dbus.Call, ip string, ifc string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, ip, ifc)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceNetwork) RequestIPConflictCheck(flags dbus.Flags, ip string, ifc string) error {
+	mockArgs := v.Called(flags, ip, ifc)
+
+	return mockArgs.Error(0)
+}
+
 // method RequestWirelessScan
 
 func (v *MockInterfaceNetwork) GoRequestWirelessScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -459,6 +511,25 @@ func (v *MockInterfaceNetwork) GoSetProxy(flags dbus.Flags, ch chan *dbus.Call, 
 
 func (v *MockInterfaceNetwork) SetProxy(flags dbus.Flags, proxyType string, host string, port string) error {
 	mockArgs := v.Called(flags, proxyType, host, port)
+
+	return mockArgs.Error(0)
+}
+
+// method SetProxyAuthentication
+
+func (v *MockInterfaceNetwork) GoSetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string, user string, password string, enable bool) *dbus.Call {
+	mockArgs := v.Called(flags, ch, proxyType, user, password, enable)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceNetwork) SetProxyAuthentication(flags dbus.Flags, proxyType string, user string, password string, enable bool) error {
+	mockArgs := v.Called(flags, proxyType, user, password, enable)
 
 	return mockArgs.Error(0)
 }
@@ -553,30 +624,30 @@ func (v *MockInterfaceNetwork) ConnectDeviceEnabled(cb func(devPath string, enab
 	return ret0, mockArgs.Error(1)
 }
 
-// property Connectivity u
+// signal ActiveConnectionInfoChanged
 
-func (v *MockInterfaceNetwork) Connectivity() proxy.PropUint32 {
-	mockArgs := v.Called()
+func (v *MockInterfaceNetwork) ConnectActiveConnectionInfoChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
 
-	return ret0
+	return ret0, mockArgs.Error(1)
 }
 
-// property NetworkingEnabled b
+// signal IPConflict
 
-func (v *MockInterfaceNetwork) NetworkingEnabled() proxy.PropBool {
-	mockArgs := v.Called()
+func (v *MockInterfaceNetwork) ConnectIPConflict(cb func(ip string, mac string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
 
-	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}
 
-	return ret0
+	return ret0, mockArgs.Error(1)
 }
 
 // property VpnEnabled b
@@ -631,12 +702,51 @@ func (v *MockInterfaceNetwork) ActiveConnections() proxy.PropString {
 	return ret0
 }
 
+// property WirelessAccessPoints s
+
+func (v *MockInterfaceNetwork) WirelessAccessPoints() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property State u
 
 func (v *MockInterfaceNetwork) State() proxy.PropUint32 {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property Connectivity u
+
+func (v *MockInterfaceNetwork) Connectivity() proxy.PropUint32 {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropUint32)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+// property NetworkingEnabled b
+
+func (v *MockInterfaceNetwork) NetworkingEnabled() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
 	if !ok {
 		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
 	}

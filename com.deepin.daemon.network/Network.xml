@@ -16,6 +16,9 @@
         <method name="DeactivateConnection">
             <arg name="uuid" type="s" direction="in"></arg>
         </method>
+        <method name="DebugChangeAPChannel">
+            <arg name="band" type="s" direction="in"></arg>
+        </method>
         <method name="DeleteConnection">
             <arg name="uuid" type="s" direction="in"></arg>
         </method>
@@ -28,7 +31,6 @@
         <method name="EnableDevice">
             <arg name="devPath" type="o" direction="in"></arg>
             <arg name="enabled" type="b" direction="in"></arg>
-            <arg name="cpath"   type="o" direction="out"></arg>
         </method>
         <method name="EnableWirelessHotspotMode">
             <arg name="devPath" type="o" direction="in"></arg>
@@ -47,6 +49,12 @@
             <arg name="proxyType" type="s" direction="in"></arg>
             <arg name="host" type="s" direction="out"></arg>
             <arg name="port" type="s" direction="out"></arg>
+        </method>
+        <method name="GetProxyAuthentication">
+            <arg name="proxyType" type="s" direction="in"></arg>
+            <arg name="user" type="s" direction="out"></arg>
+            <arg name="password" type="s" direction="out"></arg>
+            <arg name="enable" type="b" direction="out"></arg>
         </method>
         <method name="GetProxyIgnoreHosts">
             <arg name="ignoreHosts" type="s" direction="out"></arg>
@@ -69,6 +77,10 @@
             <arg name="devPath" type="o" direction="in"></arg>
             <arg name="connections" type="ao" direction="out"></arg>
         </method>
+        <method name="RequestIPConflictCheck">
+            <arg name="ip" type="s" direction="in"></arg>
+            <arg name="ifc" type="s" direction="in"></arg>
+        </method>
         <method name="RequestWirelessScan"></method>
         <method name="SetAutoProxy">
             <arg name="proxyAuto" type="s" direction="in"></arg>
@@ -81,6 +93,12 @@
             <arg name="proxyType" type="s" direction="in"></arg>
             <arg name="host" type="s" direction="in"></arg>
             <arg name="port" type="s" direction="in"></arg>
+        </method>
+        <method name="SetProxyAuthentication">
+            <arg name="proxyType" type="s" direction="in"></arg>
+            <arg name="user" type="s" direction="in"></arg>
+            <arg name="password" type="s" direction="in"></arg>
+            <arg name="enable" type="b" direction="in"></arg>
         </method>
         <method name="SetProxyIgnoreHosts">
             <arg name="ignoreHosts" type="s" direction="in"></arg>
@@ -104,13 +122,27 @@
             <arg name="devPath" type="s"></arg>
             <arg name="enabled" type="b"></arg>
         </signal>
-        <property name="Connectivity" type="u" access="read"></property>
-        <property name="NetworkingEnabled" type="b" access="readwrite"></property>
+        <signal name="ActiveConnectionInfoChanged"></signal>
+        <signal name="IPConflict">
+            <arg name="ip" type="s"></arg>
+            <arg name="mac" type="s"></arg>
+        </signal>
         <property name="VpnEnabled" type="b" access="readwrite"></property>
         <property name="Devices" type="s" access="read"></property>
         <property name="Connections" type="s" access="read"></property>
         <property name="ActiveConnections" type="s" access="read"></property>
+        <property name="WirelessAccessPoints" type="s" access="read"></property>
         <property name="State" type="u" access="read"></property>
+        <property name="Connectivity" type="u" access="read"></property>
+        <property name="NetworkingEnabled" type="b" access="readwrite"></property>
+    </interface>
+    <interface name="com.deepin.sync.Config">
+        <method name="Get">
+            <arg name="data" type="ay" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="data" type="ay" direction="in"></arg>
+        </method>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
