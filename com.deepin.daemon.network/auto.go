@@ -36,6 +36,8 @@ type network interface {
 	ActivateConnection(flags dbus.Flags, uuid string, devPath dbus.ObjectPath) (dbus.ObjectPath, error)
 	GoDeactivateConnection(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call
 	DeactivateConnection(flags dbus.Flags, uuid string) error
+	GoDebugChangeAPChannel(flags dbus.Flags, ch chan *dbus.Call, band string) *dbus.Call
+	DebugChangeAPChannel(flags dbus.Flags, band string) error
 	GoDeleteConnection(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call
 	DeleteConnection(flags dbus.Flags, uuid string) error
 	GoDisableWirelessHotspotMode(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath) *dbus.Call
@@ -43,7 +45,7 @@ type network interface {
 	GoDisconnectDevice(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath) *dbus.Call
 	DisconnectDevice(flags dbus.Flags, devPath dbus.ObjectPath) error
 	GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath, enabled bool) *dbus.Call
-	EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) (dbus.ObjectPath, error)
+	EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) error
 	GoEnableWirelessHotspotMode(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath) *dbus.Call
 	EnableWirelessHotspotMode(flags dbus.Flags, devPath dbus.ObjectPath) error
 	GoGetAccessPoints(flags dbus.Flags, ch chan *dbus.Call, path dbus.ObjectPath) *dbus.Call
@@ -54,6 +56,8 @@ type network interface {
 	GetAutoProxy(flags dbus.Flags) (string, error)
 	GoGetProxy(flags dbus.Flags, ch chan *dbus.Call, proxyType string) *dbus.Call
 	GetProxy(flags dbus.Flags, proxyType string) (string, string, error)
+	GoGetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string) *dbus.Call
+	GetProxyAuthentication(flags dbus.Flags, proxyType string) (string, string, bool, error)
 	GoGetProxyIgnoreHosts(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	GetProxyIgnoreHosts(flags dbus.Flags) (string, error)
 	GoGetProxyMethod(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
@@ -66,6 +70,8 @@ type network interface {
 	IsWirelessHotspotModeEnabled(flags dbus.Flags, devPath dbus.ObjectPath) (bool, error)
 	GoListDeviceConnections(flags dbus.Flags, ch chan *dbus.Call, devPath dbus.ObjectPath) *dbus.Call
 	ListDeviceConnections(flags dbus.Flags, devPath dbus.ObjectPath) ([]dbus.ObjectPath, error)
+	GoRequestIPConflictCheck(flags dbus.Flags, ch chan *dbus.Call, ip string, ifc string) *dbus.Call
+	RequestIPConflictCheck(flags dbus.Flags, ip string, ifc string) error
 	GoRequestWirelessScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	RequestWirelessScan(flags dbus.Flags) error
 	GoSetAutoProxy(flags dbus.Flags, ch chan *dbus.Call, proxyAuto string) *dbus.Call
@@ -74,6 +80,8 @@ type network interface {
 	SetDeviceManaged(flags dbus.Flags, devPathOrIfc string, managed bool) error
 	GoSetProxy(flags dbus.Flags, ch chan *dbus.Call, proxyType string, host string, port string) *dbus.Call
 	SetProxy(flags dbus.Flags, proxyType string, host string, port string) error
+	GoSetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string, user string, password string, enable bool) *dbus.Call
+	SetProxyAuthentication(flags dbus.Flags, proxyType string, user string, password string, enable bool) error
 	GoSetProxyIgnoreHosts(flags dbus.Flags, ch chan *dbus.Call, ignoreHosts string) *dbus.Call
 	SetProxyIgnoreHosts(flags dbus.Flags, ignoreHosts string) error
 	GoSetProxyMethod(flags dbus.Flags, ch chan *dbus.Call, proxyMode string) *dbus.Call
@@ -82,13 +90,16 @@ type network interface {
 	ConnectAccessPointRemoved(cb func(devPath string, apJSON string)) (dbusutil.SignalHandlerId, error)
 	ConnectAccessPointPropertiesChanged(cb func(devPath string, apJSON string)) (dbusutil.SignalHandlerId, error)
 	ConnectDeviceEnabled(cb func(devPath string, enabled bool)) (dbusutil.SignalHandlerId, error)
-	Connectivity() proxy.PropUint32
-	NetworkingEnabled() proxy.PropBool
+	ConnectActiveConnectionInfoChanged(cb func()) (dbusutil.SignalHandlerId, error)
+	ConnectIPConflict(cb func(ip string, mac string)) (dbusutil.SignalHandlerId, error)
 	VpnEnabled() proxy.PropBool
 	Devices() proxy.PropString
 	Connections() proxy.PropString
 	ActiveConnections() proxy.PropString
+	WirelessAccessPoints() proxy.PropString
 	State() proxy.PropUint32
+	Connectivity() proxy.PropUint32
+	NetworkingEnabled() proxy.PropBool
 }
 
 type interfaceNetwork struct{}
@@ -143,6 +154,16 @@ func (v *interfaceNetwork) DeactivateConnection(flags dbus.Flags, uuid string) e
 	return (<-v.GoDeactivateConnection(flags, make(chan *dbus.Call, 1), uuid).Done).Err
 }
 
+// method DebugChangeAPChannel
+
+func (v *interfaceNetwork) GoDebugChangeAPChannel(flags dbus.Flags, ch chan *dbus.Call, band string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DebugChangeAPChannel", flags, ch, band)
+}
+
+func (v *interfaceNetwork) DebugChangeAPChannel(flags dbus.Flags, band string) error {
+	return (<-v.GoDebugChangeAPChannel(flags, make(chan *dbus.Call, 1), band).Done).Err
+}
+
 // method DeleteConnection
 
 func (v *interfaceNetwork) GoDeleteConnection(flags dbus.Flags, ch chan *dbus.Call, uuid string) *dbus.Call {
@@ -179,14 +200,8 @@ func (v *interfaceNetwork) GoEnableDevice(flags dbus.Flags, ch chan *dbus.Call, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".EnableDevice", flags, ch, devPath, enabled)
 }
 
-func (*interfaceNetwork) StoreEnableDevice(call *dbus.Call) (cpath dbus.ObjectPath, err error) {
-	err = call.Store(&cpath)
-	return
-}
-
-func (v *interfaceNetwork) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) (dbus.ObjectPath, error) {
-	return v.StoreEnableDevice(
-		<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done)
+func (v *interfaceNetwork) EnableDevice(flags dbus.Flags, devPath dbus.ObjectPath, enabled bool) error {
+	return (<-v.GoEnableDevice(flags, make(chan *dbus.Call, 1), devPath, enabled).Done).Err
 }
 
 // method EnableWirelessHotspotMode
@@ -261,6 +276,22 @@ func (*interfaceNetwork) StoreGetProxy(call *dbus.Call) (host string, port strin
 func (v *interfaceNetwork) GetProxy(flags dbus.Flags, proxyType string) (string, string, error) {
 	return v.StoreGetProxy(
 		<-v.GoGetProxy(flags, make(chan *dbus.Call, 1), proxyType).Done)
+}
+
+// method GetProxyAuthentication
+
+func (v *interfaceNetwork) GoGetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetProxyAuthentication", flags, ch, proxyType)
+}
+
+func (*interfaceNetwork) StoreGetProxyAuthentication(call *dbus.Call) (user string, password string, enable bool, err error) {
+	err = call.Store(&user, &password, &enable)
+	return
+}
+
+func (v *interfaceNetwork) GetProxyAuthentication(flags dbus.Flags, proxyType string) (string, string, bool, error) {
+	return v.StoreGetProxyAuthentication(
+		<-v.GoGetProxyAuthentication(flags, make(chan *dbus.Call, 1), proxyType).Done)
 }
 
 // method GetProxyIgnoreHosts
@@ -359,6 +390,16 @@ func (v *interfaceNetwork) ListDeviceConnections(flags dbus.Flags, devPath dbus.
 		<-v.GoListDeviceConnections(flags, make(chan *dbus.Call, 1), devPath).Done)
 }
 
+// method RequestIPConflictCheck
+
+func (v *interfaceNetwork) GoRequestIPConflictCheck(flags dbus.Flags, ch chan *dbus.Call, ip string, ifc string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".RequestIPConflictCheck", flags, ch, ip, ifc)
+}
+
+func (v *interfaceNetwork) RequestIPConflictCheck(flags dbus.Flags, ip string, ifc string) error {
+	return (<-v.GoRequestIPConflictCheck(flags, make(chan *dbus.Call, 1), ip, ifc).Done).Err
+}
+
 // method RequestWirelessScan
 
 func (v *interfaceNetwork) GoRequestWirelessScan(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
@@ -397,6 +438,16 @@ func (v *interfaceNetwork) GoSetProxy(flags dbus.Flags, ch chan *dbus.Call, prox
 
 func (v *interfaceNetwork) SetProxy(flags dbus.Flags, proxyType string, host string, port string) error {
 	return (<-v.GoSetProxy(flags, make(chan *dbus.Call, 1), proxyType, host, port).Done).Err
+}
+
+// method SetProxyAuthentication
+
+func (v *interfaceNetwork) GoSetProxyAuthentication(flags dbus.Flags, ch chan *dbus.Call, proxyType string, user string, password string, enable bool) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetProxyAuthentication", flags, ch, proxyType, user, password, enable)
+}
+
+func (v *interfaceNetwork) SetProxyAuthentication(flags dbus.Flags, proxyType string, user string, password string, enable bool) error {
+	return (<-v.GoSetProxyAuthentication(flags, make(chan *dbus.Call, 1), proxyType, user, password, enable).Done).Err
 }
 
 // method SetProxyIgnoreHosts
@@ -527,22 +578,53 @@ func (v *interfaceNetwork) ConnectDeviceEnabled(cb func(devPath string, enabled 
 	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property Connectivity u
+// signal ActiveConnectionInfoChanged
 
-func (v *interfaceNetwork) Connectivity() proxy.PropUint32 {
-	return &proxy.ImplPropUint32{
-		Impl: v,
-		Name: "Connectivity",
+func (v *interfaceNetwork) ConnectActiveConnectionInfoChanged(cb func()) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
 	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "ActiveConnectionInfoChanged", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".ActiveConnectionInfoChanged",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		cb()
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
-// property NetworkingEnabled b
+// signal IPConflict
 
-func (v *interfaceNetwork) NetworkingEnabled() proxy.PropBool {
-	return &proxy.ImplPropBool{
-		Impl: v,
-		Name: "NetworkingEnabled",
+func (v *interfaceNetwork) ConnectIPConflict(cb func(ip string, mac string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
 	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "IPConflict", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".IPConflict",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var ip string
+		var mac string
+		err := dbus.Store(sig.Body, &ip, &mac)
+		if err == nil {
+			cb(ip, mac)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
 }
 
 // property VpnEnabled b
@@ -581,11 +663,38 @@ func (v *interfaceNetwork) ActiveConnections() proxy.PropString {
 	}
 }
 
+// property WirelessAccessPoints s
+
+func (v *interfaceNetwork) WirelessAccessPoints() proxy.PropString {
+	return &proxy.ImplPropString{
+		Impl: v,
+		Name: "WirelessAccessPoints",
+	}
+}
+
 // property State u
 
 func (v *interfaceNetwork) State() proxy.PropUint32 {
 	return &proxy.ImplPropUint32{
 		Impl: v,
 		Name: "State",
+	}
+}
+
+// property Connectivity u
+
+func (v *interfaceNetwork) Connectivity() proxy.PropUint32 {
+	return &proxy.ImplPropUint32{
+		Impl: v,
+		Name: "Connectivity",
+	}
+}
+
+// property NetworkingEnabled b
+
+func (v *interfaceNetwork) NetworkingEnabled() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "NetworkingEnabled",
 	}
 }
