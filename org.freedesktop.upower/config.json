@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.UPower",
+  "Objects": [
+    {
+      "Type": "UPower",
+      "Path": "/org/freedesktop/UPower",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.UPower",
+          "Type": "upower"
+        }
+      ]
+    }
+  ]
+}
