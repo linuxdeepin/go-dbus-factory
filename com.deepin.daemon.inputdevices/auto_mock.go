@@ -5,11 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package inputdevices
 
-import "fmt"
-import "github.com/godbus/dbus"
+import (
+	"fmt"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockKeyboard struct {
 	MockInterfaceKeyboard // interface com.deepin.daemon.InputDevice.Keyboard

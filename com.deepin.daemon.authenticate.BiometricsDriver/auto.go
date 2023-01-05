@@ -5,13 +5,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package BiometricsDriver
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type BiometricsDriver interface {
 	biometricsDriver // interface com.deepin.daemon.authenticate.BiometricsDriver

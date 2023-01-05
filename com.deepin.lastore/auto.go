@@ -5,12 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package lastore
 
-import "errors"
+import (
+	"errors"
+	"unsafe"
 
-import "github.com/godbus/dbus"
-
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type Lastore interface {
 	Manager() manager // interface com.deepin.lastore.Manager

@@ -5,13 +5,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package bluez
 
-import "errors"
+import (
+	"errors"
+	"unsafe"
 
-import "github.com/godbus/dbus"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager

@@ -5,13 +5,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package networkmanager
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
+
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
