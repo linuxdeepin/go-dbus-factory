@@ -9,8 +9,8 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"github.com/stretchr/testify/mock"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
 )
 
 type MockBluetooth struct {

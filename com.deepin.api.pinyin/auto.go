@@ -5,10 +5,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package pinyin
 
-import "github.com/godbus/dbus"
+import (
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type Pinyin interface {
 	pinyin // interface com.deepin.api.Pinyin

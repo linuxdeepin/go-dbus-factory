@@ -5,12 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package systeminfo
 
-import "errors"
+import (
+	"errors"
+	"unsafe"
 
-import "github.com/godbus/dbus"
-
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type SystemInfo interface {
 	systemInfo // interface com.deepin.system.SystemInfo

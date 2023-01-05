@@ -5,11 +5,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package policykit1
 
-import "fmt"
-import "github.com/godbus/dbus"
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+import (
+	"fmt"
+
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockAuthority struct {
 	MockInterfaceAuthority // interface org.freedesktop.PolicyKit1.Authority
