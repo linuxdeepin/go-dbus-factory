@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.ImageBlur1",
+  "Objects": [
+    {
+      "Type": "ImageBlur",
+      "Path": "/org/deepin/dde/ImageBlur1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.ImageBlur1",
+          "Type": "imageBlur"
+        }
+      ]
+    }
+  ]
+}

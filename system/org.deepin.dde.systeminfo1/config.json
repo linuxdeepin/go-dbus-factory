@@ -1,0 +1,21 @@
+{
+  "Service": "org.deepin.dde.SystemInfo1",
+  "Objects": [
+    {
+      "Type": "SystemInfo",
+      "Path": "/org/deepin/dde/SystemInfo1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.SystemInfo1",
+          "Type": "systemInfo"
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropDMIInfo",
+      "ValueType": "DMIInfo"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.IPWatch1",
+  "Objects": [
+    {
+      "Type": "IPWatch",
+      "Path": "/org/deepin/dde/IPWatch1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.IPWatch1",
+          "Type": "ipwatch"
+        }
+      ]
+    }
+  ]
+}

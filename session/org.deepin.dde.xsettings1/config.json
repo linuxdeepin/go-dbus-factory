@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.XSettings1",
+  "Objects": [
+    {
+      "Type": "XSettings",
+      "Path": "/org/deepin/dde/XSettings1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.XSettings1",
+          "Type": "xSettings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "Service": "org.deepin.dde.AirplaneMode1",
+  "Objects": [
+    {
+      "Type": "AirplaneMode",
+      "Path": "/org/deepin/dde/AirplaneMode1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.AirplaneMode1",
+          "Type": "airplaneMode",
+          "Accessor": "AirplaneMode"
+        }
+      ]
+    }
+  ]
+}

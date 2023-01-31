@@ -1,0 +1,119 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.deepin.dde.Bluetooth1">
+        <method name="ClearUnpairedDevice"></method>
+        <method name="ConnectDevice">
+            <arg name="devPath" type="o" direction="in"></arg>
+            <arg name="adapterPath" type="o" direction="in"></arg>
+        </method>
+        <method name="DebugInfo">
+            <arg name="info" type="s" direction="out"></arg>
+        </method>
+        <method name="DisconnectAudioDevices"></method>
+        <method name="DisconnectDevice">
+            <arg name="devPath" type="o" direction="in"></arg>
+        </method>
+        <method name="GetAdapters">
+            <arg name="adaptersJSON" type="s" direction="out"></arg>
+        </method>
+        <method name="GetDevices">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="devicesJSON" type="s" direction="out"></arg>
+        </method>
+        <method name="RegisterAgent">
+            <arg name="agentPath" type="o" direction="in"></arg>
+        </method>
+        <method name="RemoveDevice">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="devPath" type="o" direction="in"></arg>
+        </method>
+        <method name="RequestDiscovery">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+        </method>
+        <method name="SetAdapterAlias">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="alias" type="s" direction="in"></arg>
+        </method>
+        <method name="SetAdapterDiscoverable">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="discoverable" type="b" direction="in"></arg>
+        </method>
+        <method name="SetAdapterDiscoverableTimeout">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="discoverableTimeout" type="u" direction="in"></arg>
+        </method>
+        <method name="SetAdapterDiscovering">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="discovering" type="b" direction="in"></arg>
+        </method>
+        <method name="SetAdapterPowered">
+            <arg name="adapterPath" type="o" direction="in"></arg>
+            <arg name="powered" type="b" direction="in"></arg>
+        </method>
+        <method name="SetDeviceAlias">
+            <arg name="device" type="o" direction="in"></arg>
+            <arg name="alias" type="s" direction="in"></arg>
+        </method>
+        <method name="SetDeviceTrusted">
+            <arg name="device" type="o" direction="in"></arg>
+            <arg name="trusted" type="b" direction="in"></arg>
+        </method>
+        <method name="UnregisterAgent">
+            <arg name="agentPath" type="o" direction="in"></arg>
+        </method>
+        <signal name="AdapterAdded">
+            <arg name="adapterJSON" type="s"></arg>
+        </signal>
+        <signal name="AdapterRemoved">
+            <arg name="adapterJSON" type="s"></arg>
+        </signal>
+        <signal name="AdapterPropertiesChanged">
+            <arg name="adapterJSON" type="s"></arg>
+        </signal>
+        <signal name="DeviceAdded">
+            <arg name="devJSON" type="s"></arg>
+        </signal>
+        <signal name="DeviceRemoved">
+            <arg name="devJSON" type="s"></arg>
+        </signal>
+        <signal name="DevicePropertiesChanged">
+            <arg name="devJSON" type="s"></arg>
+        </signal>
+        <property name="CanSendFile" type="b" access="read"></property>
+        <property name="State" type="u" access="read"></property>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="out" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="out"></arg>
+        </method>
+        <method name="GetAll">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="props" type="a{sv}" direction="out"></arg>
+        </method>
+        <method name="Set">
+            <arg name="interface" type="s" direction="in"></arg>
+            <arg name="property" type="s" direction="in"></arg>
+            <arg name="value" type="v" direction="in"></arg>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface" type="s" direction="out"></arg>
+            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
+            <arg name="invalidates_properties" type="as" direction="out"></arg>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+        <method name="Ping"></method>
+        <method name="GetMachineId">
+            <arg name="machine_uuid" type="s" direction="out"></arg>
+        </method>
+    </interface>
+    <node name="Agent"></node>
+</node>

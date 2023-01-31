@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Pinyin1",
+  "Objects": [
+    {
+      "Type": "Pinyin",
+      "Path": "/org/deepin/dde/Pinyin1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Pinyin1",
+          "Type": "pinyin"
+        }
+      ]
+    }
+  ]
+}

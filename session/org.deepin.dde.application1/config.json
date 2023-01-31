@@ -1,0 +1,35 @@
+{
+  "Service": "org.deepin.dde.Application1",
+  "Objects": [
+    {
+      "Type": "Application",
+      "Path": "/org/deepin/dde/Application1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Application1",
+          "Type": "application"
+        }
+      ]
+    },
+    {
+      "Type": "Manager",
+      "Path": "/org/deepin/dde/Application1/Manager",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Application1.Manager",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type": "Instance",
+      "Path": "/org/deepin/dde/Application1/Instance",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Application1.Instance",
+          "Type": "instance"
+        }
+      ]
+    }
+  ]
+}

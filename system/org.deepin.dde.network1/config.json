@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Network1",
+  "Objects": [
+    {
+      "Type": "Network",
+      "Path": "/org/deepin/dde/Network1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Network1",
+          "Type": "network"
+        }
+      ]
+    }
+  ]
+}

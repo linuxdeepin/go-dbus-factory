@@ -1,0 +1,25 @@
+{
+  "Service": "org.deepin.dde.NetworkProxy1",
+  "Objects": [
+    {
+      "Type": "App",
+      "Path": "/org/deepin/dde/NetworkProxy1/App",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.NetworkProxy1.App",
+          "Type": "app"
+        }
+      ]
+    },
+    {
+      "Type": "Global",
+      "Path": "/org/deepin/dde/NetworkProxy1/Global",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.NetworkProxy1.Global",
+          "Type": "global"
+        }
+      ]
+    }
+  ]
+}

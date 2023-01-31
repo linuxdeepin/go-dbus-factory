@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Timedate1",
+  "Objects": [
+    {
+      "Type": "Timedate",
+      "Path": "/org/deepin/dde/Timedate1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Timedate1",
+          "Type": "timedate"
+        }
+      ]
+    }
+  ]
+}

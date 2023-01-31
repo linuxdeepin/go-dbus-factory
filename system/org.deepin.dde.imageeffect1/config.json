@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.ImageEffect1",
+  "Objects": [
+    {
+      "Type": "ImageEffect",
+      "Path": "/org/deepin/dde/ImageEffect1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.ImageEffect1",
+          "Type": "imageEffect"
+        }
+      ]
+    }
+  ]
+}

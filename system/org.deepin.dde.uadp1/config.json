@@ -1,0 +1,16 @@
+{
+    "Service": "org.deepin.dde.Uadp1",
+    "Objects": [
+      {
+        "Type": "Uadp",
+        "Path": "/org/deepin/dde/Uadp1",
+        "Interfaces": [
+          {
+            "Name": "org.deepin.dde.Uadp1",
+            "Type": "uadp"
+          }
+        ]
+      }
+    ]
+  }
+  

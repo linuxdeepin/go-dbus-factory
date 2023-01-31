@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Gesture1",
+  "Objects": [
+    {
+      "Type": "Gesture",
+      "Path": "/org/deepin/dde/Gesture1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Gesture1",
+          "Type": "gesture"
+        }
+      ]
+    }
+  ]
+}

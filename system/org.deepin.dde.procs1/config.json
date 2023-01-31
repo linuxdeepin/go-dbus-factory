@@ -1,0 +1,26 @@
+{
+  "Service": "org.deepin.dde.Procs1",
+  "Objects": [
+    {
+      "Type": "Procs",
+      "Path": "/org/deepin/dde/Procs1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Procs1",
+          "Type": "procs",
+          "Fixes": {
+            "p/Procs": {
+              "RefType": "PropProcsMap"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "PropertyTypes": [
+    {
+      "Type": "PropProcsMap",
+      "ValueType": "map[string]ProcMessage"
+    }
+  ]
+}

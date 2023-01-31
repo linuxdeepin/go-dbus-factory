@@ -1,0 +1,32 @@
+{
+  "Service": "org.deepin.dde.Accounts1",
+  "Objects": [
+    {
+      "Type": "Accounts",
+      "Path": "/org/deepin/dde/Accounts1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Accounts1",
+          "Type": "accounts"
+        }
+      ]
+    },
+    {
+      "Type": "User",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Accounts1.User",
+          "Type": "user",
+          "Fixes": {
+            "m/GetReminderInfo": [
+              {
+                "Name": "info",
+                "Type": "LoginReminderInfo"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

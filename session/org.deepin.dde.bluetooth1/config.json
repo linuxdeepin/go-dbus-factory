@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Bluetooth1",
+  "Objects": [
+    {
+      "Type": "Bluetooth",
+      "Path": "/org/deepin/dde/Bluetooth1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Bluetooth1",
+          "Type": "bluetooth"
+        }
+      ]
+    }
+  ]
+}

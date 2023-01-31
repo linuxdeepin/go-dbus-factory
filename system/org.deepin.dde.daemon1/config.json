@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Daemon1",
+  "Objects": [
+    {
+      "Type": "Daemon",
+      "Path": "/org/deepin/dde/Daemon1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Daemon1",
+          "Type": "daemon"
+        }
+      ]
+    }
+  ]
+}

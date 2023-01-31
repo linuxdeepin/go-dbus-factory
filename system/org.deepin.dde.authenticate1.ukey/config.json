@@ -1,0 +1,17 @@
+{
+  "Service": "",
+  "Objects": [
+    {
+      "Type": "UKey",
+      "Path": "",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Authenticate1.UKey.Device",
+          "CustomInterfaceName": true,
+          "Type": "ukey",
+          "Accessor": "UKey"
+        }
+      ]
+    }
+  ]
+}

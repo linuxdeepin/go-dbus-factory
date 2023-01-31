@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.DBus",
+  "Objects": [
+    {
+      "Type": "DBus",
+      "Path": "/org/freedesktop/DBus",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus",
+          "Type": "dbusIfc"
+        }
+      ]
+    }
+  ]
+}

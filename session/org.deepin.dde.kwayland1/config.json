@@ -1,0 +1,45 @@
+{
+  "Service": "org.deepin.dde.KWayland1",
+  "Objects": [
+    {
+      "Type": "OutputManagement",
+      "Path": "/org/deepin/dde/KWayland1/Output",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.KWayland1.Output",
+          "Type": "outputManagement",
+          "Accessor": "OutputManagement"
+        }
+      ]
+    },
+    {
+      "Type": "WindowManager",
+      "Path": "/org/deepin/dde/KWayland1/WindowManager",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.KWayland1.WindowManager",
+          "Type": "windowManager",
+          "Accessor": "WindowManager"
+        }
+      ]
+    },
+    {
+      "Type": "Window",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.KWayland1.PlasmaWindow",
+          "Type": "window",
+          "Accessor": "Window",
+          "Fixes": {
+            "m/Geometry": [
+              {
+                "Name": "argout0",
+                "Type": "Rect"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

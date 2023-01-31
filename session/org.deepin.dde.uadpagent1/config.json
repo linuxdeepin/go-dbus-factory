@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.UadpAgent1",
+  "Objects": [
+    {
+      "Type": "UadpAgent",
+      "Path": "/org/deepin/dde/UadpAgent1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.UadpAgent1",
+          "Type": "uadpagent"
+        }
+      ]
+    }
+  ]
+}

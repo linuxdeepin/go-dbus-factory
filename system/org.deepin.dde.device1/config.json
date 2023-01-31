@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Device1",
+  "Objects": [
+    {
+      "Type": "Device",
+      "Path": "/org/deepin/dde/Device1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Device1",
+          "Type": "device"
+        }
+      ]
+    }
+  ]
+}

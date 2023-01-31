@@ -1,14 +1,27 @@
-golang-github-linuxdeepin-go-dbus-factory (1.10.23) unstable; urgency=low
+golang-github-linuxdeepin-go-dbus-factory (2.0.2) unstable; urgency=medium
 
-  * Version update.
+  [ TagBuilder ]
+  * feat: 增加原子更新封装(Influence: 增加原子更新封装)
+  * feat: 接口更变，增加V23接口(Task: 207483)(Influence: 接口更变)
+  * fix: Backlight的PATH错误修复(Task: 225039)(Influence: 无)
 
- -- lichangze <lichangze@uniontech.com>  Fri, 2 Sep 2022 01:40:10 +0000
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Tue, 13 Dec 2022 19:31:21 +0800
 
-golang-github-linuxdeepin-go-dbus-factory (1.10.21) unstable; urgency=low
+golang-github-linuxdeepin-go-dbus-factory (2.0.1) unstable; urgency=medium
 
-  * Version update.
+  [ TagBuilder ]
+  * fix(net.reactivated.fprint): 因上游更新新增接口和自研接口冲突而导致接口变更(Bug: 141877)(Influence: 控制中心-删除指纹)
+  * feat: 兼容V20接口(Task: 166781)(Influence: 接口改为V23标准接口， 并兼容V20接口)
+  * fix: 修复部分V23接口没有生成正确的dbus服务路径问题(Bug: 157497)(Influence: 剪切板、更新、蓝牙、电源、系统信息相关功能)
+  * fix: 增加org.freedesktop.screensaver1(Bug: 157525)(Influence: 控制中心-电源-定时待机/锁屏/关闭显示器)
 
- -- lichangze <lichangze@uniontech.com>  Sat, 27 Aug 2022 01:40:10 +0000
+ -- caixiangrong <caixiangrong@uniontech.com>  Wed, 19 Oct 2022 11:55:28 +0800
+
+golang-github-linuxdeepin-go-dbus-factory (2.0.0.0) unstable; urgency=low
+
+  * release 2.0.0.0
+
+ --  <fanpengcheng@uniontech.com>  Tue, 14 June 2022 17:08:13 +0800
 
 golang-github-linuxdeepin-go-dbus-factory (1.0.0-1) unstable; urgency=low
 
