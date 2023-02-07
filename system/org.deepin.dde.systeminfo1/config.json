@@ -7,7 +7,12 @@
       "Interfaces": [
         {
           "Name": "org.deepin.dde.SystemInfo1",
-          "Type": "systemInfo"
+          "Type": "systemInfo",
+          "Fixes": {
+            "p/DMIInfo": {
+              "RefType": "PropDMIInfo"
+            }
+          }
         }
       ]
     }

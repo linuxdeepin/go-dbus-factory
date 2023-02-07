@@ -28,18 +28,13 @@ Files: *.json *.yaml
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
-# org.freedesktop.modemmanager1 project file
-Files: org.freedesktop.modemmanager1/manual.go
-Copyright: UnionTech Software Technology Co., Ltd.
-License: GPL-3.0-or-later
-
 # xml
 Files: *.xml
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
 # org.freedesktop.modemmanager1 xml
-Files: org.freedesktop.modemmanager1/*.xml
+Files: system/org.freedesktop.modemmanager1/*.xml
 Copyright: 2011-2013 Red Hat, Inc. 2011-2013 Google, Inc. 2011-2013 Lanedo GmbH. 2015 Marco Bascetta <marco.bascetta@sadel.it>
 License: GFDL-1.3-or-later
 
@@ -58,7 +53,7 @@ Files: gen.sh _tool/prop_gen/gen.sh
 Copyright: None
 License: GPL-3.0-or-later
 
-# auto generation files
-Files: auto.go auto_mock.go
+# project file
+Files:  _tool/generator/source_file.go
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
