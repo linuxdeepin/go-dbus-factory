@@ -7,7 +7,7 @@ package bluez
 
 import "errors"
 
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 import "github.com/linuxdeepin/go-dbus-factory/object_manager"
 
 import "github.com/linuxdeepin/go-lib/dbusutil/proxy"

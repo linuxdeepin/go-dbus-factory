@@ -27,6 +27,8 @@ prepare() {
   go get -v github.com/godbus/dbus/prop
   go get -v gopkg.in/yaml.v3
   go get -v github.com/stretchr/testify
+	cp -a "$srcdir"/build/src/github.com/godbus/dbus "$srcdir"/build/src/github.com/godbus/v5
+	mv "$srcdir"/build/src/github.com/godbus/v5 "$srcdir"/build/src/github.com/godbus/dbus
 }
 
 build() {

@@ -4,7 +4,7 @@
 
 package udisks2
 
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 
 type Attribute struct {
 	Id         byte

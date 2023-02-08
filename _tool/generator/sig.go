@@ -8,10 +8,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 )
 
-// copy from github.com/godbus/dbus/sig.go
+// copy from github.com/godbus/dbus/v5/sig.go
 
 var (
 	byteType        = reflect.TypeOf(byte(0))

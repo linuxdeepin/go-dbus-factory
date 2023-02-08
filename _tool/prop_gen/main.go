@@ -132,7 +132,7 @@ func main() {
 	fmt.Println(`package proxy`)
 	fmt.Println(`import "errors"`)
 	fmt.Println(`import "fmt"`)
-	fmt.Println(`import "github.com/godbus/dbus"`)
+	fmt.Println(`import "github.com/godbus/dbus/v5"`)
 	fmt.Println(`import "github.com/stretchr/testify/mock"`)
 	fmt.Println(``)
 	fmt.Println(`var errNilCallback = errors.New("nil callback")`)
