@@ -2,16 +2,6 @@
   "Service": "org.kde.KWin",
   "Objects": [
     {
-      "Type": "KWin",
-      "Path": "/KWin",
-      "Interfaces": [
-        {
-          "Name": "org.kde.KWin",
-          "Type": "kwin"
-        }
-      ]
-    },
-    {
       "Type": "Compositor",
       "Path": "/Compositor",
       "Interfaces": [
