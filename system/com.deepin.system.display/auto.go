@@ -7,7 +7,7 @@ package display
 
 import "errors"
 import "fmt"
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 
 import "github.com/linuxdeepin/go-lib/dbusutil"
 import "github.com/linuxdeepin/go-lib/dbusutil/proxy"

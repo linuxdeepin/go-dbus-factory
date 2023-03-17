@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/godbus/dbus/introspect"
+	"github.com/godbus/dbus/v5/introspect"
 )
 
 type ServiceConfig struct {
