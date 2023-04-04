@@ -1,5 +1,5 @@
-github.com/Decodetalkers/go-lib v0.0.0-20230207102150-285b65f72371 h1:ATVW+gpTAXJMEpR8EB6F/cNWh+JUfSiQjIrZLjATmmE=
-github.com/Decodetalkers/go-lib v0.0.0-20230207102150-285b65f72371/go.mod h1:pUOgykgz56atGm8D9HQSaej7DfT6MI/sZDPdfGrmPkE=
+github.com/Decodetalkers/go-lib v0.0.0-20230404025406-a17a10117d09 h1:4Wqj7QEUrWwuw3uyckyPTkwy6k7bE+XD9A2BSKh/Sbk=
+github.com/Decodetalkers/go-lib v0.0.0-20230404025406-a17a10117d09/go.mod h1:LEqq9alqjrRAhKvY3gqjdLL/ygcf63cGEEzgJSYNwLw=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137/go.mod h1:OMCwj8VM1Kc9e19TLln2VL61YJF0x1XFtfdL4JdbSyE=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -16,7 +16,7 @@ github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfn
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/linuxdeepin/go-gir v0.0.0-20211207134948-479a42104c80/go.mod h1:abG3BzoOj3V3vTs3VhhJ9EsLL0JmfzCNpWmBzVDyJPk=
+github.com/linuxdeepin/go-gir v0.0.0-20230331033513-a8d7a9e89f9b/go.mod h1:a0tox5vepTQu5iO6rdKc4diGT+fkyXZlRROM8ULEvaI=
 github.com/linuxdeepin/go-x11-client v0.0.0-20230131052004-7503e2337ee1/go.mod h1:KwpmRZ47A/0a2l9V0V6aTlkuNaqy5j1fOqMFJONuIMY=
 github.com/mozillazg/go-pinyin v0.19.0/go.mod h1:iR4EnMMRXkfpFVV5FMi4FNB6wGq9NV6uDWbUuPhP4Yc=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

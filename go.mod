@@ -15,4 +15,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/linuxdeepin/go-lib => github.com/Decodetalkers/go-lib v0.0.0-20230207102150-285b65f72371
+replace github.com/linuxdeepin/go-lib => github.com/Decodetalkers/go-lib v0.0.0-20230404025406-a17a10117d09
