@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package bluetooth1
 
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 
 import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
 import "unsafe"

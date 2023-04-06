@@ -4,7 +4,7 @@
 
 package login1
 
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 
 type ScheduledShutdown struct {
 	Type string

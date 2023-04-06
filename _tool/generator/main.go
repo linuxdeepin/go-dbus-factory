@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/godbus/dbus/introspect"
+	"github.com/godbus/dbus/v5/introspect"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/utils"
 )
@@ -48,13 +48,13 @@ func main() {
 	sf.AddGoImport("errors")
 	sf.AddGoImport("fmt")
 	sf.AddGoImport("unsafe")
-	sf.AddGoImport("github.com/godbus/dbus")
+	sf.AddGoImport("github.com/godbus/dbus/v5")
 	sf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil")
 	sf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil/proxy")
 	sf.AddGoImport("github.com/linuxdeepin/go-dbus-factory/object_manager")
 
 	msf.AddGoImport("fmt")
-	msf.AddGoImport("github.com/godbus/dbus")
+	msf.AddGoImport("github.com/godbus/dbus/v5")
 	msf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil")
 	msf.AddGoImport("github.com/linuxdeepin/go-lib/dbusutil/proxy")
 	msf.AddGoImport("github.com/stretchr/testify/mock")

@@ -4,7 +4,7 @@
 
 package policykit1
 
-import "github.com/godbus/dbus"
+import "github.com/godbus/dbus/v5"
 
 type ActionDescription struct {
 	ActionId         string
