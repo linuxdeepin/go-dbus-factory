@@ -39,7 +39,11 @@ func (v *SourceFile) Save(filename string) {
 	if err != nil {
 		log.Fatal("fail to create file:", err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Fatal("fail to close file:", err)
+		}
+	}()
 	_, err = v.WriteTo(f)
 	if err != nil {
 		log.Fatal("failed to write to file:", err)

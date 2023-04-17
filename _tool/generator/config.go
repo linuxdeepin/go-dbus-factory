@@ -110,7 +110,11 @@ func getInterfacesFromXmlFile(file string) ([]introspect.Interface, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			return nil, err
+		}
+	}()
 
 	dec := xml.NewDecoder(f)
 	var node introspect.Node
