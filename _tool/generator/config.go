@@ -105,14 +105,17 @@ func (oc *ObjectConfig) loadXml(dir string) ([]introspect.Interface, error) {
 	return result, nil
 }
 
-func getInterfacesFromXmlFile(file string) ([]introspect.Interface, error) {
+func getInterfacesFromXmlFile(file string) (interfaces []introspect.Interface, err error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer func() {
-		if err := f.Close(); err != nil {
-			return nil, err
+		closeErr := f.Close()
+		if err == nil {
+			err = closeErr
+		} else {
+			log.Printf("error on close file %v: %v", f.Name(), closeErr)
 		}
 	}()
 
@@ -120,9 +123,10 @@ func getInterfacesFromXmlFile(file string) ([]introspect.Interface, error) {
 	var node introspect.Node
 	err = dec.Decode(&node)
 	if err != nil {
-		return nil, err
+		return
 	}
-	return node.Interfaces, nil
+	interfaces = node.Interfaces
+	return
 }
 
 func (oc *ObjectConfig) getInterface(name string) *InterfaceConfig {
