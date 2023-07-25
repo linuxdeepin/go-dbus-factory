@@ -549,11 +549,13 @@ func (v *interfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) error
 
 type Device interface {
 	device // interface org.bluez.Device1
+	battery // interface org.bluez.Battery1
 	proxy.Object
 }
 
 type objectDevice struct {
 	interfaceDevice // interface org.bluez.Device1
+	interfaceBattery // interface org.bluez.Battery1
 	proxy.ImplObject
 }
 
@@ -812,6 +814,29 @@ func (v *interfaceDevice) Adapter() proxy.PropObjectPath {
 	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Adapter",
+	}
+}
+
+type battery interface {
+	Percentage() proxy.PropByte
+}
+
+type interfaceBattery struct{}
+
+func (v *interfaceBattery) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBattery) GetInterfaceName_() string {
+	return "org.bluez.Battery1"
+}
+
+// property Battery o
+
+func (v *interfaceBattery) Percentage() proxy.PropByte {
+	return &proxy.ImplPropByte{
+		Impl: v,
+		Name: "Percentage",
 	}
 }
 

@@ -6,6 +6,9 @@
             <arg name="xml" type="s" direction="out"/>
         </method>
     </interface>
+    <interface name="org.bluez.Battery1">
+        <property name="Percentage" type="b" access="read"></property>
+    </interface>
     <interface name="org.bluez.Device1">
         <method name="Disconnect"></method>
         <method name="Connect"></method>

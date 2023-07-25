@@ -61,6 +61,11 @@
       "Type": "Device",
       "Interfaces": [
         {
+          "Name": "org.bluez.Battery1",
+          "Type": "battery",
+          "Accessor": "Battery"
+        },
+        {
           "Name": "org.bluez.Device1",
           "Type": "device",
           "Accessor": "Device",
