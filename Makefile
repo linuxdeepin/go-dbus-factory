@@ -2,7 +2,6 @@ PREFIX = /usr
 GOSITE_DIR = ${PREFIX}/share/gocode
 GOPKG_PERFIX = github.com/linuxdeepin/go-dbus-factory
 SRC_DIR=${DESTDIR}${GOSITE_DIR}/src/${GOPKG_PERFIX}
-export GO111MODULE=off
 
 all: build
 
@@ -13,7 +12,8 @@ print_gopath:
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
 bin:
-	go build -o generator _tool/generator/*.go
+	cd _tool/generator && go build -o generator
+	cp _tool/generator/generator .
 
 install:
 	mkdir -p ${SRC_DIR}

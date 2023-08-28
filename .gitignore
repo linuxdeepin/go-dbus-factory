@@ -1,6 +1,6 @@
 .idea
 local_test
-generator
+./generator
 obj-x86_64-linux-gnu
 debian/.debhelper
 debian/debhelper-build-stamp
