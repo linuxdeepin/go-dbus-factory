@@ -1,70 +1,90 @@
-<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+'<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection '
+1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-    <interface name='org.deepin.dde.Application1.Manager'>
-        <method name='AddAutostart'>
-            <arg type='s' name='fileNamae' direction='in' />
-            <arg type='b' name='outArg0' direction='out' />
+    <interface name="org.deepin.dde.Application1.Manager">
+        <method name="AddAutostart">
+            <arg direction="in" type="s" name="fileNamae"/>
+            <arg direction="out" type="b" name="outArg0"/>
         </method>
-        <method name='AutostartList'>
-            <arg type='as' name='outArg0' direction='out' />
+        <method name="AutostartList">
+            <arg direction="out" type="as" name="outArg0"/>
         </method>
-        <method name='IsAutostart'>
-            <arg type='s' name='fileName' direction='in' />
-            <arg type='b' name='outArg0' direction='out' />
+        <method name="IsAutostart">
+            <arg direction="in" type="s" name="fileName"/>
+            <arg direction="out" type="b" name="outArg0"/>
         </method>
-        <method name='RemoveAutostart'>
-            <arg type='s' name='fileNamae' direction='in' />
-            <arg type='b' name='outArg0' direction='out' />
+        <method name="RemoveAutostart">
+            <arg direction="in" type="s" name="fileNamae"/>
+            <arg direction="out" type="b" name="outArg0"/>
         </method>
         <method name="Launch">
-            <arg type='s' name='desktopFile' direction='in'/>
+            <arg direction="in" type="s" name="desktopFile"/>
         </method>
         <method name="LaunchApp">
-            <arg type='s' name='desktopFile' direction='in'/>
-            <arg type='u' name='timestamp' direction='in'/>
-            <arg type='as' name='files' direction='in'/>
+            <arg direction="in" type="s" name="desktopFile"/>
+            <arg direction="in" type="u" name="timestamp"/>
+            <arg direction="in" type="as" name="files"/>
         </method>
-        <method name='LaunchAppAction'>
-            <arg type='s' name='desktopFile' direction='in' />
-            <arg type='s' name='action' direction='in' />
-            <arg type='u' name='timestamp' direction='in' />
+        <method name="LaunchAppAction">
+            <arg direction="in" type="s" name="desktopFile"/>
+            <arg direction="in" type="s" name="action"/>
+            <arg direction="in" type="u" name="timestamp"/>
         </method>
-        <signal name='AutostartChanged'>
-            <arg type='s' name='status' />
-            <arg type='s' name='filePath' />
+        <method name="LaunchAppWithOptions">
+            <arg direction="in" type="s" name="desktopFile"/>
+            <arg direction="in" type="u" name="timestamp"/>
+            <arg direction="in" type="as" name="files"/>
+            <arg direction="in" type="a{sv}" name="options"/>
+            <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.In3"/>
+        </method>
+        <method name="RunCommand">
+            <arg direction="in" type="s" name="exe"/>
+            <arg direction="in" type="as" name="args"/>
+        </method>
+        <method name="RunCommandWithOptions">
+            <arg direction="in" type="s" name="exe"/>
+            <arg direction="in" type="as" name="args"/>
+            <arg direction="in" type="a{sv}" name="options"/>
+            <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.In2"/>
+        </method>
+        <signal name="AutostartChanged">
+            <arg type="s" name="status"/>
+            <arg type="s" name="filePath"/>
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+        <method name="Get">
+            <arg name="interface_name" type="s" direction="in"/>
+            <arg name="property_name" type="s" direction="in"/>
+            <arg name="value" type="v" direction="out"/>
+        </method>
+        <method name="Set">
+            <arg name="interface_name" type="s" direction="in"/>
+            <arg name="property_name" type="s" direction="in"/>
+            <arg name="value" type="v" direction="in"/>
+        </method>
+        <method name="GetAll">
+            <arg name="interface_name" type="s" direction="in"/>
+            <arg name="values" type="a{sv}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        </method>
+        <signal name="PropertiesChanged">
+            <arg name="interface_name" type="s" direction="out"/>
+            <arg name="changed_properties" type="a{sv}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+            <arg name="invalidated_properties" type="as" direction="out"/>
         </signal>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
-            <arg name="out" type="s" direction="out"></arg>
+            <arg name="xml_data" type="s" direction="out"/>
         </method>
-    </interface>
-    <interface name="org.freedesktop.DBus.Properties">
-        <method name="Get">
-            <arg name="interface" type="s" direction="in"></arg>
-            <arg name="property" type="s" direction="in"></arg>
-            <arg name="value" type="v" direction="out"></arg>
-        </method>
-        <method name="GetAll">
-            <arg name="interface" type="s" direction="in"></arg>
-            <arg name="props" type="a{sv}" direction="out"></arg>
-        </method>
-        <method name="Set">
-            <arg name="interface" type="s" direction="in"></arg>
-            <arg name="property" type="s" direction="in"></arg>
-            <arg name="value" type="v" direction="in"></arg>
-        </method>
-        <signal name="PropertiesChanged">
-            <arg name="interface" type="s" direction="out"></arg>
-            <arg name="changed_properties" type="a{sv}" direction="out"></arg>
-            <arg name="invalidates_properties" type="as" direction="out"></arg>
-        </signal>
     </interface>
     <interface name="org.freedesktop.DBus.Peer">
-        <method name="Ping"></method>
+        <method name="Ping"/>
         <method name="GetMachineId">
-            <arg name="machine_uuid" type="s" direction="out"></arg>
+            <arg name="machine_uuid" type="s" direction="out"/>
         </method>
     </interface>
 </node>
