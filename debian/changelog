@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.6) unstable; urgency=medium
+
+  * use new am interface instead
+
+ -- chenhongtao <chenhongtao@deepin.org>  Wed, 11 Oct 2023 10:12:59 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.5) unstable; urgency=medium
 
   * support show bluetooth battery
