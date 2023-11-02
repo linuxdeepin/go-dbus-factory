@@ -1,0 +1,34 @@
+{
+  "Service": "org.desktopspec.ApplicationManager1",
+  "Objects": [
+    {
+      "Type": "Application",
+      "Interfaces": [
+        {
+          "Name": "org.desktopspec.ApplicationManager1.Application",
+          "Type": "application"
+        }
+      ]
+    },
+    {
+      "Type": "Manager",
+      "Path": "/org/desktopspec/ApplicationManager1",
+      "Interfaces": [
+        {
+          "Name": "org.desktopspec.ApplicationManager1",
+          "Type": "manager"
+        }
+      ]
+    },
+    {
+      "Type": "MimeManager",
+      "Path": "/org/desktopspec/ApplicationManager1/MimeManager1",
+      "Interfaces": [
+        {
+          "Name": "org.desktopspec.MimeManager1",
+          "Type": "mimeManager"
+        }
+      ]
+    }
+  ]
+}
