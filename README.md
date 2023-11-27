@@ -16,7 +16,7 @@ If you are debian user, you can use
 make bin
 ```
 
-to generater a executable file called `generater`. It can be used to auto generater code, like
+to generate an executable file called `generater`. It can be used to auto-generate code, like
 
 ```bash
 ./generator org.freedesktop.notifications
@@ -39,13 +39,13 @@ To generator all interface, run the command
 ./gen.sh
 ```
 
-The shell script will find all folders which contains `config.json` can generater the code
+The shell script will find all folders which contain `config.json` can generate the code
 
 ### Folders
 
-The tool will generater the code to a folder, the name of the folder always be the name of that service, which is all lower case.
+The tool will generate the code to a folder, the name of the folder always be the name of that service, which is all lower case.
 
-The package name of that go project under that folder always be the last word of the stringlist by spliting the name of the service by `.`.
+The package name of that go project under that folder always be the last word of the stringlist by splitting the name of the service by `.`.
 
 You can assess the default xml, config.json and go code under the folder which is generated.
 
