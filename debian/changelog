@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.8) unstable; urgency=medium
+
+  * feat: add org.freedesktop.timedate1 interface
+
+ -- dengbo <dengbo@deepin.org>  Mon, 27 Nov 2023 10:04:20 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.7) unstable; urgency=medium
 
   * add new am dbus interface
