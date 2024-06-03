@@ -1,0 +1,15 @@
+{
+  "Service": "org.freedesktop.DisplayManager",
+  "Objects": [
+    {
+      "Type": "DisplayManager",
+      "Path": "/org/freedesktop/DisplayManager",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DisplayManager",
+          "Type": "displayManager"
+        }
+      ]
+    }
+  ]
+}

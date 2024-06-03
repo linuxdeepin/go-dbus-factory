@@ -48,6 +48,12 @@
             <arg name="host" type="s" direction="out"></arg>
             <arg name="port" type="s" direction="out"></arg>
         </method>
+        <method name="GetProxyAuthentication">
+            <arg name="proxyType" type="s" direction="in"></arg>
+            <arg name="user" type="s" direction="out"></arg>
+            <arg name="password" type="s" direction="out"></arg>
+            <arg name="enable" type="b" direction="out"></arg>
+        </method>
         <method name="GetProxyIgnoreHosts">
             <arg name="ignoreHosts" type="s" direction="out"></arg>
         </method>

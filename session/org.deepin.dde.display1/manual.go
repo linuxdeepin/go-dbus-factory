@@ -27,3 +27,11 @@ type Touchscreen struct {
 	DeviceNode string
 	Serial     string
 }
+
+type TouchscreenV2 struct {
+	Id         int32
+	Node       string
+	DeviceNode string
+	Serial     string
+	UUID       string
+}
