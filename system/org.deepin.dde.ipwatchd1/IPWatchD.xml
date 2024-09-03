@@ -1,7 +1,7 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="org.deepin.dde.IPWatchd1">
+  <interface name="org.deepin.dde.IPWatchD1">
     <method name="RequestIPConflictCheck">
       <arg name="ip" type="s" direction="in"/>
       <arg name="ifc" type="s" direction="in"/>
