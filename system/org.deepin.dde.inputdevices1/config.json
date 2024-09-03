@@ -19,6 +19,15 @@
           "Type": "touchscreen"
         }
       ]
+    },
+    {
+      "Type": "Touchpad",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.InputDevices1.Touchpad",
+          "Type": "touchpad"
+        }
+      ]
     }
   ]
 }

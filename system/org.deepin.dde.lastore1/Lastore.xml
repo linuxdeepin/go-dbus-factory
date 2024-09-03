@@ -42,10 +42,16 @@
         <method name="PrepareDistUpgrade">
             <arg name="job" type="o" direction="out"></arg>
         </method>
+        <method name="RegisterAgent">
+            <arg name="path" type="o" direction="in"></arg>
+        </method>
         <method name="RemovePackage">
             <arg name="jobName" type="s" direction="in"></arg>
             <arg name="packages" type="s" direction="in"></arg>
             <arg name="job" type="o" direction="out"></arg>
+        </method>
+        <method name="UnRegisterAgent">
+            <arg name="path" type="o" direction="in"></arg>
         </method>
         <method name="SetAutoClean">
             <arg name="enable" type="b" direction="in"></arg>

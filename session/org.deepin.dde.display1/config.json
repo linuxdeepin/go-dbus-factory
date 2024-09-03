@@ -31,6 +31,10 @@
             "p/Touchscreens":{
               "Type": "PropTouchscreens",
               "ValueType": "[]Touchscreen"
+            },
+            "p/TouchscreensV2":{
+              "Type": "PropTouchscreensV2",
+              "ValueType": "[]TouchscreenV2"
             }
           }
         }

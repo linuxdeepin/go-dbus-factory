@@ -1,0 +1,16 @@
+{
+  "Service": "org.deepin.dde.EventLog1",
+  "Objects": [
+    {
+      "Type": "EventLog",
+      "Path": "/org/deepin/dde/EventLog1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.EventLog1",
+          "Type": "eventLog",
+          "Accessor": "EventLog"
+        }
+      ]
+    }
+  ]
+}

@@ -74,5 +74,6 @@
     <property name="supportsClickMethodClickfinger" type="b" access="read"/>
     <property name="defaultClickMethodClickfinger" type="b" access="read"/>
     <property name="clickMethodClickfinger" type="b" access="readwrite"/>
+    <property name="scrollFactor" type="d" access="readwrite"/>
   </interface>
 </node>
