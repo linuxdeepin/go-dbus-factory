@@ -5,10 +5,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package uadp1
 
-import "github.com/godbus/dbus/v5"
+import (
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type Uadp interface {
 	uadp // interface org.deepin.dde.Uadp1

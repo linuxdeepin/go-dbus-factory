@@ -585,8 +585,26 @@ func (v *MockInterfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) e
 }
 
 type MockDevice struct {
-	MockInterfaceDevice // interface org.bluez.Device1
+	MockInterfaceBattery // interface org.bluez.Battery1
+	MockInterfaceDevice  // interface org.bluez.Device1
 	proxy.MockObject
+}
+
+type MockInterfaceBattery struct {
+	mock.Mock
+}
+
+// property Percentage b
+
+func (v *MockInterfaceBattery) Percentage() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
 }
 
 type MockInterfaceDevice struct {

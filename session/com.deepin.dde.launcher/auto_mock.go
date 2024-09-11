@@ -5,11 +5,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package launcher
 
-import "fmt"
-import "github.com/godbus/dbus/v5"
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+import (
+	"fmt"
+
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockLauncher struct {
 	MockInterfaceLauncher // interface com.deepin.dde.Launcher
