@@ -5,10 +5,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package cursorhelper1
 
-import "github.com/godbus/dbus/v5"
+import (
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type CursorHelper interface {
 	cursorHelper // interface org.deepin.dde.CursorHelper1

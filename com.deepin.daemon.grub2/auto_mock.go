@@ -5,11 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package grub2
 
-import "fmt"
-import "github.com/godbus/dbus/v5"
+import (
+	"fmt"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockGrub2 struct {
 	MockInterfaceGrub2 // interface com.deepin.daemon.Grub2

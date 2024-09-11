@@ -5,10 +5,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package timesync1
 
-import "fmt"
+import (
+	"fmt"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockTimesync1 struct {
 	MockInterfaceTimesync1 // interface org.freedesktop.timesync1.Manager

@@ -5,11 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package lunarcalendar1
 
-import "fmt"
-import "github.com/godbus/dbus/v5"
+import (
+	"fmt"
 
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockLunarCalendar struct {
 	MockInterfaceLunarCalendar // interface org.deepin.dde.LunarCalendar1

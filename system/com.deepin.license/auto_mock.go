@@ -5,11 +5,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package license
 
-import "fmt"
+import (
+	"fmt"
 
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "github.com/stretchr/testify/mock"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/stretchr/testify/mock"
+)
 
 type MockLicense struct {
 	MockInterfaceLicense // interface com.deepin.license.Info

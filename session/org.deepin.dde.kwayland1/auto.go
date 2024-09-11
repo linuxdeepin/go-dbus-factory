@@ -5,13 +5,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package kwayland1
 
-import "errors"
-import "fmt"
-import "github.com/godbus/dbus/v5"
+import (
+	"errors"
+	"fmt"
+	"unsafe"
 
-import "github.com/linuxdeepin/go-lib/dbusutil"
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type OutputManagement interface {
 	outputManagement // interface org.deepin.dde.KWayland1.Output

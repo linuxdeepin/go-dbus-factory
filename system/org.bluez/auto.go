@@ -5,13 +5,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package bluez
 
-import "errors"
+import (
+	"errors"
+	"unsafe"
 
-import "github.com/godbus/dbus/v5"
-import "github.com/linuxdeepin/go-dbus-factory/object_manager"
-
-import "github.com/linuxdeepin/go-lib/dbusutil/proxy"
-import "unsafe"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+)
 
 type ObjectManager interface {
 	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
@@ -548,14 +549,14 @@ func (v *interfaceNetworkServer) Unregister(flags dbus.Flags, uuid string) error
 }
 
 type Device interface {
-	device // interface org.bluez.Device1
-	battery // interface org.bluez.Battery1
+	Battery() battery // interface org.bluez.Battery1
+	Device() device   // interface org.bluez.Device1
 	proxy.Object
 }
 
 type objectDevice struct {
-	interfaceDevice // interface org.bluez.Device1
 	interfaceBattery // interface org.bluez.Battery1
+	interfaceDevice  // interface org.bluez.Device1
 	proxy.ImplObject
 }
 
@@ -566,6 +567,37 @@ func NewDevice(conn *dbus.Conn, path dbus.ObjectPath) (Device, error) {
 	obj := new(objectDevice)
 	obj.ImplObject.Init_(conn, "org.bluez", path)
 	return obj, nil
+}
+
+func (obj *objectDevice) Battery() battery {
+	return &obj.interfaceBattery
+}
+
+type battery interface {
+	Percentage() proxy.PropBool
+}
+
+type interfaceBattery struct{}
+
+func (v *interfaceBattery) GetObject_() *proxy.ImplObject {
+	return (*proxy.ImplObject)(unsafe.Pointer(v))
+}
+
+func (*interfaceBattery) GetInterfaceName_() string {
+	return "org.bluez.Battery1"
+}
+
+// property Percentage b
+
+func (v *interfaceBattery) Percentage() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "Percentage",
+	}
+}
+
+func (obj *objectDevice) Device() device {
+	return &obj.interfaceDevice
 }
 
 type device interface {
@@ -814,29 +846,6 @@ func (v *interfaceDevice) Adapter() proxy.PropObjectPath {
 	return &proxy.ImplPropObjectPath{
 		Impl: v,
 		Name: "Adapter",
-	}
-}
-
-type battery interface {
-	Percentage() proxy.PropByte
-}
-
-type interfaceBattery struct{}
-
-func (v *interfaceBattery) GetObject_() *proxy.ImplObject {
-	return (*proxy.ImplObject)(unsafe.Pointer(v))
-}
-
-func (*interfaceBattery) GetInterfaceName_() string {
-	return "org.bluez.Battery1"
-}
-
-// property Battery o
-
-func (v *interfaceBattery) Percentage() proxy.PropByte {
-	return &proxy.ImplPropByte{
-		Impl: v,
-		Name: "Percentage",
 	}
 }
 
