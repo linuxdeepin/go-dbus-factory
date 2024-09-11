@@ -6,7 +6,7 @@
       "Path": "",
       "Interfaces": [
         {
-          "Name": "com.deepin.lastore.Agent",
+          "Name": "org.deepin.dde.Lastore1.Agent",
           "Type": "agent"
         }
       ]

@@ -1,7 +1,7 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-	<interface name="com.deepin.lastore.Agent">
+	<interface name="org.deepin.dde.Lastore1.Agent">
 		<method name="GetManualProxy">
 			<arg name="outArg0" type="a{ss}" direction="out"></arg>
 		</method>
@@ -15,6 +15,9 @@
 			<arg type="a{sv}" name="hints" direction="in"/>
 			<arg type="i" name="expire_timeout" direction="in"/>
 			<arg type="u" name="id" direction="out"/>
+		</method>
+		<method name="ReportLog">
+			<arg name="log" type="s" direction="in"></arg>
 		</method>
 		<method name="CloseNotification">
 			<arg type="u" name="id" direction="in"/>
