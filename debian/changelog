@@ -1,3 +1,12 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.9) unstable; urgency=medium
+
+  * chore: regenerate code
+  * chore: rename com.deepin.lastore.Agent to org.deepin.dde.Lastore1.Agent
+  * chore: IPWatchd接口名调整
+  * chore: 接口整改
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 18 Oct 2024 16:19:26 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.8) unstable; urgency=medium
 
   * feat: add org.freedesktop.timedate1 interface
