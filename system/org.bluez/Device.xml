@@ -7,7 +7,7 @@
         </method>
     </interface>
     <interface name="org.bluez.Battery1">
-        <property name="Percentage" type="b" access="read"></property>
+        <property name="Percentage" type="y" access="read"></property>
     </interface>
     <interface name="org.bluez.Device1">
         <method name="Disconnect"></method>
