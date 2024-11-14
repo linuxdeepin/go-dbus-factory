@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.10) unstable; urgency=medium
+
+  * chore: 更正bluez属性Percentage为byte (#119)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 14 Nov 2024 13:17:22 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.9) unstable; urgency=medium
 
   * chore: regenerate code
