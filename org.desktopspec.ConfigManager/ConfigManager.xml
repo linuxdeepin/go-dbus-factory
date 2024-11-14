@@ -8,6 +8,18 @@
       <arg direction="in" type="s" name="subpath"/>
       <arg direction="out" type="o" name="path"/>
     </method>
+    <method name="acquireManagerV2">
+      <arg direction="in" type="u" name="uid"/>
+      <arg direction="in" type="s" name="appid"/>
+      <arg direction="in" type="s" name="name"/>
+      <arg direction="in" type="s" name="subpath"/>
+      <arg direction="out" type="o" name="path"/>
+    </method>
+    <method name="enableVerboseLogging"/>
+    <method name="disableVerboseLogging"/>
+    <method name="setLogRules">
+      <arg direction="in" type="s" name="rules"/>
+    </method>
     <method name="update">
       <arg direction="in" type="s" name="path"/>
     </method>
