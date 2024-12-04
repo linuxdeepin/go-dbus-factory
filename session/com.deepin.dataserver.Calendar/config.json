@@ -1,14 +1,14 @@
 {
-  "Service": "org.deepin.dde.LunarCalendar1",
+  "Service": "com.deepin.dataserver.Calendar",
   "Objects": [
     {
-      "Type": "LunarCalendar",
-      "Path": "/org/deepin/dde/LunarCalendar1",
+      "Type": "HuangLi",
+      "Path": "/com/deepin/dataserver/Calendar/HuangLi",
       "Interfaces": [
         {
-          "Name": "org.deepin.dde.LunarCalendar1",
-          "Type": "lunarCalendar",
-          "Accessor": "LunarCalendar",
+          "Name": "com.deepin.dataserver.Calendar.HuangLi",
+          "Type": "huangLi",
+          "Accessor": "HuangLi",
           "Fixes": {
             "m/GetFestivalsInRange": [
               {
