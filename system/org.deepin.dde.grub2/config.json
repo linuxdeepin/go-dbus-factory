@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.Grub2",
+  "Objects": [
+    {
+      "Type": "Grub2",
+      "Path": "/org/deepin/dde/Grub2",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.Grub2",
+          "Type": "grub2"
+        }
+      ]
+    }
+  ]
+}

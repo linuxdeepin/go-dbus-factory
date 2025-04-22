@@ -1,0 +1,66 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+	 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+	<interface name="org.deepin.dde.Grub2">
+		<method name="GetAvailableGfxmodes">
+			<arg name="gfxModes" type="as" direction="out"></arg>
+		</method>
+		<method name="GetSimpleEntryTitles">
+			<arg name="titles" type="as" direction="out"></arg>
+		</method>
+		<method name="PrepareGfxmodeDetect"></method>
+		<method name="Reset"></method>
+		<method name="SetDefaultEntry">
+			<arg name="entry" type="s" direction="in"></arg>
+		</method>
+		<method name="SetEnableTheme">
+			<arg name="enabled" type="b" direction="in"></arg>
+		</method>
+		<method name="SetGfxmode">
+			<arg name="gfxmode" type="s" direction="in"></arg>
+		</method>
+		<method name="SetTimeout">
+			<arg name="timeout" type="u" direction="in"></arg>
+		</method>
+		<property name="ThemeFile" type="s" access="read"></property>
+		<property name="DefaultEntry" type="s" access="read"></property>
+		<property name="EnableTheme" type="b" access="read"></property>
+		<property name="Gfxmode" type="s" access="read"></property>
+		<property name="Timeout" type="u" access="read"></property>
+		<property name="Updating" type="b" access="read"></property>
+	</interface>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg name="out" type="s" direction="out"></arg>
+		</method>
+	</interface>
+	<interface name="org.freedesktop.DBus.Properties">
+		<method name="Get">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="out"></arg>
+		</method>
+		<method name="GetAll">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="props" type="a{sv}" direction="out"></arg>
+		</method>
+		<method name="Set">
+			<arg name="interface" type="s" direction="in"></arg>
+			<arg name="property" type="s" direction="in"></arg>
+			<arg name="value" type="v" direction="in"></arg>
+		</method>
+		<signal name="PropertiesChanged">
+			<arg name="interface" type="s" direction="out"></arg>
+			<arg name="changed_properties" type="a{sv}" direction="out"></arg>
+			<arg name="invalidates_properties" type="as" direction="out"></arg>
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Peer">
+		<method name="Ping"></method>
+		<method name="GetMachineId">
+			<arg name="machine_uuid" type="s" direction="out"></arg>
+		</method>
+	</interface>
+	<node name="Theme"></node>
+	<node name="EditAuthentication"></node>
+</node>
