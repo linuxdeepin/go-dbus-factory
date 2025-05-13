@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.13) unstable; urgency=medium
+
+  * feat: add isDefaultValue method to ConfigManager
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Tue, 13 May 2025 20:57:49 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.12) unstable; urgency=medium
 
   * chore: add org.deepin.dde.grub2
