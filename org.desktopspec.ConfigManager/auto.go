@@ -140,6 +140,8 @@ type manager interface {
 	Value(flags dbus.Flags, key string) (dbus.Variant, error)
 	GoSetValue(flags dbus.Flags, ch chan *dbus.Call, key string, value dbus.Variant) *dbus.Call
 	SetValue(flags dbus.Flags, key string, value dbus.Variant) error
+	GoIsDefaultValue(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call
+	IsDefaultValue(flags dbus.Flags, key string) (bool, error)
 	GoReset(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call
 	Reset(flags dbus.Flags, key string) error
 	GoName(flags dbus.Flags, ch chan *dbus.Call, key string, language string) *dbus.Call
@@ -193,6 +195,22 @@ func (v *interfaceManager) GoSetValue(flags dbus.Flags, ch chan *dbus.Call, key 
 
 func (v *interfaceManager) SetValue(flags dbus.Flags, key string, value dbus.Variant) error {
 	return (<-v.GoSetValue(flags, make(chan *dbus.Call, 1), key, value).Done).Err
+}
+
+// method isDefaultValue
+
+func (v *interfaceManager) GoIsDefaultValue(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".isDefaultValue", flags, ch, key)
+}
+
+func (*interfaceManager) StoreIsDefaultValue(call *dbus.Call) (isDefault bool, err error) {
+	err = call.Store(&isDefault)
+	return
+}
+
+func (v *interfaceManager) IsDefaultValue(flags dbus.Flags, key string) (bool, error) {
+	return v.StoreIsDefaultValue(
+		<-v.GoIsDefaultValue(flags, make(chan *dbus.Call, 1), key).Done)
 }
 
 // method reset

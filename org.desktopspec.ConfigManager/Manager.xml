@@ -12,6 +12,10 @@
       <arg direction="in" type="s" name="key"/>
       <arg direction="in" type="v" name="value"/>
     </method>
+    <method name="isDefaultValue">
+      <arg direction="in" type="s" name="key"/>
+      <arg direction="out" type="b" name="isDefault"/>
+    </method>
     <method name="reset">
       <arg direction="in" type="s" name="key"/>
     </method>
