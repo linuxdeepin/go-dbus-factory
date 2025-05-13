@@ -180,6 +180,25 @@ func (v *MockInterfaceManager) SetValue(flags dbus.Flags, key string, value dbus
 	return mockArgs.Error(0)
 }
 
+// method isDefaultValue
+
+func (v *MockInterfaceManager) GoIsDefaultValue(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, key)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceManager) IsDefaultValue(flags dbus.Flags, key string) (bool, error) {
+	mockArgs := v.Called(flags, key)
+
+	return mockArgs.Bool(0), mockArgs.Error(1)
+}
+
 // method reset
 
 func (v *MockInterfaceManager) GoReset(flags dbus.Flags, ch chan *dbus.Call, key string) *dbus.Call {
