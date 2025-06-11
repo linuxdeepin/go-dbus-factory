@@ -32,16 +32,12 @@ func NewConfigManager(conn *dbus.Conn) ConfigManager {
 }
 
 type configManager interface {
+	GoAcquireManagerV2(flags dbus.Flags, ch chan *dbus.Call, uid uint32, appid string, name string, subpath string) *dbus.Call
+	AcquireManagerV2(flags dbus.Flags, uid uint32, appid string, name string, subpath string) (dbus.ObjectPath, error)
 	GoAcquireManager(flags dbus.Flags, ch chan *dbus.Call, appid string, name string, subpath string) *dbus.Call
 	AcquireManager(flags dbus.Flags, appid string, name string, subpath string) (dbus.ObjectPath, error)
-	GoUpdate(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call
-	Update(flags dbus.Flags, path string) error
-	GoSync(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call
-	Sync(flags dbus.Flags, path string) error
-	GoSetDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call, time int32) *dbus.Call
-	SetDelayReleaseTime(flags dbus.Flags, time int32) error
-	GoDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
-	DelayReleaseTime(flags dbus.Flags) (int32, error)
+	GoRemoveUserData(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call
+	RemoveUserData(flags dbus.Flags, uid uint32) error
 }
 
 type interfaceConfigManager struct{}
@@ -52,6 +48,22 @@ func (v *interfaceConfigManager) GetObject_() *proxy.ImplObject {
 
 func (*interfaceConfigManager) GetInterfaceName_() string {
 	return "org.desktopspec.ConfigManager"
+}
+
+// method acquireManagerV2
+
+func (v *interfaceConfigManager) GoAcquireManagerV2(flags dbus.Flags, ch chan *dbus.Call, uid uint32, appid string, name string, subpath string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".acquireManagerV2", flags, ch, uid, appid, name, subpath)
+}
+
+func (*interfaceConfigManager) StoreAcquireManagerV2(call *dbus.Call) (path dbus.ObjectPath, err error) {
+	err = call.Store(&path)
+	return
+}
+
+func (v *interfaceConfigManager) AcquireManagerV2(flags dbus.Flags, uid uint32, appid string, name string, subpath string) (dbus.ObjectPath, error) {
+	return v.StoreAcquireManagerV2(
+		<-v.GoAcquireManagerV2(flags, make(chan *dbus.Call, 1), uid, appid, name, subpath).Done)
 }
 
 // method acquireManager
@@ -70,50 +82,14 @@ func (v *interfaceConfigManager) AcquireManager(flags dbus.Flags, appid string, 
 		<-v.GoAcquireManager(flags, make(chan *dbus.Call, 1), appid, name, subpath).Done)
 }
 
-// method update
+// method removeUserData
 
-func (v *interfaceConfigManager) GoUpdate(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".update", flags, ch, path)
+func (v *interfaceConfigManager) GoRemoveUserData(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".removeUserData", flags, ch, uid)
 }
 
-func (v *interfaceConfigManager) Update(flags dbus.Flags, path string) error {
-	return (<-v.GoUpdate(flags, make(chan *dbus.Call, 1), path).Done).Err
-}
-
-// method sync
-
-func (v *interfaceConfigManager) GoSync(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".sync", flags, ch, path)
-}
-
-func (v *interfaceConfigManager) Sync(flags dbus.Flags, path string) error {
-	return (<-v.GoSync(flags, make(chan *dbus.Call, 1), path).Done).Err
-}
-
-// method setDelayReleaseTime
-
-func (v *interfaceConfigManager) GoSetDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call, time int32) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".setDelayReleaseTime", flags, ch, time)
-}
-
-func (v *interfaceConfigManager) SetDelayReleaseTime(flags dbus.Flags, time int32) error {
-	return (<-v.GoSetDelayReleaseTime(flags, make(chan *dbus.Call, 1), time).Done).Err
-}
-
-// method delayReleaseTime
-
-func (v *interfaceConfigManager) GoDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".delayReleaseTime", flags, ch)
-}
-
-func (*interfaceConfigManager) StoreDelayReleaseTime(call *dbus.Call) (time int32, err error) {
-	err = call.Store(&time)
-	return
-}
-
-func (v *interfaceConfigManager) DelayReleaseTime(flags dbus.Flags) (int32, error) {
-	return v.StoreDelayReleaseTime(
-		<-v.GoDelayReleaseTime(flags, make(chan *dbus.Call, 1)).Done)
+func (v *interfaceConfigManager) RemoveUserData(flags dbus.Flags, uid uint32) error {
+	return (<-v.GoRemoveUserData(flags, make(chan *dbus.Call, 1), uid).Done).Err
 }
 
 type Manager interface {

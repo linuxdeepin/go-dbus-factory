@@ -23,6 +23,30 @@ type MockInterfaceConfigManager struct {
 	mock.Mock
 }
 
+// method acquireManagerV2
+
+func (v *MockInterfaceConfigManager) GoAcquireManagerV2(flags dbus.Flags, ch chan *dbus.Call, uid uint32, appid string, name string, subpath string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uid, appid, name, subpath)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceConfigManager) AcquireManagerV2(flags dbus.Flags, uid uint32, appid string, name string, subpath string) (dbus.ObjectPath, error) {
+	mockArgs := v.Called(flags, uid, appid, name, subpath)
+
+	ret0, ok := mockArgs.Get(0).(dbus.ObjectPath)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
 // method acquireManager
 
 func (v *MockInterfaceConfigManager) GoAcquireManager(flags dbus.Flags, ch chan *dbus.Call, appid string, name string, subpath string) *dbus.Call {
@@ -47,10 +71,10 @@ func (v *MockInterfaceConfigManager) AcquireManager(flags dbus.Flags, appid stri
 	return ret0, mockArgs.Error(1)
 }
 
-// method update
+// method removeUserData
 
-func (v *MockInterfaceConfigManager) GoUpdate(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, path)
+func (v *MockInterfaceConfigManager) GoRemoveUserData(flags dbus.Flags, ch chan *dbus.Call, uid uint32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, uid)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -60,72 +84,10 @@ func (v *MockInterfaceConfigManager) GoUpdate(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *MockInterfaceConfigManager) Update(flags dbus.Flags, path string) error {
-	mockArgs := v.Called(flags, path)
+func (v *MockInterfaceConfigManager) RemoveUserData(flags dbus.Flags, uid uint32) error {
+	mockArgs := v.Called(flags, uid)
 
 	return mockArgs.Error(0)
-}
-
-// method sync
-
-func (v *MockInterfaceConfigManager) GoSync(flags dbus.Flags, ch chan *dbus.Call, path string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, path)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceConfigManager) Sync(flags dbus.Flags, path string) error {
-	mockArgs := v.Called(flags, path)
-
-	return mockArgs.Error(0)
-}
-
-// method setDelayReleaseTime
-
-func (v *MockInterfaceConfigManager) GoSetDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call, time int32) *dbus.Call {
-	mockArgs := v.Called(flags, ch, time)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceConfigManager) SetDelayReleaseTime(flags dbus.Flags, time int32) error {
-	mockArgs := v.Called(flags, time)
-
-	return mockArgs.Error(0)
-}
-
-// method delayReleaseTime
-
-func (v *MockInterfaceConfigManager) GoDelayReleaseTime(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
-	mockArgs := v.Called(flags, ch)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceConfigManager) DelayReleaseTime(flags dbus.Flags) (int32, error) {
-	mockArgs := v.Called(flags)
-
-	ret0, ok := mockArgs.Get(0).(int32)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
 }
 
 type MockManager struct {
