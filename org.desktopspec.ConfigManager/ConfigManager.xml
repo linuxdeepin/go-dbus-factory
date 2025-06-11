@@ -1,24 +1,22 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="org.desktopspec.ConfigManager">
-    <method name="acquireManager">
-      <arg direction="in" type="s" name="appid"/>
-      <arg direction="in" type="s" name="name"/>
-      <arg direction="in" type="s" name="subpath"/>
-      <arg direction="out" type="o" name="path"/>
+  <interface name='org.desktopspec.ConfigManager'>
+    <method name='acquireManagerV2'>
+      <arg type='u' name='uid' direction='in'/>
+      <arg type='s' name='appid' direction='in'/>
+      <arg type='s' name='name' direction='in'/>
+      <arg type='s' name='subpath' direction='in'/>
+      <arg type='o' name='path' direction='out'/>
     </method>
-    <method name="update">
-      <arg direction="in" type="s" name="path"/>
+    <method name='acquireManager'>
+      <arg type='s' name='appid' direction='in'/>
+      <arg type='s' name='name' direction='in'/>
+      <arg type='s' name='subpath' direction='in'/>
+      <arg type='o' name='path' direction='out'/>
     </method>
-    <method name="sync">
-      <arg direction="in" type="s" name="path"/>
-    </method>
-    <method name="setDelayReleaseTime">
-      <arg direction="in" type="i" name="time"/>
-    </method>
-    <method name="delayReleaseTime">
-      <arg direction="out" type="i" name="time"/>
+    <method name='removeUserData'>
+      <arg type='u' name='uid' direction='in'/>
     </method>
   </interface>
 </node>
