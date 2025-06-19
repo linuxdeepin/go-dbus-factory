@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.14) unstable; urgency=medium
+
+  * feat: update ConfigManager D-Bus interface
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 19 Jun 2025 10:39:00 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.13) unstable; urgency=medium
 
   * feat: add isDefaultValue method to ConfigManager
