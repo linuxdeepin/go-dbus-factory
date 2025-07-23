@@ -55,6 +55,17 @@
           "Accessor": "CharaManger"
         }
       ]
+    },
+    {
+        "Type": "Passkey",
+        "Path": "/org/deepin/dde/Authenticate1/Passkey",
+        "Interfaces": [
+            {
+                "Name": "org.deepin.dde.Authenticate1.Passkey",
+                "Type": "passkey",
+                "Accessor": "Passkey"
+            }
+        ]
     }
   ]
 }
