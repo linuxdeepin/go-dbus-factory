@@ -95,8 +95,8 @@ func (v *MockInterfacePasskey) GetPinStatus(flags dbus.Flags) (int32, int32, err
 
 // method SetPin
 
-func (v *MockInterfacePasskey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, old string, new string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, old, new)
+func (v *MockInterfacePasskey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, oldPin string, newPin string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, oldPin, newPin)
 
 	ret, ok := mockArgs.Get(0).(*dbus.Call)
 	if !ok {
@@ -106,8 +106,8 @@ func (v *MockInterfacePasskey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, ol
 	return ret
 }
 
-func (v *MockInterfacePasskey) SetPin(flags dbus.Flags, old string, new string) error {
-	mockArgs := v.Called(flags, old, new)
+func (v *MockInterfacePasskey) SetPin(flags dbus.Flags, oldPin string, newPin string) error {
+	mockArgs := v.Called(flags, oldPin, newPin)
 
 	return mockArgs.Error(0)
 }
@@ -125,10 +125,10 @@ func (v *MockInterfacePasskey) GoReset(flags dbus.Flags, ch chan *dbus.Call) *db
 	return ret
 }
 
-func (v *MockInterfacePasskey) Reset(flags dbus.Flags) error {
+func (v *MockInterfacePasskey) Reset(flags dbus.Flags) (string, error) {
 	mockArgs := v.Called(flags)
 
-	return mockArgs.Error(0)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method MakeCredential
@@ -144,10 +144,10 @@ func (v *MockInterfacePasskey) GoMakeCredential(flags dbus.Flags, ch chan *dbus.
 	return ret
 }
 
-func (v *MockInterfacePasskey) MakeCredential(flags dbus.Flags, user string, credName string, pin string) error {
+func (v *MockInterfacePasskey) MakeCredential(flags dbus.Flags, user string, credName string, pin string) (string, error) {
 	mockArgs := v.Called(flags, user, credName, pin)
 
-	return mockArgs.Error(0)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetAssertion
@@ -163,10 +163,10 @@ func (v *MockInterfacePasskey) GoGetAssertion(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *MockInterfacePasskey) GetAssertion(flags dbus.Flags, user string, credName string, pin string) error {
+func (v *MockInterfacePasskey) GetAssertion(flags dbus.Flags, user string, credName string, pin string) (string, error) {
 	mockArgs := v.Called(flags, user, credName, pin)
 
-	return mockArgs.Error(0)
+	return mockArgs.String(0), mockArgs.Error(1)
 }
 
 // method GetValidCredCount
@@ -254,15 +254,110 @@ func (v *MockInterfacePasskey) GoDeviceDetect(flags dbus.Flags, ch chan *dbus.Ca
 	return ret
 }
 
-func (v *MockInterfacePasskey) DeviceDetect(flags dbus.Flags, timeout int32) error {
+func (v *MockInterfacePasskey) DeviceDetect(flags dbus.Flags, timeout int32) (string, error) {
 	mockArgs := v.Called(flags, timeout)
+
+	return mockArgs.String(0), mockArgs.Error(1)
+}
+
+// method DeviceSelect
+
+func (v *MockInterfacePasskey) GoDeviceSelect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) DeviceSelect(flags dbus.Flags) (string, error) {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.String(0), mockArgs.Error(1)
+}
+
+// method DeviceSelectClose
+
+func (v *MockInterfacePasskey) GoDeviceSelectClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) DeviceSelectClose(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
+// method DeviceClose
+
+func (v *MockInterfacePasskey) GoDeviceClose(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, id)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) DeviceClose(flags dbus.Flags, id string) error {
+	mockArgs := v.Called(flags, id)
+
+	return mockArgs.Error(0)
+}
+
+// method EncryptKey
+
+func (v *MockInterfacePasskey) GoEncryptKey(flags dbus.Flags, ch chan *dbus.Call, keyType int32) *dbus.Call {
+	mockArgs := v.Called(flags, ch, keyType)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) EncryptKey(flags dbus.Flags, keyType int32) (string, error) {
+	mockArgs := v.Called(flags, keyType)
+
+	return mockArgs.String(0), mockArgs.Error(1)
+}
+
+// method SetSymmetricKey
+
+func (v *MockInterfacePasskey) GoSetSymmetricKey(flags dbus.Flags, ch chan *dbus.Call, encryptType int32, keyType int32, key string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, encryptType, keyType, key)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) SetSymmetricKey(flags dbus.Flags, encryptType int32, keyType int32, key string) error {
+	mockArgs := v.Called(flags, encryptType, keyType, key)
 
 	return mockArgs.Error(0)
 }
 
 // signal ResetStatus
 
-func (v *MockInterfacePasskey) ConnectResetStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePasskey) ConnectResetStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -275,7 +370,7 @@ func (v *MockInterfacePasskey) ConnectResetStatus(cb func(finish int32, result i
 
 // signal MakeCredStatus
 
-func (v *MockInterfacePasskey) ConnectMakeCredStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePasskey) ConnectMakeCredStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -288,7 +383,7 @@ func (v *MockInterfacePasskey) ConnectMakeCredStatus(cb func(user string, finish
 
 // signal GetAssertStatus
 
-func (v *MockInterfacePasskey) ConnectGetAssertStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePasskey) ConnectGetAssertStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
@@ -301,7 +396,20 @@ func (v *MockInterfacePasskey) ConnectGetAssertStatus(cb func(user string, finis
 
 // signal DeviceDetectStatus
 
-func (v *MockInterfacePasskey) ConnectDeviceDetectStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *MockInterfacePasskey) ConnectDeviceDetectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// signal DeviceSelectStatus
+
+func (v *MockInterfacePasskey) ConnectDeviceSelectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	mockArgs := v.Called(cb)
 
 	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)

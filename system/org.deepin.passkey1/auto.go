@@ -42,14 +42,14 @@ type passkey interface {
 	UnClaim(flags dbus.Flags) error
 	GoGetPinStatus(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	GetPinStatus(flags dbus.Flags) (int32, int32, error)
-	GoSetPin(flags dbus.Flags, ch chan *dbus.Call, old string, new string) *dbus.Call
-	SetPin(flags dbus.Flags, old string, new string) error
+	GoSetPin(flags dbus.Flags, ch chan *dbus.Call, oldPin string, newPin string) *dbus.Call
+	SetPin(flags dbus.Flags, oldPin string, newPin string) error
 	GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
-	Reset(flags dbus.Flags) error
+	Reset(flags dbus.Flags) (string, error)
 	GoMakeCredential(flags dbus.Flags, ch chan *dbus.Call, user string, credName string, pin string) *dbus.Call
-	MakeCredential(flags dbus.Flags, user string, credName string, pin string) error
+	MakeCredential(flags dbus.Flags, user string, credName string, pin string) (string, error)
 	GoGetAssertion(flags dbus.Flags, ch chan *dbus.Call, user string, credName string, pin string) *dbus.Call
-	GetAssertion(flags dbus.Flags, user string, credName string, pin string) error
+	GetAssertion(flags dbus.Flags, user string, credName string, pin string) (string, error)
 	GoGetValidCredCount(flags dbus.Flags, ch chan *dbus.Call, user string) *dbus.Call
 	GetValidCredCount(flags dbus.Flags, user string) (int32, error)
 	GoGetCreds(flags dbus.Flags, ch chan *dbus.Call, user string) *dbus.Call
@@ -57,11 +57,22 @@ type passkey interface {
 	GoGetDeviceCount(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	GetDeviceCount(flags dbus.Flags) (int32, error)
 	GoDeviceDetect(flags dbus.Flags, ch chan *dbus.Call, timeout int32) *dbus.Call
-	DeviceDetect(flags dbus.Flags, timeout int32) error
-	ConnectResetStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error)
-	ConnectMakeCredStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error)
-	ConnectGetAssertStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error)
-	ConnectDeviceDetectStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error)
+	DeviceDetect(flags dbus.Flags, timeout int32) (string, error)
+	GoDeviceSelect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DeviceSelect(flags dbus.Flags) (string, error)
+	GoDeviceSelectClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	DeviceSelectClose(flags dbus.Flags) error
+	GoDeviceClose(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call
+	DeviceClose(flags dbus.Flags, id string) error
+	GoEncryptKey(flags dbus.Flags, ch chan *dbus.Call, keyType int32) *dbus.Call
+	EncryptKey(flags dbus.Flags, keyType int32) (string, error)
+	GoSetSymmetricKey(flags dbus.Flags, ch chan *dbus.Call, encryptType int32, keyType int32, key string) *dbus.Call
+	SetSymmetricKey(flags dbus.Flags, encryptType int32, keyType int32, key string) error
+	ConnectResetStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error)
+	ConnectMakeCredStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error)
+	ConnectGetAssertStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceDetectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceSelectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error)
 }
 
 type interfacePasskey struct{}
@@ -118,12 +129,12 @@ func (v *interfacePasskey) GetPinStatus(flags dbus.Flags) (int32, int32, error) 
 
 // method SetPin
 
-func (v *interfacePasskey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, old string, new string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPin", flags, ch, old, new)
+func (v *interfacePasskey) GoSetPin(flags dbus.Flags, ch chan *dbus.Call, oldPin string, newPin string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetPin", flags, ch, oldPin, newPin)
 }
 
-func (v *interfacePasskey) SetPin(flags dbus.Flags, old string, new string) error {
-	return (<-v.GoSetPin(flags, make(chan *dbus.Call, 1), old, new).Done).Err
+func (v *interfacePasskey) SetPin(flags dbus.Flags, oldPin string, newPin string) error {
+	return (<-v.GoSetPin(flags, make(chan *dbus.Call, 1), oldPin, newPin).Done).Err
 }
 
 // method Reset
@@ -132,8 +143,14 @@ func (v *interfacePasskey) GoReset(flags dbus.Flags, ch chan *dbus.Call) *dbus.C
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".Reset", flags, ch)
 }
 
-func (v *interfacePasskey) Reset(flags dbus.Flags) error {
-	return (<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done).Err
+func (*interfacePasskey) StoreReset(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *interfacePasskey) Reset(flags dbus.Flags) (string, error) {
+	return v.StoreReset(
+		<-v.GoReset(flags, make(chan *dbus.Call, 1)).Done)
 }
 
 // method MakeCredential
@@ -142,8 +159,14 @@ func (v *interfacePasskey) GoMakeCredential(flags dbus.Flags, ch chan *dbus.Call
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".MakeCredential", flags, ch, user, credName, pin)
 }
 
-func (v *interfacePasskey) MakeCredential(flags dbus.Flags, user string, credName string, pin string) error {
-	return (<-v.GoMakeCredential(flags, make(chan *dbus.Call, 1), user, credName, pin).Done).Err
+func (*interfacePasskey) StoreMakeCredential(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *interfacePasskey) MakeCredential(flags dbus.Flags, user string, credName string, pin string) (string, error) {
+	return v.StoreMakeCredential(
+		<-v.GoMakeCredential(flags, make(chan *dbus.Call, 1), user, credName, pin).Done)
 }
 
 // method GetAssertion
@@ -152,8 +175,14 @@ func (v *interfacePasskey) GoGetAssertion(flags dbus.Flags, ch chan *dbus.Call, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".GetAssertion", flags, ch, user, credName, pin)
 }
 
-func (v *interfacePasskey) GetAssertion(flags dbus.Flags, user string, credName string, pin string) error {
-	return (<-v.GoGetAssertion(flags, make(chan *dbus.Call, 1), user, credName, pin).Done).Err
+func (*interfacePasskey) StoreGetAssertion(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *interfacePasskey) GetAssertion(flags dbus.Flags, user string, credName string, pin string) (string, error) {
+	return v.StoreGetAssertion(
+		<-v.GoGetAssertion(flags, make(chan *dbus.Call, 1), user, credName, pin).Done)
 }
 
 // method GetValidCredCount
@@ -210,13 +239,81 @@ func (v *interfacePasskey) GoDeviceDetect(flags dbus.Flags, ch chan *dbus.Call, 
 	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeviceDetect", flags, ch, timeout)
 }
 
-func (v *interfacePasskey) DeviceDetect(flags dbus.Flags, timeout int32) error {
-	return (<-v.GoDeviceDetect(flags, make(chan *dbus.Call, 1), timeout).Done).Err
+func (*interfacePasskey) StoreDeviceDetect(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *interfacePasskey) DeviceDetect(flags dbus.Flags, timeout int32) (string, error) {
+	return v.StoreDeviceDetect(
+		<-v.GoDeviceDetect(flags, make(chan *dbus.Call, 1), timeout).Done)
+}
+
+// method DeviceSelect
+
+func (v *interfacePasskey) GoDeviceSelect(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeviceSelect", flags, ch)
+}
+
+func (*interfacePasskey) StoreDeviceSelect(call *dbus.Call) (id string, err error) {
+	err = call.Store(&id)
+	return
+}
+
+func (v *interfacePasskey) DeviceSelect(flags dbus.Flags) (string, error) {
+	return v.StoreDeviceSelect(
+		<-v.GoDeviceSelect(flags, make(chan *dbus.Call, 1)).Done)
+}
+
+// method DeviceSelectClose
+
+func (v *interfacePasskey) GoDeviceSelectClose(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeviceSelectClose", flags, ch)
+}
+
+func (v *interfacePasskey) DeviceSelectClose(flags dbus.Flags) error {
+	return (<-v.GoDeviceSelectClose(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method DeviceClose
+
+func (v *interfacePasskey) GoDeviceClose(flags dbus.Flags, ch chan *dbus.Call, id string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".DeviceClose", flags, ch, id)
+}
+
+func (v *interfacePasskey) DeviceClose(flags dbus.Flags, id string) error {
+	return (<-v.GoDeviceClose(flags, make(chan *dbus.Call, 1), id).Done).Err
+}
+
+// method EncryptKey
+
+func (v *interfacePasskey) GoEncryptKey(flags dbus.Flags, ch chan *dbus.Call, keyType int32) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".EncryptKey", flags, ch, keyType)
+}
+
+func (*interfacePasskey) StoreEncryptKey(call *dbus.Call) (publicKey string, err error) {
+	err = call.Store(&publicKey)
+	return
+}
+
+func (v *interfacePasskey) EncryptKey(flags dbus.Flags, keyType int32) (string, error) {
+	return v.StoreEncryptKey(
+		<-v.GoEncryptKey(flags, make(chan *dbus.Call, 1), keyType).Done)
+}
+
+// method SetSymmetricKey
+
+func (v *interfacePasskey) GoSetSymmetricKey(flags dbus.Flags, ch chan *dbus.Call, encryptType int32, keyType int32, key string) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetSymmetricKey", flags, ch, encryptType, keyType, key)
+}
+
+func (v *interfacePasskey) SetSymmetricKey(flags dbus.Flags, encryptType int32, keyType int32, key string) error {
+	return (<-v.GoSetSymmetricKey(flags, make(chan *dbus.Call, 1), encryptType, keyType, key).Done).Err
 }
 
 // signal ResetStatus
 
-func (v *interfacePasskey) ConnectResetStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePasskey) ConnectResetStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -230,11 +327,12 @@ func (v *interfacePasskey) ConnectResetStatus(cb func(finish int32, result int32
 		Name: v.GetInterfaceName_() + ".ResetStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
+		var id string
 		var finish int32
-		var result int32
-		err := dbus.Store(sig.Body, &finish, &result)
+		var result string
+		err := dbus.Store(sig.Body, &id, &finish, &result)
 		if err == nil {
-			cb(finish, result)
+			cb(id, finish, result)
 		}
 	}
 
@@ -243,7 +341,7 @@ func (v *interfacePasskey) ConnectResetStatus(cb func(finish int32, result int32
 
 // signal MakeCredStatus
 
-func (v *interfacePasskey) ConnectMakeCredStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePasskey) ConnectMakeCredStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -257,12 +355,13 @@ func (v *interfacePasskey) ConnectMakeCredStatus(cb func(user string, finish int
 		Name: v.GetInterfaceName_() + ".MakeCredStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
+		var id string
 		var user string
 		var finish int32
-		var result int32
-		err := dbus.Store(sig.Body, &user, &finish, &result)
+		var result string
+		err := dbus.Store(sig.Body, &id, &user, &finish, &result)
 		if err == nil {
-			cb(user, finish, result)
+			cb(id, user, finish, result)
 		}
 	}
 
@@ -271,7 +370,7 @@ func (v *interfacePasskey) ConnectMakeCredStatus(cb func(user string, finish int
 
 // signal GetAssertStatus
 
-func (v *interfacePasskey) ConnectGetAssertStatus(cb func(user string, finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePasskey) ConnectGetAssertStatus(cb func(id string, user string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -285,12 +384,13 @@ func (v *interfacePasskey) ConnectGetAssertStatus(cb func(user string, finish in
 		Name: v.GetInterfaceName_() + ".GetAssertStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
+		var id string
 		var user string
 		var finish int32
-		var result int32
-		err := dbus.Store(sig.Body, &user, &finish, &result)
+		var result string
+		err := dbus.Store(sig.Body, &id, &user, &finish, &result)
 		if err == nil {
-			cb(user, finish, result)
+			cb(id, user, finish, result)
 		}
 	}
 
@@ -299,7 +399,7 @@ func (v *interfacePasskey) ConnectGetAssertStatus(cb func(user string, finish in
 
 // signal DeviceDetectStatus
 
-func (v *interfacePasskey) ConnectDeviceDetectStatus(cb func(finish int32, result int32)) (dbusutil.SignalHandlerId, error) {
+func (v *interfacePasskey) ConnectDeviceDetectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
 	if cb == nil {
 		return 0, errors.New("nil callback")
 	}
@@ -313,11 +413,40 @@ func (v *interfacePasskey) ConnectDeviceDetectStatus(cb func(finish int32, resul
 		Name: v.GetInterfaceName_() + ".DeviceDetectStatus",
 	}
 	handlerFunc := func(sig *dbus.Signal) {
+		var id string
 		var finish int32
-		var result int32
-		err := dbus.Store(sig.Body, &finish, &result)
+		var result string
+		err := dbus.Store(sig.Body, &id, &finish, &result)
 		if err == nil {
-			cb(finish, result)
+			cb(id, finish, result)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal DeviceSelectStatus
+
+func (v *interfacePasskey) ConnectDeviceSelectStatus(cb func(id string, finish int32, result string)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DeviceSelectStatus", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DeviceSelectStatus",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var id string
+		var finish int32
+		var result string
+		err := dbus.Store(sig.Body, &id, &finish, &result)
+		if err == nil {
+			cb(id, finish, result)
 		}
 	}
 
