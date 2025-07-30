@@ -1,0 +1,62 @@
+
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"\n\t "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name='org.deepin.Passkey1'>
+        <method name='Claim'>
+        </method>
+        <method name='UnClaim'>
+        </method>
+        <method name='GetPinStatus'>
+            <arg name='support' direction='out' type='i'/>
+            <arg name='exist' direction='out' type='i'/>
+        </method>
+        <method name='SetPin'>
+            <arg name='old' direction='in' type='s'/>
+            <arg name='new' direction='in' type='s'/>
+        </method>
+        <method name='Reset'>
+        </method>
+        <method name='MakeCredential'>
+            <arg name='user' direction='in' type='s'/>
+            <arg name='credName' direction='in' type='s'/>
+            <arg name='pin' direction='in' type='s'/>
+        </method>
+        <method name='GetAssertion'>
+            <arg name='user' direction='in' type='s'/>
+            <arg name='credName' direction='in' type='s'/>
+            <arg name='pin' direction='in' type='s'/>
+        </method>
+        <method name='GetValidCredCount'>
+            <arg name='user' direction='in' type='s'/>
+            <arg name='count' direction='out' type='i'/>
+        </method>
+        <method name='GetCreds'>
+            <arg name='user' direction='in' type='s'/>
+            <arg name='creds' direction='out' type='as'/>
+        </method>
+        <method name='GetDeviceCount'>
+            <arg name='count' direction='out' type='i'/>
+        </method>
+        <method name='DeviceDetect'>
+            <arg name='timeout' direction='in' type='i'/>
+        </method>
+        <signal name='ResetStatus'>
+            <arg name='finish' type='i'></arg>
+            <arg name='result' type='i'></arg>
+        </signal>
+        <signal name='MakeCredStatus'>
+            <arg name='user' type='s'></arg>
+            <arg name='finish' type='i'></arg>
+            <arg name='result' type='i'></arg>
+        </signal>
+        <signal name='GetAssertStatus'>
+            <arg name='user' type='s'></arg>
+            <arg name='finish' type='i'></arg>
+            <arg name='result' type='i'></arg>
+        </signal>
+        <signal name='DeviceDetectStatus'>
+            <arg name='finish' type='i'></arg>
+            <arg name='result' type='i'></arg>
+        </signal>
+    </interface>
+</node>

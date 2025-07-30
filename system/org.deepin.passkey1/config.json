@@ -1,0 +1,18 @@
+
+{
+    "Service": "",
+    "Objects": [
+        {
+            "Type": "Passkey",
+            "Path": "",
+            "Interfaces": [
+                {
+                    "Name": "org.deepin.Passkey1",
+                    "CustomInterfaceName": true,
+                    "Type": "passkey",
+                    "Accessor": "passkey"
+                }
+            ]
+        }
+    ]
+}
