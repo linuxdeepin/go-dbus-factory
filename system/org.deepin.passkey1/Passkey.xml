@@ -1,4 +1,3 @@
-
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"\n\t "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name='org.deepin.Passkey1'>
@@ -11,20 +10,23 @@
             <arg name='exist' direction='out' type='i'/>
         </method>
         <method name='SetPin'>
-            <arg name='old' direction='in' type='s'/>
-            <arg name='new' direction='in' type='s'/>
+            <arg name='oldPin' direction='in' type='s'/>
+            <arg name='newPin' direction='in' type='s'/>
         </method>
         <method name='Reset'>
+            <arg name='id' direction='out' type='s'/>
         </method>
         <method name='MakeCredential'>
             <arg name='user' direction='in' type='s'/>
             <arg name='credName' direction='in' type='s'/>
             <arg name='pin' direction='in' type='s'/>
+            <arg name='id' direction='out' type='s'/>
         </method>
         <method name='GetAssertion'>
             <arg name='user' direction='in' type='s'/>
             <arg name='credName' direction='in' type='s'/>
             <arg name='pin' direction='in' type='s'/>
+            <arg name='id' direction='out' type='s'/>
         </method>
         <method name='GetValidCredCount'>
             <arg name='user' direction='in' type='s'/>
@@ -39,24 +41,51 @@
         </method>
         <method name='DeviceDetect'>
             <arg name='timeout' direction='in' type='i'/>
+            <arg name='id' direction='out' type='s'/>
+        </method>
+        <method name='DeviceSelect'>
+            <arg name='id' direction='out' type='s'/>
+        </method>
+        <method name='DeviceSelectClose'>
+        </method>
+        <method name='DeviceClose'>
+            <arg name='id' direction='in' type='s'/>
+        </method>
+        <method name='EncryptKey'>
+            <arg name='keyType' direction='in' type='i'/>
+            <arg name='publicKey' direction='out' type='s'/>
+        </method>
+        <method name='SetSymmetricKey'>
+            <arg name='encryptType' direction='in' type='i'/>
+            <arg name='keyType' direction='in' type='i'/>
+            <arg name='key' direction='in' type='s'/>
         </method>
         <signal name='ResetStatus'>
+            <arg name='id' type='s'></arg>
             <arg name='finish' type='i'></arg>
-            <arg name='result' type='i'></arg>
+            <arg name='result' type='s'></arg>
         </signal>
         <signal name='MakeCredStatus'>
+            <arg name='id' type='s'></arg>
             <arg name='user' type='s'></arg>
             <arg name='finish' type='i'></arg>
-            <arg name='result' type='i'></arg>
+            <arg name='result' type='s'></arg>
         </signal>
         <signal name='GetAssertStatus'>
+            <arg name='id' type='s'></arg>
             <arg name='user' type='s'></arg>
             <arg name='finish' type='i'></arg>
-            <arg name='result' type='i'></arg>
+            <arg name='result' type='s'></arg>
         </signal>
         <signal name='DeviceDetectStatus'>
+            <arg name='id' type='s'></arg>
             <arg name='finish' type='i'></arg>
-            <arg name='result' type='i'></arg>
+            <arg name='result' type='s'></arg>
+        </signal>
+        <signal name='DeviceSelectStatus'>
+            <arg name='id' type='s'></arg>
+            <arg name='finish' type='i'></arg>
+            <arg name='result' type='s'></arg>
         </signal>
     </interface>
 </node>
