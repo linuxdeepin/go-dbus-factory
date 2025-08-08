@@ -52,6 +52,7 @@ type fingerprint interface {
 	ConnectIdentifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error)
 	ConnectIdentifyNoAccount(cb func(result int32, userName string)) (dbusutil.SignalHandlerId, error)
 	ConnectVerifyStatus(cb func(result int32)) (dbusutil.SignalHandlerId, error)
+	ConnectDeviceStatus(cb func(DeviceStatus bool)) (dbusutil.SignalHandlerId, error)
 }
 
 type interfaceFingerprint struct{}
@@ -274,6 +275,32 @@ func (v *interfaceFingerprint) ConnectVerifyStatus(cb func(result int32)) (dbusu
 		err := dbus.Store(sig.Body, &result)
 		if err == nil {
 			cb(result)
+		}
+	}
+
+	return obj.ConnectSignal_(rule, sigRule, handlerFunc)
+}
+
+// signal DeviceStatus
+
+func (v *interfaceFingerprint) ConnectDeviceStatus(cb func(DeviceStatus bool)) (dbusutil.SignalHandlerId, error) {
+	if cb == nil {
+		return 0, errors.New("nil callback")
+	}
+	obj := v.GetObject_()
+	rule := fmt.Sprintf(
+		"type='signal',interface='%s',member='%s',path='%s',sender='%s'",
+		v.GetInterfaceName_(), "DeviceStatus", obj.Path_(), obj.ServiceName_())
+
+	sigRule := &dbusutil.SignalRule{
+		Path: obj.Path_(),
+		Name: v.GetInterfaceName_() + ".DeviceStatus",
+	}
+	handlerFunc := func(sig *dbus.Signal) {
+		var DeviceStatus bool
+		err := dbus.Store(sig.Body, &DeviceStatus)
+		if err == nil {
+			cb(DeviceStatus)
 		}
 	}
 

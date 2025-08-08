@@ -246,3 +246,16 @@ func (v *MockInterfaceFingerprint) ConnectVerifyStatus(cb func(result int32)) (d
 
 	return ret0, mockArgs.Error(1)
 }
+
+// signal DeviceStatus
+
+func (v *MockInterfaceFingerprint) ConnectDeviceStatus(cb func(DeviceStatus bool)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
