@@ -59,7 +59,9 @@
         <signal name="VerifyStatus">
             <arg name="result" type="i"/>
         </signal>
-
+        <signal name="DeviceStatus">
+            <arg name="DeviceStatus" type="b"/>
+        </signal>
     </interface>
 </node>
 

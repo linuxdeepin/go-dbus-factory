@@ -11,9 +11,26 @@ import (
 	"unsafe"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-dbus-factory/object_manager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
+
+type ObjectManager interface {
+	object_manager.ObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.Object
+}
+
+type objectObjectManager struct {
+	object_manager.InterfaceObjectManager // interface org.freedesktop.DBus.ObjectManager
+	proxy.ImplObject
+}
+
+func NewObjectManager(conn *dbus.Conn) ObjectManager {
+	obj := new(objectObjectManager)
+	obj.ImplObject.Init_(conn, "net.reactivated.Fprint", "/net/reactivated/Fprint")
+	return obj
+}
 
 type Manager interface {
 	manager // interface net.reactivated.Fprint.Manager

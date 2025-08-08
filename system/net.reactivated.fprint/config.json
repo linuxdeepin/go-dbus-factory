@@ -2,6 +2,16 @@
   "Service": "net.reactivated.Fprint",
   "Objects": [
     {
+      "Type": "ObjectManager",
+      "XMLFile": "-",
+      "Path": "/net/reactivated/Fprint",
+      "Interfaces": [
+        {
+          "Name": "org.freedesktop.DBus.ObjectManager"
+        }
+      ]
+    },
+    {
       "Type": "Manager",
       "Path": "/net/reactivated/Fprint/Manager",
       "Interfaces": [

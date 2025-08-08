@@ -112,6 +112,19 @@ func (v *MockInterfaceAuthenticate) ConnectLimitUpdated(cb func(username string)
 	return ret0, mockArgs.Error(1)
 }
 
+// signal DeviceChange
+
+func (v *MockInterfaceAuthenticate) ConnectDeviceChange(cb func(deviceFlag int32, action int32)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
 // property SupportEncrypts s
 
 func (v *MockInterfaceAuthenticate) SupportEncrypts() proxy.PropString {
@@ -1081,6 +1094,103 @@ func (v *MockInterfaceCharaManger) ConnectDriverChanged(cb func()) (dbusutil.Sig
 // property DriverInfo s
 
 func (v *MockInterfaceCharaManger) DriverInfo() proxy.PropString {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
+type MockPasskey struct {
+	MockInterfacePasskey // interface org.deepin.dde.Authenticate1.Passkey
+	proxy.MockObject
+}
+
+type MockInterfacePasskey struct {
+	mock.Mock
+}
+
+// method ListCreds
+
+func (v *MockInterfacePasskey) GoListCreds(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, username)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) ListCreds(flags dbus.Flags, username string) ([]string, error) {
+	mockArgs := v.Called(flags, username)
+
+	ret0, ok := mockArgs.Get(0).([]string)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// method StartVerify
+
+func (v *MockInterfacePasskey) GoStartVerify(flags dbus.Flags, ch chan *dbus.Call, username string) *dbus.Call {
+	mockArgs := v.Called(flags, ch, username)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) StartVerify(flags dbus.Flags, username string) error {
+	mockArgs := v.Called(flags, username)
+
+	return mockArgs.Error(0)
+}
+
+// method StopVerify
+
+func (v *MockInterfacePasskey) GoStopVerify(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfacePasskey) StopVerify(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
+// signal VerifyStatus
+
+func (v *MockInterfacePasskey) ConnectVerifyStatus(cb func(user string, code int32, msg string)) (dbusutil.SignalHandlerId, error) {
+	mockArgs := v.Called(cb)
+
+	ret0, ok := mockArgs.Get(0).(dbusutil.SignalHandlerId)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0, mockArgs.Error(1)
+}
+
+// property DefaultDevice s
+
+func (v *MockInterfacePasskey) DefaultDevice() proxy.PropString {
 	mockArgs := v.Called()
 
 	ret0, ok := mockArgs.Get(0).(*proxy.MockPropString)

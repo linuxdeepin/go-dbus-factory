@@ -21,6 +21,10 @@
         <signal name="LimitUpdated">
             <arg name="username" type="s"></arg>
         </signal>
+        <signal name="DeviceChange">
+            <arg name="deviceFlag" type="i"></arg>
+            <arg name="action" type="i"></arg>
+        </signal>
         
         <property name="SupportEncrypts" type="s" access="read"></property>
         <property name="FrameworkState" type="i" access="read"></property>
