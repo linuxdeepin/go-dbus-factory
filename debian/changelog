@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.16) unstable; urgency=medium
+
+  * Release 2.0.16
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 08 Aug 2025 09:27:18 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.15) unstable; urgency=medium
 
   * feat: 增加fido接口 (#132)
