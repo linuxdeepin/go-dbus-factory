@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/godbus/dbus/v5 v5.1.0
-	github.com/linuxdeepin/go-lib v0.0.0-20230406092403-b4b4282fc513
+	github.com/linuxdeepin/go-lib v0.0.0-20250812091504-ef74b917a73a
 	github.com/stretchr/testify v1.8.1
 )
 
