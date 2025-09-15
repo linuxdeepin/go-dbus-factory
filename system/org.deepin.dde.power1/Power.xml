@@ -25,6 +25,7 @@
         <property name="PowerSavingModeAuto" type="b" access="readwrite"></property>
         <property name="OnBattery" type="b" access="read"></property>
         <property name="HasLidSwitch" type="b" access="read"></property>
+        <property name="LidClosed" type="b" access="read"></property>
         <property name="BatteryPercentage" type="d" access="read"></property>
         <property name="BatteryTimeToEmpty" type="t" access="read"></property>
         <property name="HasBattery" type="b" access="read"></property>

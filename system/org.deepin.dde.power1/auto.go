@@ -57,6 +57,7 @@ type power interface {
 	PowerSavingModeAuto() proxy.PropBool
 	OnBattery() proxy.PropBool
 	HasLidSwitch() proxy.PropBool
+	LidClosed() proxy.PropBool
 	BatteryPercentage() proxy.PropDouble
 	BatteryTimeToEmpty() proxy.PropUint64
 	HasBattery() proxy.PropBool
@@ -345,6 +346,15 @@ func (v *interfacePower) HasLidSwitch() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "HasLidSwitch",
+	}
+}
+
+// property LidClosed b
+
+func (v *interfacePower) LidClosed() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "LidClosed",
 	}
 }
 

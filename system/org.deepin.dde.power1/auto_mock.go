@@ -297,6 +297,19 @@ func (v *MockInterfacePower) HasLidSwitch() proxy.PropBool {
 	return ret0
 }
 
+// property LidClosed b
+
+func (v *MockInterfacePower) LidClosed() proxy.PropBool {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropBool)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}
+
 // property BatteryPercentage d
 
 func (v *MockInterfacePower) BatteryPercentage() proxy.PropDouble {
