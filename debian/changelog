@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.18) unstable; urgency=medium
+
+  * feat: 多屏场景下支持合盖后自动切换仅外屏显示
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 18 Sep 2025 19:53:35 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.17) unstable; urgency=medium
 
   * chore: update 1st-party dependency in go.mod and go.sum
