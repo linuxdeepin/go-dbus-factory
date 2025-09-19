@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.ControlCenter1",
+  "Objects": [
+    {
+      "Type": "ControlCenter",
+      "Path": "/org/deepin/dde/ControlCenter1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.ControlCenter1",
+          "Type": "controlCenter"
+        }
+      ]
+    }
+  ]
+}
