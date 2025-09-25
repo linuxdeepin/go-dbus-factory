@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.20) unstable; urgency=medium
+
+  * chore: remove deprecated fprintd1 service files
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 25 Sep 2025 20:20:53 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.19) unstable; urgency=medium
 
   * feat: 添加控制中心接口
