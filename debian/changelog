@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.22) unstable; urgency=medium
+
+  * chore: remove powermanager1 D-Bus service files
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 06 Nov 2025 14:47:54 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.21) unstable; urgency=medium
 
   * chore: remove deprecated apps modules
