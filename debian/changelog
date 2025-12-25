@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.23) unstable; urgency=medium
+
+  * chore: remove deprecated cursor helper D-Bus interfaces
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 25 Dec 2025 19:28:07 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.22) unstable; urgency=medium
 
   * chore: remove powermanager1 D-Bus service files
