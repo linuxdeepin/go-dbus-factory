@@ -241,3 +241,16 @@ func (v *MockInterfaceTouchpad) Enable() proxy.PropBool {
 
 	return ret0
 }
+
+// property DeviceList as
+
+func (v *MockInterfaceTouchpad) DeviceList() proxy.PropStringArray {
+	mockArgs := v.Called()
+
+	ret0, ok := mockArgs.Get(0).(*proxy.MockPropStringArray)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
+	}
+
+	return ret0
+}

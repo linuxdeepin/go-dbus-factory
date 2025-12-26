@@ -254,6 +254,7 @@ type touchpad interface {
 	SetTouchpadEnable(flags dbus.Flags, enabled bool) error
 	IsExist() proxy.PropBool
 	Enable() proxy.PropBool
+	DeviceList() proxy.PropStringArray
 }
 
 type interfaceTouchpad struct{}
@@ -291,5 +292,14 @@ func (v *interfaceTouchpad) Enable() proxy.PropBool {
 	return &proxy.ImplPropBool{
 		Impl: v,
 		Name: "Enable",
+	}
+}
+
+// property DeviceList as
+
+func (v *interfaceTouchpad) DeviceList() proxy.PropStringArray {
+	return &proxy.ImplPropStringArray{
+		Impl: v,
+		Name: "DeviceList",
 	}
 }
