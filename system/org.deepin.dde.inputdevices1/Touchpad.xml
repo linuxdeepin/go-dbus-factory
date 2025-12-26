@@ -6,6 +6,7 @@
         </method>
         <property name="isExist" type="b" access="read"></property>
         <property name="Enable" type="b" access="read"></property>
+        <property name="DeviceList" type="as" access="read"></property>
     </interface>
     <interface name="org.freedesktop.DBus.Introspectable">
         <method name="Introspect">
