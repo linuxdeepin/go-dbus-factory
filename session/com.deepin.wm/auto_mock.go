@@ -80,6 +80,44 @@ func (v *MockInterfaceWm) BeginToMoveActiveWindow(flags dbus.Flags) error {
 	return mockArgs.Error(0)
 }
 
+// method MaximizeActiveWindow
+
+func (v *MockInterfaceWm) GoMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceWm) MaximizeActiveWindow(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
+// method UnMaximizeActiveWindow
+
+func (v *MockInterfaceWm) GoUnMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	mockArgs := v.Called(flags, ch)
+
+	ret, ok := mockArgs.Get(0).(*dbus.Call)
+	if !ok {
+		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
+	}
+
+	return ret
+}
+
+func (v *MockInterfaceWm) UnMaximizeActiveWindow(flags dbus.Flags) error {
+	mockArgs := v.Called(flags)
+
+	return mockArgs.Error(0)
+}
+
 // method ToggleActiveWindowMaximize
 
 func (v *MockInterfaceWm) GoToggleActiveWindowMaximize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {

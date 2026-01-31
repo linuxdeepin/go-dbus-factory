@@ -38,6 +38,10 @@ type wm interface {
 	TileActiveWindow(flags dbus.Flags, side uint32) error
 	GoBeginToMoveActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	BeginToMoveActiveWindow(flags dbus.Flags) error
+	GoMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	MaximizeActiveWindow(flags dbus.Flags) error
+	GoUnMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
+	UnMaximizeActiveWindow(flags dbus.Flags) error
 	GoToggleActiveWindowMaximize(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
 	ToggleActiveWindowMaximize(flags dbus.Flags) error
 	GoMinimizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
@@ -166,6 +170,26 @@ func (v *interfaceWm) GoBeginToMoveActiveWindow(flags dbus.Flags, ch chan *dbus.
 
 func (v *interfaceWm) BeginToMoveActiveWindow(flags dbus.Flags) error {
 	return (<-v.GoBeginToMoveActiveWindow(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method MaximizeActiveWindow
+
+func (v *interfaceWm) GoMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".MaximizeActiveWindow", flags, ch)
+}
+
+func (v *interfaceWm) MaximizeActiveWindow(flags dbus.Flags) error {
+	return (<-v.GoMaximizeActiveWindow(flags, make(chan *dbus.Call, 1)).Done).Err
+}
+
+// method UnMaximizeActiveWindow
+
+func (v *interfaceWm) GoUnMaximizeActiveWindow(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call {
+	return v.GetObject_().Go_(v.GetInterfaceName_()+".UnMaximizeActiveWindow", flags, ch)
+}
+
+func (v *interfaceWm) UnMaximizeActiveWindow(flags dbus.Flags) error {
+	return (<-v.GoUnMaximizeActiveWindow(flags, make(chan *dbus.Call, 1)).Done).Err
 }
 
 // method ToggleActiveWindowMaximize
