@@ -141,6 +141,7 @@ type device interface {
 	ScanType() proxy.PropString
 	NumEnrollStages() proxy.PropInt32
 	Name() proxy.PropString
+	FingerNeeded() proxy.PropBool
 }
 
 type interfaceDevice struct{}
@@ -353,5 +354,14 @@ func (v *interfaceDevice) Name() proxy.PropString {
 	return &proxy.ImplPropString{
 		Impl: v,
 		Name: "name",
+	}
+}
+
+// property finger-needed b
+
+func (v *interfaceDevice) FingerNeeded() proxy.PropBool {
+	return &proxy.ImplPropBool{
+		Impl: v,
+		Name: "finger-needed",
 	}
 }

@@ -62,5 +62,6 @@
     <property name="scan-type" type="s" access="read"/>
     <property name="num-enroll-stages" type="i" access="read"/>
     <property name="name" type="s" access="read"/>
-  </interface>
+    <property name="finger-needed" type="b" access="read"/>
+     </interface>
 </node>

@@ -36,6 +36,9 @@
             },
             "p/name": {
               "RenameTo": "Name"
+            },
+            "p/finger-needed": {
+              "RenameTo": "FingerNeeded"
             }
           }
         }
