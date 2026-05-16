@@ -44,6 +44,8 @@
         <property name="IsBalanceSupported" type="b" access="read"></property>
         <property name="IsPowerSaveSupported" type="b" access="read"></property>
         <property name="Mode" type="s" access="read"></property>
+        <property name="TlpMode" type="s" access="read"></property>
+        <property name="ShortIdleState" type="b" access="read"></property>
         <method name="SetCpuGovernor">
             <arg name="governor" type="s" direction="in"></arg>
         </method>
@@ -52,6 +54,12 @@
         </method>
         <method name="SetMode">
             <arg name="mode" type="s" direction="in"></arg>
+        </method>
+        <method name="SetTlpMode">
+            <arg name="mode" type="s" direction="in"></arg>
+        </method>
+        <method name="SetShortIdleState">
+            <arg name="state" type="b" direction="in"></arg>
         </method>
         <method name="LockCpuFreq">
             <arg name="governor" type="s" direction="in"></arg>
