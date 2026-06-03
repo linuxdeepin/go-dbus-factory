@@ -12,6 +12,16 @@
       ]
     },
     {
+      "Type": "Mouse",
+      "Path": "/org/deepin/dde/InputDevice1/Mouse",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.InputDevice1.Mouse",
+          "Type": "mouse"
+        }
+      ]
+    },
+    {
       "Type": "TouchPad",
       "Path": "/org/deepin/dde/InputDevice1/TouchPad",
       "Interfaces": [
