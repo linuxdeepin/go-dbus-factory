@@ -1,6 +1,14 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.28) unstable; urgency=medium
+
+  * feat: add Tlp mode and short idle support to power management
+  * refactor(eventlog): improve application event reporting
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 04 Jun 2026 19:32:58 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.27) unstable; urgency=medium
 
   * feat: add proximity sensor interfaces
+  * fix: remove KWin blur from DialogWindow to fix dark theme issue
 
  -- zhangkun <zhangkun2@uniontech.com>  Thu, 14 May 2026 20:03:22 +0800
 
