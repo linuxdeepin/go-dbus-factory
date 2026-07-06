@@ -30,7 +30,8 @@
         </method>
         <method name="SaveCustomWallPaper">
             <arg name="username" type="s" direction="in"></arg>
-            <arg name="file" type="s" direction="in"></arg>
+            <arg name="fd" type="h" direction="in"></arg>
+            <arg name="wallpaperType" type="s" direction="in"></arg>
             <arg name="path" type="s" direction="out"></arg>
         </method>
         <method name="GetCustomWallPapers">
