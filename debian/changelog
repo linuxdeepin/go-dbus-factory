@@ -1,3 +1,12 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.29) unstable; urgency=medium
+
+  * fix(daemon): update custom wallpaper dbus interface
+  * chore: Sync by
+    https://github.com/linuxdeepin/.github/commit/126af434677bcf06252378
+    4e2f8e98ecab832e15
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 09 Jul 2026 21:55:48 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.28) unstable; urgency=medium
 
   * feat: add Tlp mode and short idle support to power management
