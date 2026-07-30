@@ -1,0 +1,15 @@
+{
+  "Service": "org.deepin.dde.AmbientBrightness1",
+  "Objects": [
+    {
+      "Type": "AmbientBrightness",
+      "Path": "/org/deepin/dde/AmbientBrightness1",
+      "Interfaces": [
+        {
+          "Name": "org.deepin.dde.AmbientBrightness1",
+          "Type": "ambientBrightness"
+        }
+      ]
+    }
+  ]
+}
