@@ -180,25 +180,6 @@ func (v *MockInterfacePower) SetTlpMode(flags dbus.Flags, mode string) error {
 	return mockArgs.Error(0)
 }
 
-// method SetShortIdleState
-
-func (v *MockInterfacePower) GoSetShortIdleState(flags dbus.Flags, ch chan *dbus.Call, state bool) *dbus.Call {
-	mockArgs := v.Called(flags, ch, state)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfacePower) SetShortIdleState(flags dbus.Flags, state bool) error {
-	mockArgs := v.Called(flags, state)
-
-	return mockArgs.Error(0)
-}
-
 // method LockCpuFreq
 
 func (v *MockInterfacePower) GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call {

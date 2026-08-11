@@ -48,8 +48,6 @@ type power interface {
 	SetMode(flags dbus.Flags, mode string) error
 	GoSetTlpMode(flags dbus.Flags, ch chan *dbus.Call, mode string) *dbus.Call
 	SetTlpMode(flags dbus.Flags, mode string) error
-	GoSetShortIdleState(flags dbus.Flags, ch chan *dbus.Call, state bool) *dbus.Call
-	SetShortIdleState(flags dbus.Flags, state bool) error
 	GoLockCpuFreq(flags dbus.Flags, ch chan *dbus.Call, governor string, lockTime int32) *dbus.Call
 	LockCpuFreq(flags dbus.Flags, governor string, lockTime int32) error
 	ConnectBatteryDisplayUpdate(cb func(timestamp int64)) (dbusutil.SignalHandlerId, error)
@@ -178,16 +176,6 @@ func (v *interfacePower) GoSetTlpMode(flags dbus.Flags, ch chan *dbus.Call, mode
 
 func (v *interfacePower) SetTlpMode(flags dbus.Flags, mode string) error {
 	return (<-v.GoSetTlpMode(flags, make(chan *dbus.Call, 1), mode).Done).Err
-}
-
-// method SetShortIdleState
-
-func (v *interfacePower) GoSetShortIdleState(flags dbus.Flags, ch chan *dbus.Call, state bool) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".SetShortIdleState", flags, ch, state)
-}
-
-func (v *interfacePower) SetShortIdleState(flags dbus.Flags, state bool) error {
-	return (<-v.GoSetShortIdleState(flags, make(chan *dbus.Call, 1), state).Done).Err
 }
 
 // method LockCpuFreq
