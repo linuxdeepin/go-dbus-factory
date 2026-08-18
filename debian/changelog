@@ -1,3 +1,9 @@
+golang-github-linuxdeepin-go-dbus-factory (2.0.31) unstable; urgency=medium
+
+  * refactor: 移除 SetShortIdleState 接口方法
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 18 Aug 2026 15:22:15 +0800
+
 golang-github-linuxdeepin-go-dbus-factory (2.0.30) unstable; urgency=medium
 
   * feat(session): add AmbientBrightness1 D-Bus factory interface
