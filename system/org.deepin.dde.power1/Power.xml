@@ -58,6 +58,9 @@
         <method name="SetTlpMode">
             <arg name="mode" type="s" direction="in"></arg>
         </method>
+        <method name="SetShortIdleState">
+            <arg name="state" type="b" direction="in"></arg>
+        </method>
         <method name="LockCpuFreq">
             <arg name="governor" type="s" direction="in"></arg>
             <arg name="lockTime" type="i" direction="in"></arg>
