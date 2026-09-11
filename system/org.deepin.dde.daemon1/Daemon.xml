@@ -2,11 +2,6 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
     <interface name="org.deepin.dde.Daemon1">
-        <method name="BluetoothGetDeviceTechnologies">
-            <arg name="adapter" type="s" direction="in"></arg>
-            <arg name="device" type="s" direction="in"></arg>
-            <arg name="technologies" type="as" direction="out"></arg>
-        </method>
 	    <method name="IsPidVirtualMachine">
             <arg name="pid" type="u" direction="in"></arg>
             <arg name="ret" type="b" direction="out"></arg>

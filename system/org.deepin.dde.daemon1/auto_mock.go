@@ -23,30 +23,6 @@ type MockInterfaceDaemon struct {
 	mock.Mock
 }
 
-// method BluetoothGetDeviceTechnologies
-
-func (v *MockInterfaceDaemon) GoBluetoothGetDeviceTechnologies(flags dbus.Flags, ch chan *dbus.Call, adapter string, device string) *dbus.Call {
-	mockArgs := v.Called(flags, ch, adapter, device)
-
-	ret, ok := mockArgs.Get(0).(*dbus.Call)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: 0 failed because object wasn't correct type: %v", mockArgs.Get(0)))
-	}
-
-	return ret
-}
-
-func (v *MockInterfaceDaemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error) {
-	mockArgs := v.Called(flags, adapter, device)
-
-	ret0, ok := mockArgs.Get(0).([]string)
-	if !ok {
-		panic(fmt.Sprintf("assert: arguments: %d failed because object wasn't correct type: %v", 0, mockArgs.Get(0)))
-	}
-
-	return ret0, mockArgs.Error(1)
-}
-
 // method IsPidVirtualMachine
 
 func (v *MockInterfaceDaemon) GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call {

@@ -32,8 +32,6 @@ func NewDaemon(conn *dbus.Conn) Daemon {
 }
 
 type daemon interface {
-	GoBluetoothGetDeviceTechnologies(flags dbus.Flags, ch chan *dbus.Call, adapter string, device string) *dbus.Call
-	BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error)
 	GoIsPidVirtualMachine(flags dbus.Flags, ch chan *dbus.Call, pid uint32) *dbus.Call
 	IsPidVirtualMachine(flags dbus.Flags, pid uint32) (bool, error)
 	GoClearTtys(flags dbus.Flags, ch chan *dbus.Call) *dbus.Call
@@ -65,22 +63,6 @@ func (v *interfaceDaemon) GetObject_() *proxy.ImplObject {
 
 func (*interfaceDaemon) GetInterfaceName_() string {
 	return "org.deepin.dde.Daemon1"
-}
-
-// method BluetoothGetDeviceTechnologies
-
-func (v *interfaceDaemon) GoBluetoothGetDeviceTechnologies(flags dbus.Flags, ch chan *dbus.Call, adapter string, device string) *dbus.Call {
-	return v.GetObject_().Go_(v.GetInterfaceName_()+".BluetoothGetDeviceTechnologies", flags, ch, adapter, device)
-}
-
-func (*interfaceDaemon) StoreBluetoothGetDeviceTechnologies(call *dbus.Call) (technologies []string, err error) {
-	err = call.Store(&technologies)
-	return
-}
-
-func (v *interfaceDaemon) BluetoothGetDeviceTechnologies(flags dbus.Flags, adapter string, device string) ([]string, error) {
-	return v.StoreBluetoothGetDeviceTechnologies(
-		<-v.GoBluetoothGetDeviceTechnologies(flags, make(chan *dbus.Call, 1), adapter, device).Done)
 }
 
 // method IsPidVirtualMachine
